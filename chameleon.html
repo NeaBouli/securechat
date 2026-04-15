@@ -78,7 +78,7 @@
   /* ── NAV ── */
   nav { position:sticky; top:0; z-index:100; background:rgba(10,10,15,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px; }
   .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
-  .nav-logo-bg { background:var(--green); border-radius:8px; padding:4px 8px; display:flex; align-items:center; box-shadow:0 0 16px var(--logo-glow); overflow:visible; }
+  .nav-logo-bg { background:var(--cyan); border-radius:8px; padding:4px 8px; display:flex; align-items:center; box-shadow:0 0 16px rgba(0,212,255,0.15); overflow:visible; }
   .nav-logo-bg img { height:39px; width:auto; margin:-4px -2px; }
   .nav-logo-text { display:flex; flex-direction:column; }
   .nav-logo-brand { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
@@ -228,7 +228,7 @@
   footer { background:var(--surface); border-top:1px solid var(--border); padding:3rem 2rem 2rem; }
   .footer-inner { max-width:1100px; margin:0 auto; }
   .footer-logo { display:flex; align-items:center; gap:10px; margin-bottom:1.5rem; text-decoration:none; }
-  .footer-logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; overflow:visible; }
+  .footer-logo-bg { background:var(--cyan); border-radius:6px; padding:3px 7px; overflow:visible; }
   .footer-logo-bg img { height:31px; margin:-3px -2px; }
   .footer-logo-name { font-size:14px; font-weight:700; color:var(--text); }
   .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:2rem; margin-bottom:2rem; }
@@ -261,7 +261,7 @@
 <nav>
   <a class="nav-logo" href="/">
     <div class="nav-logo-bg">
-      <img src="https://stealthx.tech/logo.png" alt="StealthX">
+      <span style="font-size:28px;line-height:1;margin:-2px 0;">&#129422;</span>
     </div>
     <div class="nav-logo-text">
       <span class="nav-logo-brand">StealthX</span>
@@ -355,6 +355,11 @@
       <div class="feature-icon">&#128737;&#65039;</div>
       <h3>Protection turns on by itself.</h3>
       <p>The moment one of your rules applies &mdash; Chameleon acts. Instantly. You don't press a button. You don't have to remember anything. It just happens.</p>
+    </div>
+    <div class="feature-card" style="border-color:var(--cyan);">
+      <div class="feature-icon">&#127380;</div>
+      <h3>One ID. Both apps.</h3>
+      <p>Your StealthX ID works in SecureCall AND SecureChat. Chameleon uses the same identity. Share once &mdash; reach everywhere.</p>
     </div>
   </div>
 
@@ -601,7 +606,7 @@
   <div class="footer-inner">
     <a class="footer-logo" href="/">
       <div class="footer-logo-bg">
-        <img src="https://stealthx.tech/logo.png" alt="StealthX">
+        <span style="font-size:22px;line-height:1;">&#129422;</span>
       </div>
       <span class="footer-logo-name">Chameleon</span>
     </a>
