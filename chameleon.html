@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chameleon — Privacy OS · Part of SecureChat</title>
+<meta name="description" content="Chameleon: context-aware privacy overlay for Android. Encrypts automatically based on location, app, and context. Part of the SecureChat ecosystem.">
+<meta name="keywords" content="privacy OS, context-aware encryption, overlay encryption, Android privacy, XChaCha20, geofencing, decoy profile, SecureChat, IFR Token, open source">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="NeaBouli / StealthX Platform">
+<meta name="copyright" content="© 2026 Vendetta Labs">
+<meta name="category" content="Security, Privacy, Encryption, Android">
+<meta name="theme-color" content="#00ff88">
+<meta name="language" content="English">
+<meta name="distribution" content="Global">
+<meta name="geo.region" content="GR">
+<meta name="geo.placename" content="Greece">
+<meta name="target" content="all">
+<link rel="canonical" href="https://securechat.stealthx.tech/chameleon.html">
+<link rel="me" href="https://github.com/NeaBouli">
+<link rel="preconnect" href="https://stealthx.tech">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Chameleon — SecureChat Ecosystem">
+<meta property="og:title" content="Chameleon — Privacy OS · Part of SecureChat">
+<meta property="og:description" content="Context-aware privacy overlay for Android. Encrypts automatically based on location, app, and context. Part of the SecureChat ecosystem.">
+<meta property="og:url" content="https://securechat.stealthx.tech/chameleon.html">
+<meta property="og:image" content="https://securechat.stealthx.tech/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chameleon — Privacy OS · Part of SecureChat">
+<meta name="twitter:description" content="Context-aware privacy overlay for Android. Encrypts automatically based on location, app, and context.">
+<meta name="twitter:image" content="https://securechat.stealthx.tech/logo.png">
+<link rel="alternate" hreflang="en" href="https://securechat.stealthx.tech/chameleon.html">
+<link rel="alternate" hreflang="x-default" href="https://securechat.stealthx.tech/chameleon.html">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Chameleon","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"Context-aware privacy overlay for Android. Encrypts automatically based on location, app, and context. Part of the SecureChat ecosystem.","url":"https://securechat.stealthx.tech/chameleon.html","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://opensource.org/licenses/GPL-3.0","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<style>
+  :root {
+    --bg:        #0a0a0f;
+    --surface:   #0d1b2a;
+    --surface2:  #1b2a3b;
+    --border:    #1e3a52;
+    --cyan:      #00d4ff;
+    --green:     #00ff88;
+    --green-dim: #00c96d;
+    --gold:      #ffb800;
+    --red:       #ff3b3b;
+    --orange:    #ff6b35;
+    --muted:     #8899aa;
+    --text:      #e8edf2;
+    --text-dim:  #b0bec5;
+    --logo-glow: rgba(0,255,136,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.6; }
+
+  /* ── NAV ── */
+  nav { position:sticky; top:0; z-index:100; background:rgba(10,10,15,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px; }
+  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .nav-logo-bg { background:var(--green); border-radius:8px; padding:4px 8px; display:flex; align-items:center; box-shadow:0 0 16px var(--logo-glow); overflow:visible; }
+  .nav-logo-bg img { height:39px; width:auto; margin:-4px -2px; }
+  .nav-logo-text { display:flex; flex-direction:column; }
+  .nav-logo-brand { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+  .nav-logo-app { font-size:16px; font-weight:700; color:var(--text); letter-spacing:0.5px; }
+  .nav-links { display:flex; align-items:center; gap:0.2rem; flex-wrap:wrap; }
+  .nav-links a { color:var(--muted); text-decoration:none; padding:6px 10px; border-radius:6px; font-size:13px; font-weight:500; transition:all .2s; white-space:nowrap; }
+  .nav-links a:hover { color:var(--cyan); background:rgba(0,212,255,0.08); }
+  .nav-links a.active { color:var(--cyan); background:rgba(0,212,255,0.08); }
+  .nav-links a.cta { background:var(--green); color:#000; font-weight:700; padding:7px 14px; }
+  .nav-links a.cta:hover { background:var(--green-dim); color:#000; }
+
+  /* ── HERO ── */
+  .hero { padding:5rem 2rem 4rem; text-align:center; max-width:900px; margin:0 auto; }
+  .hero-eyebrow { font-size:11px; font-weight:700; letter-spacing:3px; color:var(--green); text-transform:uppercase; margin-bottom:1.5rem; }
+  .hero-title { font-size:clamp(2.8rem,6vw,5rem); font-weight:800; line-height:1.05; letter-spacing:-1px; margin-bottom:1.2rem; }
+  .hero-title span { color:var(--green); }
+  .hero-sub { font-size:1.2rem; color:var(--text-dim); max-width:640px; margin:0 auto 2.5rem; line-height:1.7; }
+  .hero-tags { display:flex; justify-content:center; gap:0.6rem; flex-wrap:wrap; margin-bottom:2.5rem; }
+  .tag { background:var(--surface); border:1px solid var(--border); color:var(--muted); padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600; letter-spacing:1px; }
+  .tag.green { border-color:var(--green); color:var(--green); }
+  .tag.cyan  { border-color:var(--cyan); color:var(--cyan); }
+  .hero-btns { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
+  .btn { padding:13px 28px; border-radius:8px; text-decoration:none; font-weight:700; font-size:14px; letter-spacing:0.5px; transition:all .2s; display:inline-block; }
+  .btn-primary { background:var(--green); color:#000; }
+  .btn-primary:hover { background:var(--green-dim); transform:translateY(-1px); }
+  .btn-secondary { background:transparent; color:var(--cyan); border:1px solid var(--cyan); }
+  .btn-secondary:hover { background:rgba(0,212,255,0.08); }
+
+  /* ── STATS BAR ── */
+  .stats-bar { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.5rem 2rem; display:flex; justify-content:center; gap:3rem; flex-wrap:wrap; }
+  .stat { text-align:center; }
+  .stat-value { font-size:1.4rem; font-weight:800; color:var(--green); display:block; }
+  .stat-label { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+
+  /* ── STATUS PILL ── */
+  .status-bar { text-align:center; padding:0.8rem 2rem; font-size:13px; color:var(--muted); background:var(--surface); border-bottom:1px solid var(--border); }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--orange); margin-right:6px; animation:pulse 2s infinite; }
+  .dot.green { background:var(--green); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* ── SECTIONS ── */
+  section { padding:4rem 2rem; max-width:1100px; margin:0 auto; }
+  .section-label { font-size:11px; font-weight:700; letter-spacing:3px; color:var(--green); text-transform:uppercase; margin-bottom:1rem; }
+  .section-title { font-size:clamp(1.8rem,3vw,2.4rem); font-weight:800; margin-bottom:1rem; }
+  .section-sub { color:var(--text-dim); max-width:600px; margin-bottom:3rem; line-height:1.7; }
+  hr.divider { border:none; border-top:1px solid var(--border); margin:0; }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+  .feature-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.8rem; transition:border-color .2s; }
+  .feature-card:hover { border-color:var(--green); }
+  .feature-icon { font-size:2rem; margin-bottom:1rem; }
+  .feature-card h3 { font-size:1rem; font-weight:700; margin-bottom:0.6rem; color:var(--text); }
+  .feature-card p { font-size:14px; color:var(--text-dim); line-height:1.6; }
+
+  /* ── BADGE GRID ── */
+  .badge-grid { display:flex; flex-wrap:wrap; gap:0.8rem; margin-bottom:2rem; }
+  .badge { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:0.8rem 1.2rem; font-size:13px; display:flex; align-items:center; gap:0.5rem; }
+  .badge-icon { font-size:1.2rem; }
+
+  /* ── CRYPTO TABLE ── */
+  .crypto-table { width:100%; border-collapse:collapse; margin-top:1rem; }
+  .crypto-table th { background:var(--surface2); color:var(--cyan); font-size:12px; letter-spacing:1px; text-transform:uppercase; padding:12px 16px; text-align:left; border:1px solid var(--border); }
+  .crypto-table td { padding:12px 16px; border:1px solid var(--border); font-size:14px; color:var(--text-dim); }
+  .crypto-table tr:hover td { background:rgba(0,255,136,0.04); }
+  .crypto-table td:first-child { color:var(--text); font-weight:600; }
+  .crypto-table td:last-child { color:var(--green); font-size:12px; font-family:monospace; }
+
+  /* ── COMPARE TABLE ── */
+  .compare-table { width:100%; border-collapse:collapse; }
+  .compare-table th { background:var(--surface2); padding:14px 16px; text-align:left; font-size:13px; border:1px solid var(--border); color:var(--muted); }
+  .compare-table th:first-child { color:var(--text); }
+  .compare-table th.ours { color:var(--green); background:rgba(0,255,136,0.08); }
+  .compare-table td { padding:12px 16px; border:1px solid var(--border); font-size:14px; }
+  .compare-table td:first-child { color:var(--text-dim); }
+  .compare-table td.ours { background:rgba(0,255,136,0.04); color:var(--green); text-align:center; font-weight:700; }
+  .compare-table td.no { text-align:center; color:var(--muted); }
+  .compare-table td.warn { text-align:center; color:var(--orange); }
+  .compare-table tr:hover td { background:rgba(255,255,255,0.02); }
+  .compare-table tr:hover td.ours { background:rgba(0,255,136,0.08); }
+
+  /* ── ARCHITECTURE ── */
+  .arch-diagram { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:2rem; font-family:monospace; font-size:13px; line-height:1.8; color:var(--text-dim); overflow-x:auto; }
+  .arch-diagram .hl { color:var(--green); }
+  .arch-diagram .dim { color:var(--border); }
+  .arch-diagram .cyan { color:var(--cyan); }
+  .arch-diagram .gold { color:var(--gold); }
+
+  /* ── IFR TIERS ── */
+  .tier-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; }
+  .tier-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:2rem; }
+  .tier-card.featured { border-color:var(--green); background:rgba(0,255,136,0.05); }
+  .tier-name { font-size:1.2rem; font-weight:800; margin-bottom:0.3rem; }
+  .tier-lock { font-size:13px; color:var(--muted); margin-bottom:1.5rem; font-family:monospace; }
+  .tier-lock span { color:var(--green); }
+  .tier-features { list-style:none; }
+  .tier-features li { font-size:14px; color:var(--text-dim); padding:5px 0; display:flex; gap:8px; }
+  .tier-features li::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; }
+
+  /* ── ROADMAP ── */
+  .roadmap { display:flex; flex-direction:column; gap:1rem; }
+  .roadmap-item { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.5rem; display:flex; gap:1.5rem; align-items:flex-start; }
+  .roadmap-item.done { border-color:var(--green); }
+  .roadmap-item.active { border-color:var(--cyan); }
+  .phase-badge { background:var(--surface2); border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; letter-spacing:1px; white-space:nowrap; }
+  .done .phase-badge { background:rgba(0,255,136,0.1); color:var(--green); }
+  .active .phase-badge { background:rgba(0,212,255,0.1); color:var(--cyan); }
+  .roadmap-content h3 { font-size:15px; font-weight:700; margin-bottom:0.4rem; }
+  .roadmap-content p { font-size:13px; color:var(--text-dim); }
+
+  /* ── CODE BLOCK ── */
+  .code-block { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.5rem; font-family:monospace; font-size:13px; line-height:1.7; color:#7ec8e3; overflow-x:auto; }
+  .code-block .kw { color:var(--cyan); }
+  .code-block .fn { color:var(--green); }
+  .code-block .cm { color:var(--muted); }
+
+  /* ── INTEGRATION GRID ── */
+  .integration-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+  .integration-col { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:2rem; }
+  .integration-col h3 { font-size:1rem; font-weight:700; margin-bottom:1.2rem; }
+  .integration-col ul { list-style:none; }
+  .integration-col ul li { font-size:14px; color:var(--text-dim); padding:6px 0; display:flex; gap:8px; align-items:flex-start; }
+  .integration-col.without h3 { color:var(--red); }
+  .integration-col.without ul li::before { content:'✗'; color:var(--red); font-weight:700; flex-shrink:0; }
+  .integration-col.with h3 { color:var(--green); }
+  .integration-col.with ul li::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; }
+
+  /* ── FOOTER ── */
+  footer { background:var(--surface); border-top:1px solid var(--border); padding:3rem 2rem 2rem; }
+  .footer-inner { max-width:1100px; margin:0 auto; }
+  .footer-logo { display:flex; align-items:center; gap:10px; margin-bottom:1.5rem; text-decoration:none; }
+  .footer-logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; overflow:visible; }
+  .footer-logo-bg img { height:31px; margin:-3px -2px; }
+  .footer-logo-name { font-size:14px; font-weight:700; color:var(--text); }
+  .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:2rem; margin-bottom:2rem; }
+  .footer-col h4 { font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; }
+  .footer-col a { display:block; color:var(--text-dim); text-decoration:none; font-size:14px; margin-bottom:0.5rem; }
+  .footer-col a:hover { color:var(--green); }
+  .footer-bottom { border-top:1px solid var(--border); padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+  .footer-bottom p { font-size:13px; color:var(--muted); }
+  .footer-bottom a { color:var(--muted); text-decoration:none; }
+  .footer-bottom a:hover { color:var(--green); }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:768px) {
+    nav { padding:0 1rem; }
+    .nav-links { display:none; }
+    .hero { padding:3rem 1rem 2rem; }
+    section { padding:3rem 1rem; }
+    .stats-bar { gap:1.5rem; }
+    .integration-grid { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-bg">
+      <img src="https://stealthx.tech/logo.png" alt="StealthX">
+    </div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-brand">StealthX</span>
+      <span class="nav-logo-app">Chameleon</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="/">SecureChat</a>
+    <a href="/chameleon.html" class="active">Chameleon</a>
+    <a href="#features">Features</a>
+    <a href="#security">Security</a>
+    <a href="#ifr">IFR</a>
+    <a href="wiki/">Wiki</a>
+    <a href="https://github.com/NeaBouli/chameleon">GitHub</a>
+    <a href="https://github.com/NeaBouli/chameleon" class="cta">View on GitHub</a>
+  </div>
+</nav>
+
+<!-- STATUS -->
+<div class="status-bar"><span class="dot"></span> CHAMELEON — Privacy OS &middot; Part of SecureChat Ecosystem</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">CONTEXT-AWARE PRIVACY · PART OF SECURECHAT</div>
+  <h1 class="hero-title">Chameleon<span>.</span></h1>
+  <p class="hero-sub">
+    The Privacy OS that makes SecureChat invisible. Encrypts automatically — based on where you are, which app you use, and who might be watching.
+  </p>
+  <div class="hero-tags">
+    <span class="tag green">GPL-3.0</span>
+    <span class="tag cyan">XChaCha20</span>
+    <span class="tag">Android</span>
+    <span class="tag">SecureChat Integration</span>
+  </div>
+  <div class="hero-btns">
+    <a href="https://github.com/NeaBouli/chameleon" class="btn btn-primary">View on GitHub</a>
+    <a href="/" class="btn btn-secondary">Back to SecureChat</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat"><span class="stat-value">XChaCha20</span><span class="stat-label">Encryption</span></div>
+  <div class="stat"><span class="stat-value">0</span><span class="stat-label">Metadata</span></div>
+  <div class="stat"><span class="stat-value">GPL-3.0</span><span class="stat-label">Open Source</span></div>
+  <div class="stat"><span class="stat-value">SecureChat</span><span class="stat-label">Integrated</span></div>
+</div>
+
+<hr class="divider">
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title">Privacy on autopilot.</h2>
+  <p class="section-sub">Set it up once. Then forget about it. Chameleon does the rest.</p>
+
+  <!-- Analogy -->
+  <div style="background:var(--surface);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:1.8rem 2rem;margin-bottom:3rem;">
+    <div style="font-size:2rem;margin-bottom:0.5rem;">&#129422;</div>
+    <h3 style="font-size:1.1rem;margin-bottom:1rem;color:var(--text);">Like a bodyguard that never sleeps.</h3>
+    <p style="font-size:14px;color:var(--text-dim);line-height:1.8;">Imagine a bodyguard who stands quietly behind you. You don't notice them. Nobody else does either.<br><br>But the moment something doesn't look right &mdash; they step in. Automatically. Silently.<br><br>That's Chameleon. You tell it once: &ldquo;Protect me when I'm outside. Protect me when I'm on a strange WiFi. Protect me when I open my messages.&rdquo;<br><br>And then you forget about it. It watches. It adapts. It protects. Without you doing anything.</p>
+  </div>
+
+  <!-- 3 Steps -->
+  <h3 style="font-size:1.2rem;font-weight:800;margin-bottom:2rem;">3 simple steps.</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:3rem;">
+    <div class="feature-card">
+      <div class="feature-icon">&#9881;&#65039;</div>
+      <h3>Tell it your rules. Once.</h3>
+      <p>Open the app and set simple rules. &ldquo;When I'm on public WiFi &rarr; protect everything.&rdquo; &ldquo;When I open my messages &rarr; hide the content.&rdquo; &ldquo;When I leave home &rarr; switch on full protection.&rdquo; That's it. You're done.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128065;&#65039;</div>
+      <h3>It watches quietly in the background.</h3>
+      <p>Chameleon runs silently on your phone. It notices which app you open. Which WiFi you're on. Where you are. Everything stays on your phone. Nothing is sent anywhere.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#128737;&#65039;</div>
+      <h3>Protection turns on by itself.</h3>
+      <p>The moment one of your rules applies &mdash; Chameleon acts. Instantly. You don't press a button. You don't have to remember anything. It just happens.</p>
+    </div>
+  </div>
+
+  <!-- Together with SecureChat -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-bottom:2rem;">
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Together with SecureChat.</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1.5rem;">Good alone. Better together.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;">
+      <div>
+        <p style="font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:1rem;">SecureChat alone</p>
+        <div style="font-size:14px;color:var(--text-dim);line-height:2;">&#10003; Messages encrypted while traveling<br>&#10003; No phone number needed<br>&#10003; No server storing your messages</div>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:1rem;">SecureChat + Chameleon</p>
+        <div style="font-size:14px;color:var(--text-dim);line-height:2;">&#10003; Everything above, plus:<br>&#10003; Messages hidden BEFORE you hit send<br>&#10003; Notifications show nothing private<br>&#10003; Automatic protection &mdash; no buttons<br>&#10003; Fake profile if someone forces you to unlock</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple FAQ -->
+  <div style="margin-top:2rem;">
+    <p style="margin-bottom:1rem;"><strong style="color:var(--green);font-size:15px;">Does it spy on me?</strong></p>
+    <p style="color:var(--text-dim);font-size:14px;padding-left:1rem;margin-bottom:1.5rem;">We understand why you'd ask that. The app reads your screen &mdash; but only on YOUR phone. Nothing leaves your device. And the code is public. Anyone can check.</p>
+    <p style="margin-bottom:1rem;"><strong style="color:var(--green);font-size:15px;">Does it use a lot of battery?</strong></p>
+    <p style="color:var(--text-dim);font-size:14px;padding-left:1rem;margin-bottom:1.5rem;">Less than most social media apps use in 5 minutes of scrolling. We measured it carefully. Less than 3% extra battery per day.</p>
+    <p style="margin-bottom:1rem;"><strong style="color:var(--green);font-size:15px;">Do I need this if I already have SecureChat?</strong></p>
+    <p style="color:var(--text-dim);font-size:14px;padding-left:1rem;">SecureChat protects your messages while they travel. Chameleon protects everything else &mdash; your screen, your notifications, your habits. Together: complete protection.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Capabilities</div>
+  <h2 class="section-title">Context-aware privacy, zero effort.</h2>
+  <p class="section-sub">Chameleon adapts your privacy level automatically. No manual toggles. No forgotten settings. Just protection that follows you.</p>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>Overlay Encryption</h3>
+      <p>Encrypts text in ANY app via Android AccessibilityService. Type normally — Chameleon encrypts before the text leaves your keyboard. Works with every messenger, email, and note app.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚙️</div>
+      <h3>Rule-Based Automation</h3>
+      <p>Define encryption rules by WiFi network, GPS location, or active app. Connect to public WiFi? Encryption activates. Open a specific app? Privacy mode engages. Zero manual steps.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🗄️</div>
+      <h3>Private Zone</h3>
+      <p>Encrypted file storage powered by XChaCha20-Poly1305. Photos, documents, notes — everything locked behind military-grade encryption. Accessible only with your master key.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎭</div>
+      <h3>Decoy Profile</h3>
+      <p>Enter the wrong PIN and Chameleon activates an empty decoy profile. No contacts, no messages, no files. The real data stays invisible and encrypted beneath the surface.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📍</div>
+      <h3>Geofencing</h3>
+      <p>Privacy level changes automatically based on your physical location. At home? Relaxed mode. At work or traveling? Maximum encryption. Define zones once, forget forever.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔑</div>
+      <h3>IFR Token Access</h3>
+      <p>Same IFR token lock as SecureChat. One on-chain lock unlocks lifetime access to both Chameleon and SecureChat. No subscriptions, no renewals.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- INTEGRATION -->
+<section id="integration">
+  <div class="section-label">Ecosystem</div>
+  <h2 class="section-title">How Chameleon + SecureChat work together.</h2>
+  <p class="section-sub">Two apps. One privacy ecosystem.</p>
+
+  <div class="integration-grid">
+    <div class="integration-col without">
+      <h3>Without Chameleon</h3>
+      <ul>
+        <li>Notification preview visible on lock screen</li>
+        <li>App content visible when switching between apps</li>
+        <li>Manual encryption — you have to remember every time</li>
+        <li>No location-based privacy protection</li>
+      </ul>
+    </div>
+    <div class="integration-col with">
+      <h3>With Chameleon</h3>
+      <ul>
+        <li>Notifications encrypted by overlay — no previews leak</li>
+        <li>App content hidden automatically when switching</li>
+        <li>Automatic encryption rules — set once, forget forever</li>
+        <li>Decoy profile activates with wrong PIN — real data invisible</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECURITY -->
+<section id="security">
+  <div class="section-label">Classified</div>
+  <h2 class="section-title">Cryptographic specifications.</h2>
+  <p class="section-sub">Same battle-tested crypto stack as SecureChat. Every claim is auditable in source code.</p>
+
+  <table class="crypto-table">
+    <thead>
+      <tr><th>Layer</th><th>Algorithm</th><th>Specification</th><th>Library</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Symmetric Encryption</td><td>XChaCha20-Poly1305</td><td>256-bit key, 192-bit nonce, AEAD</td><td>lazysodium-android</td></tr>
+      <tr><td>Key Exchange</td><td>X25519 ECDH</td><td>Curve25519 Diffie-Hellman, ephemeral</td><td>lazysodium-android</td></tr>
+      <tr><td>Forward Secrecy</td><td>Double Ratchet</td><td>HKDF-SHA256 ratchet, RFC 5869</td><td>lazysodium-android</td></tr>
+      <tr><td>Key Derivation</td><td>Argon2id</td><td>64MB memory, 3 iterations, 4 threads</td><td>lazysodium-android</td></tr>
+      <tr><td>Identity Signing</td><td>Ed25519</td><td>64-byte signatures, key bundles</td><td>lazysodium-android</td></tr>
+      <tr><td>Key Storage</td><td>Android Keystore</td><td>StrongBox/TEE, per-use auth</td><td>Android API 26+</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<hr class="divider">
+
+<!-- IFR -->
+<section id="ifr">
+  <div class="section-label">Inferno Integration</div>
+  <h2 class="section-title">IFR Lifetime Unlock.</h2>
+  <p class="section-sub">Lock IFR tokens once. Unlock forever. Same lock across Chameleon and SecureChat.</p>
+
+  <div class="tier-grid">
+    <div class="tier-card">
+      <div class="tier-name">Free</div>
+      <div class="tier-lock"><span>0 IFR</span> — forever</div>
+      <ul class="tier-features">
+        <li>Overlay encryption (basic)</li>
+        <li>3 automation rules</li>
+        <li>Private Zone (100 MB)</li>
+        <li>Manual geofencing</li>
+      </ul>
+    </div>
+    <div class="tier-card featured">
+      <div class="tier-name" style="color:var(--green)">Pro</div>
+      <div class="tier-lock">Lock <span>&ge; 2,000 IFR</span> — lifetime</div>
+      <ul class="tier-features">
+        <li>Everything in Free</li>
+        <li>Unlimited automation rules</li>
+        <li>Private Zone (unlimited)</li>
+        <li>Decoy profile</li>
+        <li>Automatic geofencing</li>
+        <li>SecureChat deep integration</li>
+      </ul>
+    </div>
+    <div class="tier-card">
+      <div class="tier-name" style="color:var(--gold)">Elite</div>
+      <div class="tier-lock">Lock <span>&ge; 6,000 IFR</span> — lifetime</div>
+      <ul class="tier-features">
+        <li>Everything in Pro</li>
+        <li>Multi-decoy profiles</li>
+        <li>Advanced threat detection</li>
+        <li>Zero telemetry</li>
+        <li>Priority support</li>
+        <li>Early access to features</li>
+      </ul>
+    </div>
+  </div>
+
+  <br>
+  <p style="font-size:13px; color:var(--muted); text-align:center;">
+    Same IFR lock as SecureChat — one lock covers both.
+    &nbsp;&middot;&nbsp; <a href="https://ifrunit.tech" style="color:var(--green)">Learn more at ifrunit.tech &rarr;</a>
+  </p>
+</section>
+
+<hr class="divider">
+
+<!-- DOWNLOAD -->
+<section id="download" style="text-align:center;">
+  <div class="section-label">Deploy</div>
+  <h2 class="section-title">Get Chameleon.</h2>
+  <p class="section-sub" style="margin:0 auto 2rem;">Pre-alpha builds available on GitHub. Public beta coming Q3 2026.</p>
+
+  <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
+    <a href="https://github.com/NeaBouli/chameleon" class="btn btn-primary">GitHub</a>
+    <a href="#" class="btn btn-secondary" style="opacity:0.4; cursor:not-allowed; pointer-events:none;">Public Beta Q3 2026</a>
+  </div>
+  <p style="font-size:13px; color:var(--muted);">Requires Android 8.0+ &middot; GPL-3.0 Open Source &middot; Part of SecureChat Ecosystem</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a class="footer-logo" href="/">
+      <div class="footer-logo-bg">
+        <img src="https://stealthx.tech/logo.png" alt="StealthX">
+      </div>
+      <span class="footer-logo-name">Chameleon</span>
+    </a>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#security">Security</a>
+        <a href="#ifr">IFR Token</a>
+        <a href="#download">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="wiki/">Wiki</a>
+        <a href="https://github.com/NeaBouli/chameleon">Source Code</a>
+        <a href="https://github.com/NeaBouli/chameleon/issues">Report Bugs</a>
+      </div>
+      <div class="footer-col">
+        <h4>StealthX Platform</h4>
+        <a href="https://stealthx.tech">SecureCall</a>
+        <a href="/">SecureChat</a>
+        <a href="/chameleon.html">Chameleon</a>
+        <a href="https://github.com/NeaBouli/inferno">IFR Token</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="https://github.com/NeaBouli/chameleon/blob/main/LICENSE">License (GPL-3.0)</a>
+        <a href="https://github.com/NeaBouli/chameleon/blob/main/SECURITY.md">Security Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Vendetta Labs — Greece &nbsp;|&nbsp; Chameleon is part of the <a href="https://stealthx.tech">StealthX Platform</a></p>
+      <p>GPL-3.0 &middot; <a href="https://github.com/NeaBouli/chameleon">github.com/NeaBouli/chameleon</a></p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
