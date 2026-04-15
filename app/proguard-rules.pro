@@ -1,0 +1,3 @@
+-dontwarn com.goterl.**
+-dontwarn net.java.dev.**
+-keep class com.goterl.lazysodium.** { *; }

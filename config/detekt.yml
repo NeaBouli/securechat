@@ -1,0 +1,128 @@
+# Chameleon — Detekt Static Analysis Configuration
+# Focus: Security-critical rules for a crypto/privacy app
+
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+config:
+  validation: true
+  warningsAsErrors: true
+  checkExhaustiveness: false
+
+processors:
+  active: true
+  exclude:
+    - 'DetektProgressListener'
+
+console-reports:
+  active: true
+
+output-reports:
+  active: true
+
+comments:
+  active: true
+  AbsentOrWrongFileLicense:
+    active: true
+    licenseTemplateFile: 'config/license_header.txt'
+    licenseTemplateIsRegex: false
+
+complexity:
+  active: true
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 15
+  LongMethod:
+    active: true
+    threshold: 80
+  LongParameterList:
+    active: true
+    functionThreshold: 7
+
+coroutines:
+  active: true
+  GlobalCoroutineUsage:
+    active: true
+  RedundantSuspendModifier:
+    active: true
+
+empty-blocks:
+  active: true
+
+exceptions:
+  active: true
+  SwallowedException:
+    active: true
+    allowedExceptionNameRegex: '_|(ignore|expected).*'
+  TooGenericExceptionCaught:
+    active: true
+    exceptionNames:
+      - Error
+      - Exception
+      - RuntimeException
+      - Throwable
+
+naming:
+  active: true
+  VariableNaming:
+    active: true
+    variablePattern: '[a-z][A-Za-z0-9]*'
+    privateVariablePattern: '(_)?[a-z][A-Za-z0-9]*'
+    excludeClassPattern: '$^'
+
+performance:
+  active: true
+
+potential-bugs:
+  active: true
+  CastToNullableType:
+    active: true
+  DontDowncastCollectionTypes:
+    active: true
+  ImplicitUnitReturnType:
+    active: true
+  LateinitUsage:
+    active: true
+    excludeAnnotatedProperties:
+      - 'Inject'
+      - 'JvmField'
+  NullableToStringCall:
+    active: true
+  UnconditionalJumpStatementInLoop:
+    active: true
+  UnnecessaryNotNullCheck:
+    active: true
+
+style:
+  active: true
+  ForbiddenComment:
+    active: true
+    values:
+      - reason: 'Use LOGBUCH.md BLOCKERS section instead'
+        value: 'FIXME'
+      - reason: 'TODOs must reference a step number e.g. TODO(S-05)'
+        value: '// TODO(?!\\(S-)'
+  ForbiddenMethodCall:
+    active: true
+    methods:
+      # Forbid debug logging in crypto/security modules
+      - reason: 'No debug logs in crypto — use Timber.d only in debug builds with guard'
+        value: 'android.util.Log.d'
+      - reason: 'No verbose logs in security-sensitive code'
+        value: 'android.util.Log.v'
+      - reason: 'No println in production code'
+        value: 'kotlin.io.println'
+      # Forbid AES — we use XChaCha20 exclusively
+      - reason: 'Use ChameleonCrypto.encrypt() — never AES directly'
+        value: 'javax.crypto.Cipher.getInstance(java.lang.String)'
+      # Forbid Math.random — use SecureRandom
+      - reason: 'Use SecureRandom or ChameleonCrypto.randomBytes() for crypto randomness'
+        value: 'java.lang.Math.random'
+  MagicNumber:
+    active: false  # Crypto code has legitimate magic numbers (key sizes etc.)
+  MaxLineLength:
+    active: true
+    maxLineLength: 140
+  WildcardImport:
+    active: true
