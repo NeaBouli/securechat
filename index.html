@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureChat — Encrypted Messaging. Zero Metadata.</title>
+<meta name="description" content="SecureChat — Decentralized, end-to-end encrypted messaging. No phone number. No server. No metadata. Built on the StealthX platform.">
+<meta property="og:title" content="SecureChat — Encrypted Messaging. Zero Metadata.">
+<meta property="og:description" content="Decentralized E2E encrypted chat. No accounts. No servers. IFR Token lifetime access.">
+<meta property="og:image" content="https://neabouli.github.io/securechat/logo.png">
+<link rel="icon" type="image/png" href="logo.png">
+<style>
+  :root {
+    --bg:        #0a0a0f;
+    --surface:   #0d1b2a;
+    --surface2:  #1b2a3b;
+    --border:    #1e3a52;
+    --cyan:      #00d4ff;
+    --green:     #00ff88;
+    --green-dim: #00c96d;
+    --gold:      #ffb800;
+    --red:       #ff3b3b;
+    --orange:    #ff6b35;
+    --muted:     #8899aa;
+    --text:      #e8edf2;
+    --text-dim:  #b0bec5;
+    --logo-glow: rgba(0,255,136,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.6; }
+
+  /* ── NAV ── */
+  nav { position:sticky; top:0; z-index:100; background:rgba(10,10,15,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px; }
+  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .nav-logo-bg { background:var(--green); border-radius:8px; padding:4px 8px; display:flex; align-items:center; box-shadow:0 0 16px var(--logo-glow); }
+  .nav-logo-bg img { height:28px; width:auto; filter:brightness(0) invert(1); }
+  .nav-logo-text { display:flex; flex-direction:column; }
+  .nav-logo-brand { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+  .nav-logo-app { font-size:16px; font-weight:700; color:var(--text); letter-spacing:0.5px; }
+  .nav-links { display:flex; align-items:center; gap:0.2rem; flex-wrap:wrap; }
+  .nav-links a { color:var(--muted); text-decoration:none; padding:6px 10px; border-radius:6px; font-size:13px; font-weight:500; transition:all .2s; white-space:nowrap; }
+  .nav-links a:hover { color:var(--cyan); background:rgba(0,212,255,0.08); }
+  .nav-links a.cta { background:var(--green); color:#000; font-weight:700; padding:7px 14px; }
+  .nav-links a.cta:hover { background:var(--green-dim); color:#000; }
+
+  /* ── HERO ── */
+  .hero { padding:5rem 2rem 4rem; text-align:center; max-width:900px; margin:0 auto; }
+  .hero-eyebrow { font-size:11px; font-weight:700; letter-spacing:3px; color:var(--green); text-transform:uppercase; margin-bottom:1.5rem; }
+  .hero-title { font-size:clamp(2.8rem,6vw,5rem); font-weight:800; line-height:1.05; letter-spacing:-1px; margin-bottom:1.2rem; }
+  .hero-title span { color:var(--green); }
+  .hero-sub { font-size:1.2rem; color:var(--text-dim); max-width:640px; margin:0 auto 2.5rem; line-height:1.7; }
+  .hero-tags { display:flex; justify-content:center; gap:0.6rem; flex-wrap:wrap; margin-bottom:2.5rem; }
+  .tag { background:var(--surface); border:1px solid var(--border); color:var(--muted); padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600; letter-spacing:1px; }
+  .tag.green { border-color:var(--green); color:var(--green); }
+  .tag.cyan  { border-color:var(--cyan); color:var(--cyan); }
+  .hero-btns { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
+  .btn { padding:13px 28px; border-radius:8px; text-decoration:none; font-weight:700; font-size:14px; letter-spacing:0.5px; transition:all .2s; display:inline-block; }
+  .btn-primary { background:var(--green); color:#000; }
+  .btn-primary:hover { background:var(--green-dim); transform:translateY(-1px); }
+  .btn-secondary { background:transparent; color:var(--cyan); border:1px solid var(--cyan); }
+  .btn-secondary:hover { background:rgba(0,212,255,0.08); }
+
+  /* ── STATS BAR ── */
+  .stats-bar { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.5rem 2rem; display:flex; justify-content:center; gap:3rem; flex-wrap:wrap; }
+  .stat { text-align:center; }
+  .stat-value { font-size:1.4rem; font-weight:800; color:var(--green); display:block; }
+  .stat-label { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+
+  /* ── STATUS PILL ── */
+  .status-bar { text-align:center; padding:0.8rem 2rem; font-size:13px; color:var(--muted); background:var(--surface); border-bottom:1px solid var(--border); }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--orange); margin-right:6px; animation:pulse 2s infinite; }
+  .dot.green { background:var(--green); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* ── SECTIONS ── */
+  section { padding:4rem 2rem; max-width:1100px; margin:0 auto; }
+  .section-label { font-size:11px; font-weight:700; letter-spacing:3px; color:var(--green); text-transform:uppercase; margin-bottom:1rem; }
+  .section-title { font-size:clamp(1.8rem,3vw,2.4rem); font-weight:800; margin-bottom:1rem; }
+  .section-sub { color:var(--text-dim); max-width:600px; margin-bottom:3rem; line-height:1.7; }
+  hr.divider { border:none; border-top:1px solid var(--border); margin:0; }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+  .feature-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.8rem; transition:border-color .2s; }
+  .feature-card:hover { border-color:var(--green); }
+  .feature-icon { font-size:2rem; margin-bottom:1rem; }
+  .feature-card h3 { font-size:1rem; font-weight:700; margin-bottom:0.6rem; color:var(--text); }
+  .feature-card p { font-size:14px; color:var(--text-dim); line-height:1.6; }
+
+  /* ── BADGE GRID ── */
+  .badge-grid { display:flex; flex-wrap:wrap; gap:0.8rem; margin-bottom:2rem; }
+  .badge { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:0.8rem 1.2rem; font-size:13px; display:flex; align-items:center; gap:0.5rem; }
+  .badge-icon { font-size:1.2rem; }
+
+  /* ── CRYPTO TABLE ── */
+  .crypto-table { width:100%; border-collapse:collapse; margin-top:1rem; }
+  .crypto-table th { background:var(--surface2); color:var(--cyan); font-size:12px; letter-spacing:1px; text-transform:uppercase; padding:12px 16px; text-align:left; border:1px solid var(--border); }
+  .crypto-table td { padding:12px 16px; border:1px solid var(--border); font-size:14px; color:var(--text-dim); }
+  .crypto-table tr:hover td { background:rgba(0,255,136,0.04); }
+  .crypto-table td:first-child { color:var(--text); font-weight:600; }
+  .crypto-table td:last-child { color:var(--green); font-size:12px; font-family:monospace; }
+
+  /* ── COMPARE TABLE ── */
+  .compare-table { width:100%; border-collapse:collapse; }
+  .compare-table th { background:var(--surface2); padding:14px 16px; text-align:left; font-size:13px; border:1px solid var(--border); color:var(--muted); }
+  .compare-table th:first-child { color:var(--text); }
+  .compare-table th.ours { color:var(--green); background:rgba(0,255,136,0.08); }
+  .compare-table td { padding:12px 16px; border:1px solid var(--border); font-size:14px; }
+  .compare-table td:first-child { color:var(--text-dim); }
+  .compare-table td.ours { background:rgba(0,255,136,0.04); color:var(--green); text-align:center; font-weight:700; }
+  .compare-table td.no { text-align:center; color:var(--muted); }
+  .compare-table td.warn { text-align:center; color:var(--orange); }
+  .compare-table tr:hover td { background:rgba(255,255,255,0.02); }
+  .compare-table tr:hover td.ours { background:rgba(0,255,136,0.08); }
+
+  /* ── ARCHITECTURE ── */
+  .arch-diagram { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:2rem; font-family:monospace; font-size:13px; line-height:1.8; color:var(--text-dim); overflow-x:auto; }
+  .arch-diagram .hl { color:var(--green); }
+  .arch-diagram .dim { color:var(--border); }
+  .arch-diagram .cyan { color:var(--cyan); }
+  .arch-diagram .gold { color:var(--gold); }
+
+  /* ── IFR TIERS ── */
+  .tier-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.5rem; }
+  .tier-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:2rem; }
+  .tier-card.featured { border-color:var(--green); background:rgba(0,255,136,0.05); }
+  .tier-name { font-size:1.2rem; font-weight:800; margin-bottom:0.3rem; }
+  .tier-lock { font-size:13px; color:var(--muted); margin-bottom:1.5rem; font-family:monospace; }
+  .tier-lock span { color:var(--green); }
+  .tier-features { list-style:none; }
+  .tier-features li { font-size:14px; color:var(--text-dim); padding:5px 0; display:flex; gap:8px; }
+  .tier-features li::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; }
+
+  /* ── ROADMAP ── */
+  .roadmap { display:flex; flex-direction:column; gap:1rem; }
+  .roadmap-item { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.5rem; display:flex; gap:1.5rem; align-items:flex-start; }
+  .roadmap-item.done { border-color:var(--green); }
+  .roadmap-item.active { border-color:var(--cyan); }
+  .phase-badge { background:var(--surface2); border-radius:6px; padding:4px 10px; font-size:11px; font-weight:700; letter-spacing:1px; white-space:nowrap; }
+  .done .phase-badge { background:rgba(0,255,136,0.1); color:var(--green); }
+  .active .phase-badge { background:rgba(0,212,255,0.1); color:var(--cyan); }
+  .roadmap-content h3 { font-size:15px; font-weight:700; margin-bottom:0.4rem; }
+  .roadmap-content p { font-size:13px; color:var(--text-dim); }
+
+  /* ── CODE BLOCK ── */
+  .code-block { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.5rem; font-family:monospace; font-size:13px; line-height:1.7; color:#7ec8e3; overflow-x:auto; }
+  .code-block .kw { color:var(--cyan); }
+  .code-block .fn { color:var(--green); }
+  .code-block .cm { color:var(--muted); }
+
+  /* ── FOOTER ── */
+  footer { background:var(--surface); border-top:1px solid var(--border); padding:3rem 2rem 2rem; }
+  .footer-inner { max-width:1100px; margin:0 auto; }
+  .footer-logo { display:flex; align-items:center; gap:10px; margin-bottom:1.5rem; text-decoration:none; }
+  .footer-logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; }
+  .footer-logo-bg img { height:22px; filter:brightness(0) invert(1); }
+  .footer-logo-name { font-size:14px; font-weight:700; color:var(--text); }
+  .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:2rem; margin-bottom:2rem; }
+  .footer-col h4 { font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; }
+  .footer-col a { display:block; color:var(--text-dim); text-decoration:none; font-size:14px; margin-bottom:0.5rem; }
+  .footer-col a:hover { color:var(--green); }
+  .footer-bottom { border-top:1px solid var(--border); padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+  .footer-bottom p { font-size:13px; color:var(--muted); }
+  .footer-bottom a { color:var(--muted); text-decoration:none; }
+  .footer-bottom a:hover { color:var(--green); }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:768px) {
+    nav { padding:0 1rem; }
+    .nav-links { display:none; }
+    .hero { padding:3rem 1rem 2rem; }
+    section { padding:3rem 1rem; }
+    .stats-bar { gap:1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-bg">
+      <img src="https://stealthx.tech/logo.png" alt="StealthX">
+    </div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-brand">StealthX</span>
+      <span class="nav-logo-app">SecureChat</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#security">Security</a>
+    <a href="#compare">Compare</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#ifr">IFR Token</a>
+    <a href="wiki/">Wiki</a>
+    <a href="https://github.com/NeaBouli/securechat">GitHub</a>
+    <a href="#download" class="cta">Download</a>
+  </div>
+</nav>
+
+<!-- STATUS -->
+<div class="status-bar">
+  <span class="dot"></span>
+  🛠 IN DEVELOPMENT — Pre-Alpha &nbsp;·&nbsp; Part of the <a href="https://stealthx.tech" style="color:var(--cyan)">StealthX Platform</a> &nbsp;·&nbsp; <a href="https://github.com/NeaBouli/securechat/issues" style="color:var(--muted)">Report bugs →</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">DECENTRALIZED · ENCRYPTED · ZERO METADATA</div>
+  <h1 class="hero-title">Classified <span>Messaging.</span></h1>
+  <p class="hero-sub">
+    The only encrypted messenger with no phone number, no server, no account —
+    and no metadata. Built on Kaspa BlockDAG for true decentralization.
+    Your conversations exist only on your devices.
+  </p>
+  <div class="hero-tags">
+    <span class="tag green">GPL-3.0 Open Source</span>
+    <span class="tag cyan">XChaCha20-Poly1305</span>
+    <span class="tag">Double Ratchet</span>
+    <span class="tag">Kaspa Layer 1</span>
+    <span class="tag">Zero Server</span>
+  </div>
+  <div class="hero-btns">
+    <a href="#download" class="btn btn-primary">Download for Android</a>
+    <a href="https://github.com/NeaBouli/securechat" class="btn btn-secondary">View Source</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat"><span class="stat-value">XChaCha20</span><span class="stat-label">Encryption</span></div>
+  <div class="stat"><span class="stat-value">0</span><span class="stat-label">Metadata Stored</span></div>
+  <div class="stat"><span class="stat-value">0</span><span class="stat-label">Central Servers</span></div>
+  <div class="stat"><span class="stat-value">Kotlin</span><span class="stat-label">Android Native</span></div>
+  <div class="stat"><span class="stat-value">Kaspa</span><span class="stat-label">Identity Layer</span></div>
+</div>
+
+<hr class="divider">
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Capabilities</div>
+  <h2 class="section-title">Tactical security, not empty promises.</h2>
+  <p class="section-sub">Every architectural decision puts your privacy first. No compromises, no backdoors, no exceptions.</p>
+
+  <div class="badge-grid">
+    <div class="badge"><span class="badge-icon">🔐</span> No phone number required</div>
+    <div class="badge"><span class="badge-icon">💥</span> STEALTH-DELETE</div>
+    <div class="badge"><span class="badge-icon">⛓</span> Kaspa Identity Layer</div>
+    <div class="badge"><span class="badge-icon">🔑</span> Lifetime via IFR Token</div>
+    <div class="badge"><span class="badge-icon">📦</span> GPL-3.0 Open Source</div>
+    <div class="badge"><span class="badge-icon">🦎</span> Chameleon Overlay Compatible</div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <h3>End-to-End Encryption</h3>
+      <p>XChaCha20-Poly1305 AEAD with X25519 key exchange. Every message gets a unique session key. We can never read your messages.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⛓</div>
+      <h3>Kaspa Identity Layer</h3>
+      <p>Your public key is anchored once to the Kaspa BlockDAG. Decentralized identity without a central server. Your identity is yours forever.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
+      <h3>Double Ratchet Forward Secrecy</h3>
+      <p>Signal-grade Double Ratchet protocol. Compromising one key exposes nothing about past or future messages. Every message is independent.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📡</div>
+      <h3>Zero Server Architecture</h3>
+      <p>Messages route through ephemeral Kaspa relay nodes — incentivized with KAS micropayments. No central server to hack, subpoena, or censor.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌐</div>
+      <h3>Group Messaging</h3>
+      <p>Encrypted group chats with per-member key derivation. No group server. Group state lives on Kaspa. Members join via QR or NFC.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💥</div>
+      <h3>STEALTH-DELETE</h3>
+      <p>5-tap instant wipe destroys all messages, keys, and contacts. The app resets to factory state in under a second. Leave no trace.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📎</div>
+      <h3>Encrypted File Transfer</h3>
+      <p>Send files encrypted end-to-end via Kaspa XFTP protocol. Files are chunked, encrypted, and deleted from relay after delivery.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🦎</div>
+      <h3>Chameleon Integration</h3>
+      <p>Works natively with Chameleon Privacy OS. Automatic encryption based on your security rules. One ecosystem, total privacy.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔑</div>
+      <h3>IFR Token Lifetime Access</h3>
+      <p>Lock IFR tokens on-chain for lifetime Pro or Elite access. No subscriptions. No renewals. Your tokens stay yours.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="section-label">Architecture</div>
+  <h2 class="section-title">How SecureChat works.</h2>
+  <p class="section-sub">Three independent layers. Zero central authority. Every component is replaceable and auditable.</p>
+
+  <div class="arch-diagram">
+<span class="hl">SecureChat Architecture — StealthX Platform</span>
+<span class="dim">────────────────────────────────────────────────────────</span>
+
+<span class="cyan">LAYER 1 — Identity (Kaspa BlockDAG)</span>
+  <span class="hl">KaspaIdentityManager</span>    ← Public key anchored on-chain (once)
+  <span class="hl">ContactDiscovery</span>         ← Find contacts by Kaspa address
+  <span class="hl">NodeIncentives</span>           ← KAS micropayments to relay operators
+  <span class="dim">No message content on-chain. Only identity hashes.</span>
+
+<span class="cyan">LAYER 2 — Transport (Ephemeral Relay Nodes)</span>
+  <span class="hl">EphemeralRelayPool</span>       ← Community-operated, KAS-incentivized
+  <span class="hl">SMP-style Queues</span>         ← Unidirectional, anonymous message queues
+  <span class="hl">OnionRouting</span>             ← 2-hop routing, IP protected
+  <span class="dim">Relay sees only encrypted blobs. Deleted after delivery.</span>
+
+<span class="cyan">LAYER 3 — Crypto (Device-side, lazysodium)</span>
+  <span class="hl">XChaCha20Poly1305</span>        ← Symmetric encryption (24-byte nonce)
+  <span class="hl">X25519 ECDH</span>              ← Key exchange (ephemeral per-session)
+  <span class="hl">DoubleRatchet</span>            ← Forward secrecy + break-in recovery
+  <span class="hl">Argon2id</span>                 ← Password-based key derivation
+  <span class="gold">Android Keystore</span>         ← Hardware-backed key storage (StrongBox)
+
+<span class="dim">────────────────────────────────────────────────────────</span>
+<span class="hl">StealthX Platform compatibility:</span>
+  SecureCall   ← shared XChaCha20 + X25519 stack
+  Chameleon    ← overlay encryption for SecureChat messages
+  IFR Token    ← unified lifetime access across all products
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SECURITY -->
+<section id="security">
+  <div class="section-label">Classified</div>
+  <h2 class="section-title">Cryptographic specifications.</h2>
+  <p class="section-sub">We don't ask for trust. We provide proof. Every claim is auditable in source code.</p>
+
+  <table class="crypto-table">
+    <thead>
+      <tr><th>Layer</th><th>Algorithm</th><th>Specification</th><th>Library</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Symmetric Encryption</td><td>XChaCha20-Poly1305</td><td>256-bit key, 192-bit nonce, AEAD</td><td>lazysodium-android</td></tr>
+      <tr><td>Key Exchange</td><td>X25519 ECDH</td><td>Curve25519 Diffie-Hellman, ephemeral</td><td>lazysodium-android</td></tr>
+      <tr><td>Forward Secrecy</td><td>Double Ratchet</td><td>HKDF-SHA256 ratchet, RFC 5869</td><td>lazysodium-android</td></tr>
+      <tr><td>Identity Signing</td><td>Ed25519</td><td>64-byte signatures, key bundles</td><td>lazysodium-android</td></tr>
+      <tr><td>Key Derivation</td><td>Argon2id</td><td>64MB memory, 3 iterations, 4 threads</td><td>lazysodium-android</td></tr>
+      <tr><td>Key Storage</td><td>Android Keystore</td><td>StrongBox/TEE, per-use auth</td><td>Android API 26+</td></tr>
+      <tr><td>Identity Layer</td><td>Kaspa BlockDAG</td><td>GHOSTDAG, PoW, 10 BPS</td><td>kaspa-wasm32-sdk</td></tr>
+      <tr><td>Message Padding</td><td>PKCS7-style</td><td>256-byte block boundaries</td><td>Custom</td></tr>
+    </tbody>
+  </table>
+
+  <br>
+  <div class="code-block">
+<span class="cm">// core_crypto — XChaCha20-Poly1305 message encryption</span>
+<span class="kw">fun</span> <span class="fn">encrypt</span>(plaintext: ByteArray, key: ByteArray, aad: ByteArray): EncryptedPayload {
+    <span class="kw">val</span> padded = padToBlock(plaintext)           <span class="cm">// 256-byte blocks</span>
+    <span class="kw">val</span> nonce  = sodium.randomBytesBuf(<span class="fn">24</span>)       <span class="cm">// fresh every time</span>
+    <span class="kw">val</span> cipher = ByteArray(padded.size + <span class="fn">16</span>)     <span class="cm">// +16 Poly1305 tag</span>
+    sodium.cryptoAeadXChaCha20Poly1305IetfEncrypt(
+        cipher, null, padded, padded.size.toLong(),
+        aad, aad.size.toLong(), null, nonce, key
+    )
+    wipeBytes(padded)
+    <span class="kw">return</span> EncryptedPayload(cipher, nonce, aad, <span class="fn">"XChaCha20-Poly1305"</span>, <span class="fn">1</span>)
+}
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- COMPARE -->
+<section id="compare">
+  <div class="section-label">Benchmark</div>
+  <h2 class="section-title">Why SecureChat?</h2>
+  <p class="section-sub">The only encrypted messenger with decentralized identity, no server, and blockchain-native architecture.</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th class="ours">SecureChat</th>
+        <th>Signal</th>
+        <th>SimpleX</th>
+        <th>Telegram</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>No phone number required</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✓</td><td class="no">✗</td></tr>
+      <tr><td>No central server</td><td class="ours">✓</td><td class="no">✗</td><td class="warn">⚠️</td><td class="no">✗</td></tr>
+      <tr><td>Decentralized identity</td><td class="ours">✓ Kaspa</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Double Ratchet E2E</td><td class="ours">✓</td><td class="ours">✓</td><td class="ours">✓</td><td class="warn">⚠️ opt-in</td></tr>
+      <tr><td>XChaCha20-Poly1305</td><td class="ours">✓</td><td class="no">✗ AES</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>STEALTH-DELETE</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Blockchain identity anchor</td><td class="ours">✓ Kaspa</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>IFR Token lifetime access</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Chameleon overlay compatible</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>GPL-3.0 Open Source</td><td class="ours">✓</td><td class="ours">✓</td><td class="ours">✓</td><td class="no">✗</td></tr>
+      <tr><td>Zero metadata</td><td class="ours">✓</td><td class="warn">⚠️</td><td class="ours">✓</td><td class="no">✗</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<hr class="divider">
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="section-label">Mission Timeline</div>
+  <h2 class="section-title">Development Roadmap.</h2>
+  <p class="section-sub">From architecture to decentralized deployment. Each phase builds on the last.</p>
+
+  <div class="roadmap">
+    <div class="roadmap-item done">
+      <div class="phase-badge">PHASE 0 — DONE</div>
+      <div class="roadmap-content">
+        <h3>Foundation — Crypto Stack & Architecture Design</h3>
+        <p>XChaCha20-Poly1305 + Double Ratchet + Argon2id. StealthX platform architecture. IFR Token integration design. Threat model.</p>
+      </div>
+    </div>
+    <div class="roadmap-item active">
+      <div class="phase-badge">PHASE 1 — ACTIVE</div>
+      <div class="roadmap-content">
+        <h3>Android App — Core Messaging (Pre-Alpha)</h3>
+        <p>Local E2E encrypted messenger. QR + NFC key exchange. X25519 key management. Room + SQLCipher local storage. Basic UI.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="phase-badge">PHASE 2 — Q3 2026</div>
+      <div class="roadmap-content">
+        <h3>Kaspa Identity Layer Integration</h3>
+        <p>Public key anchoring on Kaspa BlockDAG. Contact discovery by Kaspa address. Ephemeral relay node protocol (SMP-style). KAS micropayment incentives.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="phase-badge">PHASE 3 — Q4 2026</div>
+      <div class="roadmap-content">
+        <h3>Group Messaging + File Transfer</h3>
+        <p>Encrypted group chats. XFTP-style file transfer. Onion routing for transport anonymity. Kaspa relay node network launch.</p>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="phase-badge">PHASE 4 — 2027</div>
+      <div class="roadmap-content">
+        <h3>StealthX Layer 1 Migration + iOS</h3>
+        <p>Full migration to StealthX Layer 1 protocol. iOS client (shared Rust crypto core). External security audit. F-Droid + Play Store release.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- IFR -->
+<section id="ifr">
+  <div class="section-label">Inferno Integration</div>
+  <h2 class="section-title">IFR Lifetime Unlock.</h2>
+  <p class="section-sub">Lock IFR tokens once. Unlock forever. Works across all StealthX products — one lock, lifetime benefit.</p>
+
+  <div class="tier-grid">
+    <div class="tier-card">
+      <div class="tier-name">Free</div>
+      <div class="tier-lock"><span>0 IFR</span> — forever</div>
+      <ul class="tier-features">
+        <li>E2E encrypted messaging</li>
+        <li>10 contacts</li>
+        <li>QR key exchange</li>
+        <li>STEALTH-DELETE</li>
+        <li>Basic security warnings</li>
+      </ul>
+    </div>
+    <div class="tier-card featured">
+      <div class="tier-name" style="color:var(--green)">Pro</div>
+      <div class="tier-lock">Lock <span>≥ 2,000 IFR</span> — lifetime</div>
+      <ul class="tier-features">
+        <li>Everything in Free</li>
+        <li>Unlimited contacts</li>
+        <li>Group messaging</li>
+        <li>Encrypted file transfer</li>
+        <li>Kaspa identity anchor</li>
+        <li>Chameleon integration</li>
+        <li>Priority relay routing</li>
+      </ul>
+    </div>
+    <div class="tier-card">
+      <div class="tier-name" style="color:var(--gold)">Elite</div>
+      <div class="tier-lock">Lock <span>≥ 6,000 IFR</span> — lifetime</div>
+      <ul class="tier-features">
+        <li>Everything in Pro</li>
+        <li>Onion routing (3-hop)</li>
+        <li>Decoy chat profiles</li>
+        <li>Advanced threat detection</li>
+        <li>Zero telemetry</li>
+        <li>Run your own relay node</li>
+        <li>Early access to features</li>
+      </ul>
+    </div>
+  </div>
+
+  <br>
+  <p style="font-size:13px; color:var(--muted); text-align:center;">
+    IFR Lock contract: <code style="color:var(--cyan); font-size:12px;">0x769928aBDfc949D0718d8766a1C2d7dBb63954Eb</code> (Ethereum Mainnet)
+    &nbsp;·&nbsp; <a href="https://ifrunit.tech" style="color:var(--green)">Learn more at ifrunit.tech →</a>
+  </p>
+</section>
+
+<hr class="divider">
+
+<!-- DOWNLOAD -->
+<section id="download" style="text-align:center;">
+  <div class="section-label">Deploy</div>
+  <h2 class="section-title">Ready to secure your comms?</h2>
+  <p class="section-sub" style="margin:0 auto 2rem;">SecureChat is in active development. Pre-alpha builds available on GitHub.</p>
+
+  <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
+    <a href="https://github.com/NeaBouli/securechat/releases" class="btn btn-primary" style="opacity:0.6; cursor:not-allowed;">APK — Coming Q3 2026</a>
+    <a href="https://github.com/NeaBouli/securechat" class="btn btn-secondary">View Source on GitHub</a>
+  </div>
+  <p style="font-size:13px; color:var(--muted);">Requires Android 8.0+ · GPL-3.0 Open Source · No account required</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a class="footer-logo" href="/">
+      <div class="footer-logo-bg">
+        <img src="https://stealthx.tech/logo.png" alt="StealthX">
+      </div>
+      <span class="footer-logo-name">SecureChat</span>
+    </a>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#security">Security</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#download">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="wiki/">Wiki</a>
+        <a href="wiki/architecture.html">Architecture</a>
+        <a href="wiki/security-design.html">Security Design</a>
+        <a href="wiki/roadmap.html">Full Roadmap</a>
+      </div>
+      <div class="footer-col">
+        <h4>StealthX Platform</h4>
+        <a href="https://stealthx.tech">SecureCall</a>
+        <a href="https://github.com/NeaBouli/chameleon">Chameleon</a>
+        <a href="https://ifrunit.tech">IFR Token</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="https://github.com/NeaBouli/securechat/blob/main/LICENSE">License (GPL-3.0)</a>
+        <a href="https://github.com/NeaBouli/securechat/blob/main/SECURITY.md">Security Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Vendetta Labs — Greece &nbsp;|&nbsp; SecureChat is a product of the <a href="https://stealthx.tech">StealthX Platform</a></p>
+      <p>GPL-3.0 · <a href="https://github.com/NeaBouli/securechat">github.com/NeaBouli/securechat</a></p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

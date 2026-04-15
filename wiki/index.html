@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureChat Wiki — Intel Database</title>
+<link rel="icon" type="image/png" href="../logo.png">
+<style>
+  :root { --bg:#0a0a0f; --surface:#0d1b2a; --surface2:#1b2a3b; --border:#1e3a52; --cyan:#00d4ff; --green:#00ff88; --green-dim:#00c96d; --muted:#8899aa; --text:#e8edf2; --text-dim:#b0bec5; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; display:flex; min-height:100vh; }
+  nav.topbar { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,15,0.97); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 1.5rem; gap:1rem; z-index:100; }
+  nav.topbar a { color:var(--muted); text-decoration:none; font-size:13px; }
+  nav.topbar a:hover { color:var(--green); }
+  nav.topbar .logo { display:flex; align-items:center; gap:8px; text-decoration:none; margin-right:auto; }
+  nav.topbar .logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; }
+  nav.topbar .logo-bg img { height:20px; filter:brightness(0) invert(1); }
+  nav.topbar .logo-name { font-size:14px; font-weight:700; color:var(--text); }
+  aside { width:240px; flex-shrink:0; border-right:1px solid var(--border); padding:80px 0 2rem; position:fixed; top:0; bottom:0; overflow-y:auto; background:var(--surface); }
+  aside h4 { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:1rem 1.5rem 0.4rem; }
+  aside a { display:block; padding:7px 1.5rem; font-size:13px; color:var(--text-dim); text-decoration:none; border-left:2px solid transparent; }
+  aside a:hover, aside a.active { color:var(--green); border-left-color:var(--green); background:rgba(0,255,136,0.05); }
+  main { margin-left:240px; padding:80px 3rem 3rem; max-width:860px; flex:1; }
+  .wiki-label { font-size:10px; letter-spacing:2px; color:var(--green); text-transform:uppercase; margin-bottom:0.8rem; }
+  h1 { font-size:2rem; font-weight:800; margin-bottom:0.5rem; }
+  .meta { font-size:13px; color:var(--muted); margin-bottom:2.5rem; }
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-bottom:2.5rem; }
+  .wiki-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.4rem; text-decoration:none; transition:border-color .2s; display:block; }
+  .wiki-card:hover { border-color:var(--green); }
+  .wiki-card-type { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--green); margin-bottom:0.5rem; }
+  .wiki-card h3 { font-size:14px; font-weight:700; color:var(--text); margin-bottom:0.4rem; }
+  .wiki-card p { font-size:12px; color:var(--muted); line-height:1.5; }
+  table { width:100%; border-collapse:collapse; margin:1rem 0 2rem; }
+  th { background:var(--surface2); padding:10px 14px; text-align:left; font-size:12px; color:var(--cyan); border:1px solid var(--border); letter-spacing:1px; text-transform:uppercase; }
+  td { padding:10px 14px; border:1px solid var(--border); font-size:13px; color:var(--text-dim); }
+  td:first-child { color:var(--text); font-weight:600; }
+  @media(max-width:768px) { aside { display:none; } main { margin-left:0; padding:70px 1.2rem 2rem; } }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="logo" href="../">
+    <div class="logo-bg"><img src="https://stealthx.tech/logo.png" alt="StealthX"></div>
+    <span class="logo-name">SecureChat</span>
+  </a>
+  <a href="../">← Back to Main Site</a>
+  <a href="https://github.com/NeaBouli/securechat">GitHub</a>
+</nav>
+
+<aside>
+  <h4>Getting Started</h4>
+  <a href="index.html" class="active">Overview</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="security-design.html">Security Design</a>
+  <a href="roadmap.html">Roadmap</a>
+
+  <h4>Developer</h4>
+  <a href="kaspa-integration.html">Kaspa Integration</a>
+  <a href="crypto-protocol.html">Crypto Protocol</a>
+  <a href="ifr-unlock.html">IFR Unlock</a>
+  <a href="build-instructions.html">Build Instructions</a>
+
+  <h4>Project</h4>
+  <a href="../privacy.html">Privacy Policy</a>
+  <a href="https://github.com/NeaBouli/securechat/blob/main/SECURITY.md">Security Policy</a>
+  <a href="https://github.com/NeaBouli/securechat/blob/main/CONTRIBUTING.md">Contributing</a>
+</aside>
+
+<main>
+  <div class="wiki-label">SecureChat Intel Database</div>
+  <h1>Documentation Hub</h1>
+  <p class="meta">Architecture · Security · Developer Reference · Pre-Alpha Stage</p>
+
+  <h2 style="font-size:1.1rem; margin-bottom:1rem; color:var(--cyan)">Getting Started</h2>
+  <div class="card-grid">
+    <a class="wiki-card" href="architecture.html">
+      <div class="wiki-card-type">Architecture</div>
+      <h3>System Architecture</h3>
+      <p>3-layer design: Kaspa identity, ephemeral relays, device-side crypto.</p>
+    </a>
+    <a class="wiki-card" href="security-design.html">
+      <div class="wiki-card-type">Security</div>
+      <h3>Security Design</h3>
+      <p>XChaCha20, Double Ratchet, Argon2id, Keystore — full spec.</p>
+    </a>
+    <a class="wiki-card" href="roadmap.html">
+      <div class="wiki-card-type">Project</div>
+      <h3>Roadmap</h3>
+      <p>Phase 0–4 development timeline. Current status and next milestones.</p>
+    </a>
+    <a class="wiki-card" href="ifr-unlock.html">
+      <div class="wiki-card-type">Integration</div>
+      <h3>IFR Token Unlock</h3>
+      <p>Lock IFR for lifetime Pro or Elite. On-chain verification guide.</p>
+    </a>
+  </div>
+
+  <h2 style="font-size:1.1rem; margin-bottom:1rem; color:var(--cyan)">Project Status</h2>
+  <table>
+    <thead><tr><th>Component</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Crypto Stack (XChaCha20 + DR)</td><td style="color:var(--green)">✅ Designed</td><td>Aligned with SecureCall + Chameleon</td></tr>
+      <tr><td>Android App Scaffold</td><td style="color:var(--green)">✅ In Progress</td><td>Based on Chameleon architecture</td></tr>
+      <tr><td>Kaspa Identity Layer</td><td style="color:var(--cyan)">🔨 Design Phase</td><td>Phase 2 — Q3 2026</td></tr>
+      <tr><td>Relay Node Protocol</td><td style="color:var(--muted)">⏳ Planned</td><td>Inspired by SimpleX SMP</td></tr>
+      <tr><td>IFR Token Integration</td><td style="color:var(--green)">✅ Designed</td><td>Same contract as SecureCall/Chameleon</td></tr>
+      <tr><td>External Security Audit</td><td style="color:var(--muted)">⏳ Pre-Release</td><td>Trail of Bits recommended</td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:13px; color:var(--muted);">
+    SecureChat is a <strong style="color:var(--text)">StealthX Platform</strong> product.
+    Built by <a href="https://github.com/NeaBouli" style="color:var(--green)">NeaBouli</a> · GPL-3.0
+  </p>
+</main>
+
+</body>
+</html>

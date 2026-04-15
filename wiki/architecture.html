@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureChat — Architecture</title>
+<link rel="icon" type="image/png" href="../logo.png">
+<style>
+  :root { --bg:#0a0a0f; --surface:#0d1b2a; --surface2:#1b2a3b; --border:#1e3a52; --cyan:#00d4ff; --green:#00ff88; --gold:#ffb800; --muted:#8899aa; --text:#e8edf2; --text-dim:#b0bec5; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; display:flex; min-height:100vh; }
+  nav.topbar { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,15,0.97); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 1.5rem; gap:1rem; z-index:100; }
+  nav.topbar a { color:var(--muted); text-decoration:none; font-size:13px; }
+  nav.topbar a:hover { color:var(--green); }
+  nav.topbar .logo { display:flex; align-items:center; gap:8px; text-decoration:none; margin-right:auto; }
+  nav.topbar .logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; }
+  nav.topbar .logo-bg img { height:20px; filter:brightness(0) invert(1); }
+  nav.topbar .logo-name { font-size:14px; font-weight:700; color:var(--text); }
+  aside { width:240px; flex-shrink:0; border-right:1px solid var(--border); padding:80px 0 2rem; position:fixed; top:0; bottom:0; overflow-y:auto; background:var(--surface); }
+  aside h4 { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:1rem 1.5rem 0.4rem; }
+  aside a { display:block; padding:7px 1.5rem; font-size:13px; color:var(--text-dim); text-decoration:none; border-left:2px solid transparent; }
+  aside a:hover, aside a.active { color:var(--green); border-left-color:var(--green); background:rgba(0,255,136,0.05); }
+  main { margin-left:240px; padding:80px 3rem 3rem; max-width:860px; flex:1; }
+  h1 { font-size:2rem; font-weight:800; margin-bottom:0.5rem; }
+  h2 { font-size:1.3rem; font-weight:700; color:var(--cyan); margin:2rem 0 1rem; }
+  h3 { font-size:1rem; font-weight:700; color:var(--text); margin:1.5rem 0 0.6rem; }
+  p { font-size:14px; color:var(--text-dim); line-height:1.7; margin-bottom:1rem; }
+  .meta { font-size:13px; color:var(--muted); margin-bottom:2rem; }
+  .arch { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.8rem; font-family:monospace; font-size:13px; line-height:1.9; overflow-x:auto; margin:1rem 0 2rem; }
+  .arch .hl { color:var(--green); }
+  .arch .dim { color:var(--border); }
+  .arch .cy { color:var(--cyan); }
+  .arch .go { color:var(--gold); }
+  .arch .mu { color:var(--muted); }
+  .layer { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.5rem; margin:1rem 0; }
+  .layer-num { font-size:11px; color:var(--green); letter-spacing:1px; text-transform:uppercase; margin-bottom:0.4rem; }
+  .layer h3 { margin:0 0 0.6rem; font-size:1rem; }
+  ul { list-style:none; padding:0; }
+  ul li { font-size:14px; color:var(--text-dim); padding:4px 0; display:flex; gap:8px; }
+  ul li::before { content:'→'; color:var(--green); flex-shrink:0; }
+  @media(max-width:768px) { aside { display:none; } main { margin-left:0; padding:70px 1.2rem 2rem; } }
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a class="logo" href="../">
+    <div class="logo-bg"><img src="https://stealthx.tech/logo.png" alt="StealthX"></div>
+    <span class="logo-name">SecureChat</span>
+  </a>
+  <a href="index.html">← Wiki</a>
+  <a href="https://github.com/NeaBouli/securechat">GitHub</a>
+</nav>
+<aside>
+  <h4>Getting Started</h4>
+  <a href="index.html">Overview</a>
+  <a href="architecture.html" class="active">Architecture</a>
+  <a href="security-design.html">Security Design</a>
+  <a href="roadmap.html">Roadmap</a>
+  <h4>Developer</h4>
+  <a href="kaspa-integration.html">Kaspa Integration</a>
+  <a href="crypto-protocol.html">Crypto Protocol</a>
+  <a href="ifr-unlock.html">IFR Unlock</a>
+  <a href="build-instructions.html">Build Instructions</a>
+  <h4>Project</h4>
+  <a href="../privacy.html">Privacy Policy</a>
+</aside>
+<main>
+  <h1>System Architecture</h1>
+  <p class="meta">Classification: Technical · Last updated: April 2026</p>
+
+  <p>SecureChat uses a 3-layer architecture that separates identity, transport, and cryptography into independent, replaceable components. No single layer has access to all information.</p>
+
+  <div class="arch">
+<span class="hl">SecureChat — Full Architecture</span>
+<span class="dim">═══════════════════════════════════════════════════════</span>
+
+<span class="cy">LAYER 1 — IDENTITY (Kaspa BlockDAG)</span>
+<span class="dim">───────────────────────────────────</span>
+  <span class="hl">KaspaIdentityManager</span>
+    ├── Public key anchored once on-chain (Kaspa tx)
+    ├── ContactDiscovery by Kaspa address
+    ├── KeyBundle signed with Ed25519 (in Keystore)
+    └── No message content ever touches the chain
+
+  <span class="hl">NodeIncentives</span>
+    ├── Relay operators earn KAS micropayments
+    ├── Community-operated, permissionless
+    └── Anyone can run a relay node
+
+<span class="cy">LAYER 2 — TRANSPORT (Ephemeral Relay Nodes)</span>
+<span class="dim">────────────────────────────────────────────</span>
+  <span class="hl">SMP-style Message Queues</span>
+    ├── Unidirectional queues (sender cannot see recipient ID)
+    ├── Unique queue ID per connection pair
+    ├── Messages deleted immediately after delivery
+    └── Server never sees plaintext — only encrypted blobs
+
+  <span class="hl">Onion Routing (2-hop)</span>
+    ├── Sender IP hidden from recipient's relay
+    ├── Recipient IP hidden from sender's relay
+    └── No single relay knows both parties
+
+<span class="cy">LAYER 3 — CRYPTO (Device-side only)</span>
+<span class="dim">────────────────────────────────────</span>
+  <span class="hl">ChameleonCrypto (lazysodium)</span>
+    ├── XChaCha20-Poly1305 — symmetric encryption
+    ├── X25519 ECDH — key exchange (ephemeral per-session)
+    ├── Double Ratchet — forward secrecy
+    ├── Ed25519 — identity signing
+    └── Argon2id — password key derivation
+
+  <span class="go">Android Keystore</span>
+    ├── StrongBox (Titan M) — preferred
+    ├── TEE — fallback
+    └── Private keys NEVER leave the chip
+
+<span class="dim">═══════════════════════════════════════════════════════</span>
+<span class="hl">StealthX Platform Integration</span>
+  SecureCall   <span class="mu">← shared XChaCha20 + X25519 stack</span>
+  Chameleon    <span class="mu">← overlay encryption for SecureChat messages</span>
+  IFR Token    <span class="mu">← unified lifetime access, same contract</span>
+  </div>
+
+  <h2>Layer 1 — Kaspa Identity</h2>
+  <div class="layer">
+    <div class="layer-num">Identity Layer</div>
+    <h3>Why Kaspa?</h3>
+    <p>Traditional messengers use phone numbers or email as identity — both require a central authority. Kaspa's BlockDAG allows anchoring a public key once as a transaction, creating a decentralized, server-free identity that you own permanently.</p>
+    <ul>
+      <li>10 blocks per second — fast enough for identity operations</li>
+      <li>PoW security — same model as Bitcoin, no stake requirements</li>
+      <li>Minimal fees — identity anchor costs fractions of a cent</li>
+      <li>No smart contracts needed — simple UTXO transactions suffice</li>
+      <li>Community run — no single company controls the network</li>
+    </ul>
+  </div>
+
+  <h2>Layer 2 — Transport</h2>
+  <div class="layer">
+    <div class="layer-num">Transport Layer</div>
+    <h3>Ephemeral Relay Nodes</h3>
+    <p>Inspired by SimpleX's SMP protocol. Message queues are unidirectional — the relay knows a queue exists but not who is communicating. Messages are deleted immediately after delivery. Relay operators are incentivized with KAS micropayments.</p>
+    <ul>
+      <li>No user accounts on relay — only anonymous queue IDs</li>
+      <li>Separate queue IDs for each contact pair</li>
+      <li>2-hop onion routing hides both parties' IPs</li>
+      <li>Anyone can run a relay — permissionless network</li>
+      <li>Minimal server storage — messages gone after delivery</li>
+    </ul>
+  </div>
+
+  <h2>Layer 3 — Device Crypto</h2>
+  <div class="layer">
+    <div class="layer-num">Crypto Layer</div>
+    <h3>All crypto happens on your device</h3>
+    <p>The relay never sees plaintext. The Kaspa chain never sees message content. All cryptographic operations use lazysodium (libsodium wrapper), the same library used by SecureCall and Chameleon — one audited stack across the entire StealthX platform.</p>
+    <ul>
+      <li>XChaCha20-Poly1305: 192-bit nonce eliminates IV reuse risk</li>
+      <li>Double Ratchet: break-in recovery + forward secrecy</li>
+      <li>Message padding to 256-byte blocks — prevents size analysis</li>
+      <li>Keys generated on-device, stored in Android Keystore hardware</li>
+      <li>STEALTH-DELETE wipes all keys and messages in under 1 second</li>
+    </ul>
+  </div>
+</main>
+</body>
+</html>
