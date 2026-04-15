@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="SecureChat relay architecture: Tor Hidden Services, 2-hop onion routing, Kaspa node registry, and decentralization roadmap.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="NeaBouli / StealthX Platform">
+<meta name="theme-color" content="#00ff88">
+<link rel="canonical" href="https://securechat.stealthx.tech/wiki/relay-architecture.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="SecureChat">
+<meta property="og:title" content="Relay Architecture — SecureChat Wiki">
+<title>Relay Architecture — SecureChat Wiki</title><link rel="icon" type="image/png" href="../logo.png"><style>:root{--bg:#0a0a0f;--surface:#0d1b2a;--surface2:#1b2a3b;--border:#1e3a52;--cyan:#00d4ff;--green:#00ff88;--gold:#ffb800;--orange:#ff6b35;--muted:#8899aa;--text:#e8edf2;--text-dim:#b0bec5}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;display:flex;min-height:100vh}nav.topbar{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(10,10,15,.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;z-index:100}nav.topbar a{color:var(--muted);text-decoration:none;font-size:13px}nav.topbar a:hover{color:var(--green)}nav.topbar .logo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-right:auto}.logo-bg{background:var(--green);border-radius:6px;padding:3px 7px}.logo-bg img{height:20px;}.logo-name{font-size:14px;font-weight:700;color:var(--text)}aside{width:240px;flex-shrink:0;border-right:1px solid var(--border);padding:80px 0 2rem;position:fixed;top:0;bottom:0;overflow-y:auto;background:var(--surface)}aside h4{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:1rem 1.5rem .4rem}aside a{display:block;padding:7px 1.5rem;font-size:13px;color:var(--text-dim);text-decoration:none;border-left:2px solid transparent}aside a:hover,aside a.active{color:var(--green);border-left-color:var(--green);background:rgba(0,255,136,.05)}main{margin-left:240px;padding:80px 3rem 3rem;max-width:860px;flex:1}h1{font-size:2rem;font-weight:800;margin-bottom:.5rem}h2{font-size:1.1rem;font-weight:700;color:var(--cyan);margin:2rem 0 1rem}h3{font-size:0.95rem;font-weight:700;color:var(--green);margin:1.5rem 0 0.5rem}p{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:1rem}pre{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.2rem;font-size:12px;font-family:'JetBrains Mono',monospace;overflow-x:auto;margin:1rem 0;color:var(--text-dim)}table{width:100%;border-collapse:collapse;margin:1rem 0}th,td{text-align:left;padding:8px 12px;border:1px solid var(--border);font-size:13px}th{background:var(--surface);color:var(--muted);font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:1px}td{color:var(--text-dim)}.warn{background:rgba(255,184,0,0.08);border:1px solid rgba(255,184,0,0.2);border-radius:8px;padding:1rem;margin:1rem 0;font-size:13px;color:var(--gold)}@media(max-width:768px){aside{display:none}main{margin-left:0;padding:70px 1.2rem 2rem}}</style></head><body>
+<nav class="topbar"><a class="logo" href="../"><div class="logo-bg"><img src="https://stealthx.tech/logo.png" alt="StealthX"></div><span class="logo-name">SecureChat</span></a><a href="index.html">&larr; Wiki</a><a href="https://github.com/NeaBouli/securechat">GitHub</a></nav>
+<aside><h4>Getting Started</h4><a href="index.html">Overview</a><a href="architecture.html">Architecture</a><a href="security-design.html">Security Design</a><a href="roadmap.html">Roadmap</a><h4>Developer</h4><a href="relay-architecture.html" class="active">Relay Architecture</a><a href="ifr-unlock.html">IFR Unlock</a><h4>Project</h4><a href="../privacy.html">Privacy Policy</a></aside>
+<main>
+<h1>Relay Architecture</h1>
+<p class="meta" style="font-size:13px;color:var(--muted);margin-bottom:2rem;">Based on StealthX Relay Architecture Handbook v1.0 &middot; April 2026</p>
+
+<h2>The Problem</h2>
+<p>Even with perfect E2E encryption, third-party relays can expose metadata: who communicates with whom, when, how long, and from which IP address. Encryption protects the content &mdash; not the communication structure.</p>
+
+<h2>Current Architecture</h2>
+<table>
+<tr><th>Component</th><th>Function</th><th>Risk Level</th></tr>
+<tr><td>Kaspa Identity Layer</td><td>Public key anchor on BlockDAG</td><td style="color:var(--green)">Low (decentralized)</td></tr>
+<tr><td>Ephemeral Relay Pool</td><td>Message forwarding</td><td style="color:var(--orange)">Medium (relay sees sender IP)</td></tr>
+<tr><td>SMP-style Queues</td><td>Unidirectional anonymous queues</td><td style="color:var(--orange)">Medium (queue server is central)</td></tr>
+<tr><td>KAS Micropayments</td><td>Relay operator incentives</td><td style="color:var(--green)">Low (decentralized)</td></tr>
+</table>
+
+<h2>Threat Model</h2>
+<table>
+<tr><th>Level</th><th>Adversary</th><th>Protection Status</th></tr>
+<tr><td>L1</td><td>Passive Observer (network sniffing)</td><td style="color:var(--green)">Achieved (E2E)</td></tr>
+<tr><td>L2</td><td>Active Relay Operator (IP, timing)</td><td style="color:var(--orange)">Partial</td></tr>
+<tr><td>L3</td><td>State-Level Adversary (global observation)</td><td style="color:var(--cyan)">Target of this roadmap</td></tr>
+</table>
+
+<h2>Solution: Tor Hidden Services + Onion Routing</h2>
+
+<h3>Phase 2 (Q3 2026) &mdash; Tor for Relay Nodes</h3>
+<p>All relay nodes operate as .onion Hidden Services. Clients connect via Tor SOCKS5 proxy. Neither client IP nor relay IP is visible to third parties.</p>
+<pre>
+// Android: tor-android library
+dependencies {
+    implementation 'info.guardianproject:tor-android:0.4.8.12'
+    implementation 'info.guardianproject:jtorctl:0.4.5.7'
+}
+
+// Proxy-Socket for OkHttp via Tor-SOCKS5
+val torProxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress("127.0.0.1", 9050))
+val client = OkHttpClient.Builder().proxy(torProxy).build()
+
+// .onion address of the relay node
+val relayEndpoint = "http://xxxxxxxxxxxxxxxx.onion/queue"
+</pre>
+
+<h3>Kaspa Node-Registry On-Chain</h3>
+<p>Relay nodes register their X25519 public keys and .onion addresses directly on the Kaspa BlockDAG via OP_RETURN transactions &mdash; trustless, decentralized, immutably traceable.</p>
+<table>
+<tr><th>Component</th><th>Kaspa Integration</th></tr>
+<tr><td>Node-Registry</td><td>X25519 PubKey in Kaspa OP_RETURN Tx</td></tr>
+<tr><td>Node-Reputation</td><td>KAS deposit as stake (Sybil protection)</td></tr>
+<tr><td>Node-Payment</td><td>KAS micropayment per forwarded message</td></tr>
+<tr><td>Node-Selection</td><td>Client randomly selects 2 nodes from registry</td></tr>
+</table>
+
+<h3>Phase 2 &mdash; 2-Hop Onion Routing (Pro Tier)</h3>
+<pre>
+ONION ROUTING FLOW (2-Hop):
+
+Layer 3 (outer):  Enc(PubKey_Node_A)[Enc(PubKey_Node_B)[Enc(PubKey_Bob)[Message]]]
+
+  Alice --encrypt(A,B,Bob)--> Node_A
+    Node_A removes outer layer. Knows: Alice sends to Node_B. Does NOT know: Bob.
+
+  Node_A ----------------------> Node_B
+    Node_B removes second layer. Knows: Node_A has something for Bob. Does NOT know: Alice.
+
+  Node_B ----------------------> Bob
+    Bob decrypts. Knows: Message is from Alice. Cannot trace which nodes.
+</pre>
+
+<h3>Phase 3 (Q4 2026) &mdash; Advanced Privacy</h3>
+<ul style="list-style:none;padding:0;">
+<li style="font-size:14px;color:var(--text-dim);padding:5px 0;display:flex;gap:8px;"><span style="color:var(--green);">&rarr;</span> 3-hop Onion Routing for Elite tier (maximum anonymity)</li>
+<li style="font-size:14px;color:var(--text-dim);padding:5px 0;display:flex;gap:8px;"><span style="color:var(--green);">&rarr;</span> Cover Traffic: dummy packets at regular intervals against traffic analysis</li>
+<li style="font-size:14px;color:var(--text-dim);padding:5px 0;display:flex;gap:8px;"><span style="color:var(--green);">&rarr;</span> Pluggable Transports: obfs4/Snowflake for users in censored regions</li>
+</ul>
+
+<h2>Crypto Stack Compatibility</h2>
+<p>The entire SecureChat crypto stack is transport-agnostic. XChaCha20-Poly1305, X25519, Double Ratchet work identically over Tor, direct P2P, or internal onion routing. <strong>No changes to the crypto core required.</strong></p>
+
+<div class="warn">Security Audit Required: Internal onion routing (Phase 3) must pass an external security audit before release. Recommended auditor: Trail of Bits.</div>
+
+<h2>Long-Term: Nym Mixnet (2027+)</h2>
+<p>Nym provides timing obfuscation beyond Tor &mdash; packets are delayed and mixed with dummy traffic. Currently too immature for Android production. Monitoring recommended. Roadmap candidate for 2027+.</p>
+
+</main></body></html>
