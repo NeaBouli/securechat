@@ -652,9 +652,9 @@
   const input = document.getElementById('chatInput');
   if (!msgs) return;
   const conversation = [
-    { text:'Meeting at 5pm tomorrow', garbled:'m#8kT!ng @t 5p& t0m$rr%w' },
-    { text:'Send me the documents', garbled:'S#nd m\u20ACe th\u20AC d0\u00A9um\u20ACnt$' },
-    { text:'Location: Central Park', garbled:'L0\u00A9@t!0n: C\u20ACntr@l P@rk' },
+    { text:'Meeting at 5pm tomorrow', garbled:'\u16A0\u2593\u0416\u25CA\u03A8\u2234 \u04D8\u2660 \u0E17\u16B1\u2021 \u03BE\u2591\u25A0\u04E8\u16C7\u2593\u0416' },
+    { text:'Send me the documents', garbled:'\u2592\u03A3\u16B9\u25CA \u04D8\u2660 \u0E17\u16A0\u2593 \u0416\u25CA\u03A8\u2021\u2592\u04D8\u2660\u03BE\u2591' },
+    { text:'Location: Central Park', garbled:'\u16C7\u2593\u0416\u25CA\u04E8\u16B1\u2234: \u0E17\u03A8\u2021\u2592\u16A0\u04D8\u2660 \u03BE\u16B9\u25A0\u0416' },
   ];
   let i = 0;
   function showNext() {
