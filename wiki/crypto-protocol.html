@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SecureChat crypto protocol specification: XChaCha20-Poly1305, X25519, Double Ratchet, Argon2id, Ed25519, Android Keystore.">
+<meta name="keywords" content="SecureChat, crypto protocol, XChaCha20, X25519, Double Ratchet, Argon2id, Ed25519, lazysodium">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="NeaBouli / StealthX Platform">
+<meta name="theme-color" content="#00ff88">
+<meta name="geo.region" content="GR">
+<meta name="language" content="English">
+<link rel="canonical" href="https://securechat.stealthx.tech/wiki/crypto-protocol.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="SecureChat">
+<meta property="og:title" content="SecureChat Crypto Protocol Specification">
+<meta property="og:description" content="SecureChat crypto protocol specification: XChaCha20-Poly1305, X25519, Double Ratchet, Argon2id, Ed25519, Android Keystore.">
+<meta property="og:url" content="https://securechat.stealthx.tech/wiki/crypto-protocol.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SecureChat Crypto Protocol Specification">
+<title>SecureChat Crypto Protocol Specification</title>
+<link rel="icon" type="image/png" href="../logo.png">
+<style>
+  :root { --bg:#0a0a0f; --surface:#0d1b2a; --surface2:#1b2a3b; --border:#1e3a52; --cyan:#00d4ff; --green:#00ff88; --gold:#ffb800; --muted:#8899aa; --text:#e8edf2; --text-dim:#b0bec5; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; display:flex; min-height:100vh; }
+  nav.topbar { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,15,0.97); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 1.5rem; gap:1rem; z-index:100; }
+  nav.topbar a { color:var(--muted); text-decoration:none; font-size:13px; }
+  nav.topbar a:hover { color:var(--green); }
+  nav.topbar .logo { display:flex; align-items:center; gap:8px; text-decoration:none; margin-right:auto; }
+  nav.topbar .logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; }
+  nav.topbar .logo-bg img { height:20px;  }
+  nav.topbar .logo-name { font-size:14px; font-weight:700; color:var(--text); }
+  aside { width:240px; flex-shrink:0; border-right:1px solid var(--border); padding:80px 0 2rem; position:fixed; top:0; bottom:0; overflow-y:auto; background:var(--surface); }
+  aside h4 { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:1rem 1.5rem 0.4rem; }
+  aside a { display:block; padding:7px 1.5rem; font-size:13px; color:var(--text-dim); text-decoration:none; border-left:2px solid transparent; }
+  aside a:hover, aside a.active { color:var(--green); border-left-color:var(--green); background:rgba(0,255,136,0.05); }
+  main { margin-left:240px; padding:80px 3rem 3rem; max-width:860px; flex:1; }
+  h1 { font-size:2rem; font-weight:800; margin-bottom:0.5rem; }
+  h2 { font-size:1.3rem; font-weight:700; color:var(--cyan); margin:2rem 0 1rem; }
+  h3 { font-size:1rem; font-weight:700; color:var(--text); margin:1.5rem 0 0.6rem; }
+  p { font-size:14px; color:var(--text-dim); line-height:1.7; margin-bottom:1rem; }
+  .meta { font-size:13px; color:var(--muted); margin-bottom:2rem; }
+  .arch { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.8rem; font-family:monospace; font-size:13px; line-height:1.9; overflow-x:auto; margin:1rem 0 2rem; }
+  .arch .hl { color:var(--green); }
+  .arch .dim { color:var(--border); }
+  .arch .cy { color:var(--cyan); }
+  .arch .go { color:var(--gold); }
+  .arch .mu { color:var(--muted); }
+  .layer { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.5rem; margin:1rem 0; }
+  .layer-num { font-size:11px; color:var(--green); letter-spacing:1px; text-transform:uppercase; margin-bottom:0.4rem; }
+  .layer h3 { margin:0 0 0.6rem; font-size:1rem; }
+  ul { list-style:none; padding:0; }
+  ul li { font-size:14px; color:var(--text-dim); padding:4px 0; display:flex; gap:8px; }
+  ul li::before { content:'->'; color:var(--green); flex-shrink:0; }
+  @media(max-width:768px) { aside { display:none; } main { margin-left:0; padding:70px 1.2rem 2rem; } }
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a class="logo" href="../">
+    <div class="logo-bg"><img src="https://stealthx.tech/logo.png" alt="StealthX"></div>
+    <span class="logo-name">SecureChat</span>
+  </a>
+  <a href="index.html">← Wiki</a>
+  <a href="https://github.com/NeaBouli/securechat">GitHub</a>
+</nav>
+<aside>
+  <h4>Getting Started</h4>
+  <a href="index.html">Overview</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="security-design.html">Security Design</a>
+  <a href="roadmap.html">Roadmap</a>
+  <h4>Developer</h4>
+  <a href="kaspa-integration.html">Kaspa Integration</a>
+  <a href="crypto-protocol.html" class="active">Crypto Protocol</a>
+  <a href="ifr-unlock.html">IFR Unlock</a>
+  <a href="build-instructions.html">Build Instructions</a>
+  <h4>Project</h4>
+  <a href="../privacy.html">Privacy Policy</a>
+</aside>
+<main>
+  <h1>Crypto Protocol Specification</h1>
+  <p class="meta">Classification: Technical · Last updated: April 2026</p>
+
+  <p>SecureChat's entire cryptographic stack runs on a single library: <strong>lazysodium-android</strong> (libsodium wrapper for Android). No AES-GCM. No BouncyCastle. No custom crypto. One audited library for all operations across the StealthX platform.</p>
+
+  <h2>XChaCha20-Poly1305 — Symmetric Encryption</h2>
+  <div class="layer">
+    <div class="layer-num">Symmetric Cipher</div>
+    <h3>Algorithm</h3>
+    <p>XChaCha20-Poly1305 AEAD (Authenticated Encryption with Associated Data). All message content, attachments, and metadata are encrypted with this cipher before leaving the device.</p>
+    <ul>
+      <li><strong>Key size:</strong> 256-bit</li>
+      <li><strong>Nonce size:</strong> 192-bit (extended nonce eliminates IV reuse risk)</li>
+      <li><strong>Auth tag:</strong> 128-bit Poly1305 MAC</li>
+      <li><strong>Library:</strong> lazysodium-android (crypto_aead_xchacha20poly1305_ietf)</li>
+      <li><strong>Purpose:</strong> Encrypt all message payloads, file attachments, and local database</li>
+    </ul>
+  </div>
+
+  <h2>X25519 ECDH — Key Exchange</h2>
+  <div class="layer">
+    <div class="layer-num">Key Exchange</div>
+    <h3>Algorithm</h3>
+    <p>X25519 Elliptic-Curve Diffie-Hellman for ephemeral key agreement. Each session generates fresh key pairs so that compromise of one session does not affect others.</p>
+    <ul>
+      <li><strong>Curve:</strong> Curve25519</li>
+      <li><strong>Key size:</strong> 256-bit (32 bytes)</li>
+      <li><strong>Shared secret:</strong> 256-bit, fed into HKDF for session keys</li>
+      <li><strong>Library:</strong> lazysodium-android (crypto_kx / crypto_scalarmult)</li>
+      <li><strong>Purpose:</strong> Derive shared secrets for symmetric encryption without transmitting keys</li>
+    </ul>
+  </div>
+
+  <h2>Double Ratchet — Forward Secrecy</h2>
+  <div class="layer">
+    <div class="layer-num">Ratchet Protocol</div>
+    <h3>Algorithm</h3>
+    <p>Double Ratchet protocol combining a Diffie-Hellman ratchet with a symmetric-key ratchet. Every message uses a unique key. Compromise of a single message key cannot decrypt past or future messages.</p>
+    <ul>
+      <li><strong>DH ratchet:</strong> X25519 key pair rotated on each reply</li>
+      <li><strong>Symmetric ratchet:</strong> HMAC-based key derivation chain</li>
+      <li><strong>Message keys:</strong> Unique per message, deleted after decryption</li>
+      <li><strong>Library:</strong> lazysodium-android (crypto_kx + crypto_auth)</li>
+      <li><strong>Purpose:</strong> Forward secrecy and break-in recovery — past messages stay safe even if current keys leak</li>
+    </ul>
+  </div>
+
+  <h2>Argon2id — Key Derivation</h2>
+  <div class="layer">
+    <div class="layer-num">KDF</div>
+    <h3>Algorithm</h3>
+    <p>Argon2id password-based key derivation function. Used to derive encryption keys from user passwords for local database encryption and backup protection.</p>
+    <ul>
+      <li><strong>Variant:</strong> Argon2id (hybrid: side-channel resistant + GPU resistant)</li>
+      <li><strong>Memory:</strong> 256 MB</li>
+      <li><strong>Iterations:</strong> 3</li>
+      <li><strong>Parallelism:</strong> 4</li>
+      <li><strong>Output:</strong> 256-bit key</li>
+      <li><strong>Library:</strong> lazysodium-android (crypto_pwhash)</li>
+      <li><strong>Purpose:</strong> Derive encryption keys from user passwords for local storage and backup encryption</li>
+    </ul>
+  </div>
+
+  <h2>Ed25519 — Digital Signatures</h2>
+  <div class="layer">
+    <div class="layer-num">Signing</div>
+    <h3>Algorithm</h3>
+    <p>Ed25519 for identity signing. Each device generates an Ed25519 key pair that signs key bundles, identity proofs, and Kaspa-anchored public keys.</p>
+    <ul>
+      <li><strong>Curve:</strong> Edwards25519</li>
+      <li><strong>Key size:</strong> 256-bit (32-byte seed, 64-byte signature)</li>
+      <li><strong>Deterministic:</strong> Same message + key always produces the same signature</li>
+      <li><strong>Library:</strong> lazysodium-android (crypto_sign_ed25519)</li>
+      <li><strong>Purpose:</strong> Sign identity key bundles, verify contact authenticity, sign Kaspa identity anchors</li>
+    </ul>
+  </div>
+
+  <h2>Android Keystore — Hardware Key Storage</h2>
+  <div class="layer">
+    <div class="layer-num">Hardware Security</div>
+    <h3>Platform</h3>
+    <p>Long-term private keys are stored in Android Keystore hardware. Keys are generated inside the secure element and never leave the chip — not even the OS can extract them.</p>
+    <ul>
+      <li><strong>Preferred:</strong> StrongBox (Titan M / SE) — dedicated tamper-resistant hardware</li>
+      <li><strong>Fallback:</strong> TEE (Trusted Execution Environment) — isolated ARM TrustZone</li>
+      <li><strong>Key types stored:</strong> Ed25519 identity key, X25519 long-term key</li>
+      <li><strong>Extraction:</strong> Impossible — private keys never leave the hardware</li>
+      <li><strong>Library:</strong> Android Keystore API + lazysodium-android for operations</li>
+      <li><strong>Purpose:</strong> Tamper-proof storage of identity and long-term cryptographic keys</li>
+    </ul>
+  </div>
+
+  <h2>Design Principles</h2>
+  <div class="layer">
+    <div class="layer-num">Philosophy</div>
+    <h3>Single Library Policy</h3>
+    <p>The entire SecureChat crypto stack uses one library: <strong>lazysodium-android</strong>. This is the same library used by SecureCall and Chameleon across the StealthX platform. One audited stack means fewer attack surfaces, consistent behavior, and simpler security reviews.</p>
+    <ul>
+      <li>No AES-GCM — XChaCha20-Poly1305 is safer (192-bit nonce vs 96-bit)</li>
+      <li>No BouncyCastle — too large, too many legacy algorithms</li>
+      <li>No custom crypto — every primitive comes from libsodium</li>
+      <li>Single library: lazysodium-android — one dependency to audit</li>
+      <li>Message padding to 256-byte blocks prevents traffic analysis</li>
+    </ul>
+  </div>
+</main>
+</body>
+</html>

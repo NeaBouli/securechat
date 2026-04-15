@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ — SecureChat</title>
+<meta name="description" content="Frequently asked questions about SecureChat: encryption, privacy, pricing, Chameleon, and more.">
+<meta name="keywords" content="SecureChat FAQ, encrypted messaging, XChaCha20, privacy, Chameleon, IFR Token, pricing">
+<meta name="robots" content="index, follow">
+<meta name="author" content="NeaBouli / StealthX Platform">
+<meta name="copyright" content="© 2026 Vendetta Labs">
+<meta name="theme-color" content="#00ff88">
+<link rel="canonical" href="https://securechat.stealthx.tech/faq.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SecureChat">
+<meta property="og:title" content="FAQ — SecureChat">
+<meta property="og:description" content="Everything you need to know about SecureChat encrypted messaging, Chameleon, and the StealthX Platform.">
+<meta property="og:url" content="https://securechat.stealthx.tech/faq.html">
+<meta property="og:image" content="https://securechat.stealthx.tech/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FAQ — SecureChat">
+<meta name="twitter:description" content="Everything you need to know about SecureChat encrypted messaging, Chameleon, and the StealthX Platform.">
+<meta name="twitter:image" content="https://securechat.stealthx.tech/logo.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is SecureChat?","acceptedAnswer":{"@type":"Answer","text":"SecureChat is a decentralized, end-to-end encrypted messaging app. No phone number, no server, no metadata. Built on Kaspa identity with XChaCha20-Poly1305 encryption."}},{"@type":"Question","name":"Can you read my messages?","acceptedAnswer":{"@type":"Answer","text":"No. Messages are encrypted on your device before they leave. We never have the keys. It is technically impossible for us to read your messages."}},{"@type":"Question","name":"Is SecureChat free?","acceptedAnswer":{"@type":"Answer","text":"Yes. The core app is free forever. Pro is a one-time payment of 9 euros. Elite is 19 euros. No subscriptions."}}]}</script>
+<style>
+  :root {
+    --bg:        #0a0a0f;
+    --surface:   #0d1b2a;
+    --surface2:  #1b2a3b;
+    --border:    #1e3a52;
+    --cyan:      #00d4ff;
+    --green:     #00ff88;
+    --green-dim: #00c96d;
+    --gold:      #ffb800;
+    --red:       #ff3b3b;
+    --orange:    #ff6b35;
+    --muted:     #8899aa;
+    --text:      #e8edf2;
+    --text-dim:  #b0bec5;
+    --logo-glow: rgba(0,255,136,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.6; }
+
+  /* ── NAV ── */
+  nav { position:sticky; top:0; z-index:100; background:rgba(10,10,15,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px; }
+  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .nav-logo-bg { background:var(--green); border-radius:8px; padding:4px 8px; display:flex; align-items:center; box-shadow:0 0 16px var(--logo-glow); overflow:visible; }
+  .nav-logo-bg img { height:39px; width:auto; margin:-4px -2px; }
+  .nav-logo-text { display:flex; flex-direction:column; }
+  .nav-logo-brand { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+  .nav-logo-app { font-size:16px; font-weight:700; color:var(--text); letter-spacing:0.5px; }
+  .nav-links { display:flex; align-items:center; gap:0.2rem; flex-wrap:wrap; }
+  .nav-links a { color:var(--muted); text-decoration:none; padding:6px 10px; border-radius:6px; font-size:13px; font-weight:500; transition:all .2s; white-space:nowrap; }
+  .nav-links a:hover { color:var(--cyan); background:rgba(0,212,255,0.08); }
+  .nav-links a.active { color:var(--cyan); background:rgba(0,212,255,0.08); }
+  .nav-links a.cta { background:var(--green); color:#000; font-weight:700; padding:7px 14px; }
+  .nav-links a.cta:hover { background:var(--green-dim); color:#000; }
+
+  /* ── SECTIONS ── */
+  section { padding:4rem 2rem; max-width:1100px; margin:0 auto; }
+  .section-label { font-size:11px; font-weight:700; letter-spacing:3px; color:var(--green); text-transform:uppercase; margin-bottom:1rem; }
+  .section-title { font-size:clamp(1.8rem,3vw,2.4rem); font-weight:800; margin-bottom:1rem; }
+  .section-sub { color:var(--text-dim); max-width:600px; margin-bottom:3rem; line-height:1.7; }
+  hr.divider { border:none; border-top:1px solid var(--border); margin:0; }
+
+  /* ── FAQ ── */
+  .faq-content { max-width:800px; margin:0 auto; padding:4rem 2rem; }
+  .faq-content h1 { font-size:clamp(2rem,4vw,3rem); font-weight:800; margin-bottom:0.5rem; }
+  .faq-content .page-meta { color:var(--text-dim); font-size:1.1rem; margin-bottom:3rem; }
+  .faq-content h2 { font-size:1.3rem; font-weight:800; color:var(--green); margin:3rem 0 1.2rem; letter-spacing:0.5px; }
+  .faq-content h2:first-of-type { margin-top:0; }
+  .faq-list { display:flex; flex-direction:column; gap:0; }
+  .faq-item { border-bottom:1px solid var(--border); }
+  .faq-question { width:100%; background:none; border:none; color:var(--text); font-size:15px; font-weight:600; padding:1.2rem 0; text-align:left; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:1rem; font-family:inherit; line-height:1.4; }
+  .faq-question svg { width:20px; height:20px; flex-shrink:0; transition:transform .2s; color:var(--muted); }
+  .faq-question:hover { color:var(--cyan); }
+  .faq-answer { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  .faq-answer-inner { padding:0 0 1.2rem; font-size:14px; color:var(--text-dim); line-height:1.8; }
+  .faq-answer-inner a { color:var(--green); text-decoration:none; }
+  .faq-answer-inner a:hover { text-decoration:underline; }
+  .faq-answer-inner strong { color:var(--text); }
+  .faq-item.open .faq-question svg { transform:rotate(180deg); }
+  .faq-item.open .faq-answer { max-height:500px; }
+  .back-link { display:inline-block; color:var(--muted); text-decoration:none; font-size:14px; margin-bottom:2rem; }
+  .back-link:hover { color:var(--green); }
+
+  /* ── FOOTER ── */
+  footer { background:var(--surface); border-top:1px solid var(--border); padding:3rem 2rem 2rem; }
+  .footer-inner { max-width:1100px; margin:0 auto; }
+  .footer-logo { display:flex; align-items:center; gap:10px; margin-bottom:1.5rem; text-decoration:none; }
+  .footer-logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; overflow:visible; }
+  .footer-logo-bg img { height:31px; margin:-3px -2px; }
+  .footer-logo-name { font-size:14px; font-weight:700; color:var(--text); }
+  .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:2rem; margin-bottom:2rem; }
+  .footer-col h4 { font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; }
+  .footer-col a { display:block; color:var(--text-dim); text-decoration:none; font-size:14px; margin-bottom:0.5rem; }
+  .footer-col a:hover { color:var(--green); }
+  .footer-bottom { border-top:1px solid var(--border); padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+  .footer-bottom p { font-size:13px; color:var(--muted); }
+  .footer-bottom a { color:var(--muted); text-decoration:none; }
+  .footer-bottom a:hover { color:var(--green); }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:768px) {
+    nav { padding:0 1rem; }
+    .nav-links { display:none; }
+    .faq-content { padding:3rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="nav-logo-bg">
+      <img src="https://stealthx.tech/logo.png" alt="StealthX">
+    </div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-brand">StealthX</span>
+      <span class="nav-logo-app">SecureChat</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/#features">Features</a>
+    <a href="/#security">Security</a>
+    <a href="/#compare">Compare</a>
+    <a href="/#ifr">IFR Token</a>
+    <a href="faq.html" class="active">FAQ</a>
+    <a href="wiki/">Wiki</a>
+    <a href="https://github.com/NeaBouli/securechat">GitHub</a>
+    <a href="https://stealthx.tech" target="_blank" rel="noopener">SecureCall &#8599;</a>
+    <a href="chameleon.html" style="color:var(--green);font-weight:700;">Chameleon</a>
+    <a href="/#download" class="cta">Download</a>
+  </div>
+</nav>
+
+<!-- FAQ CONTENT -->
+<div class="faq-content">
+  <a href="/" class="back-link">&larr; Back to SecureChat</a>
+
+  <div class="section-label" style="margin-bottom:24px">CLASSIFIED</div>
+
+  <h1>Frequently Asked Questions</h1>
+  <p class="page-meta">Everything you need to know about SecureChat, Chameleon, and the StealthX Platform.</p>
+
+  <!-- ── General ──────────────────────────────────────── -->
+  <h2>General</h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question">
+        What is SecureChat?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          SecureChat is a messaging app that keeps your conversations truly private. Every message is encrypted on your phone before it leaves. We use XChaCha20-Poly1305 encryption &mdash; the same kind used by security professionals. Your identity is tied to Kaspa, a decentralized blockchain, not to your phone number. There is no central server. No one can read your messages. Not even us.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        Can you read my messages?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          No. This is not a promise &mdash; it is a technical fact. Messages are encrypted end-to-end. The encryption keys are created on your device and never leave it. We do not have them. We cannot hand them over to anyone, even if asked by a court. It is physically impossible for us to read your messages.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        Do I need a phone number?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          No. You do not need a phone number, email address, or any personal information. When you open SecureChat for the first time, it creates a unique identity on your phone. You share it with friends using a simple QR code. That is all it takes to connect. No sign-up. No account.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        Is SecureChat available yet?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          SecureChat is currently in Phase 1 pre-alpha. We are building and testing the core encryption and messaging engine. A public alpha for Android is planned for Q3 2026. You can follow progress on <a href="https://github.com/NeaBouli/securechat">GitHub</a> and join the discussion there.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        Is it open source?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Yes. SecureChat is fully open source under the GPL-3.0 license. Every line of code is public on <a href="https://github.com/NeaBouli/securechat">GitHub</a>. Anyone can inspect the encryption, verify there are no backdoors, and build the app from source. Transparency is not optional &mdash; it is how trust works.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Privacy & Data ───────────────────────────────── -->
+  <h2>Privacy &amp; Data</h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question">
+        What data do you collect?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Nothing. There is no server that stores your messages. Messages travel through decentralized relay nodes on the Kaspa network. Relay operators see only encrypted blobs &mdash; meaningless data. Once a message is delivered, it is deleted from the relay. We do not collect analytics, contacts, IP addresses, or any personal information. Ever.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        Do you comply with GDPR?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Yes. SecureChat is built by Vendetta Labs, based in Greece (EU). We comply fully with the EU General Data Protection Regulation. Since we collect virtually no personal data, most GDPR rights are satisfied by default. There is nothing to delete because we never stored anything in the first place.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        What about Chameleon data?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Chameleon has no internet permission. It cannot send data anywhere, even if it wanted to. Everything stays on your phone. Your rules, your encrypted files, your settings &mdash; all stored locally in an SQLCipher encrypted database. The source code is on <a href="https://github.com/NeaBouli/chameleon">GitHub</a> so you can verify this yourself.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Security ─────────────────────────────────────── -->
+  <h2>Security</h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question">
+        What encryption does SecureChat use?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Four layers working together. <strong>XChaCha20-Poly1305</strong> encrypts every message (256-bit, with a 192-bit nonce &mdash; virtually impossible to break). <strong>X25519</strong> handles the key exchange between you and your contact. The <strong>Double Ratchet</strong> protocol gives you forward secrecy &mdash; even if one key leaks, past messages stay safe. And <strong>Argon2id</strong> protects your local data with memory-hard key derivation. This is the same crypto stack used by SecureCall.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        What is onion routing?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Think of it like passing a sealed letter through strangers. Your message travels through 2 or 3 relay nodes before reaching its destination. Each node only knows who gave it the message and who to pass it to &mdash; never both the sender and the receiver. Pro users get 2-hop routing. Elite users get 3-hop routing. Nobody can trace the full path from you to your contact.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        What is STEALTH-DELETE?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Tap 5 times. Everything is gone in under a second. All messages, all keys, all contacts, all local data &mdash; wiped instantly from your device. No confirmation dialog. No undo. Designed for situations where you need your data to disappear immediately. It is like a self-destruct button for your entire chat history.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Pricing ──────────────────────────────────────── -->
+  <h2>Pricing</h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question">
+        Is SecureChat free?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Yes. The core app is free forever. End-to-end encryption, decentralized messaging, QR identity &mdash; all included at no cost. <strong>Pro</strong> costs &euro;9 lifetime (one-time, not a subscription). <strong>Elite</strong> costs &euro;19 lifetime. Pro adds 2-hop onion routing. Elite adds 3-hop routing and priority relay access. No monthly fees. Ever.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        What is the IFR Token?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          IFR is an Ethereum ERC-20 token. Instead of paying euros, you can lock IFR tokens on-chain to unlock lifetime access. Lock &ge;2,000 IFR for Pro. Lock &ge;6,000 IFR for Elite. Your tokens stay yours &mdash; they are locked, not spent. As long as they are locked, your access is active. One lock works across SecureChat, SecureCall, and Chameleon. Details: <a href="/#ifr">IFR Token</a>
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        What is the StealthX Suite?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          <strong>&euro;54 one-time</strong> or lock &ge;8,000 IFR &mdash; and you get everything. SecureCall Premium, SecureChat Elite, and Chameleon Elite. All products. All features. All tiers. Forever. No subscriptions, no renewals, no hidden costs. One payment, lifetime access to the entire StealthX Platform.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Chameleon ────────────────────────────────────── -->
+  <h2>Chameleon</h2>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question">
+        What is Chameleon?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          Chameleon is a privacy layer for your entire phone. It runs quietly in the background and encrypts text in any app &mdash; automatically. It uses Android's AccessibilityService to read what is on screen, encrypts it with XChaCha20-Poly1305, and puts the encrypted version back. Think of it as a Privacy OS that makes your messages invisible to anyone looking over your shoulder. It is part of the SecureChat ecosystem. <a href="chameleon.html">Learn more &rarr;</a>
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        Does Chameleon spy on me?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          No. Chameleon uses Android's AccessibilityService, but only locally on your device. It never connects to the internet. It has no internet permission at all. Everything it does stays on your phone. The full source code is available on <a href="https://github.com/NeaBouli/chameleon">GitHub</a> under GPL-3.0, so you can verify this claim yourself. We built it to protect you, not to watch you.
+        </div>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">
+        Do I need both SecureChat and Chameleon?
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">
+          No. Each app works perfectly on its own. SecureChat handles encrypted messaging. Chameleon handles overlay encryption across all apps. But together, they form a complete privacy layer. Chameleon can automatically protect your SecureChat conversations with an extra encryption layer, hide content when someone is looking, and switch to decoy mode based on your location. They are stronger together &mdash; but neither requires the other.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a class="footer-logo" href="/">
+      <div class="footer-logo-bg">
+        <img src="https://stealthx.tech/logo.png" alt="StealthX">
+      </div>
+      <span class="footer-logo-name">SecureChat</span>
+    </a>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="/#features">Features</a>
+        <a href="/#security">Security</a>
+        <a href="/#roadmap">Roadmap</a>
+        <a href="/#download">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="wiki/">Wiki</a>
+        <a href="wiki/architecture.html">Architecture</a>
+        <a href="wiki/security-design.html">Security Design</a>
+        <a href="wiki/roadmap.html">Full Roadmap</a>
+      </div>
+      <div class="footer-col">
+        <h4>StealthX Platform</h4>
+        <a href="https://stealthx.tech">SecureCall</a>
+        <a href="chameleon.html">Chameleon Privacy OS</a>
+        <a href="https://ifrunit.tech">IFR Token</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="https://github.com/NeaBouli/securechat/blob/main/LICENSE">License (GPL-3.0)</a>
+        <a href="https://github.com/NeaBouli/securechat/blob/main/SECURITY.md">Security Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Vendetta Labs &mdash; Greece &nbsp;|&nbsp; SecureChat is a product of the <a href="https://stealthx.tech">StealthX Platform</a></p>
+      <p>GPL-3.0 &middot; <a href="https://github.com/NeaBouli/securechat">github.com/NeaBouli/securechat</a></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var item = this.closest('.faq-item');
+    var wasOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+    // Toggle current
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+</script>
+
+</body>
+</html>

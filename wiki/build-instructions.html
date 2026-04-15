@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SecureChat build instructions: requirements, source code, and compilation steps for SecureChat and Chameleon.">
+<meta name="keywords" content="SecureChat, build, compile, Android Studio, JDK, Chameleon, source code">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="NeaBouli / StealthX Platform">
+<meta name="theme-color" content="#00ff88">
+<meta name="geo.region" content="GR">
+<meta name="language" content="English">
+<link rel="canonical" href="https://securechat.stealthx.tech/wiki/build-instructions.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="SecureChat">
+<meta property="og:title" content="SecureChat Build Instructions">
+<meta property="og:description" content="SecureChat build instructions: requirements, source code, and compilation steps for SecureChat and Chameleon.">
+<meta property="og:url" content="https://securechat.stealthx.tech/wiki/build-instructions.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SecureChat Build Instructions">
+<title>SecureChat Build Instructions</title>
+<link rel="icon" type="image/png" href="../logo.png">
+<style>
+  :root { --bg:#0a0a0f; --surface:#0d1b2a; --surface2:#1b2a3b; --border:#1e3a52; --cyan:#00d4ff; --green:#00ff88; --gold:#ffb800; --muted:#8899aa; --text:#e8edf2; --text-dim:#b0bec5; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; display:flex; min-height:100vh; }
+  nav.topbar { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,15,0.97); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 1.5rem; gap:1rem; z-index:100; }
+  nav.topbar a { color:var(--muted); text-decoration:none; font-size:13px; }
+  nav.topbar a:hover { color:var(--green); }
+  nav.topbar .logo { display:flex; align-items:center; gap:8px; text-decoration:none; margin-right:auto; }
+  nav.topbar .logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; }
+  nav.topbar .logo-bg img { height:20px;  }
+  nav.topbar .logo-name { font-size:14px; font-weight:700; color:var(--text); }
+  aside { width:240px; flex-shrink:0; border-right:1px solid var(--border); padding:80px 0 2rem; position:fixed; top:0; bottom:0; overflow-y:auto; background:var(--surface); }
+  aside h4 { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:1rem 1.5rem 0.4rem; }
+  aside a { display:block; padding:7px 1.5rem; font-size:13px; color:var(--text-dim); text-decoration:none; border-left:2px solid transparent; }
+  aside a:hover, aside a.active { color:var(--green); border-left-color:var(--green); background:rgba(0,255,136,0.05); }
+  main { margin-left:240px; padding:80px 3rem 3rem; max-width:860px; flex:1; }
+  h1 { font-size:2rem; font-weight:800; margin-bottom:0.5rem; }
+  h2 { font-size:1.3rem; font-weight:700; color:var(--cyan); margin:2rem 0 1rem; }
+  h3 { font-size:1rem; font-weight:700; color:var(--text); margin:1.5rem 0 0.6rem; }
+  p { font-size:14px; color:var(--text-dim); line-height:1.7; margin-bottom:1rem; }
+  .meta { font-size:13px; color:var(--muted); margin-bottom:2rem; }
+  .arch { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.8rem; font-family:monospace; font-size:13px; line-height:1.9; overflow-x:auto; margin:1rem 0 2rem; }
+  .arch .hl { color:var(--green); }
+  .arch .dim { color:var(--border); }
+  .arch .cy { color:var(--cyan); }
+  .arch .go { color:var(--gold); }
+  .arch .mu { color:var(--muted); }
+  .layer { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.5rem; margin:1rem 0; }
+  .layer-num { font-size:11px; color:var(--green); letter-spacing:1px; text-transform:uppercase; margin-bottom:0.4rem; }
+  .layer h3 { margin:0 0 0.6rem; font-size:1rem; }
+  ul { list-style:none; padding:0; }
+  ul li { font-size:14px; color:var(--text-dim); padding:4px 0; display:flex; gap:8px; }
+  ul li::before { content:'->'; color:var(--green); flex-shrink:0; }
+  code { background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:2px 6px; font-family:monospace; font-size:13px; color:var(--green); }
+  @media(max-width:768px) { aside { display:none; } main { margin-left:0; padding:70px 1.2rem 2rem; } }
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a class="logo" href="../">
+    <div class="logo-bg"><img src="https://stealthx.tech/logo.png" alt="StealthX"></div>
+    <span class="logo-name">SecureChat</span>
+  </a>
+  <a href="index.html">← Wiki</a>
+  <a href="https://github.com/NeaBouli/securechat">GitHub</a>
+</nav>
+<aside>
+  <h4>Getting Started</h4>
+  <a href="index.html">Overview</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="security-design.html">Security Design</a>
+  <a href="roadmap.html">Roadmap</a>
+  <h4>Developer</h4>
+  <a href="kaspa-integration.html">Kaspa Integration</a>
+  <a href="crypto-protocol.html">Crypto Protocol</a>
+  <a href="ifr-unlock.html">IFR Unlock</a>
+  <a href="build-instructions.html" class="active">Build Instructions</a>
+  <h4>Project</h4>
+  <a href="../privacy.html">Privacy Policy</a>
+</aside>
+<main>
+  <h1>Build Instructions</h1>
+  <p class="meta">Classification: Developer · Last updated: April 2026</p>
+
+  <p>SecureChat is currently a website and documentation project. The Android app source code will be published when Phase 1 development is complete (Q2-Q3 2026). In the meantime, you can build the Chameleon overlay encryption component from source.</p>
+
+  <h2>Requirements</h2>
+  <div class="layer">
+    <div class="layer-num">Prerequisites</div>
+    <h3>Development Environment</h3>
+    <p>The following tools are required to build SecureChat and Chameleon from source.</p>
+    <ul>
+      <li><strong>Android Studio</strong> — latest stable release (Hedgehog or newer)</li>
+      <li><strong>JDK 17</strong> — required by the Gradle build system</li>
+      <li><strong>Android SDK 26+</strong> — minimum API level (Android 8.0 Oreo)</li>
+      <li><strong>Gradle</strong> — bundled with the project via Gradle Wrapper</li>
+      <li><strong>Git</strong> — for cloning the repository</li>
+    </ul>
+  </div>
+
+  <h2>SecureChat</h2>
+  <div class="layer">
+    <div class="layer-num">Main Application</div>
+    <h3>Clone the Repository</h3>
+    <div class="arch">
+<span class="cy">$ git clone https://github.com/NeaBouli/securechat</span>
+<span class="cy">$ cd securechat</span>
+    </div>
+    <p><strong>Note:</strong> SecureChat is currently a website + documentation project. The Android app source code will be published when Phase 1 development is complete (Q2-Q3 2026). The repository currently contains the project website, wiki, privacy policy, and technical documentation.</p>
+  </div>
+
+  <h2>Chameleon</h2>
+  <div class="layer">
+    <div class="layer-num">Overlay Encryption</div>
+    <h3>Build from Source</h3>
+    <p>Chameleon is the overlay encryption component that provides an additional encryption layer for SecureChat messages. It can be built independently.</p>
+    <div class="arch">
+<span class="cy">$ git clone https://github.com/NeaBouli/chameleon</span>
+<span class="cy">$ cd chameleon</span>
+<span class="cy">$ ./gradlew assembleDebug</span>
+
+<span class="mu"># Output APK location:</span>
+<span class="hl">app/build/outputs/apk/debug/app-debug.apk</span>
+    </div>
+    <ul>
+      <li><strong>Debug build:</strong> <code>./gradlew assembleDebug</code></li>
+      <li><strong>Release build:</strong> <code>./gradlew assembleRelease</code> (requires signing key)</li>
+      <li><strong>Run tests:</strong> <code>./gradlew test</code></li>
+      <li><strong>Clean build:</strong> <code>./gradlew clean assembleDebug</code></li>
+    </ul>
+  </div>
+
+  <h2>Verification</h2>
+  <div class="layer">
+    <div class="layer-num">Security</div>
+    <h3>Verify Release Signatures</h3>
+    <p>All release builds are signed with the project's release key. You can verify the APK signature using Android's <code>apksigner</code> tool.</p>
+    <div class="arch">
+<span class="cy">$ apksigner verify --print-certs app-release.apk</span>
+    </div>
+    <ul>
+      <li>Compare the certificate fingerprint against the published fingerprint on GitHub</li>
+      <li>F-Droid builds are reproducible — you can verify that F-Droid's build matches the source</li>
+      <li>Never install APKs from untrusted sources — always verify signatures</li>
+    </ul>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="SecureChat Kaspa identity layer: decentralized identity anchoring, contact discovery, relay registry, and KAS micropayments.">
+<meta name="keywords" content="SecureChat, Kaspa, BlockDAG, identity, decentralized, OP_RETURN, X25519, relay nodes">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="NeaBouli / StealthX Platform">
+<meta name="theme-color" content="#00ff88">
+<meta name="geo.region" content="GR">
+<meta name="language" content="English">
+<link rel="canonical" href="https://securechat.stealthx.tech/wiki/kaspa-integration.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="SecureChat">
+<meta property="og:title" content="SecureChat Kaspa Identity Layer">
+<meta property="og:description" content="SecureChat Kaspa identity layer: decentralized identity anchoring, contact discovery, relay registry, and KAS micropayments.">
+<meta property="og:url" content="https://securechat.stealthx.tech/wiki/kaspa-integration.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SecureChat Kaspa Identity Layer">
+<title>SecureChat Kaspa Identity Layer</title>
+<link rel="icon" type="image/png" href="../logo.png">
+<style>
+  :root { --bg:#0a0a0f; --surface:#0d1b2a; --surface2:#1b2a3b; --border:#1e3a52; --cyan:#00d4ff; --green:#00ff88; --gold:#ffb800; --muted:#8899aa; --text:#e8edf2; --text-dim:#b0bec5; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,sans-serif; display:flex; min-height:100vh; }
+  nav.topbar { position:fixed; top:0; left:0; right:0; height:56px; background:rgba(10,10,15,0.97); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 1.5rem; gap:1rem; z-index:100; }
+  nav.topbar a { color:var(--muted); text-decoration:none; font-size:13px; }
+  nav.topbar a:hover { color:var(--green); }
+  nav.topbar .logo { display:flex; align-items:center; gap:8px; text-decoration:none; margin-right:auto; }
+  nav.topbar .logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; }
+  nav.topbar .logo-bg img { height:20px;  }
+  nav.topbar .logo-name { font-size:14px; font-weight:700; color:var(--text); }
+  aside { width:240px; flex-shrink:0; border-right:1px solid var(--border); padding:80px 0 2rem; position:fixed; top:0; bottom:0; overflow-y:auto; background:var(--surface); }
+  aside h4 { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:1rem 1.5rem 0.4rem; }
+  aside a { display:block; padding:7px 1.5rem; font-size:13px; color:var(--text-dim); text-decoration:none; border-left:2px solid transparent; }
+  aside a:hover, aside a.active { color:var(--green); border-left-color:var(--green); background:rgba(0,255,136,0.05); }
+  main { margin-left:240px; padding:80px 3rem 3rem; max-width:860px; flex:1; }
+  h1 { font-size:2rem; font-weight:800; margin-bottom:0.5rem; }
+  h2 { font-size:1.3rem; font-weight:700; color:var(--cyan); margin:2rem 0 1rem; }
+  h3 { font-size:1rem; font-weight:700; color:var(--text); margin:1.5rem 0 0.6rem; }
+  p { font-size:14px; color:var(--text-dim); line-height:1.7; margin-bottom:1rem; }
+  .meta { font-size:13px; color:var(--muted); margin-bottom:2rem; }
+  .arch { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.8rem; font-family:monospace; font-size:13px; line-height:1.9; overflow-x:auto; margin:1rem 0 2rem; }
+  .arch .hl { color:var(--green); }
+  .arch .dim { color:var(--border); }
+  .arch .cy { color:var(--cyan); }
+  .arch .go { color:var(--gold); }
+  .arch .mu { color:var(--muted); }
+  .layer { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.5rem; margin:1rem 0; }
+  .layer-num { font-size:11px; color:var(--green); letter-spacing:1px; text-transform:uppercase; margin-bottom:0.4rem; }
+  .layer h3 { margin:0 0 0.6rem; font-size:1rem; }
+  ul { list-style:none; padding:0; }
+  ul li { font-size:14px; color:var(--text-dim); padding:4px 0; display:flex; gap:8px; }
+  ul li::before { content:'->'; color:var(--green); flex-shrink:0; }
+  @media(max-width:768px) { aside { display:none; } main { margin-left:0; padding:70px 1.2rem 2rem; } }
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a class="logo" href="../">
+    <div class="logo-bg"><img src="https://stealthx.tech/logo.png" alt="StealthX"></div>
+    <span class="logo-name">SecureChat</span>
+  </a>
+  <a href="index.html">← Wiki</a>
+  <a href="https://github.com/NeaBouli/securechat">GitHub</a>
+</nav>
+<aside>
+  <h4>Getting Started</h4>
+  <a href="index.html">Overview</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="security-design.html">Security Design</a>
+  <a href="roadmap.html">Roadmap</a>
+  <h4>Developer</h4>
+  <a href="kaspa-integration.html" class="active">Kaspa Integration</a>
+  <a href="crypto-protocol.html">Crypto Protocol</a>
+  <a href="ifr-unlock.html">IFR Unlock</a>
+  <a href="build-instructions.html">Build Instructions</a>
+  <h4>Project</h4>
+  <a href="../privacy.html">Privacy Policy</a>
+</aside>
+<main>
+  <h1>Kaspa Identity Layer</h1>
+  <p class="meta">Classification: Technical · Status: Phase 2 (Q3 2026) — in design · Last updated: April 2026</p>
+
+  <p>SecureChat uses the Kaspa BlockDAG as a decentralized identity layer. Instead of phone numbers or email addresses, your cryptographic public key is anchored on-chain — giving you a permanent, self-sovereign identity that no company can revoke.</p>
+
+  <h2>Why Kaspa</h2>
+  <div class="layer">
+    <div class="layer-num">Network Choice</div>
+    <h3>BlockDAG Advantages</h3>
+    <p>Kaspa's BlockDAG architecture provides the ideal properties for a decentralized identity system: fast finality, low cost, and battle-tested Proof-of-Work security without requiring stake or validators.</p>
+    <ul>
+      <li><strong>10 blocks per second</strong> — fast enough for real-time identity operations and key rotation</li>
+      <li><strong>Proof-of-Work security</strong> — same trust model as Bitcoin, no stake requirements or validator sets</li>
+      <li><strong>Minimal fees</strong> — identity anchor transaction costs fractions of a cent</li>
+      <li><strong>No smart contracts needed</strong> — simple UTXO transactions with OP_RETURN suffice</li>
+      <li><strong>Community operated</strong> — no single company controls the network</li>
+      <li><strong>GHOSTDAG protocol</strong> — parallel blocks mean no orphans, no wasted work</li>
+    </ul>
+  </div>
+
+  <h2>Identity Anchoring</h2>
+  <div class="layer">
+    <div class="layer-num">On-Chain Identity</div>
+    <h3>X25519 Public Key in OP_RETURN</h3>
+    <p>When a user creates a SecureChat identity, their X25519 public key is embedded in a Kaspa transaction's OP_RETURN field. This creates a permanent, timestamped, tamper-proof record of the public key bound to a Kaspa address.</p>
+    <ul>
+      <li><strong>One-time anchor:</strong> Public key is written to the chain once during setup</li>
+      <li><strong>OP_RETURN payload:</strong> X25519 public key (32 bytes) + Ed25519 signature</li>
+      <li><strong>Kaspa address = identity:</strong> Your Kaspa address becomes your SecureChat ID</li>
+      <li><strong>Key rotation:</strong> New anchor transaction with previous key's signature as proof</li>
+      <li><strong>No message content:</strong> Only identity data touches the chain — never message content</li>
+    </ul>
+  </div>
+
+  <h2>Contact Discovery</h2>
+  <div class="layer">
+    <div class="layer-num">Discovery Protocol</div>
+    <h3>Find Contacts by Kaspa Address</h3>
+    <p>To add a contact, you only need their Kaspa address. SecureChat queries the BlockDAG for the associated public key anchor transaction, verifies the Ed25519 signature, and establishes an encrypted channel — no server-side directory required.</p>
+    <ul>
+      <li><strong>Lookup:</strong> Query Kaspa BlockDAG for OP_RETURN transactions from the target address</li>
+      <li><strong>Verification:</strong> Ed25519 signature proves the key was published by the address owner</li>
+      <li><strong>No phone numbers:</strong> No SIM card, no email, no centralized directory</li>
+      <li><strong>QR codes:</strong> Share Kaspa address via QR for in-person contact exchange</li>
+      <li><strong>Offline-capable:</strong> Once keys are cached locally, no network needed for verification</li>
+    </ul>
+  </div>
+
+  <h2>Relay Node Registry</h2>
+  <div class="layer">
+    <div class="layer-num">On-Chain Registry</div>
+    <h3>Decentralized Relay Discovery</h3>
+    <p>Relay node operators register their endpoints on-chain using Kaspa transactions. Clients discover available relays by scanning the BlockDAG — no hardcoded server list, no central relay directory.</p>
+    <ul>
+      <li><strong>Registration:</strong> Relay operators publish endpoint + public key via OP_RETURN</li>
+      <li><strong>Permissionless:</strong> Anyone can register a relay node — no approval needed</li>
+      <li><strong>Liveness:</strong> Periodic heartbeat transactions prove the relay is still operational</li>
+      <li><strong>Client selection:</strong> Users choose relays based on latency, reputation, and geographic proximity</li>
+      <li><strong>Decentralized:</strong> No single entity controls which relays are available</li>
+    </ul>
+  </div>
+
+  <h2>KAS Micropayments for Relay Operators</h2>
+  <div class="layer">
+    <div class="layer-num">Incentive Layer</div>
+    <h3>Sustainable Relay Network</h3>
+    <p>Relay operators earn KAS micropayments for forwarding encrypted message blobs. This creates a sustainable, market-driven network where relay capacity scales with demand — no donations, no corporate sponsorship required.</p>
+    <ul>
+      <li><strong>Per-message payments:</strong> Tiny KAS amounts per forwarded message (fractions of a cent)</li>
+      <li><strong>Direct payment:</strong> Sender pays relay directly via Kaspa transaction</li>
+      <li><strong>No middleman:</strong> Payments go directly to the relay operator's Kaspa address</li>
+      <li><strong>Market pricing:</strong> Relay operators set their own rates — competition keeps prices low</li>
+      <li><strong>Privacy preserved:</strong> Payment does not reveal message content or recipient identity</li>
+    </ul>
+  </div>
+
+  <h2>Implementation Status</h2>
+  <div class="layer">
+    <div class="layer-num">Roadmap</div>
+    <h3>Phase 2 — Q3 2026</h3>
+    <p>The Kaspa identity layer is currently in the design phase. The core cryptographic primitives (X25519, Ed25519) are already implemented in the SecureChat crypto stack via lazysodium-android. The on-chain integration, relay registry, and micropayment system are planned for Phase 2.</p>
+    <ul>
+      <li><strong>Completed:</strong> X25519 + Ed25519 key generation and management</li>
+      <li><strong>In design:</strong> OP_RETURN transaction format and parsing</li>
+      <li><strong>In design:</strong> Relay node registry protocol</li>
+      <li><strong>In design:</strong> KAS micropayment flow and fee structure</li>
+      <li><strong>Planned:</strong> Kaspa testnet integration and end-to-end testing</li>
+    </ul>
+  </div>
+</main>
+</body>
+</html>
