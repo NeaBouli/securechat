@@ -57,6 +57,25 @@
   html { scroll-behavior:smooth; }
   body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.6; }
 
+  /* ── HONEYCOMB BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.035;
+    background-image:
+        linear-gradient(30deg, #8a8a9a 12%, transparent 12.5%, transparent 87%, #8a8a9a 87.5%, #8a8a9a),
+        linear-gradient(150deg, #8a8a9a 12%, transparent 12.5%, transparent 87%, #8a8a9a 87.5%, #8a8a9a),
+        linear-gradient(30deg, #8a8a9a 12%, transparent 12.5%, transparent 87%, #8a8a9a 87.5%, #8a8a9a),
+        linear-gradient(150deg, #8a8a9a 12%, transparent 12.5%, transparent 87%, #8a8a9a 87.5%, #8a8a9a),
+        linear-gradient(60deg, rgba(138,138,154,0.5) 25%, transparent 25.5%, transparent 75%, rgba(138,138,154,0.5) 75%, rgba(138,138,154,0.5)),
+        linear-gradient(60deg, rgba(138,138,154,0.5) 25%, transparent 25.5%, transparent 75%, rgba(138,138,154,0.5) 75%, rgba(138,138,154,0.5));
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+    pointer-events: none;
+  }
+
   /* ── NAV ── */
   nav { position:sticky; top:0; z-index:100; background:rgba(10,10,15,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px; }
   .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
@@ -87,6 +106,24 @@
   .btn-primary:hover { background:var(--green-dim); transform:translateY(-1px); }
   .btn-secondary { background:transparent; color:var(--cyan); border:1px solid var(--cyan); }
   .btn-secondary:hover { background:rgba(0,212,255,0.08); }
+
+  /* ── HERO LAYOUT (2-column) ── */
+  .hero-inner { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; max-width:1100px; margin:0 auto; }
+  .hero-visual { position:relative; display:flex; justify-content:center; }
+  .hero-phone { width:280px; height:560px; background:var(--surface); border:2px solid var(--border); border-radius:36px; position:relative; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.4); }
+  .hero-phone::before { content:''; position:absolute; top:12px; left:50%; transform:translateX(-50%); width:100px; height:28px; background:var(--bg); border-radius:20px; z-index:2; }
+  .hero-phone-content { position:absolute; inset:4px; border-radius:32px; background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%); display:flex; flex-direction:column; padding:70px 20px 30px; }
+  .hero-glow { position:absolute; top:50%; right:-10%; width:500px; height:500px; background:radial-gradient(circle,rgba(0,255,136,0.08) 0%,transparent 70%); transform:translateY(-50%); pointer-events:none; }
+  /* Chat animation */
+  .chat-msg { padding:8px 14px; border-radius:14px; font-size:13px; max-width:85%; margin-bottom:8px; opacity:0; animation:msgIn 0.4s ease forwards; }
+  .chat-msg.sent { background:var(--green); color:#000; align-self:flex-end; border-bottom-right-radius:4px; }
+  .chat-msg.recv { background:var(--surface2); color:var(--text); align-self:flex-start; border-bottom-left-radius:4px; border:1px solid var(--border); }
+  .chat-msg.encrypted { background:rgba(0,212,255,0.1); color:var(--cyan); font-family:monospace; font-size:11px; border:1px solid rgba(0,212,255,0.2); align-self:center; }
+  @keyframes msgIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes typing { 0%,100% { opacity:0.3; } 50% { opacity:1; } }
+  .typing-dots span { display:inline-block; width:6px; height:6px; background:var(--muted); border-radius:50%; margin:0 2px; animation:typing 1.2s infinite; }
+  .typing-dots span:nth-child(2) { animation-delay:0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay:0.4s; }
 
   /* ── STATS BAR ── */
   .stats-bar { background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.5rem 2rem; display:flex; justify-content:center; gap:3rem; flex-wrap:wrap; }
@@ -197,6 +234,10 @@
     nav { padding:0 1rem; }
     .nav-links { display:none; }
     .hero { padding:3rem 1rem 2rem; }
+    .hero-inner { grid-template-columns:1fr; text-align:center; }
+    .hero-visual { margin-top:2rem; }
+    .hero-glow { display:none; }
+    .hero-phone { width:220px; height:440px; }
     section { padding:3rem 1rem; }
     .stats-bar { gap:1.5rem; }
   }
@@ -238,35 +279,43 @@
 </div>
 
 <!-- HERO -->
-<div class="hero">
-  <div class="hero-eyebrow">DECENTRALIZED · ENCRYPTED · ZERO METADATA</div>
-  <h1 class="hero-title">Classified <span>Messaging.</span></h1>
-  <p class="hero-sub">
-    The only encrypted messenger with no phone number, no server, no account —
-    and no metadata. Built on Kaspa BlockDAG for true decentralization.
-    Your conversations exist only on your devices.
-  </p>
-  <div class="hero-tags">
-    <span class="tag green">GPL-3.0 Open Source</span>
-    <span class="tag cyan">XChaCha20-Poly1305</span>
-    <span class="tag">Double Ratchet</span>
-    <span class="tag">Kaspa Layer 1</span>
-    <span class="tag">Zero Server</span>
+<section class="hero" style="padding:5rem 2rem 3rem;">
+  <div class="hero-inner">
+    <div>
+      <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:20px;font-size:12px;font-weight:600;color:var(--green);margin-bottom:1.5rem;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;"></span>
+        ENCRYPTED MESSAGING · ZERO METADATA
+      </div>
+      <h1 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.05;letter-spacing:-1px;margin-bottom:1.2rem;">Classified<br>Messaging<span style="color:var(--green);">.</span></h1>
+      <p style="font-size:1.1rem;color:var(--text-dim);max-width:480px;line-height:1.7;margin-bottom:2rem;">Decentralized end-to-end encrypted messaging. No phone number. No server. No metadata. Built for people who refuse to be watched.</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;">
+        <a href="#download" class="btn btn-primary">Coming Q3 2026</a>
+        <a href="https://github.com/NeaBouli/securechat" class="btn btn-secondary" target="_blank" rel="noopener">View Source</a>
+      </div>
+      <div style="display:flex;gap:3rem;flex-wrap:wrap;">
+        <div><span style="font-size:1.2rem;font-weight:800;color:var(--green);display:block;">XChaCha20</span><span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Encryption</span></div>
+        <div><span style="font-size:1.2rem;font-weight:800;color:var(--green);display:block;">0</span><span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Metadata Stored</span></div>
+        <div><span style="font-size:1.2rem;font-weight:800;color:var(--green);display:block;">Kaspa</span><span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Identity Layer</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-phone">
+        <div class="hero-phone-content" id="chatDemo" style="gap:0;">
+          <div style="text-align:center;margin-bottom:auto;padding:10px 0;">
+            <div style="font-size:11px;color:var(--muted);letter-spacing:1px;">ENCRYPTED CHANNEL</div>
+            <div style="font-size:10px;color:var(--green);font-family:monospace;margin-top:4px;">XChaCha20-Poly1305</div>
+          </div>
+          <div id="chatMessages" style="display:flex;flex-direction:column;width:100%;flex:1;justify-content:flex-end;overflow:hidden;"></div>
+          <div style="margin-top:8px;padding:8px 12px;background:var(--surface2);border-radius:20px;border:1px solid var(--border);display:flex;align-items:center;gap:8px;">
+            <div id="chatInput" style="flex:1;font-size:12px;color:var(--text-dim);min-height:16px;"></div>
+            <div style="width:24px;height:24px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;">&#9654;</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-glow"></div>
+    </div>
   </div>
-  <div class="hero-btns">
-    <a href="#download" class="btn btn-primary">Download for Android</a>
-    <a href="https://github.com/NeaBouli/securechat" class="btn btn-secondary">View Source</a>
-  </div>
-</div>
-
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stat"><span class="stat-value">XChaCha20</span><span class="stat-label">Encryption</span></div>
-  <div class="stat"><span class="stat-value">0</span><span class="stat-label">Metadata Stored</span></div>
-  <div class="stat"><span class="stat-value">0</span><span class="stat-label">Central Servers</span></div>
-  <div class="stat"><span class="stat-value">Kotlin</span><span class="stat-label">Android Native</span></div>
-  <div class="stat"><span class="stat-value">Kaspa</span><span class="stat-label">Identity Layer</span></div>
-</div>
+</section>
 
 <hr class="divider">
 
@@ -758,6 +807,54 @@
     </div>
   </div>
 </footer>
+
+<script>
+// Chat animation
+(function() {
+  const msgs = document.getElementById('chatMessages');
+  const input = document.getElementById('chatInput');
+  if (!msgs) return;
+  const conversation = [
+    { type:'recv', text:'Hey, are you on SecureChat?' },
+    { type:'sent', text:'Yes! Everything is encrypted.' },
+    { type:'encrypted', text:'aX7k#mP2$qR9...decrypting' },
+    { type:'recv', text:'No one can read this. Not even the server.' },
+    { type:'sent', text:'Zero metadata. Zero trace.' },
+  ];
+  let i = 0;
+  function showNext() {
+    if (i >= conversation.length) { setTimeout(() => { msgs.innerHTML = ''; i = 0; showNext(); }, 3000); return; }
+    const m = conversation[i];
+    if (m.type !== 'encrypted') {
+      input.textContent = '';
+      let c = 0;
+      const typeInterval = setInterval(() => {
+        input.textContent = m.text.substring(0, ++c);
+        if (c >= m.text.length) {
+          clearInterval(typeInterval);
+          setTimeout(() => {
+            input.textContent = '';
+            const div = document.createElement('div');
+            div.className = 'chat-msg ' + m.type;
+            div.style.animationDelay = '0s';
+            div.textContent = m.text;
+            msgs.appendChild(div);
+            i++;
+            setTimeout(showNext, 800);
+          }, 300);
+        }
+      }, 40);
+    } else {
+      const div = document.createElement('div');
+      div.className = 'chat-msg encrypted';
+      div.textContent = m.text;
+      msgs.appendChild(div);
+      setTimeout(() => { div.style.opacity = '0'; setTimeout(() => { div.remove(); i++; showNext(); }, 400); }, 1500);
+    }
+  }
+  setTimeout(showNext, 1500);
+})();
+</script>
 
 </body>
 </html>
