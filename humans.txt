@@ -1,0 +1,29 @@
+/* TEAM */
+Developer: NeaBouli
+Site: https://github.com/NeaBouli
+Location: Greece
+
+Organization: Vendetta Labs
+Platform: StealthX (stealthx.tech)
+
+/* TECHNOLOGY */
+Language: Kotlin (Android)
+Crypto: lazysodium-android (libsodium wrapper)
+Algorithms: XChaCha20-Poly1305, X25519, Ed25519, Argon2id, Double Ratchet
+Database: Room + SQLCipher
+UI: Jetpack Compose + Material3
+DI: Hilt/Dagger
+Build: Gradle 8.9, AGP 8.7.0, Kotlin 2.0.21
+Identity: Kaspa BlockDAG
+Token: IFR (Ethereum ERC-20)
+
+/* SITE */
+Built with: Static HTML + CSS (GitHub Pages)
+Design: StealthX dark tactical aesthetic
+Standards: HTML5, CSS3
+Fonts: System UI (Segoe UI, SF Pro, Roboto)
+
+/* THANKS */
+libsodium — Frank Denis (jedisct1)
+Signal Protocol — Moxie Marlinspike, Trevor Perrin
+Kaspa — Yonatan Sompolinsky

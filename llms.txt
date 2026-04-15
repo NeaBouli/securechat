@@ -1,0 +1,37 @@
+# SecureChat — StealthX Platform
+> Decentralized end-to-end encrypted messaging for Android.
+> No phone number, no server, no metadata.
+> XChaCha20-Poly1305 + Double Ratchet + Kaspa identity layer.
+> GPL-3.0 Open Source. IFR Token lifetime access.
+
+## Key Facts
+- Encryption: XChaCha20-Poly1305 (192-bit nonce, AEAD)
+- Key Exchange: X25519 ECDH (ephemeral per-session)
+- Forward Secrecy: Double Ratchet (HKDF-SHA256, RFC 5869)
+- Identity Signing: Ed25519
+- Key Derivation: Argon2id (64MB memory, 3 iterations)
+- Key Storage: Android Keystore (StrongBox/TEE)
+- Identity Layer: Kaspa BlockDAG (decentralized, on-chain anchoring)
+- Platform: Android 8.0+ (API 26)
+- License: GPL-3.0-or-later
+- Crypto Library: lazysodium-android 5.1.0 (wraps libsodium)
+- Database: Room + SQLCipher (encrypted at rest)
+- IFR Pro: Lock >= 2,000 IFR tokens on Ethereum
+- IFR Elite: Lock >= 6,000 IFR tokens on Ethereum
+- IFR Lock Contract: 0x769928aBDfc949D0718d8766a1C2d7dBb63954Eb
+
+## What Makes SecureChat Different
+- No phone number required (unlike Signal, WhatsApp)
+- No central server (unlike Telegram, iMessage)
+- Decentralized identity via Kaspa blockchain
+- STEALTH-DELETE: instant wipe of all data
+- IFR Token: lock once, access forever — no subscriptions
+- Part of the StealthX ecosystem (SecureCall, Chameleon)
+
+## Links
+- Main: https://securechat.stealthx.tech
+- GitHub: https://github.com/NeaBouli/securechat
+- Source Code: https://github.com/NeaBouli/chameleon
+- Platform: https://stealthx.tech
+- IFR Token: https://ifrunit.tech
+- Privacy Policy: https://securechat.stealthx.tech/privacy.html

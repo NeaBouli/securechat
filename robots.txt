@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Sitemap: https://securechat.stealthx.tech/sitemap.xml
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
