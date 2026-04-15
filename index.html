@@ -33,7 +33,9 @@
 <link rel="alternate" hreflang="x-default" href="https://securechat.stealthx.tech/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SecureChat","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"Decentralized end-to-end encrypted messaging with zero metadata.","url":"https://securechat.stealthx.tech","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://opensource.org/licenses/GPL-3.0","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses X25519 key pairs for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat open source?","acceptedAnswer":{"@type":"Answer","text":"Yes. GPL-3.0 licensed. Full source code on GitHub."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. Lock tokens on-chain for lifetime Pro or Elite access. No subscriptions."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"No central server. Messages route through ephemeral Kaspa relay nodes. Relay operators see only encrypted blobs."}}]}</script>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <style>
   :root {
     --bg:        #0a0a0f;
@@ -58,8 +60,8 @@
   /* ── NAV ── */
   nav { position:sticky; top:0; z-index:100; background:rgba(10,10,15,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px; }
   .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
-  .nav-logo-bg { background:var(--green); border-radius:8px; padding:4px 8px; display:flex; align-items:center; box-shadow:0 0 16px var(--logo-glow); }
-  .nav-logo-bg img { height:28px; width:auto;  }
+  .nav-logo-bg { background:var(--green); border-radius:10px; padding:6px 12px; display:flex; align-items:center; box-shadow:0 0 16px var(--logo-glow); }
+  .nav-logo-bg img { height:40px; width:auto;  }
   .nav-logo-text { display:flex; flex-direction:column; }
   .nav-logo-brand { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
   .nav-logo-app { font-size:16px; font-weight:700; color:var(--text); letter-spacing:0.5px; }
@@ -178,8 +180,8 @@
   footer { background:var(--surface); border-top:1px solid var(--border); padding:3rem 2rem 2rem; }
   .footer-inner { max-width:1100px; margin:0 auto; }
   .footer-logo { display:flex; align-items:center; gap:10px; margin-bottom:1.5rem; text-decoration:none; }
-  .footer-logo-bg { background:var(--green); border-radius:6px; padding:3px 7px; }
-  .footer-logo-bg img { height:22px;  }
+  .footer-logo-bg { background:var(--green); border-radius:8px; padding:5px 10px; }
+  .footer-logo-bg img { height:32px;  }
   .footer-logo-name { font-size:14px; font-weight:700; color:var(--text); }
   .footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:2rem; margin-bottom:2rem; }
   .footer-col h4 { font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; }
