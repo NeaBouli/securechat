@@ -30,6 +30,8 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    // QR code scanning for key-exchange (SC-04)
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     testImplementation(libs.junit5.api)
     testRuntimeOnly(libs.junit5.engine)
     testImplementation(libs.mockk)

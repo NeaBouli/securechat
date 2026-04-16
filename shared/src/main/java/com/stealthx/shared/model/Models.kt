@@ -43,19 +43,6 @@ data class RatchetMessage(
     val payload:      EncryptedPayload
 )
 
-/**
- * Public key bundle for out-of-band key exchange (QR / NFC).
- * Contains everything needed to establish a session.
- */
-data class PublicKeyBundle(
-    val identityKey:     ByteArray,   // Ed25519 public key (long-term identity)
-    val dhPublicKey:     ByteArray,   // X25519 public key (session key exchange)
-    val signature:       ByteArray,   // Ed25519 signature over dhPublicKey
-    val displayName:     String,      // Human-readable contact name
-    val createdAt:       Long = Instant.now().epochSecond,
-    val version:         Int  = 1
-)
-
 // ── Security Models ───────────────────────────────────────────
 
 /**
