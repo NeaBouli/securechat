@@ -20,3 +20,11 @@ Thumbs.db
 *.jks
 *.keystore
 signing.properties
+
+# Secrets — never commit
+.env
+.env.local
+.env.*
+*.secrets
+secrets.env
+credentials.env
