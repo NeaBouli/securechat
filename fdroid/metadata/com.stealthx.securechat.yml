@@ -1,0 +1,43 @@
+Categories:
+  - Internet
+  - Security
+License: GPL-3.0-only
+AuthorName: StealthX / Vendetta Labs
+AuthorWebSite: https://securechat.stealthx.tech
+WebSite: https://securechat.stealthx.tech
+SourceCode: https://github.com/NeaBouli/securechat
+IssueTracker: https://github.com/NeaBouli/securechat/issues
+
+AutoName: SecureChat
+Summary: End-to-end encrypted messaging. Zero metadata.
+Description: |-
+  SecureChat is a decentralized end-to-end encrypted messaging
+  app. No phone number required. No account. No metadata.
+
+  Part of the StealthX Platform. Same unified sx_ID works in
+  SecureCall, SecureChat, and Chameleon.
+
+  Features:
+  * End-to-end encrypted messaging (XChaCha20-Poly1305)
+  * X25519 key exchange, Double Ratchet forward secrecy
+  * Safety numbers for manual verification
+  * QR code + NFC contact exchange
+  * Kaspa identity layer (Phase 2 — Q3 2026)
+  * GPL-3.0 open source
+  * Part of StealthX Platform
+
+  Alpha status — not yet ready for production use.
+
+RepoType: git
+Repo: https://github.com/NeaBouli/securechat.git
+
+Builds:
+  - versionName: 0.1.0-alpha
+    versionCode: 1
+    commit: v0.1.0-alpha
+    subdir: app
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 0.1.0-alpha
+CurrentVersionCode: 1

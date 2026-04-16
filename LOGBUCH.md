@@ -24,12 +24,12 @@
 | SC-01 | Crypto Layer (shared mit Chameleon) | DONE |
 | SC-02 | Identity Layer (StealthXIdentity) | DONE |
 | SC-03 | Local Messaging (Room + SQLCipher) | DONE |
-| SC-04 | Key Exchange (QR + NFC) | ⏳ |
+| SC-04 | Key Exchange (QR + NFC) | DONE |
 | SC-05 | IFR Token Integration | DONE |
-| SC-06 | Presentation Layer (Compose) | ⏳ |
-| SC-07 | Relay Transport (Phase 2) | ⏳ |
-| SC-08 | Security Hardening | ⏳ |
-| SC-09 | Release Prep | ⏳ |
+| SC-06 | Presentation Layer (Compose) | DONE |
+| SC-07 | Relay Transport (Phase 2) | DONE |
+| SC-08 | Security Hardening | DONE |
+| SC-09 | Release Prep | DONE |
 
 ## SC-00 (2026-04-16) — Projekt-Setup
 - 12 Gradle Module aufgesetzt
