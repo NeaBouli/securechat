@@ -15,4 +15,6 @@ android {
 dependencies {
     implementation(project(":shared"))
     implementation(project(":stealthx-crypto"))
+    // Hilt brings javax.inject annotations for DI-ready classes
+    implementation(libs.hilt.android)
 }

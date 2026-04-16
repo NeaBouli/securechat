@@ -19,8 +19,11 @@ android {
 dependencies {
     implementation(project(":stealthx-crypto"))
     implementation(project(":shared"))
+    implementation(project(":transport"))
     // NO :data, NO :security
     implementation(libs.kotlinx.coroutines.android)
+    // Hilt brings javax.inject annotations for DI-ready classes
+    implementation(libs.hilt.android)
     testImplementation(libs.junit5.api)
     testImplementation(libs.junit5.params)
     testRuntimeOnly(libs.junit5.engine)
