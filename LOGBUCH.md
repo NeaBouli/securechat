@@ -30,6 +30,16 @@
 | SC-07 | Relay Transport (Phase 2) | DONE |
 | SC-08 | Security Hardening | DONE |
 | SC-09 | Release Prep | DONE |
+| SC-10 | Emergency Broadcast System (STUB) | PARTIAL |
+
+## SC-10 (2026-04-16) — Emergency Broadcast (STUB)
+Status: STUB — Interface definiert, Implementation Phase 2
+Tier: Elite (>=6.000 IFR)
+Architektur: Pro Empfaenger individuelle XChaCha20 Verschluesselung
+Transport: Via Relay Nodes (Phase 2 Q3 2026)
+- BroadcastManager.kt — Interface (sendBroadcast, getHistory)
+- BroadcastScreen.kt — Elite UI + LockedScreen (Free/Pro)
+- BUILD SUCCESSFUL
 
 ## SC-00 (2026-04-16) — Projekt-Setup
 - 12 Gradle Module aufgesetzt
