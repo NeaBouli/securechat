@@ -41,5 +41,28 @@ Gleicher Bug wie chameleon BUG-003. `./gradlew test` → `IllegalArgumentExcepti
 **Fix:** `! sudo brew install --cask temurin@21` → dann `export JAVA_HOME=$(/usr/libexec/java_home -v 21)`
 
 **Stand:** Gradle 8.13 + Kotlin 2.1.21 + AGP 8.9.0 committed. Bereit nach JDK 21 Install.
+JDK 21 Temurin wird via direktem Download installiert (~180 MB) — kein sudo.
 
 ### EMPFÄNGER: GIO
+
+---
+
+## 2026-05-10 [CC]
+### TYPE: MEMO
+### STATUS: [IN_PROGRESS]
+
+**CC Session — NEA-19 aktiv**
+
+Onboarding abgeschlossen. Stand: SC-00 bis SC-10 DONE, v0.1.0-alpha.
+
+**Nächste Schritte nach JDK 21:**
+1. `./gradlew :stealthx-crypto:test` — alle Crypto Tests verifizieren
+2. `./gradlew assembleRelease` — Release APK bauen
+3. Release-Keystore generieren (`keytool`)
+4. APK signieren + SHA-256 in `docs/RELAY_NODE_SECURITY.md`
+
+**Codex-Auftrag:** Crypto Layer Code Review (Parity-Check mit Chameleon).
+Prüfe ob `stealthx-crypto/` und `domain/` SecureCall-seitig konsistent sind.
+Schreibe Findings in BRIDGE.md TYPE:REVIEW.
+
+### EMPFÄNGER: CODEX
