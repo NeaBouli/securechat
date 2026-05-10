@@ -38,6 +38,8 @@ dependencies {
 
     // THE ONLY CRYPTO LIBRARY — lazysodium wraps libsodium
     implementation(libs.lazysodium.android)
+    // JVM fallback for unit tests: SodiumInitializer auto-detects JVM and uses desktop libsodium
+    testImplementation(libs.lazysodium.java)
     implementation(libs.jna)
 
     implementation(libs.kotlinx.coroutines.android)

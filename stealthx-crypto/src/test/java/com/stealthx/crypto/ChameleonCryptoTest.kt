@@ -16,9 +16,9 @@ class ChameleonCryptoTest {
         @BeforeAll
         @JvmStatic
         fun setup() {
-            // Note: On JVM test runner, SodiumInitializer uses desktop libsodium.
-            // On Android Robolectric, it uses SodiumAndroid.
-            // Claude Code: ensure lazysodium-java is on testRuntimeClasspath for JVM tests.
+            // SodiumInitializer auto-detects JVM and falls back to LazySodiumJava
+            // (lazysodium-java on testRuntimeClasspath — see build.gradle.kts).
+            SodiumInitializer.ensureInit()
         }
     }
 

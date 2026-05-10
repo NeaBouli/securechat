@@ -64,6 +64,7 @@ sqlite-ktx                      = { group = "androidx.sqlite", name = "sqlite-kt
 
 # Crypto — lazysodium (THE ONLY CRYPTO LIBRARY)
 lazysodium-android              = { group = "com.goterl", name = "lazysodium-android", version.ref = "lazysodium" }
+lazysodium-java                 = { group = "com.goterl", name = "lazysodium-java", version.ref = "lazysodium" }
 jna                             = { group = "net.java.dev.jna", name = "jna", version.ref = "jna" }
 
 # Web3 / IFR
