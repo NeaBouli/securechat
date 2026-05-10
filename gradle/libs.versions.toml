@@ -1,6 +1,6 @@
 [versions]
-kotlin                  = "2.0.21"
-agp                     = "8.7.0"
+kotlin                  = "2.1.21"
+agp                     = "8.9.0"
 compose-bom             = "2024.11.00"
 hilt                    = "2.52"
 room                    = "2.6.1"
