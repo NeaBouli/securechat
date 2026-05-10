@@ -28,3 +28,18 @@ Commits:
 Status: Alle 16 ChameleonCryptoTest-Tests (11 original + 5 Argon2id) sollten im JVM-Runner durchlaufen.
 
 ### EMPFÄNGER: GIO
+
+## 2026-05-10 CC
+### TYPE: BUG
+
+**BUG-003 (parity mit chameleon): Gradle Build BLOCKED — JDK 26 inkompatibel**
+
+Commits: `5797f6f`
+
+Gleicher Bug wie chameleon BUG-003. `./gradlew test` → `IllegalArgumentException: 26.0.1`.
+
+**Fix:** `! sudo brew install --cask temurin@21` → dann `export JAVA_HOME=$(/usr/libexec/java_home -v 21)`
+
+**Stand:** Gradle 8.13 + Kotlin 2.1.21 + AGP 8.9.0 committed. Bereit nach JDK 21 Install.
+
+### EMPFÄNGER: GIO
