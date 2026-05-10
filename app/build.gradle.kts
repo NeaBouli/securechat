@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,9 +8,28 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
+val localProps = Properties().also { props ->
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { props.load(it) }
+}
+
 android {
     namespace = "com.stealthx.securechat"
     compileSdk = 35
+
+    signingConfigs {
+        create("release") {
+            val ksPath = localProps["KEYSTORE_PATH"] as? String
+            val ksPass = localProps["KEYSTORE_PASS"] as? String
+            val ksAlias = localProps["KEY_ALIAS"] as? String ?: "securechat"
+            if (ksPath != null && ksPass != null) {
+                storeFile = file(ksPath)
+                storePassword = ksPass
+                keyAlias = ksAlias
+                keyPassword = ksPass
+            }
+        }
+    }
 
     defaultConfig {
         applicationId = "com.stealthx.securechat"
@@ -20,6 +41,7 @@ android {
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
