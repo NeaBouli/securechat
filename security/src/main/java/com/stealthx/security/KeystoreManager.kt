@@ -15,8 +15,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.KeyStore
+import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
+import javax.crypto.spec.GCMParameterSpec
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -88,6 +90,32 @@ class KeystoreManager @Inject constructor(
         return KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_HMAC_SHA256, KEYSTORE_PROVIDER)
             .apply { init(builder.build()) }
             .generateKey()
+    }
+
+    /**
+     * Encrypt [plaintext] with the AES-GCM key at [alias].
+     * Returns IV (12 bytes) + ciphertext + GCM tag as a single blob.
+     */
+    fun encryptBytes(alias: String, plaintext: ByteArray): ByteArray {
+        val key = getOrCreateAesKey(alias, requireAuth = false)
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.ENCRYPT_MODE, key)
+        val iv = cipher.iv
+        val ciphertext = cipher.doFinal(plaintext)
+        return iv + ciphertext
+    }
+
+    /**
+     * Decrypt a blob previously produced by [encryptBytes] using the key at [alias].
+     * Blob format: IV (12 bytes) + ciphertext + GCM tag.
+     */
+    fun decryptBytes(alias: String, blob: ByteArray): ByteArray {
+        val key = (keyStore.getEntry(alias, null) as KeyStore.SecretKeyEntry).secretKey
+        val iv = blob.sliceArray(0 until 12)
+        val ciphertext = blob.sliceArray(12 until blob.size)
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(128, iv))
+        return cipher.doFinal(ciphertext)
     }
 
     fun deleteKey(alias: String) {
