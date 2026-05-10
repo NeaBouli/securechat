@@ -84,7 +84,7 @@ class DoubleRatchet private constructor(
                 rootKey         = sharedSecret.copyOf(),
                 sendChainKey    = null,
                 recvChainKey    = null,
-                sendDhKeyPair   = myDhKeyPair,
+                sendDhKeyPair   = Pair(myDhKeyPair.first.copyOf(), myDhKeyPair.second.copyOf()),
                 recvDhPublicKey = null
             )
         }
@@ -155,6 +155,10 @@ class DoubleRatchet private constructor(
      * @throws SecurityException if decryption/auth fails
      */
     fun decrypt(message: RatchetMessage, aad: ByteArray = ByteArray(0)): ByteArray {
+        if (!message.payload.aad.contentEquals(aad)) {
+            throw SecurityException("AAD mismatch — authentication context does not match")
+        }
+
         // Check skipped message keys first
         val skippedKey = skippedKeys[Pair(message.dhPublicKey, message.counter)]
         if (skippedKey != null) {

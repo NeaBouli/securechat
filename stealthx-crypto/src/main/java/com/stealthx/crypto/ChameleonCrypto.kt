@@ -81,7 +81,7 @@ object ChameleonCrypto {
         return EncryptedPayload(
             ciphertext    = ciphertext,
             nonce         = nonce,
-            paddedLength  = padded.size,
+            paddedLength  = plaintext.size,
             aad           = aad,
             algorithm     = "XChaCha20-Poly1305",
             version       = 1
@@ -123,7 +123,7 @@ object ChameleonCrypto {
         }
 
         // Remove padding — return original plaintext
-        return unpad(decrypted, decryptedLen[0].toInt())
+        return unpad(decrypted, payload.paddedLength)
     }
 
     // ── Argon2id Key Derivation ──────────────────────────────────

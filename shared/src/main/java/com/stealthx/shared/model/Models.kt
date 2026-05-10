@@ -17,7 +17,7 @@ import java.util.UUID
 data class EncryptedPayload(
     val ciphertext:   ByteArray,
     val nonce:        ByteArray,       // 24 bytes for XChaCha20
-    val paddedLength: Int,             // original padded length before encryption
+    val paddedLength: Int,             // original plaintext length before padding (used to strip padding on decrypt)
     val aad:          ByteArray,       // additional authenticated data
     val algorithm:    String,          // "XChaCha20-Poly1305"
     val version:      Int              // payload format version for migration
