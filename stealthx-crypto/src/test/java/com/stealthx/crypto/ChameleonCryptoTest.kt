@@ -162,4 +162,82 @@ class ChameleonCryptoTest {
         assertEquals(1000, nonces.size, "All 1000 nonces must be unique")
         ChameleonCrypto.wipeBytes(key)
     }
+
+    @Test
+    @DisplayName("Argon2id: same password + salt produces same key")
+    fun `argon2id derivation is deterministic`() {
+        val password = "correcthorsebatterystaple".toCharArray()
+        val salt     = ChameleonCrypto.generateSalt()
+
+        val key1 = ChameleonCrypto.deriveKey(password.copyOf(), salt)
+        val key2 = ChameleonCrypto.deriveKey(password.copyOf(), salt)
+
+        assertArrayEquals(key1, key2, "Argon2id must be deterministic for same password+salt")
+        ChameleonCrypto.wipeBytes(key1)
+        ChameleonCrypto.wipeBytes(key2)
+        ChameleonCrypto.wipeChars(password)
+    }
+
+    @Test
+    @DisplayName("Argon2id: different salts produce different keys")
+    fun `argon2id produces different keys for different salts`() {
+        val password = "passphrase".toCharArray()
+        val salt1    = ChameleonCrypto.generateSalt()
+        val salt2    = ChameleonCrypto.generateSalt()
+
+        val key1 = ChameleonCrypto.deriveKey(password.copyOf(), salt1)
+        val key2 = ChameleonCrypto.deriveKey(password.copyOf(), salt2)
+
+        assertFalse(key1.contentEquals(key2), "Different salts must produce different keys")
+        ChameleonCrypto.wipeBytes(key1)
+        ChameleonCrypto.wipeBytes(key2)
+        ChameleonCrypto.wipeChars(password)
+    }
+
+    @Test
+    @DisplayName("Argon2id: derived key length matches requested length")
+    fun `argon2id output length matches request`() {
+        val password = "len-test".toCharArray()
+        val salt     = ChameleonCrypto.generateSalt()
+
+        val key16 = ChameleonCrypto.deriveKey(password.copyOf(), salt, keyLength = 16)
+        val key32 = ChameleonCrypto.deriveKey(password.copyOf(), salt, keyLength = 32)
+        val key64 = ChameleonCrypto.deriveKey(password.copyOf(), salt, keyLength = 64)
+
+        assertEquals(16, key16.size)
+        assertEquals(32, key32.size)
+        assertEquals(64, key64.size)
+
+        ChameleonCrypto.wipeBytes(key16)
+        ChameleonCrypto.wipeBytes(key32)
+        ChameleonCrypto.wipeBytes(key64)
+        ChameleonCrypto.wipeChars(password)
+    }
+
+    @Test
+    @DisplayName("Argon2id: password is wiped after derivation")
+    fun `argon2id wipes password char array`() {
+        val password = "wipe-me".toCharArray()
+        val salt     = ChameleonCrypto.generateSalt()
+        val key      = ChameleonCrypto.deriveKey(password, salt)
+
+        assertTrue(password.all { it == ' ' }, "Password must be zeroed after deriveKey")
+        ChameleonCrypto.wipeBytes(key)
+    }
+
+    @Test
+    @DisplayName("Argon2id: derived key can encrypt and decrypt")
+    fun `argon2id key is valid for xchacha20`() {
+        val password  = "unlock-me".toCharArray()
+        val salt      = ChameleonCrypto.generateSalt()
+        val key       = ChameleonCrypto.deriveKey(password.copyOf(), salt)
+        val plaintext = "sensitive data".toByteArray()
+
+        val payload   = ChameleonCrypto.encrypt(plaintext, key)
+        val decrypted = ChameleonCrypto.decrypt(payload, key)
+
+        assertArrayEquals(plaintext, decrypted)
+        ChameleonCrypto.wipeBytes(key)
+        ChameleonCrypto.wipeChars(password)
+    }
 }
