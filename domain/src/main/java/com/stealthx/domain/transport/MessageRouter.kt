@@ -9,7 +9,7 @@
  */
 package com.stealthx.domain.transport
 
-import com.stealthx.shared.model.EncryptedPayload
+import com.stealthx.shared.model.RatchetMessage
 import com.stealthx.transport.RelayTransport
 import com.stealthx.transport.TransportResult
 import com.stealthx.transport.TransportType
@@ -28,14 +28,14 @@ class MessageRouter @Inject constructor(
      */
     suspend fun send(
         recipientSxId: String,
-        payload: EncryptedPayload
+        message: RatchetMessage
     ): TransportResult {
         val transport = selectTransport()
             ?: return TransportResult.Failed(
                 messageId = "no-transport",
                 reason = "No available transport"
             )
-        return transport.send(recipientSxId, payload)
+        return transport.send(recipientSxId, message)
     }
 
     fun getActiveTransportType(): TransportType? = selectTransport()?.type

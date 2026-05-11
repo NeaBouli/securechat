@@ -29,6 +29,7 @@ android {
 }
 dependencies {
     implementation(project(":domain"))
+    implementation(project(":transport"))
     implementation(project(":stealthx-crypto"))
     implementation(project(":security"))
     implementation(project(":shared"))

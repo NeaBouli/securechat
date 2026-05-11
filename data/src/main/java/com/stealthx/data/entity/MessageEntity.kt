@@ -48,7 +48,21 @@ data class MessageEntity(
     @ColumnInfo(name = "sent_at")
     val sentAt: Long,
     @ColumnInfo(name = "delivery_status")
-    val deliveryStatus: String
+    val deliveryStatus: String,
+    @ColumnInfo(name = "ratchet_dh_public", typeAffinity = ColumnInfo.BLOB)
+    val ratchetDhPublic: ByteArray? = null,
+    @ColumnInfo(name = "ratchet_counter")
+    val ratchetCounter: Int? = null,
+    @ColumnInfo(name = "ratchet_prev_counter")
+    val ratchetPrevCounter: Int? = null,
+    @ColumnInfo(name = "ratchet_ciphertext", typeAffinity = ColumnInfo.BLOB)
+    val ratchetCiphertext: ByteArray? = null,
+    @ColumnInfo(name = "ratchet_nonce", typeAffinity = ColumnInfo.BLOB)
+    val ratchetNonce: ByteArray? = null,
+    @ColumnInfo(name = "ratchet_aad", typeAffinity = ColumnInfo.BLOB)
+    val ratchetAad: ByteArray? = null,
+    @ColumnInfo(name = "ratchet_padded_length")
+    val ratchetPaddedLength: Int? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

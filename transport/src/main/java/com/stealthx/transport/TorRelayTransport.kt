@@ -8,7 +8,7 @@
  */
 package com.stealthx.transport
 
-import com.stealthx.shared.model.EncryptedPayload
+import com.stealthx.shared.model.RatchetMessage
 
 class TorRelayTransport : RelayTransport {
 
@@ -17,7 +17,7 @@ class TorRelayTransport : RelayTransport {
 
     override suspend fun send(
         recipientSxId: String,
-        payload: EncryptedPayload
+        message: RatchetMessage
     ): TransportResult {
         TODO("Phase 2 — Q3 2026: Tor Hidden Services + Kaspa relay nodes")
     }

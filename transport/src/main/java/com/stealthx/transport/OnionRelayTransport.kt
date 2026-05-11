@@ -8,7 +8,7 @@
  */
 package com.stealthx.transport
 
-import com.stealthx.shared.model.EncryptedPayload
+import com.stealthx.shared.model.RatchetMessage
 
 class OnionRelayTransport : RelayTransport {
 
@@ -17,7 +17,7 @@ class OnionRelayTransport : RelayTransport {
 
     override suspend fun send(
         recipientSxId: String,
-        payload: EncryptedPayload
+        message: RatchetMessage
     ): TransportResult {
         TODO("Phase 3 — Q4 2026: 3-hop onion routing + cover traffic")
     }

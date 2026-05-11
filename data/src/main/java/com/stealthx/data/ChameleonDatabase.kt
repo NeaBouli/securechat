@@ -11,12 +11,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.stealthx.data.dao.AuditLogDao
+import com.stealthx.data.dao.ChatSessionDao
 import com.stealthx.data.dao.ContactKeyDao
 import com.stealthx.data.dao.CryptoKeyDao
 import com.stealthx.data.dao.IfrTierCacheDao
 import com.stealthx.data.dao.MessageDao
 import com.stealthx.data.dao.SecureRuleDao
 import com.stealthx.data.entity.AuditLogEntity
+import com.stealthx.data.entity.ChatSessionEntity
 import com.stealthx.data.entity.ContactKeyEntity
 import com.stealthx.data.entity.CryptoKeyEntity
 import com.stealthx.data.entity.IfrTierCacheEntity
@@ -38,11 +40,12 @@ import net.sqlcipher.database.SupportFactory
         SecureRuleEntity::class,
         CryptoKeyEntity::class,
         ContactKeyEntity::class,
+        ChatSessionEntity::class,
         MessageEntity::class,
         AuditLogEntity::class,
         IfrTierCacheEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(ChameleonTypeConverters::class)
@@ -51,6 +54,7 @@ abstract class ChameleonDatabase : RoomDatabase() {
     abstract fun secureRuleDao(): SecureRuleDao
     abstract fun cryptoKeyDao(): CryptoKeyDao
     abstract fun contactKeyDao(): ContactKeyDao
+    abstract fun chatSessionDao(): ChatSessionDao
     abstract fun messageDao(): MessageDao
     abstract fun auditLogDao(): AuditLogDao
     abstract fun ifrTierCacheDao(): IfrTierCacheDao

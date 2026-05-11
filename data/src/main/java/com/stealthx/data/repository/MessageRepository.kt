@@ -9,7 +9,9 @@ import com.stealthx.crypto.ChameleonCrypto
 import com.stealthx.data.dao.MessageDao
 import com.stealthx.data.entity.ContactKeyEntity
 import com.stealthx.data.entity.MessageEntity
+import com.stealthx.domain.transport.MessageRouter
 import com.stealthx.shared.model.EncryptedPayload
+import com.stealthx.transport.TransportResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -36,7 +38,9 @@ data class ConversationSummary(
 @Singleton
 class MessageRepository @Inject constructor(
     private val messageDao: MessageDao,
-    private val contactRepository: ContactRepository
+    private val contactRepository: ContactRepository,
+    private val chatSessionRepository: ChatSessionRepository,
+    private val messageRouter: MessageRouter
 ) {
     fun observeMessages(contactId: String): Flow<List<DecryptedMessage>> =
         messageDao.observeForContact(contactId).map { messages ->
@@ -65,6 +69,12 @@ class MessageRepository @Inject constructor(
             ?: throw IllegalArgumentException("Contact not found: $contactId")
         val sentAt = System.currentTimeMillis()
         val aad = aadFor(contactId, sentAt)
+        val outbound = chatSessionRepository.encryptForSend(
+            contact = contact,
+            plaintext = plaintext.toByteArray(Charsets.UTF_8),
+            aad = aad
+        )
+        val transportResult = messageRouter.send(contactId, outbound.message)
         val key = localMessageKey(contact)
         val payload = ChameleonCrypto.encrypt(plaintext.toByteArray(Charsets.UTF_8), key, aad)
         ChameleonCrypto.wipeBytes(key)
@@ -80,7 +90,14 @@ class MessageRepository @Inject constructor(
             algorithm = payload.algorithm,
             payloadVersion = payload.version,
             sentAt = sentAt,
-            deliveryStatus = STATUS_QUEUED
+            deliveryStatus = transportResult.toDeliveryStatus(),
+            ratchetDhPublic = outbound.dhPublicKey,
+            ratchetCounter = outbound.counter,
+            ratchetPrevCounter = outbound.message.prevCounter,
+            ratchetCiphertext = outbound.message.payload.ciphertext,
+            ratchetNonce = outbound.message.payload.nonce,
+            ratchetAad = outbound.message.payload.aad,
+            ratchetPaddedLength = outbound.message.payload.paddedLength
         )
         messageDao.insert(entity)
         return entity.toDecrypted(contact)
@@ -147,8 +164,16 @@ class MessageRepository @Inject constructor(
     private fun aadFor(contactId: String, sentAt: Long): ByteArray =
         "securechat-msg:v1:$contactId:$sentAt".toByteArray(Charsets.UTF_8)
 
+    private fun TransportResult.toDeliveryStatus(): String = when (this) {
+        is TransportResult.Delivered -> STATUS_SENT
+        is TransportResult.Queued -> STATUS_QUEUED
+        is TransportResult.Failed -> STATUS_FAILED
+    }
+
     private companion object {
         const val DIRECTION_OUTGOING = "OUTGOING"
         const val STATUS_QUEUED = "QUEUED"
+        const val STATUS_SENT = "SENT"
+        const val STATUS_FAILED = "FAILED"
     }
 }

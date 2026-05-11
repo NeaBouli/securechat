@@ -8,7 +8,7 @@
  */
 package com.stealthx.transport
 
-import com.stealthx.shared.model.EncryptedPayload
+import com.stealthx.shared.model.RatchetMessage
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,19 +18,19 @@ class LocalTransport @Inject constructor() : RelayTransport {
     override val type: TransportType = TransportType.LOCAL
     override val isAvailable: Boolean = true
 
-    private val outbox = mutableMapOf<String, List<EncryptedPayload>>()
+    private val outbox = mutableMapOf<String, List<RatchetMessage>>()
 
     override suspend fun send(
         recipientSxId: String,
-        payload: EncryptedPayload
+        message: RatchetMessage
     ): TransportResult {
         // Phase 1: queue in outbox for manual delivery
         val existing = outbox[recipientSxId] ?: emptyList()
-        outbox[recipientSxId] = existing + payload
+        outbox[recipientSxId] = existing + message
         return TransportResult.Queued("local-${System.currentTimeMillis()}")
     }
 
-    fun getOutbox(recipientSxId: String): List<EncryptedPayload> {
+    fun getOutbox(recipientSxId: String): List<RatchetMessage> {
         return outbox[recipientSxId] ?: emptyList()
     }
 

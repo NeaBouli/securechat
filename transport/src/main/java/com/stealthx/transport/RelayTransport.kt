@@ -12,7 +12,7 @@
  */
 package com.stealthx.transport
 
-import com.stealthx.shared.model.EncryptedPayload
+import com.stealthx.shared.model.RatchetMessage
 
 sealed class TransportResult {
     data class Delivered(val messageId: String, val transportType: TransportType) : TransportResult()
@@ -33,7 +33,7 @@ interface RelayTransport {
 
     suspend fun send(
         recipientSxId: String,
-        payload: EncryptedPayload
+        message: RatchetMessage
     ): TransportResult
 
     suspend fun connect(): Boolean

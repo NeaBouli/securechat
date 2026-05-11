@@ -269,6 +269,36 @@ Validation:
 ## 2026-05-11 [CODEX]
 ### TYPE: FIX
 ### STATUS: [BUILD_DONE]
+### Linear: NEA-35
+
+**SecureChat E2E Chat Messaging — Ratchet Session + Local Transport Outbox**
+
+Implemented:
+- Added persistent `chat_sessions` Room table with per-contact root key, sending chain key, DH keypair and send counter.
+- Added `ChatSessionRepository.encryptForSend()` to derive a per-message key, advance the send chain on every outgoing message, and emit a `RatchetMessage` header/payload.
+- Extended `MessageEntity` with ratchet transport fields (`dhPublicKey`, counter, prevCounter, ciphertext, nonce, AAD, padded length) while keeping the local at-rest message body encrypted for UI replay.
+- Wired `MessageRepository.sendLocalMessage()` into `MessageRouter`.
+- Updated `RelayTransport`, `MessageRouter`, and `LocalTransport` to queue full `RatchetMessage` envelopes instead of bare `EncryptedPayload` blobs.
+- Added Hilt provisioning for the current Phase-1 `LocalTransport` router path.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` -> BUILD SUCCESSFUL
+
+Linear:
+- NEA-35 commented with implementation summary and validation.
+- NEA-35 moved to Done.
+
+Scope Notes:
+- NEA-35 now has local encrypted chat persistence, conversation UI wiring, outbound ratchet session persistence, and Phase-1 local transport queueing.
+- Remote receive/import and real relay delivery remain Phase-2 transport work; no fake delivered status was added.
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [BUILD_DONE]
 ### Linear: NEA-34
 
 **SecureChat Contact Add Flow — QR Bundle Import**
