@@ -1,23 +1,31 @@
 package com.stealthx.presentation.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Fingerprint
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.stealthx.ifr.compose.TierStatusCard
+import com.stealthx.shared.model.IfrTier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(onBack: () -> Unit, onIfrClick: () -> Unit) {
+fun SettingsScreen(
+    onBack: () -> Unit,
+    onIfrClick: () -> Unit,
+    vm: SettingsViewModel = hiltViewModel()
+) {
+    val tier by vm.currentTier.collectAsState()
     var biometricsEnabled by remember { mutableStateOf(true) }
-    var defaultSecurity by remember { mutableStateOf(true) }
+    var stealthDeleteEnabled by remember { mutableStateOf(true) }
 
     Scaffold(
         topBar = {
@@ -29,41 +37,155 @@ fun SettingsScreen(onBack: () -> Unit, onIfrClick: () -> Unit) {
             )
         }
     ) { padding ->
-        Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // Tier card
+            TierStatusCard(
+                tier = tier,
+                ifrBalance = 0,
+                walletAddress = null,
+                expiresIn = null,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (tier != IfrTier.ELITE) {
+                Button(
+                    onClick = onIfrClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (tier == IfrTier.FREE) Color(0xFF00E5FF) else Color(0xFFFFD700)
+                    )
+                ) {
+                    Icon(Icons.Default.Lock, null, tint = Color.Black)
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        if (tier == IfrTier.FREE) "Upgrade to Pro — Lock 2,000 IFR" else "Upgrade to Elite — Lock 6,000 IFR",
+                        color = Color.Black
+                    )
+                }
+                Spacer(Modifier.height(8.dp))
+            }
+
+            // Security section
             SectionHeader("Security")
-            ToggleRow(icon = Icons.Default.Fingerprint, title = "Biometric Unlock",
-                checked = biometricsEnabled, onCheckedChange = { biometricsEnabled = it })
-            ToggleRow(icon = Icons.Default.Shield, title = "Maximum Security by Default",
-                checked = defaultSecurity, onCheckedChange = { defaultSecurity = it })
+            ToggleRow(Icons.Default.Fingerprint, "Biometric Unlock", biometricsEnabled) { biometricsEnabled = it }
+            ToggleRow(Icons.Default.Shield, "STEALTH-DELETE (5-tap)", stealthDeleteEnabled) { stealthDeleteEnabled = it }
+
+            // Free features
+            SectionHeader("Free")
+            FeatureRow(Icons.Default.Message, "E2E Encrypted Messaging", "XChaCha20-Poly1305 + Double Ratchet", false)
+            FeatureRow(Icons.Default.QrCode, "QR Key Exchange", "Device-to-device, no server", false)
+            ContactLimitRow(tier)
+
+            // Pro features
+            SectionHeader("Pro  ≥ 2,000 IFR")
+            GatedFeatureRow(Icons.Default.Group, "Group Messaging", "Encrypted group chats", tier, IfrTier.PRO, onIfrClick)
+            GatedFeatureRow(Icons.Default.AttachFile, "Encrypted File Transfer", "E2E via Kaspa XFTP", tier, IfrTier.PRO, onIfrClick)
+            GatedFeatureRow(Icons.Default.AccountTree, "Kaspa Identity Anchor", "Public key on BlockDAG", tier, IfrTier.PRO, onIfrClick)
+            GatedFeatureRow(Icons.Default.Security, "Chameleon Integration", "Context-aware overlay", tier, IfrTier.PRO, onIfrClick)
+
+            // Elite features
+            SectionHeader("Elite  ≥ 6,000 IFR")
+            GatedFeatureRow(Icons.Default.Router, "Onion Routing (3-hop)", "Full IP protection", tier, IfrTier.ELITE, onIfrClick)
+            GatedFeatureRow(Icons.Default.FaceRetouchingNatural, "Decoy Chat Profiles", "Fake conversations on demand", tier, IfrTier.ELITE, onIfrClick)
+            GatedFeatureRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis", tier, IfrTier.ELITE, onIfrClick)
 
             SectionHeader("Access")
-            ClickRow(icon = Icons.Default.Lock, title = "IFR Token Unlock",
-                subtitle = "Lock tokens for lifetime access", onClick = onIfrClick)
+            ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Lock tokens for lifetime access", onIfrClick)
 
             SectionHeader("About")
-            ClickRow(icon = Icons.Default.Shield, title = "Version 0.1.0-alpha",
-                subtitle = "SecureChat — StealthX Platform", onClick = {})
+            ClickRow(Icons.Default.Shield, "Version 0.1.0-alpha", "SecureChat — StealthX Platform") {}
         }
     }
 }
 
 @Composable
-private fun SectionHeader(title: String) {
-    Text(title.uppercase(),
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp))
+private fun ContactLimitRow(tier: IfrTier) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(Icons.Default.Contacts, null, tint = MaterialTheme.colorScheme.primary)
+        Spacer(Modifier.width(16.dp))
+        Column(Modifier.weight(1f)) {
+            Text("Contacts", style = MaterialTheme.typography.bodyMedium)
+            Text(
+                if (tier >= IfrTier.PRO) "Unlimited" else "10 max (Free tier)",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+        }
+    }
 }
 
 @Composable
-private fun ToggleRow(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+private fun GatedFeatureRow(
+    icon: ImageVector,
     title: String,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    subtitle: String,
+    currentTier: IfrTier,
+    requiredTier: IfrTier,
+    onUnlock: () -> Unit
 ) {
-    Row(modifier = Modifier.fillMaxWidth().padding(16.dp, 12.dp),
-        verticalAlignment = Alignment.CenterVertically) {
+    val locked = currentTier < requiredTier
+    val eliteColor = Color(0xFFFFD700)
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            icon, null,
+            tint = if (locked) Color.Gray.copy(alpha = 0.4f)
+                   else if (requiredTier == IfrTier.ELITE) eliteColor
+                   else MaterialTheme.colorScheme.primary
+        )
+        Spacer(Modifier.width(16.dp))
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyMedium, color = if (locked) Color.Gray else MaterialTheme.colorScheme.onSurface)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+        }
+        if (locked) {
+            TextButton(onClick = onUnlock) {
+                Icon(Icons.Default.Lock, null, tint = Color.Gray, modifier = Modifier.size(14.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("Unlock", style = MaterialTheme.typography.labelSmall, color = Color(0xFF00E5FF))
+            }
+        }
+    }
+}
+
+@Composable
+private fun FeatureRow(icon: ImageVector, title: String, subtitle: String, locked: Boolean) {
+    Row(modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
+        Spacer(Modifier.width(16.dp))
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyMedium)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+        }
+        Icon(Icons.Default.CheckCircle, null, tint = Color(0xFF00FF88), modifier = Modifier.size(20.dp))
+    }
+}
+
+@Composable
+private fun SectionHeader(title: String) {
+    Text(
+        title.uppercase(),
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)
+    )
+}
+
+@Composable
+private fun ToggleRow(icon: ImageVector, title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp), verticalAlignment = Alignment.CenterVertically) {
         Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
         Spacer(Modifier.width(16.dp))
         Text(title, modifier = Modifier.weight(1f))
@@ -72,22 +194,16 @@ private fun ToggleRow(
 }
 
 @Composable
-private fun ClickRow(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    title: String,
-    subtitle: String,
-    onClick: () -> Unit
-) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(16.dp, 12.dp),
-        verticalAlignment = Alignment.CenterVertically) {
+private fun ClickRow(icon: ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
         Spacer(Modifier.width(16.dp))
         Column(Modifier.weight(1f)) {
             Text(title)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
         }
         Icon(Icons.Default.ChevronRight, null)
     }

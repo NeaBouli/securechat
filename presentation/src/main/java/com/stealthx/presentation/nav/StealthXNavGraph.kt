@@ -37,7 +37,10 @@ fun StealthXNavGraph() {
             IFRUnlockScreen(onBack = { navController.popBackStack() })
         }
         composable(Screen.Settings.route) {
-            SettingsScreen(onBack = { navController.popBackStack() }, onIfrClick = { navController.navigate(Screen.IFRUnlock.route) })
+            SettingsScreen(
+                onBack = { navController.popBackStack() },
+                onIfrClick = { navController.navigate(Screen.IFRUnlock.route) }
+            )
         }
     }
 }
