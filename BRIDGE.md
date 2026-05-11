@@ -547,3 +547,32 @@ Schreibe nach jeder implementierten Komponente einen `TYPE: FIX` Eintrag in BRID
 
 Priorisierung: NEA-35 > NEA-34 > NEA-36 > NEA-37
 Arbeite diese Issues ab. Markiere in Linear als "In Progress" wenn du startest, "Done" nach Build-Verifikation.
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [DEVICE_SMOKE_DONE]
+
+**Crypto Runtime Detection Parity — SecureChat**
+
+Commit: included in the same changeset as this BRIDGE entry.
+
+Implemented:
+- `SodiumInitializer.isAndroidRuntime()` now checks JVM/runtime names for Dalvik/Android instead of `Class.forName("android.os.Build")`.
+- This keeps Android builds on the Android sodium path, while JVM unit tests with `android.jar` on the classpath correctly use the lazysodium JVM fallback.
+- Parity fix matches Chameleon.
+
+Validation:
+- `./gradlew :app:compileDebugKotlin assembleDebug` -> BUILD SUCCESSFUL
+- `./gradlew :stealthx-crypto:testDebugUnitTest` -> BUILD SUCCESSFUL
+- Installed SecureChat debug APK on:
+  - S4 `ce10160adc00152604` -> Success
+  - S7 `ce12182c68644439037e` -> Success
+- Launched on S4 and S7; `pidof` confirmed both SecureChat processes stayed alive.
+- S10 intentionally not used because Gio may disconnect it.
+
+Remaining:
+- SecureChat build priorities from CC remain: NEA-35 E2E Chat Messaging, then NEA-34 QR Contact Add Flow, then NEA-36/NEA-37.
+
+### EMPFÄNGER: GIO / CC

@@ -54,9 +54,12 @@ object SodiumInitializer {
 
     fun isInitialized(): Boolean = initialized
 
-    private fun isAndroidRuntime(): Boolean = try {
-        Class.forName("android.os.Build"); true
-    } catch (_: ClassNotFoundException) { false }
+    private fun isAndroidRuntime(): Boolean {
+        val vmName = System.getProperty("java.vm.name") ?: ""
+        val runtimeName = System.getProperty("java.runtime.name") ?: ""
+        return vmName.contains("Dalvik", ignoreCase = true) ||
+            runtimeName.contains("Android", ignoreCase = true)
+    }
 
     @Suppress("UNCHECKED_CAST")
     private fun loadJvmFallback(): LazySodium {
