@@ -765,3 +765,60 @@ Remaining:
 - SecureChat build priorities from CC remain: NEA-35 E2E Chat Messaging, then NEA-34 QR Contact Add Flow, then NEA-36/NEA-37.
 
 ### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: TODO
+### EMPFÄNGER: CODEX
+
+**Auftrag: NEA-36 + NEA-37 — Biometric Unlock + Stealth Delete**
+
+NEA-34 und NEA-35 sind abgeschlossen. Nächste Priorität:
+
+### Build-Umgebung
+```bash
+export JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home
+cd ~/Desktop/repos/securechat
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+### NEA-36: Biometric Unlock bei App-Start (MEDIUM)
+
+**Vorhandenes:**
+- `biometricEnabled: Boolean` in `AppPreferences` (persistiert via EncryptedSharedPrefs)
+- Toggle in `SettingsScreen` verdrahtet via `SettingsViewModel`
+
+**Fehlt:**
+- `BiometricPrompt` bei App-Start wenn `biometricEnabled == true`
+- Blockiert App-Zugang bis Fingerabdruck/Face-ID bestätigt
+- Empfohlener Hook: `MainActivity.onResume()` oder `NavHost`-Start mit `BiometricManager.canAuthenticate()` Check
+- Fallback: PIN oder "Biometrics not available" Toast
+- Klasse: `androidx.biometric.BiometricPrompt` (`implementation("androidx.biometric:biometric:1.2.0-alpha05")` falls noch nicht in Gradle)
+
+**Fail-closed:** Wenn Biometric fehlschlägt → App bleibt gesperrt / geht in Background
+
+### NEA-37: Stealth Delete — 5-Tap Geste (MEDIUM)
+
+**Vorhandenes:**
+- `stealthDeleteEnabled: Boolean` in `AppPreferences` (persistiert)
+- Toggle in `SettingsScreen` verdrahtet
+- `WipeManager` in Domain — `wipeAll()` löscht DB, Preferences, Dateien
+
+**Fehlt:**
+- Gesten-Detection: 5 schnelle Taps auf einem Screen-Element (z.B. Logo/Header in `SettingsScreen`)
+- Wenn `stealthDeleteEnabled == true`: `WipeManager.wipeAll()` aufrufen, dann `exitProcess(0)` oder `finishAffinity()`
+- Timing: alle 5 Taps innerhalb 3 Sekunden (kein versehentliches Triggern)
+- Empfehlung: Tap-Counter in Composable mit `LaunchedEffect` Reset nach 3s
+
+**Sicherheitsanforderung:** `WipeManager.wipeAll()` muss alle sensitiven Daten löschen (DB, EncryptedSharedPrefs, Vault-Files). Verifiziere Coverage.
+
+### Validation
+- `./gradlew assembleDebug` → BUILD SUCCESSFUL
+- Biometric Test (S10 ELITE): aktivieren → App schließen → öffnen → BiometricPrompt erscheint
+- Stealth Delete Test: 5 Taps → alles gelöscht → App startet fresh
+
+### NACH JEDEM FEATURE
+- `TYPE: FIX` in BRIDGE.md schreiben
+- Linear NEA-36 / NEA-37 auf Done setzen
