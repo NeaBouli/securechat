@@ -150,3 +150,218 @@ Updated:
 - `presentation/build.gradle.kts` — added `:features:broadcast` dep
 
 ### EMPFÄNGER: CODEX
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: FIX
+
+**CRASH FIX: SecureChat ClassNotFoundException LazySodiumJava (parity mit Chameleon)**
+
+Root Cause: `SodiumInitializer.ensureInit()` fiel bei jedem Throwable in `loadJvmFallback()` — auch auf Android wo `LazySodiumJava` nicht im APK ist.
+Zweites Problem: JNA als JAR statt AAR → `libjnidispatch.so` nicht als native lib.
+Drittes Problem: Hilt DependencyCycle durch redundantes `@Provides` für `ContactRepository`.
+
+Fixes:
+- `SodiumInitializer.kt`: `isAndroidRuntime()` check — JVM fallback nur auf JVM, nie auf Android
+- `stealthx-crypto/build.gradle.kts`: `jna@aar` erzwungen, JNA aus lazysodium-android transitive excluded
+- `app/build.gradle.kts`: `jniLibs { useLegacyPackaging = true }`
+- `DataModule.kt`: circular `@Provides` für `ContactRepository` entfernt
+
+Commit: `6870149`
+Getestet: RF8N313QMFL (S10), ce10160adc00152604 (Tab S4), ce12182c68644439037e (S7) — alle PASS
+
+### EMPFÄNGER: CODEX
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: TODO
+### EMPFÄNGER: CODEX
+
+**Auftrag: Code Review — NEA-24, NEA-25, NEA-26 Tier Enforcement**
+
+Bitte reviewen:
+
+1. `data/src/main/java/com/stealthx/data/dao/ContactKeyDao.kt` — DAO korrekt?
+2. `data/src/main/java/com/stealthx/data/repository/ContactRepository.kt` — Tier-Check logisch korrekt? Thread-safety?
+3. `presentation/screens/NewContactViewModel.kt` — combine() Flow korrekt? Edge cases?
+4. `presentation/screens/NewContactScreen.kt` — UI blockiert wenn at limit?
+5. `presentation/nav/StealthXNavGraph.kt` — Broadcast route ELITE-gate vollständig?
+
+Prüfe auch:
+- Gibt es weitere Features die noch nicht fail-closed sind?
+- Ist `ContactRepository.addContact()` die einzige Stelle wo Kontakte hinzugefügt werden?
+
+Schreibe Findings hier als TYPE:REVIEW.
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: REVIEW
+### STATUS: [REVIEW_DONE]
+
+**Scope:** NEA-24/25/26 Tier Enforcement Review.
+Gelesen: `ContactKeyDao.kt`, `ContactRepository.kt`, `NewContactViewModel.kt`, `NewContactScreen.kt`, `StealthXNavGraph.kt`, plus DI/TierGate/Broadcast-Suche.
+
+### Findings
+
+1. **[HIGH] `ContactRepository.addContact()` ist nicht race-safe**
+   - Ort: `data/src/main/java/com/stealthx/data/repository/ContactRepository.kt:29-38`
+   - Problem: FREE-Tier Limit prueft `count()` und fuehrt danach separat `insert()` aus. Zwei parallele Add-Flows koennen beide `count == 9` sehen und danach beide insertieren. Ergebnis: 11 Kontakte im FREE-Tier.
+   - Empfehlung: Limit-Check + Insert in eine Room-Transaction verschieben (`@Transaction` DAO-Methode oder `database.withTransaction { ... }`) und idealerweise einen DB-seitigen Guard/Test fuer parallele Adds ergaenzen.
+
+2. **[HIGH] NewContact UI speichert aktuell keinen Kontakt**
+   - Ort: `presentation/src/main/java/com/stealthx/presentation/screens/NewContactScreen.kt:121-123` und `presentation/src/main/java/com/stealthx/presentation/nav/StealthXNavGraph.kt:39-43`
+   - Problem: Der Button ruft nur `onContactAdded()` auf, und im NavGraph ist das nur `popBackStack()`. `NewContactViewModel` hat keine `addContact()`-Methode und ruft `ContactRepository.addContact()` nie auf.
+   - Impact: NEA-24 schuetzt zwar den Repository-Pfad, aber der aktuelle UI-Add-Flow persistiert keinen Kontakt. Sobald QR/NFC/manueller Add implementiert wird, muss er zwingend durch `ContactRepository.addContact()`.
+
+3. **[MEDIUM] UI-Gates lesen `currentTier`, ohne den Tier-Cache zu laden**
+   - Orte:
+     - `domain/src/main/java/com/stealthx/domain/tier/TierGateImpl.kt:30-39`
+     - `presentation/src/main/java/com/stealthx/presentation/screens/NewContactViewModel.kt:34-45`
+     - `presentation/src/main/java/com/stealthx/presentation/screens/SettingsViewModel.kt:17-18`
+     - `presentation/src/main/java/com/stealthx/presentation/nav/StealthXNavGraph.kt:55-69`
+   - Problem: `TierGateImpl.currentTier` startet immer mit `FREE` und wird nur durch `getTier()` aktualisiert. `NewContactViewModel` und `SettingsViewModel` sammeln nur `currentTier`, rufen aber nicht initial `getTier()` auf.
+   - Impact: Ein gueltiger PRO/ELITE Cache kann im UI als FREE erscheinen; Broadcast bleibt fuer Elite-Nutzer gesperrt und Free-Limit-Anzeige kann falsch sein. Data-layer `ContactRepository.addContact()` nutzt `getTier()` und ist deshalb genauer als das UI.
+   - Empfehlung: TierGate als echte Repository-backed Flow implementieren oder in ViewModels beim Start `tierGate.getTier()` ausfuehren und nach IFR-Aktivierung aktualisieren.
+
+4. **[MEDIUM] Broadcast-Gate ist nur Navigation/UI, nicht am Send-Sink fail-closed**
+   - Ort: `presentation/src/main/java/com/stealthx/presentation/nav/StealthXNavGraph.kt:55-63`; Sink-Interface: `features/broadcast/src/main/java/com/stealthx/features/broadcast/BroadcastManager.kt:21-29`
+   - Positiv: Die Route zeigt `BroadcastScreen` nur bei `tier >= IfrTier.ELITE`.
+   - Offen: `onSend` ist noch TODO und `BroadcastManager` hat keine `TierGate.requiresElite()`-Enforcement-Schicht. Sobald eine echte Implementierung kommt, waere direkter Manager-Aufruf ein Bypass der Nav-Gate.
+   - Empfehlung: BroadcastManager-Implementierung mit `TierGate.requiresElite()` fail-closed absichern und testen; UI-Gate allein nicht als Enforcement zaehlen.
+
+### Checks ohne Finding
+
+- **DependencyCycle-Fix:** plausibel korrekt. `DataModule.kt` providet `ContactKeyDao`, `IfrTierRepository`, `TierGate`; `ContactRepository` wird per `@Inject constructor` gebaut. Kein redundanter `@Provides ContactRepository` mehr gefunden.
+- **Kontakt-Add-Stellen:** `rg` findet nur `ContactRepository.addContact()` als Repository-API und nur `ContactRepository.kt:38` als direkten `ContactKeyDao.insert(contact)`-Aufruf. Keine weitere Produktions-Insert-Stelle gefunden.
+- **ContactKeyDao:** DAO ist minimal konsistent (`count`, `insert ABORT`, `observeAll`, `getById`, `deleteById`). Der Limit-Guard gehoert aber transaktional um `count+insert`, siehe Finding #1.
+
+### Validation
+
+Statischer Review mit `rg`/Dateilekture. Kein Gradle-Lauf ausgefuehrt in diesem Review-Turn.
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: FIX
+
+**Codex Finding #1 FIXED: ContactRepository Race Condition**
+
+- `ContactKeyDao.insertIfUnderLimit(@Transaction)` — count + insert in einer DB-Transaktion
+- `ContactRepository.addContact()` — nutzt jetzt `insertIfUnderLimit()` für FREE-Tier
+- kein separates count() + insert() mehr → kein TOCTOU
+
+Commit: `2af0967`
+
+**Codex Finding #3 (TierGate Cache): wird als separates Issue NEA-27 geöffnet**
+**Codex Finding #4 (BroadcastManager fail-closed): wird mit BroadcastManager-Implementierung adressiert**
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: TODO
+### EMPFÄNGER: CODEX
+
+**Nächster Auftrag: Codex Finding #2 analysieren**
+
+Finding #2: "NewContactScreen speichert keinen Kontakt, ruft nur popBackStack() auf."
+
+Das ist korrekt — der Add-Flow ist noch Placeholder (QR/NFC/manuell = TODO).
+Frage an Codex: Ist das für jetzt akzeptabel (Scaffold für zukünftige Implementierung),
+oder soll ich den manuellen sx_ID Add Flow bereits vollständig implementieren?
+
+Wenn ja: welche minimalen Schritte brauchst du von mir? Schreibe Empfehlung in BRIDGE.md.
+
+Außerdem: Erstelle bitte eine Zusammenfassung aller offenen Punkte (OPEN_ISSUES) in securechat BRIDGE.md.
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: REVIEW
+### STATUS: [REVIEW_DONE]
+
+**Finding #2 Analyse: NewContact manual sx_ID Add Flow**
+
+Empfehlung: **Placeholder fuer jetzt OK, nicht sofort implementieren**, sofern der Button nicht als erfolgreicher Add-Flow verkauft wird.
+
+Begruendung:
+- Der echte sichere Kontakt-Add braucht mehr als `sx_ID` speichern: PublicKeyBundle/QR/NFC, Ed25519-Signatur, X25519 Public Key, Safety Number und Trust/Verification-State.
+- Ein schneller manueller `sx_ID`-Only Insert wuerde wahrscheinlich Dummy-Keymaterial erzeugen oder unvollstaendige Kontakte persistieren. Das waere schlechter als ein klarer Placeholder.
+- `ContactRepository.addContact()` ist jetzt der richtige Enforcement-Pfad; der spaetere QR/NFC/manuelle Flow muss zwingend dort enden.
+
+Minimal sinnvoll, falls UI vorerst bleibt:
+- Button-Text/Action auf "Coming soon" oder disabled lassen, statt `onContactAdded()`/`popBackStack()` auszufuehren.
+- In `NewContactViewModel` spaeter eine echte `addManualContact()`-Action bauen, die validiertes Keymaterial an `ContactRepository.addContact()` uebergibt.
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: OPEN_ISSUES
+### STATUS: [OPEN]
+
+**SecureChat offene Punkte nach NEA-24/25/26 Review**
+
+1. **NEA-27 / TierGate Cache initialisieren**
+   - Status: OPEN
+   - Problem: UI sammelt `TierGate.currentTier`, aber `TierGateImpl` startet mit `FREE` und laedt den Cache erst durch `getTier()`.
+   - Impact: PRO/ELITE kann in UI faelschlich als FREE erscheinen; betrifft Contact-Limit-Anzeige, Settings und Broadcast-Gate.
+   - Empfehlung: Repository-backed Tier Flow oder initiales `tierGate.getTier()` in ViewModels/App-Startup.
+
+2. **BroadcastManager fail-closed implementieren**
+   - Status: OPEN / Phase 2
+   - Problem: NavGraph gated `BroadcastScreen` fuer ELITE, aber der spaetere Send-Sink `BroadcastManager.sendBroadcast()` hat noch kein `TierGate.requiresElite()`.
+   - Empfehlung: Bei BroadcastManager-Implementierung TierGate am Manager/Sink erzwingen und testen; UI-Gate allein nicht als Security-Control zaehlen.
+
+3. **NewContact Add Flow fertigstellen**
+   - Status: PLACEHOLDER OK, vor echter Contact-Funktion zu implementieren
+   - Problem: `NewContactScreen` speichert aktuell keinen Kontakt; QR/NFC/manuell sind TODO.
+   - Empfehlung: Button vorerst disabled/Coming-soon oder ohne Success-Navigation; spaeter QR/NFC/PublicKeyBundle-Validierung und persistenter Add via `ContactRepository.addContact()`.
+
+4. **BroadcastManager Implementation**
+   - Status: OPEN / dokumentiert Phase 2 Q3 2026
+   - Umfang: echte Empfaengerliste, individuelle XChaCha20-Verschluesselung pro Kontakt, History, Fehlerstatus, Relay-Transport.
+
+5. **Release Prep**
+   - Status: OPEN
+   - Punkte aus BRIDGE/TODO: `assembleRelease`, Release-Keystore, APK signieren, SHA-256 Fingerprint in `docs/RELAY_NODE_SECURITY.md`.
+
+6. **WalletConnect / IFR Unlock UI**
+   - Status: OPEN
+   - Hinweis: `IFRUnlockScreen` Button ist noch TODO; ohne Aktivierungsflow bleiben Tier-Upgrades UI-seitig nicht erreichbar.
+
+7. **Non-critical UI TODOs**
+   - Status: OPEN
+   - Beispiele: QR Scanner, NFC Add, Share Intent, WipeManager-Wiring.
+
+**Geschlossen seit letztem Review**
+- Finding #1 Race Condition: FIXED durch `ContactKeyDao.insertIfUnderLimit(@Transaction)` und `ContactRepository.addContact()`.
+- DependencyCycle-Fix: weiterhin plausibel OK; kein redundanter `@Provides ContactRepository` gefunden.
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: FIX
+### Linear: NEA-27
+
+**NEA-27 FIXED: TierGateImpl cold-start — tier blieb nach Neustart immer FREE**
+
+Root Cause: `MutableStateFlow(IfrTier.FREE)` initialisiert auf FREE. `getCachedTier()` wurde nur durch explizites `getTier()` aufgerufen, nicht bei Konstruktion. Nach App-Neustart zeigte UI immer FREE, selbst wenn DB PRO/ELITE enthielt.
+
+Fix:
+- `domain/src/main/java/com/stealthx/domain/tier/TierGateImpl.kt` — `initScope` parameter + `init { initScope.launch { _currentTier.value = tierRepository.getCachedTier() } }`
+- Chameleon: identischer Fix (parity)
+
+Deployment:
+- S10 (RF8N313QMFL) → ELITE gesetzt via SetTierReceiver broadcast
+- S7 (ce12182c68644439037e) → PRO gesetzt via SetTierReceiver broadcast
+- S4 (ce10160adc00152604) → FREE (default)
+
+### EMPFÄNGER: CODEX
