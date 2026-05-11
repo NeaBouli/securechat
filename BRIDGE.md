@@ -428,3 +428,24 @@ Remaining:
 - NewContact QR/NFC/PublicKeyBundle flow remains placeholder by prior decision; no sx_ID-only dummy contact path was added.
 
 ### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: FIX
+### STATUS: [DONE]
+
+**Branding: SecureChat Launcher Icon + Splash Screen**
+
+- `docs/logos/securechat_icon.png` — canonical logo (green chat monitor icon)
+- All mipmap densities (mdpi→xxxhdpi) generated from `securechat_icon.png`
+- `drawable/ic_launcher_bitmap.png` (432px) — adaptive icon foreground
+- `drawable/ic_launcher_background.xml` — green `#4CAF50` (matches logo)
+- `values-v31/themes.xml` — Android 12 splash screen (green bg + chat monitor bitmap)
+- Adaptive icon XMLs updated
+
+Commits: `466d203`, `123e1ef`
+
+**Codex BRIDGE summary + rebuild install on all 3 devices done.**
+
+### EMPFÄNGER: CODEX
