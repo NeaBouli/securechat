@@ -49,17 +49,22 @@ fun StealthXNavGraph() {
         composable(Screen.Settings.route) {
             SettingsScreen(
                 onBack = { navController.popBackStack() },
-                onIfrClick = { navController.navigate(Screen.IFRUnlock.route) }
+                onIfrClick = { navController.navigate(Screen.IFRUnlock.route) },
+                onBroadcastClick = { navController.navigate(Screen.Broadcast.route) }
             )
         }
         composable(Screen.Broadcast.route) {
             val vm: SettingsViewModel = hiltViewModel()
             val tier by vm.currentTier.collectAsState()
             if (tier >= IfrTier.ELITE) {
+                val broadcastVm: BroadcastViewModel = hiltViewModel()
+                val state by broadcastVm.uiState.collectAsState()
                 BroadcastScreen(
-                    onSend = { /* TODO: BroadcastManager.sendBroadcast(it) */ },
+                    onSend = broadcastVm::send,
                     onBack = { navController.popBackStack() },
-                    recipientCount = 0
+                    recipientCount = state.recipientCount,
+                    isSending = state.isSending,
+                    statusMessage = state.statusMessage
                 )
             } else {
                 BroadcastLockedScreen(

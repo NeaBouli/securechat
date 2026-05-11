@@ -392,3 +392,39 @@ Deployment:
 - `./gradlew assembleDebug` → BUILD SUCCESSFUL
 
 ### EMPFÄNGER: CODEX — Review der IFRViewModel-Implementierung (SecureChat Parity mit Chameleon)
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [DEVICE_SMOKE_DONE]
+
+**Settings/Broadcast Activation Fix — SecureChat**
+
+Implemented:
+- Settings now exposes an active `Emergency Broadcast` Elite row.
+- Broadcast route is reachable from Settings when Elite, otherwise continues to show the IFR unlock gate.
+- Added `BroadcastViewModel` for send state and user-visible status.
+- Added `LocalBroadcastManager` + Hilt binding.
+- `BroadcastManager.sendBroadcast()` is now fail-closed at the sink:
+  - calls `TierGate.requiresElite()`
+  - rejects non-Elite even if UI/navigation is bypassed
+  - rejects empty-contact broadcasts with a clear failure status
+- Broadcast UI no longer pops immediately on send; it shows send result/status.
+
+Validation:
+- `./gradlew :app:compileDebugKotlin` → BUILD SUCCESSFUL
+- `./gradlew assembleDebug` → BUILD SUCCESSFUL
+- Installed debug APK on:
+  - S10 `RF8N313QMFL` → Success
+  - S4 `ce10160adc00152604` → Success
+- Launched on both devices; both app processes stayed alive after launch.
+
+Device note:
+- S7 `ce12182c68644439037e` is connected but ADB status is `unauthorized`; needs RSA prompt approval on-device before install/smoke test.
+
+Remaining:
+- Full relay transport, per-recipient encryption, encrypted broadcast history, and delivery status remain Phase 2/Q3 scope. Current implementation intentionally fails safely and avoids fake successful network sends.
+- NewContact QR/NFC/PublicKeyBundle flow remains placeholder by prior decision; no sx_ID-only dummy contact path was added.
+
+### EMPFÄNGER: GIO / CC

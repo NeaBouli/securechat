@@ -25,7 +25,9 @@ import androidx.compose.ui.unit.dp
 fun BroadcastScreen(
     onSend: (String) -> Unit,
     onBack: () -> Unit,
-    recipientCount: Int
+    recipientCount: Int,
+    isSending: Boolean = false,
+    statusMessage: String? = null
 ) {
     var message by remember { mutableStateOf("") }
     var confirmDialog by remember { mutableStateOf(false) }
@@ -75,7 +77,7 @@ fun BroadcastScreen(
 
             Button(
                 onClick = { confirmDialog = true },
-                enabled = message.isNotBlank(),
+                enabled = message.isNotBlank() && !isSending,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error
@@ -83,7 +85,11 @@ fun BroadcastScreen(
             ) {
                 Icon(Icons.Default.Send, null)
                 Spacer(Modifier.width(8.dp))
-                Text("Send to All Contacts")
+                Text(if (isSending) "Sending..." else "Send to All Contacts")
+            }
+            statusMessage?.let {
+                Spacer(Modifier.height(12.dp))
+                Text(it, style = MaterialTheme.typography.bodySmall)
             }
         }
     }
@@ -99,7 +105,6 @@ fun BroadcastScreen(
                 TextButton(onClick = {
                     onSend(message)
                     confirmDialog = false
-                    onBack()
                 }) {
                     Text("Send Now", color = MaterialTheme.colorScheme.error)
                 }

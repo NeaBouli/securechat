@@ -22,6 +22,7 @@ import com.stealthx.shared.model.IfrTier
 fun SettingsScreen(
     onBack: () -> Unit,
     onIfrClick: () -> Unit,
+    onBroadcastClick: () -> Unit,
     vm: SettingsViewModel = hiltViewModel()
 ) {
     val tier by vm.currentTier.collectAsState()
@@ -96,6 +97,7 @@ fun SettingsScreen(
             GatedFeatureRow(Icons.Default.Router, "Onion Routing (3-hop)", "Full IP protection", tier, IfrTier.ELITE, onIfrClick)
             GatedFeatureRow(Icons.Default.FaceRetouchingNatural, "Decoy Chat Profiles", "Fake conversations on demand", tier, IfrTier.ELITE, onIfrClick)
             GatedFeatureRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis", tier, IfrTier.ELITE, onIfrClick)
+            GatedFeatureRow(Icons.Default.Send, "Emergency Broadcast", "Encrypted alert to all contacts", tier, IfrTier.ELITE, onIfrClick, onBroadcastClick)
 
             SectionHeader("Access")
             ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Lock tokens for lifetime access", onIfrClick)
@@ -132,12 +134,16 @@ private fun GatedFeatureRow(
     subtitle: String,
     currentTier: IfrTier,
     requiredTier: IfrTier,
-    onUnlock: () -> Unit
+    onUnlock: () -> Unit,
+    onOpen: (() -> Unit)? = null
 ) {
     val locked = currentTier < requiredTier
     val eliteColor = Color(0xFFFFD700)
     Row(
-        modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(if (!locked && onOpen != null) Modifier.clickable(onClick = onOpen) else Modifier)
+            .padding(16.dp, 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
