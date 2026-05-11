@@ -33,6 +33,27 @@ data class StealthXId(
         get() = "stealthx://add/$raw"
 }
 
+data class StealthXX25519KeyPair(
+    val sxId: String,
+    val publicKey: ByteArray,
+    val privateKey: ByteArray
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is StealthXX25519KeyPair) return false
+        return sxId == other.sxId &&
+            publicKey.contentEquals(other.publicKey) &&
+            privateKey.contentEquals(other.privateKey)
+    }
+
+    override fun hashCode(): Int {
+        var result = sxId.hashCode()
+        result = 31 * result + publicKey.contentHashCode()
+        result = 31 * result + privateKey.contentHashCode()
+        return result
+    }
+}
+
 object StealthXIdentity {
 
     private const val PREFS_NAME = "stealthx_identity"
@@ -142,6 +163,17 @@ object StealthXIdentity {
             signature = signature,
             version = 1,
             createdAt = createdAt
+        )
+    }
+
+    fun getX25519KeyPair(context: Context): StealthXX25519KeyPair {
+        val identity = getOrCreateWithSeed(context)
+        val prefs = getEncryptedPrefs(context)
+        ensureKeyPairs(prefs)
+        return StealthXX25519KeyPair(
+            sxId = identity.raw,
+            publicKey = prefs.getString(KEY_X25519_PUBLIC, null)!!.fromBase64(),
+            privateKey = prefs.getString(KEY_X25519_PRIVATE, null)!!.fromBase64()
         )
     }
 

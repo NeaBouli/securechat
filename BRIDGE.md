@@ -249,6 +249,40 @@ Statischer Review mit `rg`/Dateilekture. Kein Gradle-Lauf ausgefuehrt in diesem 
 ## 2026-05-11 [CODEX]
 ### TYPE: FIX
 ### STATUS: [BUILD_DONE]
+### Linear: NEA-35
+
+**SecureChat E2E Chat Messaging — Receive/Import + QR Device Flow**
+
+Implemented:
+- Added own X25519 keypair access through `StealthXIdentity.getX25519KeyPair()` backed by encrypted identity preferences.
+- Extended `chat_sessions` to persist receive root key, receive chain key, sender DH public key, and receive counter.
+- Added `ChatSessionRepository.decryptIncoming()` for incoming `RatchetMessage` envelopes:
+  - derives receive chain from own X25519 private key + sender ratchet DH public key
+  - rejects old/duplicate counters
+  - advances receive chain and wipes transient key material
+- Added `MessageRepository.receiveLocalMessage()` / `importRatchetMessage()` to decrypt inbound messages and store them as locally encrypted `INCOMING` / `UNREAD` rows.
+- Added `RatchetMessageQr` codec (`stealthx://msg?...`) for QR/manual transport of full ratchet envelopes.
+- Chat UI now supports:
+  - scan incoming message QR
+  - paste/import incoming message URI
+  - export latest outgoing message as QR + selectable URI
+- Room schema advanced to v4.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` -> BUILD SUCCESSFUL
+
+Scope Notes:
+- Phase-1 two-device chat is now testable without relay: send on device A, export QR, scan/import on device B.
+- Out-of-order skipped-key cache is not implemented yet; current receive path rejects duplicate/old counters and supports bounded forward skips.
+- Real Tor/Kaspa relay delivery remains Phase-2 transport work.
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [BUILD_DONE]
 
 **SecureChat MyId Screen — QR Code Export**
 

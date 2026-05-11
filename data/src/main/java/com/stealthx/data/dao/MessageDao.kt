@@ -21,6 +21,9 @@ interface MessageDao {
     @Query("SELECT * FROM messages WHERE contact_id = :contactId ORDER BY sent_at ASC")
     fun observeForContact(contactId: String): Flow<List<MessageEntity>>
 
+    @Query("SELECT * FROM messages WHERE contact_id = :contactId AND direction = 'OUTGOING' ORDER BY sent_at DESC LIMIT 1")
+    suspend fun latestOutgoingForContact(contactId: String): MessageEntity?
+
     @Query(
         """
         SELECT * FROM messages

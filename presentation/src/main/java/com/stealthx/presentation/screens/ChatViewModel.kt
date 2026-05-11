@@ -26,6 +26,7 @@ data class ChatUiState(
     val contactSxId: String,
     val messages: List<ChatMessageUi> = emptyList(),
     val isSending: Boolean = false,
+    val exportedMessage: String? = null,
     val errorMessage: String? = null
 )
 
@@ -36,13 +37,15 @@ class ChatViewModel @Inject constructor(
 ) : ViewModel() {
     private val contactSxId: String = checkNotNull(savedStateHandle["sxId"])
     private val sending = MutableStateFlow(false)
+    private val exportedMessage = MutableStateFlow<String?>(null)
     private val error = MutableStateFlow<String?>(null)
 
     val uiState: StateFlow<ChatUiState> = combine(
         messageRepository.observeMessages(contactSxId),
         sending,
+        exportedMessage,
         error
-    ) { messages, isSending, errorMessage ->
+    ) { messages, isSending, exportContent, errorMessage ->
         ChatUiState(
             contactSxId = contactSxId,
             messages = messages.map {
@@ -55,6 +58,7 @@ class ChatViewModel @Inject constructor(
                 )
             },
             isSending = isSending,
+            exportedMessage = exportContent,
             errorMessage = errorMessage
         )
     }.stateIn(
@@ -77,10 +81,38 @@ class ChatViewModel @Inject constructor(
             error.value = null
             try {
                 messageRepository.sendLocalMessage(contactSxId, trimmed)
+                exportedMessage.value = messageRepository.exportLatestOutgoingMessage(contactSxId)
             } catch (e: Exception) {
                 error.value = e.message ?: "Could not send message"
             } finally {
                 sending.value = false
+            }
+        }
+    }
+
+    fun exportLatestMessage() {
+        viewModelScope.launch {
+            error.value = null
+            exportedMessage.value = messageRepository.exportLatestOutgoingMessage(contactSxId)
+            if (exportedMessage.value == null) {
+                error.value = "No outgoing message to export"
+            }
+        }
+    }
+
+    fun clearExportedMessage() {
+        exportedMessage.value = null
+    }
+
+    fun importMessage(content: String) {
+        val trimmed = content.trim()
+        if (trimmed.isEmpty()) return
+        viewModelScope.launch {
+            error.value = null
+            try {
+                messageRepository.importRatchetMessage(contactSxId, trimmed)
+            } catch (e: Exception) {
+                error.value = e.message ?: "Could not import message"
             }
         }
     }

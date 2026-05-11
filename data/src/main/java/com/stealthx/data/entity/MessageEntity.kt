@@ -62,7 +62,11 @@ data class MessageEntity(
     @ColumnInfo(name = "ratchet_aad", typeAffinity = ColumnInfo.BLOB)
     val ratchetAad: ByteArray? = null,
     @ColumnInfo(name = "ratchet_padded_length")
-    val ratchetPaddedLength: Int? = null
+    val ratchetPaddedLength: Int? = null,
+    @ColumnInfo(name = "ratchet_algorithm")
+    val ratchetAlgorithm: String? = null,
+    @ColumnInfo(name = "ratchet_payload_version")
+    val ratchetPayloadVersion: Int? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

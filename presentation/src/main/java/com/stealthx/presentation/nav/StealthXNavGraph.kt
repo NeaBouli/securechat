@@ -39,6 +39,9 @@ fun StealthXNavGraph() {
             ChatScreen(
                 state = state,
                 onSend = chatVm::send,
+                onExportLatest = chatVm::exportLatestMessage,
+                onClearExport = chatVm::clearExportedMessage,
+                onImport = chatVm::importMessage,
                 onBack = { navController.popBackStack() }
             )
         }

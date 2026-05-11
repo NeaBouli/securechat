@@ -35,6 +35,14 @@ data class ChatSessionEntity(
     val sendDhPrivate: ByteArray,
     @ColumnInfo(name = "send_counter")
     val sendCounter: Int,
+    @ColumnInfo(name = "receive_root_key", typeAffinity = ColumnInfo.BLOB)
+    val receiveRootKey: ByteArray? = null,
+    @ColumnInfo(name = "receive_chain_key", typeAffinity = ColumnInfo.BLOB)
+    val receiveChainKey: ByteArray? = null,
+    @ColumnInfo(name = "receive_dh_public", typeAffinity = ColumnInfo.BLOB)
+    val receiveDhPublic: ByteArray? = null,
+    @ColumnInfo(name = "receive_counter")
+    val receiveCounter: Int = 0,
     @ColumnInfo(name = "created_at")
     val createdAt: Long,
     @ColumnInfo(name = "updated_at")

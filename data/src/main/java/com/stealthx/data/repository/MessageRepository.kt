@@ -9,8 +9,10 @@ import com.stealthx.crypto.ChameleonCrypto
 import com.stealthx.data.dao.MessageDao
 import com.stealthx.data.entity.ContactKeyEntity
 import com.stealthx.data.entity.MessageEntity
+import com.stealthx.data.identity.RatchetMessageQr
 import com.stealthx.domain.transport.MessageRouter
 import com.stealthx.shared.model.EncryptedPayload
+import com.stealthx.shared.model.RatchetMessage
 import com.stealthx.transport.TransportResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -97,10 +99,65 @@ class MessageRepository @Inject constructor(
             ratchetCiphertext = outbound.message.payload.ciphertext,
             ratchetNonce = outbound.message.payload.nonce,
             ratchetAad = outbound.message.payload.aad,
-            ratchetPaddedLength = outbound.message.payload.paddedLength
+            ratchetPaddedLength = outbound.message.payload.paddedLength,
+            ratchetAlgorithm = outbound.message.payload.algorithm,
+            ratchetPayloadVersion = outbound.message.payload.version
         )
         messageDao.insert(entity)
         return entity.toDecrypted(contact)
+    }
+
+    suspend fun exportLatestOutgoingMessage(contactId: String): String? {
+        val entity = messageDao.latestOutgoingForContact(contactId) ?: return null
+        return entity.toRatchetMessage()?.let(RatchetMessageQr::toQrContent)
+    }
+
+    suspend fun importRatchetMessage(contactId: String, content: String): DecryptedMessage {
+        val message = RatchetMessageQr.fromQrContent(content).getOrElse {
+            throw IllegalArgumentException(it.message ?: "Invalid StealthX message")
+        }
+        return receiveLocalMessage(contactId, message)
+    }
+
+    suspend fun receiveLocalMessage(contactId: String, message: RatchetMessage): DecryptedMessage {
+        val contact = contactRepository.getById(contactId)
+            ?: throw IllegalArgumentException("Contact not found: $contactId")
+        val receivedAt = System.currentTimeMillis()
+        val plaintextBytes = chatSessionRepository.decryptIncoming(contact, message)
+        val plaintext = plaintextBytes.toString(Charsets.UTF_8)
+        val aad = aadForIncoming(contactId, receivedAt)
+        val key = localMessageKey(contact)
+        val payload = try {
+            ChameleonCrypto.encrypt(plaintextBytes, key, aad)
+        } finally {
+            ChameleonCrypto.wipeBytes(key)
+            ChameleonCrypto.wipeBytes(plaintextBytes)
+        }
+
+        val entity = MessageEntity(
+            id = UUID.randomUUID().toString(),
+            contactId = contactId,
+            direction = DIRECTION_INCOMING,
+            ciphertext = payload.ciphertext,
+            nonce = payload.nonce,
+            aad = payload.aad,
+            paddedLength = payload.paddedLength,
+            algorithm = payload.algorithm,
+            payloadVersion = payload.version,
+            sentAt = receivedAt,
+            deliveryStatus = STATUS_UNREAD,
+            ratchetDhPublic = message.dhPublicKey,
+            ratchetCounter = message.counter,
+            ratchetPrevCounter = message.prevCounter,
+            ratchetCiphertext = message.payload.ciphertext,
+            ratchetNonce = message.payload.nonce,
+            ratchetAad = message.payload.aad,
+            ratchetPaddedLength = message.payload.paddedLength,
+            ratchetAlgorithm = message.payload.algorithm,
+            ratchetPayloadVersion = message.payload.version
+        )
+        messageDao.insert(entity)
+        return entity.toDecrypted(contact).copy(text = plaintext)
     }
 
     suspend fun markRead(contactId: String) {
@@ -142,6 +199,31 @@ class MessageRepository @Inject constructor(
         }
     }
 
+    private fun MessageEntity.toRatchetMessage(): RatchetMessage? {
+        val dhPublic = ratchetDhPublic ?: return null
+        val counter = ratchetCounter ?: return null
+        val prevCounter = ratchetPrevCounter ?: return null
+        val ciphertext = ratchetCiphertext ?: return null
+        val nonce = ratchetNonce ?: return null
+        val aad = ratchetAad ?: return null
+        val paddedLength = ratchetPaddedLength ?: return null
+        val algorithm = ratchetAlgorithm ?: return null
+        val version = ratchetPayloadVersion ?: return null
+        return RatchetMessage(
+            dhPublicKey = dhPublic,
+            counter = counter,
+            prevCounter = prevCounter,
+            payload = EncryptedPayload(
+                ciphertext = ciphertext,
+                nonce = nonce,
+                paddedLength = paddedLength,
+                aad = aad,
+                algorithm = algorithm,
+                version = version
+            )
+        )
+    }
+
     private fun unreadCounts(contacts: List<ContactKeyEntity>): Flow<Map<String, Int>> {
         if (contacts.isEmpty()) {
             return kotlinx.coroutines.flow.flowOf(emptyMap())
@@ -164,6 +246,9 @@ class MessageRepository @Inject constructor(
     private fun aadFor(contactId: String, sentAt: Long): ByteArray =
         "securechat-msg:v1:$contactId:$sentAt".toByteArray(Charsets.UTF_8)
 
+    private fun aadForIncoming(contactId: String, receivedAt: Long): ByteArray =
+        "securechat-incoming:v1:$contactId:$receivedAt".toByteArray(Charsets.UTF_8)
+
     private fun TransportResult.toDeliveryStatus(): String = when (this) {
         is TransportResult.Delivered -> STATUS_SENT
         is TransportResult.Queued -> STATUS_QUEUED
@@ -171,7 +256,9 @@ class MessageRepository @Inject constructor(
     }
 
     private companion object {
+        const val DIRECTION_INCOMING = "INCOMING"
         const val DIRECTION_OUTGOING = "OUTGOING"
+        const val STATUS_UNREAD = "UNREAD"
         const val STATUS_QUEUED = "QUEUED"
         const val STATUS_SENT = "SENT"
         const val STATUS_FAILED = "FAILED"
