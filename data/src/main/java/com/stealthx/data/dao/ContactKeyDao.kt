@@ -9,6 +9,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.stealthx.data.entity.ContactKeyEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -20,6 +21,17 @@ interface ContactKeyDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(contact: ContactKeyEntity)
+
+    /**
+     * Atomic count-check + insert in one transaction.
+     * Returns true if inserted, false if limit already reached.
+     */
+    @Transaction
+    suspend fun insertIfUnderLimit(contact: ContactKeyEntity, limit: Int): Boolean {
+        if (count() >= limit) return false
+        insert(contact)
+        return true
+    }
 
     @Query("SELECT * FROM contact_keys ORDER BY created_at DESC")
     fun observeAll(): Flow<List<ContactKeyEntity>>

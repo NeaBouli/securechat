@@ -25,17 +25,20 @@ class ContactRepository @Inject constructor(
 
     /**
      * Add a contact. Throws [TierLimitException] if FREE tier and limit reached.
+     * Count + insert are atomic — no TOCTOU race condition.
      */
     suspend fun addContact(contact: ContactKeyEntity) {
         if (tierGate.getTier() < IfrTier.PRO) {
-            val count = contactKeyDao.count()
-            if (count >= FREE_CONTACT_LIMIT) {
+            val inserted = contactKeyDao.insertIfUnderLimit(contact, FREE_CONTACT_LIMIT)
+            if (!inserted) {
+                val count = contactKeyDao.count()
                 throw TierLimitException(
                     "Contact limit reached ($count/$FREE_CONTACT_LIMIT). Upgrade to Pro for unlimited contacts."
                 )
             }
+        } else {
+            contactKeyDao.insert(contact)
         }
-        contactKeyDao.insert(contact)
     }
 
     fun observeAll(): Flow<List<ContactKeyEntity>> = contactKeyDao.observeAll()
