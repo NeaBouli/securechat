@@ -449,3 +449,86 @@ Commits: `466d203`, `123e1ef`
 **Codex BRIDGE summary + rebuild install on all 3 devices done.**
 
 ### EMPFÄNGER: CODEX
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: TODO
+### EMPFÄNGER: CODEX
+
+**Auftrag: SecureChat App Vervollständigung — alle offenen Features implementieren**
+
+Gio hat explizit Codex mit dem Bau und der Vervollständigung beauftragt.
+
+### Build-Umgebung
+```bash
+export JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home
+cd ~/Desktop/repos/securechat
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+### Offene Features — Priorität HIGH
+
+**1. NewContact Add Flow — QR/NFC/manuell**
+- `NewContactScreen` hat Placeholder-Button → ruft nur `popBackStack()`
+- Fehlt: echter Kontakt-Add-Flow. Minimal: QR-Scanner für sx_ID + PublicKeyBundle
+- `ContactRepository.addContact()` ist der richtige Enforcement-Pfad (atomic, tier-gated)
+- `ContactKey` Datenmodell existiert — braucht: `sxId`, `publicKey (Ed25519)`, `x25519PublicKey`, `displayName`, `verifiedAt`
+- Empfehlung: QR-Scanner (CameraX + ZXing oder ML Kit), `NewContactViewModel.addContact()`, Safety Number Anzeige
+
+**2. Chat-Funktionalität**
+- `ChatScreen` rendert — aber Nachrichten-Datenmodell und Send/Receive fehlen
+- `DoubleRatchet` + `ChameleonCrypto` existieren und sind getestet
+- Empfehlung: `MessageRepository`, `ChatViewModel`, Room-Tabelle für Nachrichten, lokale E2E-Verschlüsselung per Kontakt
+
+**3. IFR WalletConnect Activity Result**
+- `IFRUnlockScreen` mit `WalletConnectManager` deeplink vorhanden
+- Fehlt: Activity Result Callback wenn User aus Wallet mit Adresse zurückkehrt
+- Empfehlung: `ActivityResultContracts` in MainActivity oder NavGraph verdrahten
+
+### Offene Features — Priorität MEDIUM
+
+**4. BroadcastManager Phase 2 (Q3 2026)**
+- `LocalBroadcastManager` ist fail-closed Stub, queued aber ohne echten Transport
+- Phase 2: Relay Transport, per-recipient XChaCha20 Verschlüsselung, Delivery Status
+- Status: nicht für diesen Sprint — Stub ist korrekt
+
+**5. Conversation List**
+- `ConversationsScreen` zeigt Kontakte
+- Empfehlung: letzte Nachricht + Timestamp pro Conversation, Unread Badge
+
+**6. MyId Screen — QR Code Export**
+- `MyIdScreen` zeigt sx_ID
+- Fehlt: QR-Code Generierung für eigene sx_ID + PublicKeyBundle (für Kontakt-Add durch anderen)
+- Empfehlung: `zxing-android-embedded` oder `qrcode-kotlin` Lib
+
+**7. stealthx-crypto Parity mit Chameleon**
+- `ChameleonCrypto.kt` (paddedLength Fix) und `DoubleRatchet.kt` (AAD Fix) sind in Chameleon gefixed
+- SecureChat hat diese Fixes noch nicht (Codex-Audit Finding #1)
+- Empfehlung: `stealthx-crypto/` Modul aus Chameleon übernehmen
+
+### Offene Features — Priorität LOW
+
+**8. Stealth Delete (5-tap)**
+- `stealthDeleteEnabled` Toggle in Settings existiert + persisted
+- Fehlt: 5-Tap-Geste auf einem Screen triggert `WipeManager.wipeAll()`
+- `WipeManager` existiert in Domain
+
+**9. Biometric Unlock**
+- `biometricEnabled` Toggle persistiert
+- Fehlt: BiometricPrompt bei App-Start wenn aktiviert
+
+**10. Release Keystore + assembleRelease**
+- `./gradlew assembleRelease` — noch kein Signing-Config
+- Empfehlung: Keystore generieren, `signingConfigs` in `app/build.gradle.kts`
+
+### Validation pro Feature
+- `./gradlew assembleDebug` muss grün bleiben
+- `./gradlew test` muss grün bleiben
+- Feature-Test auf physischem Gerät (S10: ELITE, S7: PRO, S4: FREE)
+
+### Bridge-Update nach jedem Feature
+Schreibe nach jeder implementierten Komponente einen `TYPE: FIX` Eintrag in BRIDGE.md.
+
+### EMPFÄNGER: CODEX
