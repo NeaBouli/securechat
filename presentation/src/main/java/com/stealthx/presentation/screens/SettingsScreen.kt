@@ -1,5 +1,6 @@
 package com.stealthx.presentation.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,8 +25,8 @@ fun SettingsScreen(
     vm: SettingsViewModel = hiltViewModel()
 ) {
     val tier by vm.currentTier.collectAsState()
-    var biometricsEnabled by remember { mutableStateOf(true) }
-    var stealthDeleteEnabled by remember { mutableStateOf(true) }
+    val biometricsEnabled by vm.biometricEnabled.collectAsState()
+    val stealthDeleteEnabled by vm.stealthDeleteEnabled.collectAsState()
 
     Scaffold(
         topBar = {
@@ -74,8 +75,8 @@ fun SettingsScreen(
 
             // Security section
             SectionHeader("Security")
-            ToggleRow(Icons.Default.Fingerprint, "Biometric Unlock", biometricsEnabled) { biometricsEnabled = it }
-            ToggleRow(Icons.Default.Shield, "STEALTH-DELETE (5-tap)", stealthDeleteEnabled) { stealthDeleteEnabled = it }
+            ToggleRow(Icons.Default.Fingerprint, "Biometric Unlock", biometricsEnabled) { vm.setBiometricEnabled(it) }
+            ToggleRow(Icons.Default.Shield, "STEALTH-DELETE (5-tap)", stealthDeleteEnabled) { vm.setStealthDeleteEnabled(it) }
 
             // Free features
             SectionHeader("Free")
@@ -196,7 +197,10 @@ private fun ToggleRow(icon: ImageVector, title: String, checked: Boolean, onChec
 @Composable
 private fun ClickRow(icon: ImageVector, title: String, subtitle: String, onClick: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(16.dp, 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(icon, null, tint = MaterialTheme.colorScheme.primary)

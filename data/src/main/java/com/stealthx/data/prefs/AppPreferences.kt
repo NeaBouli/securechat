@@ -50,6 +50,8 @@ class AppPreferences @Inject constructor(
         private const val KEY_SECURITY_LEVEL_DEFAULT = "security_level_default"
         private const val KEY_IFR_WALLET = "ifr_wallet_address"
         private const val KEY_IFR_VERIFICATION_METHOD = "ifr_verification_method"
+        private const val KEY_BIOMETRIC_ENABLED = "biometric_enabled"
+        private const val KEY_STEALTH_DELETE_ENABLED = "stealth_delete_enabled"
     }
 
     var isOnboardingDone: Boolean
@@ -67,6 +69,14 @@ class AppPreferences @Inject constructor(
     var ifrVerificationMethod: String?
         get() = prefs.getString(KEY_IFR_VERIFICATION_METHOD, null)
         set(value) = prefs.edit().putString(KEY_IFR_VERIFICATION_METHOD, value).apply()
+
+    var biometricEnabled: Boolean
+        get() = prefs.getBoolean(KEY_BIOMETRIC_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(KEY_BIOMETRIC_ENABLED, value).apply()
+
+    var stealthDeleteEnabled: Boolean
+        get() = prefs.getBoolean(KEY_STEALTH_DELETE_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(KEY_STEALTH_DELETE_ENABLED, value).apply()
 
     fun clear() {
         prefs.edit().clear().apply()
