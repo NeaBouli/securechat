@@ -1,8 +1,11 @@
 package com.stealthx.presentation.nav
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,12 +24,20 @@ fun StealthXNavGraph() {
         composable(Screen.Conversations.route) {
             val conversationsVm: ConversationsViewModel = hiltViewModel()
             val state by conversationsVm.uiState.collectAsState()
+            val activity = LocalContext.current as? Activity
+            LaunchedEffect(state.wipeCompleted) {
+                if (state.wipeCompleted) {
+                    activity?.finishAffinity()
+                    kotlin.system.exitProcess(0)
+                }
+            }
             ConversationsScreen(
                 state = state,
                 onChatClick = { sxId -> navController.navigate("chat/$sxId") },
                 onNewContact = { navController.navigate(Screen.NewContact.route) },
                 onMyId = { navController.navigate(Screen.MyId.route) },
-                onSettings = { navController.navigate(Screen.Settings.route) }
+                onSettings = { navController.navigate(Screen.Settings.route) },
+                onStealthDelete = conversationsVm::triggerStealthDelete
             )
         }
         composable(

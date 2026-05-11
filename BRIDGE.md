@@ -249,6 +249,35 @@ Statischer Review mit `rg`/Dateilekture. Kein Gradle-Lauf ausgefuehrt in diesem 
 ## 2026-05-11 [CODEX]
 ### TYPE: FIX
 ### STATUS: [BUILD_DONE]
+### Linear: NEA-37
+
+**SecureChat Stealth Delete — 5-Tap Wipe**
+
+Implemented:
+- Added `WipeManager.wipeAll()` in `:data`.
+- Wipe coverage:
+  - closes encrypted Room/SQLCipher DB
+  - deletes `chameleon_secure.db` plus WAL/SHM/journal sidecars
+  - clears `AppPreferences`
+  - clears `StealthXIdentity` encrypted identity prefs
+  - clears DB key-wrap prefs (`chameleon_secure`)
+  - deletes `files/secure_vault`
+  - deletes cache/code-cache
+- Wired `ConversationsViewModel.triggerStealthDelete()` to guard on `AppPreferences.stealthDeleteEnabled`.
+- Existing lock logo in `ConversationsScreen` now detects 5 taps within 3 seconds.
+- After wipe completes, `StealthXNavGraph` calls `finishAffinity()` and exits the process.
+- Disabled toggle is fail-closed: gesture does nothing if `stealthDeleteEnabled == false`.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` -> BUILD SUCCESSFUL
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [BUILD_DONE]
 ### Linear: NEA-36
 
 **SecureChat Biometric Unlock — App Start Gate**

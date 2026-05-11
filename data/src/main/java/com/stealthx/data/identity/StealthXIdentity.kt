@@ -177,6 +177,10 @@ object StealthXIdentity {
         )
     }
 
+    fun clear(context: Context) {
+        getEncryptedPrefs(context).edit().clear().commit()
+    }
+
     private fun deriveShortId(publicKeyHex: String): String {
         val base58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
         val bytes = publicKeyHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()

@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 
 data class ConversationItem(
     val sxId: String,
@@ -29,7 +30,8 @@ fun ConversationsScreen(
     onChatClick: (String) -> Unit,
     onNewContact: () -> Unit,
     onMyId: () -> Unit,
-    onSettings: () -> Unit
+    onSettings: () -> Unit,
+    onStealthDelete: () -> Unit
 ) {
     var logoTapCount by remember { mutableIntStateOf(0) }
 
@@ -56,10 +58,12 @@ fun ConversationsScreen(
             }
         }
     ) { padding ->
-        // STEALTH-DELETE: 5 rapid taps on logo
         LaunchedEffect(logoTapCount) {
             if (logoTapCount >= 5) {
-                // TODO: wire to WipeManager
+                onStealthDelete()
+                logoTapCount = 0
+            } else if (logoTapCount > 0) {
+                delay(3_000)
                 logoTapCount = 0
             }
         }
@@ -67,6 +71,11 @@ fun ConversationsScreen(
         LazyColumn(modifier = Modifier
             .fillMaxSize()
             .padding(padding)) {
+            if (state.wipeInProgress) {
+                item {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+            }
             if (state.items.isEmpty()) {
                 item {
                     Text(
