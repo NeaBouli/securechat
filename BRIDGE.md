@@ -249,6 +249,28 @@ Statischer Review mit `rg`/Dateilekture. Kein Gradle-Lauf ausgefuehrt in diesem 
 ## 2026-05-11 [CODEX]
 ### TYPE: FIX
 ### STATUS: [BUILD_DONE]
+### Linear: NEA-36
+
+**SecureChat Biometric Unlock — App Start Gate**
+
+Implemented:
+- `MainActivity` now gates Compose navigation behind AndroidX `BiometricPrompt` when `AppPreferences.biometricEnabled` is ON.
+- Uses `BIOMETRIC_STRONG | DEVICE_CREDENTIAL`, so device PIN/pattern/password is accepted as fallback.
+- Secure locked placeholder renders before auth; `StealthXNavGraph` is only rendered after successful authentication.
+- Auth cancellation/error closes the Activity instead of exposing the app UI.
+- Added `USE_BIOMETRIC` manifest permission.
+- Added app-module biometric dependency.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` -> BUILD SUCCESSFUL
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [BUILD_DONE]
 ### Linear: NEA-35
 
 **SecureChat Chat Core — X25519 Send/Receive Chain Parity**

@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
     implementation(libs.compose.activity)
+    implementation(libs.androidx.biometric)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
