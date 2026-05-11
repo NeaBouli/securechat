@@ -251,6 +251,30 @@ Statischer Review mit `rg`/Dateilekture. Kein Gradle-Lauf ausgefuehrt in diesem 
 ### STATUS: [BUILD_DONE]
 ### Linear: NEA-35
 
+**SecureChat Chat Core — X25519 Send/Receive Chain Parity**
+
+Finding while continuing NEA-35:
+- The previous QR receive path compiled, but outbound session creation derived the send chain from raw byte concatenation (`dhPrivate + contactDhPublic`) while inbound receive derived from X25519 `computeSharedSecret(private, public)`.
+- Result: two-device QR import could fail authentication/decryption even though repository/UI paths were present.
+
+Fixed:
+- `ChatSessionRepository.createSession()` now derives the outbound send chain from `ChameleonCrypto.computeSharedSecret(ephemeralSendPrivate, contactDhPublic)`.
+- This matches inbound receive-chain derivation (`ownPrivate`, sender ratchet DH public).
+- Transient shared secret is wiped after HKDF.
+- Room schema bumped to v5 so stale debug sessions created with the wrong derivation do not survive across installs/builds.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` -> BUILD SUCCESSFUL
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [BUILD_DONE]
+### Linear: NEA-35
+
 **SecureChat E2E Chat Messaging — Receive/Import + QR Device Flow**
 
 Implemented:

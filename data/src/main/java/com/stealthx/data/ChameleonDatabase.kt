@@ -45,7 +45,7 @@ import net.sqlcipher.database.SupportFactory
         AuditLogEntity::class,
         IfrTierCacheEntity::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(ChameleonTypeConverters::class)

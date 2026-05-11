@@ -114,12 +114,17 @@ class ChatSessionRepository @Inject constructor(
             info = INFO_ROOT_KEY,
             length = ChameleonCrypto.KEY_BYTES
         )
-        val sendChainKey = ChameleonCrypto.hkdf(
-            ikm = dhPrivate + contact.dhPublicKey,
-            salt = rootKey,
-            info = INFO_CHAIN_KEY,
-            length = ChameleonCrypto.KEY_BYTES
-        )
+        val sharedSecret = ChameleonCrypto.computeSharedSecret(dhPrivate, contact.dhPublicKey)
+        val sendChainKey = try {
+            ChameleonCrypto.hkdf(
+                ikm = sharedSecret,
+                salt = rootKey,
+                info = INFO_CHAIN_KEY,
+                length = ChameleonCrypto.KEY_BYTES
+            )
+        } finally {
+            ChameleonCrypto.wipeBytes(sharedSecret)
+        }
         val now = System.currentTimeMillis()
         val session = ChatSessionEntity(
             contactId = contact.id,
