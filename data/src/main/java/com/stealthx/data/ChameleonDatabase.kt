@@ -11,6 +11,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.stealthx.data.dao.AuditLogDao
+import com.stealthx.data.dao.ContactKeyDao
 import com.stealthx.data.dao.CryptoKeyDao
 import com.stealthx.data.dao.IfrTierCacheDao
 import com.stealthx.data.dao.SecureRuleDao
@@ -46,6 +47,7 @@ abstract class ChameleonDatabase : RoomDatabase() {
 
     abstract fun secureRuleDao(): SecureRuleDao
     abstract fun cryptoKeyDao(): CryptoKeyDao
+    abstract fun contactKeyDao(): ContactKeyDao
     abstract fun auditLogDao(): AuditLogDao
     abstract fun ifrTierCacheDao(): IfrTierCacheDao
 

@@ -1,12 +1,18 @@
 package com.stealthx.presentation.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.NavType
+import com.stealthx.features.broadcast.BroadcastLockedScreen
+import com.stealthx.features.broadcast.BroadcastScreen
 import com.stealthx.presentation.screens.*
+import com.stealthx.shared.model.IfrTier
 
 @Composable
 fun StealthXNavGraph() {
@@ -31,7 +37,11 @@ fun StealthXNavGraph() {
             MyIdScreen(onBack = { navController.popBackStack() })
         }
         composable(Screen.NewContact.route) {
-            NewContactScreen(onBack = { navController.popBackStack() }, onContactAdded = { navController.popBackStack() })
+            NewContactScreen(
+                onBack = { navController.popBackStack() },
+                onContactAdded = { navController.popBackStack() },
+                onUpgrade = { navController.navigate(Screen.IFRUnlock.route) }
+            )
         }
         composable(Screen.IFRUnlock.route) {
             IFRUnlockScreen(onBack = { navController.popBackStack() })
@@ -41,6 +51,22 @@ fun StealthXNavGraph() {
                 onBack = { navController.popBackStack() },
                 onIfrClick = { navController.navigate(Screen.IFRUnlock.route) }
             )
+        }
+        composable(Screen.Broadcast.route) {
+            val vm: SettingsViewModel = hiltViewModel()
+            val tier by vm.currentTier.collectAsState()
+            if (tier >= IfrTier.ELITE) {
+                BroadcastScreen(
+                    onSend = { /* TODO: BroadcastManager.sendBroadcast(it) */ },
+                    onBack = { navController.popBackStack() },
+                    recipientCount = 0
+                )
+            } else {
+                BroadcastLockedScreen(
+                    onUnlock = { navController.navigate(Screen.IFRUnlock.route) },
+                    onBack = { navController.popBackStack() }
+                )
+            }
         }
     }
 }

@@ -122,3 +122,31 @@ Validation:
 - `./gradlew :stealthx-crypto:test` → PASS (alle Tests grün)
 
 ### EMPFÄNGER: GIO
+
+---
+
+## 2026-05-10 [CC]
+### TYPE: FIX
+### Linear: NEA-24, NEA-26
+
+**NEA-24 DONE: 10-contact limit enforced at data layer for FREE tier**
+
+New files:
+- `data/dao/ContactKeyDao.kt` — count(), insert(), observeAll(), getById(), deleteById()
+- `data/repository/ContactRepository.kt` — addContact() throws TierLimitException if FREE and count >= 10
+- `domain/tier/TierLimitException.kt`
+- `presentation/screens/NewContactViewModel.kt` — exposes ContactLimitState (count, isAtLimit, isLimitEnforced)
+
+Updated:
+- `ChameleonDatabase.kt` — added contactKeyDao()
+- `DataModule.kt` — provides ContactKeyDao, ContactRepository
+- `NewContactScreen.kt` — limit banner, disabled inputs when at limit, onUpgrade callback
+- `StealthXNavGraph.kt` — passes onUpgrade to NewContactScreen
+
+**NEA-26 DONE: BroadcastScreen wired to NavGraph with ELITE gate**
+
+- `Screen.kt` — added `Broadcast` route
+- `StealthXNavGraph.kt` — Broadcast composable: tier >= ELITE → BroadcastScreen, else BroadcastLockedScreen
+- `presentation/build.gradle.kts` — added `:features:broadcast` dep
+
+### EMPFÄNGER: CODEX
