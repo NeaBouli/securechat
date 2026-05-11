@@ -40,6 +40,25 @@ object StealthXIdentity {
     private const val ID_PREFIX = "sx_"
 
     /**
+     * Returns the Unified ID using a random device seed — creates it on first call.
+     * No biometric required — seed is stored in EncryptedSharedPreferences.
+     * Call from Application.onCreate() before any UI reads the identity.
+     */
+    fun getOrCreateWithSeed(context: Context): StealthXId {
+        val prefs = getEncryptedPrefs(context)
+        val existingSeed = prefs.getString("identity_seed", null)
+        val seedHex = if (existingSeed != null) {
+            existingSeed
+        } else {
+            val seed = java.security.SecureRandom().generateSeed(32)
+            val hex = seed.joinToString("") { "%02x".format(it) }
+            prefs.edit().putString("identity_seed", hex).apply()
+            hex
+        }
+        return getOrCreate(context, seedHex)
+    }
+
+    /**
      * Returns the Unified ID — creates it on first call.
      * ONE-TIME per device — valid for SecureCall AND SecureChat.
      */

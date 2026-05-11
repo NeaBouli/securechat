@@ -9,17 +9,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.stealthx.data.identity.StealthXIdentity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyIdScreen(onBack: () -> Unit) {
-    // TODO: pull from StealthXIdentity.get(context)
-    val sxId = "sx_a7Kx9mPq2"
-    val handle: String? = null
+    val context = LocalContext.current
+    val identity = remember { StealthXIdentity.get(context) }
+    val sxId = identity?.raw ?: "not initialized"
+    val handle = identity?.customHandle
 
     Scaffold(
         topBar = {

@@ -22,6 +22,7 @@ android {
     buildFeatures { compose = true }
 }
 dependencies {
+    implementation(project(":data"))
     implementation(project(":domain"))
     implementation(project(":features:messenger"))
     implementation(project(":features:contacts"))
