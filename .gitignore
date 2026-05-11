@@ -19,6 +19,7 @@ Thumbs.db
 # Signing
 *.jks
 *.keystore
+keystore/
 signing.properties
 
 # Secrets — never commit
