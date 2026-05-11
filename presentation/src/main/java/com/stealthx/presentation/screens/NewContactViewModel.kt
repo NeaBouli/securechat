@@ -7,15 +7,18 @@ package com.stealthx.presentation.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stealthx.data.identity.PublicKeyBundleQr
 import com.stealthx.data.repository.ContactRepository
 import com.stealthx.domain.tier.TierGate
 import com.stealthx.shared.model.IfrTier
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ContactLimitState(
@@ -25,11 +28,19 @@ data class ContactLimitState(
     val isLimitEnforced: Boolean = false
 )
 
+data class NewContactUiState(
+    val isSaving: Boolean = false,
+    val statusMessage: String? = null,
+    val errorMessage: String? = null
+)
+
 @HiltViewModel
 class NewContactViewModel @Inject constructor(
     private val contactRepository: ContactRepository,
     private val tierGate: TierGate
 ) : ViewModel() {
+    private val _uiState = MutableStateFlow(NewContactUiState())
+    val uiState: StateFlow<NewContactUiState> = _uiState.asStateFlow()
 
     val limitState: StateFlow<ContactLimitState> = combine(
         tierGate.currentTier,
@@ -43,4 +54,28 @@ class NewContactViewModel @Inject constructor(
             isLimitEnforced = enforced
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ContactLimitState())
+
+    fun addFromQrContent(content: String, onAdded: () -> Unit) {
+        val trimmed = content.trim()
+        if (trimmed.isBlank()) {
+            _uiState.value = NewContactUiState(errorMessage = "QR content is required")
+            return
+        }
+
+        val bundle = PublicKeyBundleQr.fromQrContent(trimmed).getOrElse {
+            _uiState.value = NewContactUiState(errorMessage = it.message ?: "Invalid StealthX QR content")
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.value = NewContactUiState(isSaving = true)
+            try {
+                contactRepository.addContactBundle(bundle)
+                _uiState.value = NewContactUiState(statusMessage = "Contact added")
+                onAdded()
+            } catch (e: Exception) {
+                _uiState.value = NewContactUiState(errorMessage = e.message ?: "Could not add contact")
+            }
+        }
+    }
 }

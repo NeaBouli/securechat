@@ -1,5 +1,6 @@
 package com.stealthx.presentation.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -15,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,8 +27,12 @@ fun NewContactScreen(
     onUpgrade: () -> Unit = {},
     vm: NewContactViewModel = hiltViewModel()
 ) {
-    var manualId by remember { mutableStateOf("") }
+    var qrContent by remember { mutableStateOf("") }
     val limitState by vm.limitState.collectAsState()
+    val state by vm.uiState.collectAsState()
+    val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
+        result.contents?.let { qrContent = it }
+    }
 
     Scaffold(
         topBar = {
@@ -93,37 +100,50 @@ fun NewContactScreen(
                 title = "Scan QR Code",
                 subtitle = "Fastest way to add a contact",
                 enabled = !limitState.isAtLimit,
-                onClick = { /* TODO: launch QR scanner */ }
+                onClick = {
+                    scanLauncher.launch(
+                        ScanOptions()
+                            .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+                            .setPrompt("Scan StealthX contact QR")
+                            .setBeepEnabled(false)
+                    )
+                }
             )
             OptionCard(
                 icon = Icons.Default.Nfc,
                 title = "NFC Tap",
-                subtitle = "Hold phones together",
-                enabled = !limitState.isAtLimit,
-                onClick = { /* TODO: NFC */ }
+                subtitle = "Coming after QR bundle import",
+                enabled = false,
+                onClick = {}
             )
             OptionCard(
                 icon = Icons.Default.Edit,
-                title = "Enter sx_ ID manually",
-                subtitle = "For verified contacts only",
+                title = "Paste QR content",
+                subtitle = "stealthx://add/... signed bundle",
                 enabled = !limitState.isAtLimit,
-                onClick = { /* focus input */ }
+                onClick = {}
             )
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value = manualId,
-                onValueChange = { manualId = it },
-                label = { Text("sx_ID") },
-                placeholder = { Text("sx_a7Kx9mPq2") },
+                value = qrContent,
+                onValueChange = { qrContent = it },
+                label = { Text("Contact QR content") },
+                placeholder = { Text("stealthx://add/sx_...?...") },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !limitState.isAtLimit
             )
+            state.statusMessage?.let {
+                Text(it, color = Color(0xFF00C853), style = MaterialTheme.typography.bodySmall)
+            }
+            state.errorMessage?.let {
+                Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+            }
             Button(
-                onClick = { onContactAdded() },
-                enabled = !limitState.isAtLimit && manualId.startsWith("sx_") && manualId.length >= 10,
+                onClick = { vm.addFromQrContent(qrContent, onContactAdded) },
+                enabled = !limitState.isAtLimit && !state.isSaving && qrContent.startsWith("stealthx://add/"),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Add Contact")
+                Text(if (state.isSaving) "Adding..." else "Add Contact")
             }
         }
     }

@@ -14,11 +14,13 @@ import com.stealthx.data.dao.AuditLogDao
 import com.stealthx.data.dao.ContactKeyDao
 import com.stealthx.data.dao.CryptoKeyDao
 import com.stealthx.data.dao.IfrTierCacheDao
+import com.stealthx.data.dao.MessageDao
 import com.stealthx.data.dao.SecureRuleDao
 import com.stealthx.data.entity.AuditLogEntity
 import com.stealthx.data.entity.ContactKeyEntity
 import com.stealthx.data.entity.CryptoKeyEntity
 import com.stealthx.data.entity.IfrTierCacheEntity
+import com.stealthx.data.entity.MessageEntity
 import com.stealthx.data.entity.SecureRuleEntity
 import net.sqlcipher.database.SupportFactory
 
@@ -36,10 +38,11 @@ import net.sqlcipher.database.SupportFactory
         SecureRuleEntity::class,
         CryptoKeyEntity::class,
         ContactKeyEntity::class,
+        MessageEntity::class,
         AuditLogEntity::class,
         IfrTierCacheEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(ChameleonTypeConverters::class)
@@ -48,6 +51,7 @@ abstract class ChameleonDatabase : RoomDatabase() {
     abstract fun secureRuleDao(): SecureRuleDao
     abstract fun cryptoKeyDao(): CryptoKeyDao
     abstract fun contactKeyDao(): ContactKeyDao
+    abstract fun messageDao(): MessageDao
     abstract fun auditLogDao(): AuditLogDao
     abstract fun ifrTierCacheDao(): IfrTierCacheDao
 

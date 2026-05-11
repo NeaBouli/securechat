@@ -17,35 +17,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-data class ChatMessage(
-    val id: String,
-    val text: String,
-    val isOutgoing: Boolean,
-    val timestamp: Long
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
-    contactSxId: String,
+    state: ChatUiState,
+    onSend: (String) -> Unit,
     onBack: () -> Unit
 ) {
     var input by remember { mutableStateOf("") }
     var showSafetyNumber by remember { mutableStateOf(false) }
-    val messages = remember {
-        mutableStateListOf(
-            ChatMessage("1", "Hey, this is end-to-end encrypted.", false, 0L),
-            ChatMessage("2", "Safety number verified.", true, 0L)
-        )
-    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Column {
-                        Text(contactSxId, fontWeight = FontWeight.SemiBold)
-                        Text("End-to-end encrypted",
+                        Text(state.contactSxId, fontWeight = FontWeight.SemiBold)
+                        Text("Encrypted local queue",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.primary)
                     }
@@ -77,16 +65,11 @@ fun ChatScreen(
                 IconButton(
                     onClick = {
                         if (input.isNotBlank()) {
-                            messages.add(ChatMessage(
-                                id = System.currentTimeMillis().toString(),
-                                text = input,
-                                isOutgoing = true,
-                                timestamp = System.currentTimeMillis()
-                            ))
+                            onSend(input)
                             input = ""
                         }
                     },
-                    enabled = input.isNotBlank()
+                    enabled = input.isNotBlank() && !state.isSending
                 ) {
                     Icon(Icons.Default.Send, "Send",
                         tint = MaterialTheme.colorScheme.primary)
@@ -101,7 +84,27 @@ fun ChatScreen(
                 .padding(horizontal = 12.dp),
             reverseLayout = false
         ) {
-            items(messages) { msg ->
+            if (state.errorMessage != null) {
+                item {
+                    Text(
+                        state.errorMessage,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
+            if (state.messages.isEmpty()) {
+                item {
+                    Text(
+                        "No messages yet",
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(vertical = 24.dp)
+                    )
+                }
+            }
+            items(state.messages) { msg ->
                 MessageBubble(msg)
                 Spacer(Modifier.height(4.dp))
             }
@@ -124,7 +127,7 @@ fun ChatScreen(
 }
 
 @Composable
-private fun MessageBubble(msg: ChatMessage) {
+private fun MessageBubble(msg: ChatMessageUi) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (msg.isOutgoing) Arrangement.End else Arrangement.Start
@@ -142,7 +145,16 @@ private fun MessageBubble(msg: ChatMessage) {
             ),
             modifier = Modifier.widthIn(max = 280.dp)
         ) {
-            Text(msg.text, modifier = Modifier.padding(12.dp, 8.dp))
+            Column(modifier = Modifier.padding(12.dp, 8.dp)) {
+                Text(msg.text)
+                if (msg.isOutgoing) {
+                    Text(
+                        msg.deliveryStatus.lowercase(),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = LocalContentColor.current.copy(alpha = 0.7f)
+                    )
+                }
+            }
         }
     }
 }

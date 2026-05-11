@@ -11,8 +11,11 @@ package com.stealthx.data.identity
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Base64
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.stealthx.crypto.ChameleonCrypto
+import com.stealthx.shared.model.PublicKeyBundle
 
 data class StealthXId(
     val raw: String,           // sx_a7Kx9mPq2nRt
@@ -37,7 +40,12 @@ object StealthXIdentity {
     private const val KEY_PUBLIC_KEY = "public_key"
     private const val KEY_CUSTOM_HANDLE = "custom_handle"
     private const val KEY_CREATED_AT = "created_at"
+    private const val KEY_X25519_PUBLIC = "x25519_public"
+    private const val KEY_X25519_PRIVATE = "x25519_private"
+    private const val KEY_ED25519_PUBLIC = "ed25519_public"
+    private const val KEY_ED25519_PRIVATE = "ed25519_private"
     private const val ID_PREFIX = "sx_"
+    private val B64 = Base64.NO_WRAP
 
     /**
      * Returns the Unified ID using a random device seed — creates it on first call.
@@ -115,6 +123,28 @@ object StealthXIdentity {
         )
     }
 
+    fun createPublicKeyBundle(context: Context): PublicKeyBundle {
+        val identity = getOrCreateWithSeed(context)
+        val prefs = getEncryptedPrefs(context)
+        ensureKeyPairs(prefs)
+        val x25519 = prefs.getString(KEY_X25519_PUBLIC, null)!!.fromBase64()
+        val ed25519 = prefs.getString(KEY_ED25519_PUBLIC, null)!!.fromBase64()
+        val edPrivate = prefs.getString(KEY_ED25519_PRIVATE, null)!!.fromBase64()
+        val createdAt = identity.createdAt.takeIf { it > 0L } ?: System.currentTimeMillis()
+        val payload = buildSignPayload(identity.raw, identity.customHandle, x25519, ed25519, createdAt)
+        val signature = ChameleonCrypto.sign(payload, edPrivate)
+        ChameleonCrypto.wipeBytes(edPrivate)
+        return PublicKeyBundle(
+            sxId = identity.raw,
+            customHandle = identity.customHandle,
+            x25519PublicKey = x25519,
+            ed25519PublicKey = ed25519,
+            signature = signature,
+            version = 1,
+            createdAt = createdAt
+        )
+    }
+
     private fun deriveShortId(publicKeyHex: String): String {
         val base58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
         val bytes = publicKeyHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
@@ -123,6 +153,45 @@ object StealthXIdentity {
             base58[((b.toInt() and 0xFF) % 58)]
         }.joinToString("")
     }
+
+    private fun ensureKeyPairs(prefs: SharedPreferences) {
+        if (prefs.getString(KEY_X25519_PUBLIC, null) != null &&
+            prefs.getString(KEY_ED25519_PUBLIC, null) != null
+        ) return
+
+        val (xPublic, xPrivate) = ChameleonCrypto.generateX25519KeyPair()
+        val (edPublic, edPrivate) = ChameleonCrypto.generateSigningKeyPair()
+        prefs.edit()
+            .putString(KEY_X25519_PUBLIC, xPublic.toBase64())
+            .putString(KEY_X25519_PRIVATE, xPrivate.toBase64())
+            .putString(KEY_ED25519_PUBLIC, edPublic.toBase64())
+            .putString(KEY_ED25519_PRIVATE, edPrivate.toBase64())
+            .apply()
+    }
+
+    private fun buildSignPayload(
+        sxId: String,
+        handle: String?,
+        x25519: ByteArray,
+        ed25519: ByteArray,
+        createdAt: Long
+    ): ByteArray {
+        return buildString {
+            append(sxId)
+            append("|")
+            append(handle ?: "")
+            append("|")
+            append(x25519.joinToString("") { "%02x".format(it) })
+            append("|")
+            append(ed25519.joinToString("") { "%02x".format(it) })
+            append("|")
+            append(createdAt.toString())
+        }.toByteArray(Charsets.UTF_8)
+    }
+
+    private fun ByteArray.toBase64(): String = Base64.encodeToString(this, B64)
+
+    private fun String.fromBase64(): ByteArray = Base64.decode(this, B64)
 
     private fun getEncryptedPrefs(context: Context): SharedPreferences =
         EncryptedSharedPreferences.create(

@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.icons.extended)
     implementation(libs.compose.navigation)
+    implementation(libs.compose.activity)
     implementation(libs.compose.lifecycle)
     implementation(libs.compose.hilt.navigation)
     implementation(libs.androidx.lifecycle.viewmodel)

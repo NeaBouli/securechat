@@ -246,6 +246,85 @@ Statischer Review mit `rg`/Dateilekture. Kein Gradle-Lauf ausgefuehrt in diesem 
 
 ---
 
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [BUILD_DONE]
+
+**SecureChat MyId Screen — QR Code Export**
+
+Implemented:
+- `StealthXIdentity` now generates and persists X25519 + Ed25519 keypairs in encrypted preferences when needed.
+- Added `StealthXIdentity.createPublicKeyBundle()` to produce signed contact bundles.
+- `MyIdScreen` now renders a real QR bitmap using ZXing instead of a placeholder QR icon.
+- QR content uses `PublicKeyBundleQr.toQrContent()` and matches the NEA-34 contact import format.
+- `Share Deep Link` now opens an Android share intent with the signed `stealthx://add/...` bundle content.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` -> BUILD SUCCESSFUL
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [BUILD_DONE]
+### Linear: NEA-34
+
+**SecureChat Contact Add Flow — QR Bundle Import**
+
+Implemented:
+- `NewContactScreen` no longer has a fake success button.
+- Added QR scan launcher using the existing ZXing dependency.
+- Added paste fallback for `stealthx://add/...` contact bundle content.
+- `NewContactViewModel.addFromQrContent()` parses QR content through `PublicKeyBundleQr`.
+- `ContactRepository.addContactBundle()` is now the single write sink for imported bundles.
+- Imported contacts are validated before insert:
+  - `sx_` id format
+  - X25519 public key length
+  - Ed25519 public key length
+  - Ed25519 signature length
+  - Ed25519 signature verification over the signed bundle payload
+- Existing FREE-tier contact limit remains enforced by `ContactRepository.addContact()`.
+- NFC remains disabled instead of pretending to work.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` -> BUILD SUCCESSFUL
+
+### EMPFÄNGER: GIO / CC
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [BUILD_DONE]
+### Linear: NEA-35
+
+**SecureChat Chat-Funktionalitaet — MessageRepository + ChatViewModel**
+
+Implemented:
+- Added encrypted Room-backed message storage:
+  - `MessageEntity`
+  - `MessageDao`
+  - `MessageRepository`
+- Added `messages` table to `ChameleonDatabase` v2 and provided `MessageDao` through Hilt.
+- Outgoing chat messages are now persisted per contact instead of held in fake in-memory Compose state.
+- Message bodies are encrypted at rest with `ChameleonCrypto.encrypt()` / XChaCha20-Poly1305 and contact-bound AAD.
+- Added `ChatViewModel` for send/observe/error state.
+- Added `ConversationsViewModel`; conversation list now reads real contacts/messages instead of hardcoded Alice/Bob placeholders.
+- `ChatScreen` now renders repository-backed messages and queued send status.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` -> BUILD SUCCESSFUL
+
+Security/Scope Notes:
+- This pass implements local encrypted message persistence and UI send/observe flow.
+- Relay transport, remote receive, DoubleRatchet session persistence, and delivery receipts remain separate Phase 2 work; no fake network-success path was added.
+
+### EMPFÄNGER: GIO / CC
+
+---
+
 ## 2026-05-11 [CC]
 ### TYPE: FIX
 

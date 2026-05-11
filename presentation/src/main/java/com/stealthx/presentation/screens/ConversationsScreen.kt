@@ -25,6 +25,7 @@ data class ConversationItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConversationsScreen(
+    state: ConversationUiState,
     onChatClick: (String) -> Unit,
     onNewContact: () -> Unit,
     onMyId: () -> Unit,
@@ -63,17 +64,20 @@ fun ConversationsScreen(
             }
         }
 
-        val items = remember {
-            listOf(
-                ConversationItem("sx_a7Kx9mPq2", "Alice", "Hey, encrypted and delivered.", 2),
-                ConversationItem("sx_b3Yt8nQw5", "@bob", "Safety number verified.", 0)
-            )
-        }
-
         LazyColumn(modifier = Modifier
             .fillMaxSize()
             .padding(padding)) {
-            items(items) { item ->
+            if (state.items.isEmpty()) {
+                item {
+                    Text(
+                        "No contacts yet",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        modifier = Modifier.padding(24.dp)
+                    )
+                }
+            }
+            items(state.items) { item ->
                 ConversationRow(item = item, onClick = { onChatClick(item.sxId) })
                 HorizontalDivider()
             }

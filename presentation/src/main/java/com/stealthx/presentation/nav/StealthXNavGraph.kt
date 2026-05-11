@@ -19,7 +19,10 @@ fun StealthXNavGraph() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = Screen.Conversations.route) {
         composable(Screen.Conversations.route) {
+            val conversationsVm: ConversationsViewModel = hiltViewModel()
+            val state by conversationsVm.uiState.collectAsState()
             ConversationsScreen(
+                state = state,
                 onChatClick = { sxId -> navController.navigate("chat/$sxId") },
                 onNewContact = { navController.navigate(Screen.NewContact.route) },
                 onMyId = { navController.navigate(Screen.MyId.route) },
@@ -31,7 +34,13 @@ fun StealthXNavGraph() {
             arguments = listOf(navArgument("sxId") { type = NavType.StringType })
         ) { entry ->
             val sxId = entry.arguments?.getString("sxId") ?: return@composable
-            ChatScreen(contactSxId = sxId, onBack = { navController.popBackStack() })
+            val chatVm: ChatViewModel = hiltViewModel()
+            val state by chatVm.uiState.collectAsState()
+            ChatScreen(
+                state = state,
+                onSend = chatVm::send,
+                onBack = { navController.popBackStack() }
+            )
         }
         composable(Screen.MyId.route) {
             MyIdScreen(onBack = { navController.popBackStack() })
