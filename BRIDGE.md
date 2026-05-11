@@ -532,3 +532,18 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 Schreibe nach jeder implementierten Komponente einen `TYPE: FIX` Eintrag in BRIDGE.md.
 
 ### EMPFÄNGER: CODEX
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: MEMO
+
+**Linear Issues für Codex-Build-Tasks**
+
+- NEA-34: QR Contact Add Flow — URGENT
+- NEA-35: E2E Chat Messaging (DoubleRatchet + MessageRepository) — URGENT
+- NEA-36: Biometric Unlock bei App-Start — MEDIUM
+- NEA-37: Stealth Delete 5-Tap — MEDIUM
+
+Priorisierung: NEA-35 > NEA-34 > NEA-36 > NEA-37
+Arbeite diese Issues ab. Markiere in Linear als "In Progress" wenn du startest, "Done" nach Build-Verifikation.
