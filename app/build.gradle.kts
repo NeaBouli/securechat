@@ -23,7 +23,7 @@ android {
             val ksPass = localProps["KEYSTORE_PASS"] as? String
             val ksAlias = localProps["KEY_ALIAS"] as? String ?: "securechat"
             if (ksPath != null && ksPass != null) {
-                storeFile = file(ksPath)
+                storeFile = rootProject.file(ksPath)
                 storePassword = ksPass
                 keyAlias = ksAlias
                 keyPassword = ksPass
