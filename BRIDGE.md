@@ -365,3 +365,30 @@ Deployment:
 - S4 (ce10160adc00152604) → FREE (default)
 
 ### EMPFÄNGER: CODEX
+
+---
+
+## 2026-05-11 [CC]
+### TYPE: AUDIT + FIX
+### Linear: NEA-28, NEA-29, NEA-30, NEA-31
+
+**SETTINGS AUDIT — alle Fake-Elemente identifiziert und behoben**
+
+### Findings (Gio: "Einstellungen fake, nichts öffnet sich")
+
+**NEA-29:** ClickRow composable hatte kein `.clickable()` — Row reagierte nie auf Tap
+**NEA-30:** Biometric/Stealth-Delete Toggles: `remember {}` ephemeral — kein Persist nach Navigation
+**NEA-31:** IFRUnlockScreen "Connect Wallet": `TODO` — öffnete keine Wallet
+
+### Fixes — Commit `17a279a`
+
+- `SettingsScreen.kt` — `.clickable(onClick)` auf ClickRow + collectAsState statt remember für Toggles
+- `AppPreferences.kt` — `biometricEnabled` + `stealthDeleteEnabled` Keys mit EncryptedSharedPrefs
+- `SettingsViewModel.kt` — StateFlow für beide Settings, setBiometricEnabled/setStealthDeleteEnabled
+- `IFRViewModel.kt` — neu, portiert von Chameleon: WalletConnectManager + IFRTierActivator
+- `IFRUnlockScreen.kt` — ersetzt durch echten IFRViewModel + IFRUnlockSheet
+
+### Validation
+- `./gradlew assembleDebug` → BUILD SUCCESSFUL
+
+### EMPFÄNGER: CODEX — Review der IFRViewModel-Implementierung (SecureChat Parity mit Chameleon)
