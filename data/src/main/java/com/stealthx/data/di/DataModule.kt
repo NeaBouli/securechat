@@ -5,7 +5,6 @@ import android.util.Base64
 import com.stealthx.data.ChameleonDatabase
 import com.stealthx.data.dao.ContactKeyDao
 import com.stealthx.data.dao.IfrTierCacheDao
-import com.stealthx.data.repository.ContactRepository
 import com.stealthx.data.repository.IfrTierRepositoryImpl
 import com.stealthx.domain.repository.IfrTierRepository
 import com.stealthx.domain.tier.TierGate
@@ -46,10 +45,6 @@ object DataModule {
     @Provides
     @Singleton
     fun provideContactKeyDao(db: ChameleonDatabase): ContactKeyDao = db.contactKeyDao()
-
-    @Provides
-    @Singleton
-    fun provideContactRepository(impl: ContactRepository): ContactRepository = impl
 
     @Provides
     @Singleton

@@ -69,6 +69,9 @@ android {
                 "META-INF/versions/**"
             )
         }
+        jniLibs {
+            useLegacyPackaging = true
+        }
     }
 }
 
