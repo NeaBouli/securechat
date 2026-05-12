@@ -24,16 +24,16 @@
 <meta property="og:title" content="Chameleon — Privacy OS · Part of SecureChat">
 <meta property="og:description" content="Context-aware privacy overlay for Android. Encrypts automatically based on location, app, and context. Part of the SecureChat ecosystem.">
 <meta property="og:url" content="https://securechat.stealthx.tech/chameleon.html">
-<meta property="og:image" content="https://securechat.stealthx.tech/logo.png">
+<meta property="og:image" content="https://securechat.stealthx.tech/chameleon-logo.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Chameleon — Privacy OS · Part of SecureChat">
 <meta name="twitter:description" content="Context-aware privacy overlay for Android. Encrypts automatically based on location, app, and context.">
-<meta name="twitter:image" content="https://securechat.stealthx.tech/logo.png">
+<meta name="twitter:image" content="https://securechat.stealthx.tech/chameleon-logo.png">
 <link rel="alternate" hreflang="en" href="https://securechat.stealthx.tech/chameleon.html">
 <link rel="alternate" hreflang="x-default" href="https://securechat.stealthx.tech/chameleon.html">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Chameleon","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"Context-aware privacy overlay for Android. Encrypts automatically based on location, app, and context. Part of the SecureChat ecosystem.","url":"https://securechat.stealthx.tech/chameleon.html","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://opensource.org/licenses/GPL-3.0","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="icon" type="image/png" href="logo.png">
+<link rel="icon" type="image/png" href="chameleon-logo.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <style>
   :root {
@@ -261,7 +261,7 @@
 <nav>
   <a class="nav-logo" href="/">
     <div class="nav-logo-bg">
-      <span style="font-size:22px;line-height:1;">&#129422;</span>
+      <img src="chameleon-logo.png" alt="Chameleon">
     </div>
     <div class="nav-logo-text">
       <span class="nav-logo-brand">StealthX</span>
@@ -558,7 +558,7 @@
         <li>Early adopter pricing</li>
       </ul>
       <br>
-      <span style="display:block;text-align:center;padding:10px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:14px;opacity:0.5;cursor:not-allowed;" title="Available at launch">Coming Soon</span>
+      <a href="#" aria-disabled="true" data-stripe-product="chameleon-pro-lifetime" data-stripe-status="pending" style="display:block;text-align:center;padding:10px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:14px;opacity:0.55;cursor:not-allowed;pointer-events:none;text-decoration:none;" title="Stripe Checkout pending">Stripe Checkout Ready</a>
     </div>
     <div class="tier-card featured">
       <div style="font-size:11px;font-weight:700;letter-spacing:1px;background:var(--gold);color:#000;display:inline-block;padding:3px 10px;border-radius:4px;margin-bottom:0.8rem;">LIMITED — 100 Licenses at &euro;19</div>
@@ -572,7 +572,7 @@
         <li>Early adopter pricing</li>
       </ul>
       <br>
-      <span style="display:block;text-align:center;padding:10px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:14px;opacity:0.5;cursor:not-allowed;" title="Available at launch">Coming Soon</span>
+      <a href="#" aria-disabled="true" data-stripe-product="chameleon-elite-lifetime" data-stripe-status="pending" style="display:block;text-align:center;padding:10px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:14px;opacity:0.55;cursor:not-allowed;pointer-events:none;text-decoration:none;" title="Stripe Checkout pending">Stripe Checkout Ready</a>
     </div>
   </div>
 
@@ -580,7 +580,7 @@
     <h3 style="font-size:1.3rem;color:var(--gold);margin-bottom:0.5rem;">StealthX Suite &mdash; &euro;54 one-time</h3>
     <p style="color:var(--text-dim);font-size:14px;margin-bottom:1rem;">SecureChat Elite + Chameleon Elite + SecureCall Premium. Everything. Forever.</p>
     <p style="color:var(--muted);font-size:13px;margin-bottom:1.5rem;">OR: Lock &ge; 8,000 IFR for the same access.</p>
-    <span style="display:inline-block;padding:10px 24px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:14px;opacity:0.5;cursor:not-allowed;" title="Available at launch">Coming Soon</span>
+    <a href="#" aria-disabled="true" data-stripe-product="stealthx-suite-lifetime" data-stripe-status="pending" style="display:inline-block;padding:10px 24px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:14px;opacity:0.55;cursor:not-allowed;pointer-events:none;text-decoration:none;" title="Stripe Checkout pending">Stripe Checkout Ready</a>
   </div>
 
   <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:1.5rem;">Same IFR lock as SecureChat &mdash; one lock covers both. All lifetime prices limited to 100 licenses.</p>
@@ -595,8 +595,9 @@
   <p class="section-sub" style="margin:0 auto 2rem;">Pre-alpha builds available on GitHub. Public beta coming Q3 2026.</p>
 
   <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
-    <a href="https://github.com/NeaBouli/chameleon" class="btn btn-primary">GitHub</a>
-    <a href="#" class="btn btn-secondary" style="opacity:0.4; cursor:not-allowed; pointer-events:none;">Public Beta Q3 2026</a>
+    <a href="#" class="btn btn-primary" aria-disabled="true" data-release-artifact="apk" data-release-status="pending" style="opacity:0.6; cursor:not-allowed; pointer-events:none;">APK — Ready at Release</a>
+    <a href="#" class="btn btn-secondary" aria-disabled="true" data-release-artifact="google-play" data-release-status="pending" style="opacity:0.6; cursor:not-allowed; pointer-events:none;">Google Play — Pending</a>
+    <a href="https://github.com/NeaBouli/chameleon" class="btn btn-secondary">GitHub</a>
   </div>
   <p style="font-size:13px; color:var(--muted);">Requires Android 8.0+ &middot; GPL-3.0 Open Source &middot; Part of SecureChat Ecosystem</p>
 </section>
@@ -606,7 +607,7 @@
   <div class="footer-inner">
     <a class="footer-logo" href="/">
       <div class="footer-logo-bg">
-        <span style="font-size:22px;line-height:1;">&#129422;</span>
+        <img src="chameleon-logo.png" alt="Chameleon">
       </div>
       <span class="footer-logo-name">Chameleon</span>
     </a>

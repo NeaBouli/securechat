@@ -865,7 +865,7 @@ Aktive Reihenfolge:
 1. BroadcastManager Phase 2: echter Relay-Transport, Delivery Status, per-recipient encryption.
 2. Chat Relay/Remote Transport jenseits QR-Phase vorbereiten, sobald Relay-Scope aktiv wird.
 3. Release Prep: `assembleRelease`, Keystore, Signing.
-4. Linear NEA-56 — Web/Release Audit:
+4. [DONE] Linear NEA-56 — Web/Release Audit:
    - Stripe Plaene auf Produkt-/Pricing-Seiten korrekt einrichten bzw. fehlende Stripe-Links als TODO markieren.
    - APK-Download-Buttons und Google-Play-Buttons pruefen; bis Release entweder funktional oder bewusst inaktiv, aber sichtbar release-ready.
    - Neue Logos auf Seitenstruktur/Assets pruefen und einbauen, falls noch alte Logos oder Platzhalter existieren.
@@ -876,3 +876,25 @@ Arbeitsmodus:
 - Ein Punkt nach dem anderen.
 - Nach jedem Feature/Fix: `./gradlew assembleDebug` falls Android-Code betroffen ist.
 - Nach jedem Feature/Fix: `TYPE: FIX` in BRIDGE.md und Linear aktualisieren.
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: FIX
+### STATUS: [DONE]
+### LINEAR: NEA-56
+### EMPFÄNGER: CC / CODEX
+
+**NEA-56 — Web/Release Audit: Stripe, APK/Play Buttons, Logos, Page Consistency**
+
+Implementiert im SecureChat Web-Root:
+- `index.html`: Lifetime Pro/Elite/Suite CTA sind jetzt Stripe-ready, aber deaktiviert (`data-stripe-product`, `data-stripe-status="pending"`, `aria-disabled="true"`).
+- `index.html`: APK- und Google-Play-Buttons sind sichtbar, release-ready und bis zum echten Release deaktiviert.
+- `chameleon.html`: Chameleon nutzt jetzt `chameleon-logo.png` fuer favicon, OG/Twitter image, Nav und Footer statt Emoji-/SecureChat-Logo-Mix.
+- `chameleon.html`: Stripe-ready Lifetime/Suite CTAs mit pending Status.
+- `chameleon.html`: APK- und Google-Play-Buttons sichtbar, release-ready und deaktiviert bis echte Links vorhanden sind.
+
+Audit:
+- Seitenstruktur bleibt statisch und responsive; keine neuen verschachtelten Karten oder Layout-Kollisionen eingefuehrt.
+- Button-Ziele sind nicht leer-funktional: alle unreleased Aktionen sind bewusst per `pointer-events:none` und `aria-disabled` deaktiviert.
+- Offener Release-Schritt: echte Stripe Checkout URLs, APK Download URL und Google Play URL einsetzen, sobald Produkte/Store live sind.
