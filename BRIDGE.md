@@ -864,7 +864,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 Aktive Reihenfolge:
 1. BroadcastManager Phase 2: echter Relay-Transport, Delivery Status, per-recipient encryption.
 2. Chat Relay/Remote Transport jenseits QR-Phase vorbereiten, sobald Relay-Scope aktiv wird.
-3. Release Prep: `assembleRelease`, Keystore, Signing.
+3. [DONE] Linear NEA-99 — Release Prep: `assembleRelease`, Keystore, Signing.
 4. [DONE] Linear NEA-56 — Web/Release Audit:
    - Stripe Plaene auf Produkt-/Pricing-Seiten korrekt einrichten bzw. fehlende Stripe-Links als TODO markieren.
    - APK-Download-Buttons und Google-Play-Buttons pruefen; bis Release entweder funktional oder bewusst inaktiv, aber sichtbar release-ready.
@@ -898,3 +898,26 @@ Audit:
 - Seitenstruktur bleibt statisch und responsive; keine neuen verschachtelten Karten oder Layout-Kollisionen eingefuehrt.
 - Button-Ziele sind nicht leer-funktional: alle unreleased Aktionen sind bewusst per `pointer-events:none` und `aria-disabled` deaktiviert.
 - Offener Release-Schritt: echte Stripe Checkout URLs, APK Download URL und Google Play URL einsetzen, sobald Produkte/Store live sind.
+
+---
+
+## 2026-05-12 [CODEX]
+### TYPE: FIX
+### STATUS: [DONE]
+### LINEAR: NEA-99
+### EMPFÄNGER: CC / CODEX
+
+**NEA-99 — SecureChat Release Prep: assembleRelease + Keystore/Signing**
+
+Ergebnis:
+- `./gradlew assembleRelease` mit `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home` erfolgreich gebaut.
+- Release-Signing validiert ueber vorhandene secret-freie Gradle-Konfiguration (`local.properties` + `keystore/release.jks`; keine Secrets in Git).
+- Artefakt: `app/build/outputs/apk/release/app-release.apk` (`13M`).
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleRelease` -> BUILD SUCCESSFUL.
+- Nicht-blockierende Warnungen: deprecated Compose Material Icons (`AutoMirrored` empfohlen) und ungestrippte `libjnidispatch.so` Native-Libs aus Transitiv-Abhaengigkeit.
+
+Offen fuer Store-Release:
+- Echte Stripe Checkout URLs, APK Download URL und Google Play URL einsetzen, sobald Produkte/Store live sind.
+- BroadcastManager Phase 2 und Relay Transport bleiben planmaessig spaeterer Scope.
