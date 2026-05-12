@@ -851,3 +851,28 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 ### NACH JEDEM FEATURE
 - `TYPE: FIX` in BRIDGE.md schreiben
 - Linear NEA-36 / NEA-37 auf Done setzen
+
+---
+
+## 2026-05-11 [CODEX]
+### TYPE: TODO
+### STATUS: [OPEN]
+### EMPFÄNGER: CODEX
+
+**Sequenzielle offene Arbeitsliste — SecureChat + Web/Release**
+
+Aktive Reihenfolge:
+1. BroadcastManager Phase 2: echter Relay-Transport, Delivery Status, per-recipient encryption.
+2. Chat Relay/Remote Transport jenseits QR-Phase vorbereiten, sobald Relay-Scope aktiv wird.
+3. Release Prep: `assembleRelease`, Keystore, Signing.
+4. Linear NEA-56 — Web/Release Audit:
+   - Stripe Plaene auf Produkt-/Pricing-Seiten korrekt einrichten bzw. fehlende Stripe-Links als TODO markieren.
+   - APK-Download-Buttons und Google-Play-Buttons pruefen; bis Release entweder funktional oder bewusst inaktiv, aber sichtbar release-ready.
+   - Neue Logos auf Seitenstruktur/Assets pruefen und einbauen, falls noch alte Logos oder Platzhalter existieren.
+   - Seitenstruktur, Layout, Navigation, Button-Ziele, Inkohärenzen, visuelle Kollisionen/Overlaps und Branding-Konsistenz auditieren.
+   - Findings/Fixes in BRIDGE.md dokumentieren.
+
+Arbeitsmodus:
+- Ein Punkt nach dem anderen.
+- Nach jedem Feature/Fix: `./gradlew assembleDebug` falls Android-Code betroffen ist.
+- Nach jedem Feature/Fix: `TYPE: FIX` in BRIDGE.md und Linear aktualisieren.
