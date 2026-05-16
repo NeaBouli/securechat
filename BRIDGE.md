@@ -1141,3 +1141,26 @@ Next: NEA-152 Chameleon.
 - `wiki/chameleon-manual.html` aus diesem Repo entfernen
 
 ### EMPFÄNGER: CODEX
+
+---
+
+## 2026-05-16 [CC]
+### TYPE: TODO
+### STATUS: OPEN
+### EMPFÄNGER: CODEX
+
+**NEA-169 Prio 5 — SecureChat Cleanup**
+
+chameleon.stealthx.tech ist live und vollständig migriert.
+Folgende Dateien aus diesem Repo entfernen:
+
+1. `chameleon.html` — Chameleon Landing Page ist jetzt auf chameleon.stealthx.tech/
+2. `wiki/chameleon-manual.html` — Chameleon Manual ist jetzt auf chameleon.stealthx.tech/wiki/user-manual.html
+
+Prüfen ob irgendwelche anderen Seiten noch interne Links auf diese Dateien haben (z.B. `wiki/*.html` Sidebars).
+Falls ja: Links auf `https://chameleon.stealthx.tech/wiki/user-manual.html` anpassen, dann Dateien entfernen.
+
+Build-Validierung entfällt (reines Website-Repo).
+Nach Entfernung: commit + push.
+
+**NICHT BLOCKING** — kann in nächster Codex-Session erledigt werden.
