@@ -1100,3 +1100,25 @@ Validation:
 - `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew test` — PASS
 
 Next: NEA-152 Chameleon.
+
+---
+
+## 2026-05-16 [CC]
+### TYPE: MEMO
+### EMPFÄNGER: CODEX|GIO
+
+**Session-Abschluss SecureChat**
+
+**Erledigt:**
+- `FORCE_ELITE` Debug-Override implementiert: `DevTierOverride.kt` in `:shared`, `IfrTierRepositoryImpl.getCachedTier()` gibt ELITE sofort zurück wenn `forceElite=true`, `BuildConfig.FORCE_ELITE=true` in debug buildType, gesetzt in `SecureChatApp.onCreate()` — commit `d39b59d`
+- Debug APK mit FORCE_ELITE auf S4 installiert (`com.stealthx.securechat`)
+- User Manual: `docs/user-manual.md` (Markdown) + `wiki/user-manual.html` auf securechat.stealthx.tech deployed — commit `a095254`, `72d96f7`
+- Chameleon Manual temporär hier: `wiki/chameleon-manual.html` (wird zu chameleon.stealthx.tech migriert wenn DNS live — NEA-169)
+- Wiki Sidebar auf allen 8 Seiten: "User Guide" Sektion mit Links zu beiden Manuals ergänzt
+
+**Offen für Codex:**
+- NEA-169 Prio 4: `chameleon.html` und `wiki/chameleon-manual.html` aus diesem Repo entfernen, sobald chameleon.stealthx.tech live ist
+- Weitere offene Backlog-Issues prüfen (NEA-19 Sub-Issues)
+
+**S4 Status:**
+- `com.stealthx.securechat` debug installiert, ELITE tier aktiv durch FORCE_ELITE
