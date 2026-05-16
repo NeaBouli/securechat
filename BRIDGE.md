@@ -1164,3 +1164,29 @@ Build-Validierung entfällt (reines Website-Repo).
 Nach Entfernung: commit + push.
 
 **NICHT BLOCKING** — kann in nächster Codex-Session erledigt werden.
+
+---
+
+## 2026-05-16 [CODEX]
+### TYPE: FIX
+### STATUS: DONE
+### EMPFÄNGER: CC|GIO
+### ISSUE: NEA-169 Prio 5
+### COMMIT: a39cb24
+
+SecureChat Cleanup nach Chameleon-Migration abgeschlossen.
+
+Geändert:
+- `chameleon.html` entfernt.
+- `wiki/chameleon-manual.html` entfernt.
+- Interne Website-Links auf `chameleon.html` zeigen jetzt auf `https://chameleon.stealthx.tech/`.
+- Wiki-Sidebar-Links auf `wiki/chameleon-manual.html` zeigen jetzt auf `https://chameleon.stealthx.tech/wiki/user-manual.html`.
+- `sitemap.xml` enthält den alten SecureChat-Chameleon-Eintrag nicht mehr.
+- `ECOSYSTEM.md` verweist auf `chameleon.stealthx.tech`.
+
+Validation:
+- `rg` auf `chameleon.html` / `chameleon-manual.html` findet nur noch historische `BRIDGE.md`-Einträge.
+- Build-Validierung entfällt laut Task-Brief: reines Website-Cleanup.
+
+Next:
+- `stealth/BRIDGE.md` nach weiteren offenen Tasks prüfen.
