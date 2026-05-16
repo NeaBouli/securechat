@@ -15,11 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 data class ConversationItem(
     val sxId: String,
     val displayName: String,
     val lastMessage: String,
+    val timestamp: Long? = null,
     val unreadCount: Int = 0
 )
 
@@ -79,7 +85,7 @@ fun ConversationsScreen(
             if (state.items.isEmpty()) {
                 item {
                     Text(
-                        "No contacts yet",
+                        "Noch keine Gespräche",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                         modifier = Modifier.padding(24.dp)
@@ -106,7 +112,20 @@ private fun ConversationRow(item: ConversationItem, onClick: () -> Unit) {
             modifier = Modifier.size(40.dp))
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            Text(item.displayName, fontWeight = FontWeight.SemiBold)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    item.displayName,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.weight(1f)
+                )
+                item.timestamp?.let {
+                    Text(
+                        formatConversationTimestamp(it),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f)
+                    )
+                }
+            }
             Text(item.lastMessage, style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
         }
@@ -114,4 +133,16 @@ private fun ConversationRow(item: ConversationItem, onClick: () -> Unit) {
             Badge { Text(item.unreadCount.toString()) }
         }
     }
+}
+
+private fun formatConversationTimestamp(timestamp: Long): String {
+    val zone = ZoneId.systemDefault()
+    val dateTime = Instant.ofEpochMilli(timestamp).atZone(zone)
+    val today = LocalDate.now(zone)
+    val formatter = if (dateTime.toLocalDate() == today) {
+        DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
+    } else {
+        DateTimeFormatter.ofPattern("dd.MM.yy", Locale.getDefault())
+    }
+    return dateTime.format(formatter)
 }

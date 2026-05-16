@@ -77,9 +77,14 @@ class ConversationsViewModel @Inject constructor(
                         sxId = contact.id,
                         displayName = contact.displayName.ifBlank { contact.id },
                         lastMessage = summary?.lastMessage ?: "No messages yet",
+                        timestamp = summary?.timestamp,
                         unreadCount = summary?.unreadCount ?: 0
                     )
                 }
+                    .sortedWith(
+                        compareByDescending<ConversationItem> { it.timestamp ?: Long.MIN_VALUE }
+                            .thenBy { it.displayName.lowercase() }
+                    )
             )
         }
 
