@@ -5,6 +5,7 @@
  */
 package com.stealthx.ifr.wallet
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -35,6 +36,14 @@ class WalletConnectManager @Inject constructor(
         private const val METAMASK_DEEP_LINK = "metamask://wc"
         private const val TRUST_DEEP_LINK = "trust://wc"
         private const val GENERIC_WC_SCHEME = "wc:"
+        private val ETH_ADDRESS_REGEX = Regex("0x[a-fA-F0-9]{40}")
+    }
+
+    /**
+     * Build the WalletConnect intent used by ActivityResult launchers.
+     */
+    fun createWalletConnectIntent(wcUri: String): Intent {
+        return Intent(Intent.ACTION_VIEW, Uri.parse(wcUri))
     }
 
     /**
@@ -44,7 +53,7 @@ class WalletConnectManager @Inject constructor(
      * @return true if intent was sent, false if no wallet app found
      */
     fun launchWalletConnect(wcUri: String): Boolean {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(wcUri)).apply {
+        val intent = createWalletConnectIntent(wcUri).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         return try {
@@ -86,7 +95,7 @@ class WalletConnectManager @Inject constructor(
     fun isValidAddress(address: String): Boolean {
         if (!address.startsWith("0x") || address.length != 42) return false
         val hexPart = address.substring(2)
-        return hexPart.all { it.isLetterOrDigit() }
+        return hexPart.all { it in '0'..'9' || it in 'a'..'f' || it in 'A'..'F' }
     }
 
     /**
@@ -100,4 +109,47 @@ class WalletConnectManager @Inject constructor(
             WalletConnectResult.Error("Invalid Ethereum address format")
         }
     }
+
+    /**
+     * Process data returned by a wallet ActivityResult callback.
+     *
+     * Wallet apps vary: some return extras, some return a data URI. Accept the
+     * common keys and fall back to extracting the first Ethereum address.
+     */
+    fun processActivityResult(resultCode: Int, data: Intent?): WalletConnectResult {
+        if (resultCode != Activity.RESULT_OK) return WalletConnectResult.Cancelled
+        if (data == null) return WalletConnectResult.Error("Wallet did not return connection data")
+
+        val candidates = buildList {
+            listOf("walletAddress", "address", "account", "accounts", "selectedAddress").forEach { key ->
+                data.getStringExtra(key)?.let(::add)
+                data.getStringArrayExtra(key)?.forEach(::add)
+                data.getStringArrayListExtra(key)?.forEach(::add)
+            }
+            data.dataString?.let(::add)
+            data.data?.let { uri ->
+                listOf("walletAddress", "address", "account", "accounts", "selectedAddress").forEach { key ->
+                    uri.getQueryParameter(key)?.let(::add)
+                }
+            }
+        }
+
+        val address = candidates
+            .asSequence()
+            .mapNotNull(::extractAddress)
+            .firstOrNull()
+            ?: return WalletConnectResult.Error("Wallet did not return a valid Ethereum address")
+
+        return WalletConnectResult.Success(
+            walletAddress = address,
+            signature = data.getStringExtra("signature")
+        )
+    }
+
+    private fun extractAddress(value: String): String? {
+        val direct = value.trim()
+        if (isValidAddress(direct)) return direct
+        return ETH_ADDRESS_REGEX.find(value)?.value?.takeIf(::isValidAddress)
+    }
+
 }

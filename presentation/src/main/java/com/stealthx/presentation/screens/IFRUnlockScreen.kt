@@ -1,5 +1,7 @@
 package com.stealthx.presentation.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -20,6 +22,11 @@ fun IFRUnlockScreen(
     vm: IFRViewModel = hiltViewModel()
 ) {
     val state by vm.uiState.collectAsState()
+    val walletLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        vm.handleWalletConnectResult(result.resultCode, result.data)
+    }
 
     Scaffold(
         topBar = {
@@ -47,7 +54,9 @@ fun IFRUnlockScreen(
             Spacer(Modifier.height(16.dp))
 
             IFRUnlockSheet(
-                onWalletConnectClicked = { vm.connectWallet() },
+                onWalletConnectClicked = {
+                    vm.createWalletConnectIntent()?.let(walletLauncher::launch)
+                },
                 onManualAddressSubmit = { vm.verifyManualAddress(it) },
                 isVerifying = state.isVerifying,
                 error = state.error

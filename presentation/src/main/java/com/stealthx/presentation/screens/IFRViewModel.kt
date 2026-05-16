@@ -5,6 +5,7 @@
  */
 package com.stealthx.presentation.screens
 
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stealthx.ifr.activator.IFRTierActivator
@@ -36,9 +37,23 @@ class IFRViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(IFRUiState())
     val uiState: StateFlow<IFRUiState> = _uiState.asStateFlow()
 
-    fun connectWallet() {
+    fun createWalletConnectIntent(): Intent? {
         val wcUri = "wc:securechat-ifr-verify"
-        walletManager.launchWalletConnect(wcUri)
+        return if (walletManager.isWalletAppInstalled()) {
+            _uiState.value = _uiState.value.copy(error = null)
+            walletManager.createWalletConnectIntent(wcUri)
+        } else {
+            _uiState.value = _uiState.value.copy(error = "No compatible wallet app found")
+            null
+        }
+    }
+
+    fun handleWalletConnectResult(resultCode: Int, data: Intent?) {
+        when (val result = walletManager.processActivityResult(resultCode, data)) {
+            is WalletConnectResult.Success -> activateTier(result.walletAddress)
+            is WalletConnectResult.Error -> _uiState.value = _uiState.value.copy(error = result.message)
+            is WalletConnectResult.Cancelled -> _uiState.value = _uiState.value.copy(error = null)
+        }
     }
 
     fun verifyManualAddress(address: String) {
