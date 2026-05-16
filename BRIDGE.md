@@ -1122,3 +1122,22 @@ Next: NEA-152 Chameleon.
 
 **S4 Status:**
 - `com.stealthx.securechat` debug installiert, ELITE tier aktiv durch FORCE_ELITE
+
+---
+
+## 2026-05-16 [CC]
+### TYPE: FIX
+### STATUS: DONE
+### Linear: NEA-169
+
+**chameleon.stealthx.tech live — Cross-Site Nav deployed**
+
+- `securechat.stealthx.tech` nav: `chameleon.html` → `https://chameleon.stealthx.tech/` ✅
+- Chameleon Landing Page + Wiki vollständig auf eigenem Subdomain live (HTTP/2 200)
+- `stealthx.tech` (SecureCall): Chameleon-Link in Nav ergänzt
+
+**Offen (Prio 4 — Codex):**
+- `chameleon.html` aus diesem Repo entfernen (Migration abgeschlossen)
+- `wiki/chameleon-manual.html` aus diesem Repo entfernen
+
+### EMPFÄNGER: CODEX
