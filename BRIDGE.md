@@ -1033,3 +1033,70 @@ Validation:
 - `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew test` — PASS
 
 Next: NEA-149 — Conversation List last message/timestamp/unread badge anbinden.
+
+---
+
+## 2026-05-16 [CC]
+### TYPE: TODO
+### STATUS: [AKTIV — CODEX STARTEN]
+### EMPFÄNGER: CODEX
+### ISSUE: NEA-149
+
+**CHECKPOINT — Stand 09:15 Uhr**
+
+Abgeschlossen heute:
+- NEA-147 ✅ committed ad61222 — QR-Kontakt-Verdrahtung
+- NEA-148 ✅ committed df76930 — WalletConnect ActivityResult Callback
+
+**JETZT: NEA-149 — Conversation List UI anbinden (~2h)**
+
+Problem: `ConversationsScreen` zeigt leere Liste. `ConversationListViewModel` und `MessageRepository` sind vorhanden, aber LiveData/Flow wird nicht in die Adapter-Binding gezogen.
+
+Was zu tun ist:
+1. `ConversationListViewModel` — letzten Nachrichtentext, Timestamp, Unread-Count als StateFlow/LiveData exponieren
+2. `ConversationsScreen` — Compose-State auf ViewModel subscriben, nicht hardcoded/leer
+3. Unread-Badge: Integer-Counter aus `MessageRepository.getUnreadCount(contactId)` anbinden
+4. Timestamp: formatiert anzeigen (heute → Uhrzeit, älter → Datum)
+5. Leerer State: "Noch keine Gespräche" Placeholder wenn Liste leer
+
+Validation:
+- Kontakt vorhanden → letzter Nachrichtentext + Timestamp erscheint in der Liste
+- Neue Nachricht → Unread-Badge zählt hoch
+- `./gradlew assembleDebug` PASS
+- `./gradlew test` PASS
+
+**NACH ABSCHLUSS:** BRIDGE.md Eintrag TYPE: FIX mit:
+- Was geändert wurde (welche Dateien, welche Klassen)
+- Build + Test Ergebnis
+- Commit Hash
+- Nächste Aufgabe (NEA-152 Chameleon)
+
+**BLACKOUT-SICHERUNG:** Dieser Eintrag bleibt bestehen bis NEA-149 committed und gemergt ist.
+
+### EMPFÄNGER: CC|GIO nach Abschluss
+
+---
+
+## 2026-05-16 [CODEX]
+### TYPE: FIX
+### STATUS: DONE
+### EMPFÄNGER: CC|GIO
+### ISSUE: NEA-149
+### COMMIT: fe387b9
+
+Conversation List UI ist jetzt an den vorhandenen `ConversationsViewModel`/`MessageRepository`-State angebunden.
+
+Geändert:
+- `presentation/src/main/java/com/stealthx/presentation/screens/ConversationsViewModel.kt`
+  - `ConversationItem.timestamp` wird aus `ConversationSummary.timestamp` gesetzt.
+  - Conversation-Liste wird nach letzter Nachricht absteigend sortiert; Kontakte ohne Nachrichten bleiben sichtbar und fallen nach unten.
+  - Unread-Count bleibt aus `MessageRepository.observeConversationSummaries(...)` angebunden.
+- `presentation/src/main/java/com/stealthx/presentation/screens/ConversationsScreen.kt`
+  - Row zeigt letzten Nachrichtentext, formatierte Zeit (`HH:mm` fuer heute, `dd.MM.yy` fuer aelter) und Unread-Badge.
+  - Empty-State auf `"Noch keine Gespräche"` gesetzt.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` — PASS
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew test` — PASS
+
+Next: NEA-152 Chameleon.
