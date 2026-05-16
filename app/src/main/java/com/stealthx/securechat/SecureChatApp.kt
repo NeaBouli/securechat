@@ -16,6 +16,10 @@ class SecureChatApp : Application() {
         // Create per-device identity on first launch — idempotent on subsequent launches
         StealthXIdentity.getOrCreateWithSeed(this)
 
+        if (BuildConfig.DEBUG && BuildConfig.FORCE_ELITE) {
+            com.stealthx.shared.DevTierOverride.forceElite = true
+        }
+
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }

@@ -40,11 +40,15 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("Boolean", "FORCE_ELITE", "true")
+        }
         release {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField("Boolean", "FORCE_ELITE", "false")
         }
     }
 

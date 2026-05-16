@@ -9,6 +9,7 @@ import com.stealthx.data.dao.IfrTierCacheDao
 import com.stealthx.data.entity.IfrTierCacheEntity
 import com.stealthx.domain.repository.IfrTierRepository
 import com.stealthx.security.KeystoreManager
+import com.stealthx.shared.DevTierOverride
 import com.stealthx.shared.model.CachedTierResult
 import com.stealthx.shared.model.IfrTier
 import java.nio.ByteBuffer
@@ -40,6 +41,7 @@ class IfrTierRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCachedTier(): IfrTier {
+        if (DevTierOverride.forceElite) return IfrTier.ELITE
         val entity = dao.getCurrent() ?: return IfrTier.FREE
 
         if (!validateHmac(entity)) {
