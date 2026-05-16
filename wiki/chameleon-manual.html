@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Chameleon user manual — complete setup guide, settings reference, overlay encryption, private zone, geofencing, decoy profiles, and IFR tier walkthrough.">
+<meta name="keywords" content="Chameleon, privacy OS, context-aware encryption, overlay, geofencing, decoy profile, IFR Token, StealthX">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<meta name="author" content="NeaBouli / StealthX Platform">
+<meta name="theme-color" content="#ff6b35">
+<meta name="geo.region" content="GR">
+<meta name="language" content="English">
+<link rel="canonical" href="https://securechat.stealthx.tech/wiki/chameleon-manual.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Chameleon — StealthX Platform">
+<meta property="og:title" content="Chameleon User Manual — Privacy OS Setup Guide">
+<meta property="og:description" content="Complete setup guide, settings reference, and feature walkthrough for Chameleon — the context-aware privacy OS for Android.">
+<meta property="og:url" content="https://securechat.stealthx.tech/wiki/chameleon-manual.html">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chameleon User Manual — Privacy OS Setup Guide">
+<title>User Manual — Chameleon Privacy OS</title>
+<link rel="icon" type="image/png" href="../chameleon-logo.png">
+<style>
+:root{--bg:#0a0a0f;--surface:#0d1b2a;--surface2:#1b2a3b;--border:#1e3a52;--orange:#ff6b35;--orange-dim:#e05a28;--cyan:#00d4ff;--green:#00ff88;--gold:#ffb800;--muted:#8899aa;--text:#e8edf2;--text-dim:#b0bec5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;display:flex;min-height:100vh}
+nav.topbar{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(10,10,15,.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;z-index:100}
+nav.topbar a{color:var(--muted);text-decoration:none;font-size:13px}
+nav.topbar a:hover{color:var(--orange)}
+nav.topbar .logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto}
+.logo-bg{background:var(--orange);border-radius:6px;padding:3px 7px}
+.logo-bg img{height:20px}
+.logo-name{font-size:14px;font-weight:700;color:var(--text)}
+.logo-sub{font-size:11px;color:var(--muted);margin-left:2px}
+aside{width:240px;flex-shrink:0;border-right:1px solid var(--border);padding:80px 0 2rem;position:fixed;top:0;bottom:0;overflow-y:auto;background:var(--surface)}
+aside h4{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:1rem 1.5rem .4rem}
+aside a{display:block;padding:7px 1.5rem;font-size:13px;color:var(--text-dim);text-decoration:none;border-left:2px solid transparent}
+aside a:hover,aside a.active{color:var(--orange);border-left-color:var(--orange);background:rgba(255,107,53,.06)}
+main{margin-left:240px;padding:80px 3rem 4rem;max-width:860px;flex:1}
+.page-label{font-size:10px;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:.6rem}
+h1{font-size:2rem;font-weight:800;margin-bottom:.4rem}
+.meta{font-size:13px;color:var(--muted);margin-bottom:2.5rem;border-bottom:1px solid var(--border);padding-bottom:1rem}
+h2{font-size:1.15rem;font-weight:700;color:var(--orange);margin:2.2rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
+h3{font-size:.95rem;font-weight:600;color:var(--text);margin:1.4rem 0 .5rem}
+p{font-size:14px;color:var(--text-dim);line-height:1.75;margin-bottom:.9rem}
+ul,ol{margin:.5rem 0 1rem 1.4rem}
+li{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:.35rem}
+li strong{color:var(--text)}
+code{font-family:'Courier New',monospace;font-size:12px;background:var(--surface2);color:var(--orange);padding:1px 5px;border-radius:3px}
+table{width:100%;border-collapse:collapse;margin:1rem 0 2rem}
+th{background:var(--surface2);padding:11px 14px;text-align:left;font-size:11px;color:var(--orange);border:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+td{padding:11px 14px;border:1px solid var(--border);font-size:13px;color:var(--text-dim)}
+td:first-child{color:var(--text);font-weight:600}
+.callout{background:var(--surface);border-left:3px solid var(--orange);padding:1rem 1.2rem;margin:1rem 0 1.5rem;border-radius:0 8px 8px 0;font-size:14px;color:var(--text-dim)}
+.callout strong{color:var(--text)}
+.callout.warn{border-left-color:var(--gold)}
+.callout.critical{border-left-color:#ff3b3b}
+.section-label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin:2.5rem 0 .8rem;padding:.5rem 0;border-top:1px solid var(--border)}
+.level-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;margin-left:4px}
+.level-public{background:rgba(76,175,80,.15);color:#4caf50}
+.level-protected{background:rgba(255,193,7,.15);color:#ffc107}
+.level-private{background:rgba(255,87,34,.15);color:#ff5722}
+.level-camouflage{background:rgba(244,67,54,.15);color:#f44336}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600;margin-left:6px}
+.badge.pro{background:rgba(0,212,255,.15);color:var(--cyan)}
+.badge.elite{background:rgba(255,184,0,.15);color:var(--gold)}
+.footer-note{margin-top:4rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+@media(max-width:768px){aside{display:none}main{margin-left:0;padding:70px 1.2rem 2rem}}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="logo" href="../chameleon.html">
+    <div class="logo-bg"><img src="../chameleon-logo.png" alt="Chameleon" onerror="this.style.display='none'"></div>
+    <span class="logo-name">Chameleon</span><span class="logo-sub">Privacy OS</span>
+  </a>
+  <a href="../chameleon.html">&#8592; Back to Chameleon</a>
+  <a href="index.html">SecureChat Wiki</a>
+  <a href="https://github.com/NeaBouli/chameleon" target="_blank" rel="noopener">GitHub</a>
+</nav>
+
+<aside>
+  <h4>Chameleon</h4>
+  <a href="../chameleon.html">Landing Page</a>
+  <a href="chameleon-manual.html" class="active">User Manual</a>
+
+  <h4>Getting Started</h4>
+  <a href="#overview">Overview</a>
+  <a href="#setup">First-Time Setup</a>
+  <a href="#dashboard">Dashboard</a>
+  <a href="#security-levels">Security Levels</a>
+
+  <h4>Settings</h4>
+  <a href="#ifr">IFR Token</a>
+  <a href="#overlay">Overlay Encryption</a>
+  <a href="#private-zone">Private Zone</a>
+  <a href="#geofencing">Geofencing</a>
+  <a href="#rules">Rule Engine</a>
+  <a href="#decoy">Decoy Profile</a>
+
+  <h4>Reference</h4>
+  <a href="#permissions">Permissions</a>
+  <a href="#troubleshooting">Troubleshooting</a>
+
+  <h4>SecureChat</h4>
+  <a href="index.html">Wiki Overview</a>
+  <a href="user-manual.html">SecureChat Manual</a>
+</aside>
+
+<main>
+  <div class="page-label">User Guide</div>
+  <h1>Chameleon User Manual</h1>
+  <p class="meta">Version 0.1.0-alpha &middot; Chameleon &mdash; StealthX Platform &middot; May 2026</p>
+
+  <!-- ═══ OVERVIEW ═══ -->
+  <span class="section-label" id="overview">Overview</span>
+
+  <h2>What Is Chameleon?</h2>
+  <p>Chameleon is a context-aware privacy layer for Android. It does not replace your existing apps &mdash; it runs silently on top of them. Using Android&rsquo;s Accessibility Service, Chameleon intercepts text as you type in any whitelisted app (WhatsApp, Telegram, Signal, Gmail, and others), encrypts it in real time using <strong>XChaCha20-Poly1305</strong>, and reinjects the ciphertext. Your recipient sees encrypted text. No one between you and them &mdash; not the app, not the platform, not your carrier &mdash; can read it.</p>
+  <p>Beyond message encryption, Chameleon provides a context-aware rule engine that automatically adjusts your security level based on location, active app, WiFi network, time of day, or connected Bluetooth device. It also includes a <strong>Private Zone</strong> (encrypted file vault), a <strong>Decoy Profile</strong> system, and <strong>Geofencing</strong>.</p>
+
+  <h2>How Chameleon Works</h2>
+  <ul>
+    <li><strong>Overlay Encryption</strong> &mdash; The Accessibility Service detects text input in whitelisted apps. It passes content to an isolated crypto process (separated via AIDL), receives back the ciphertext, and injects it into the text field. You hit send. The recipient sees the encrypted string.</li>
+    <li><strong>Decryption</strong> &mdash; The recipient&rsquo;s Chameleon instance recognizes the ciphertext format and decrypts it transparently on display.</li>
+    <li><strong>Rule Engine</strong> &mdash; Rules associate a trigger (location, app, WiFi, time, Bluetooth) with a security level. Chameleon evaluates all active rules and applies the highest matching level. Fail-secure: the highest level always wins.</li>
+    <li><strong>Process Isolation</strong> &mdash; The Accessibility Service contains no cryptographic code. All encryption and key management happen in an isolated <code>:crypto</code> process. Even if the Accessibility Service were compromised, your keys remain protected.</li>
+  </ul>
+
+  <h2>Tier Overview</h2>
+  <p>Chameleon uses IFR token locking for permanent tier access. No subscriptions.</p>
+  <table>
+    <thead><tr><th>Feature</th><th>Free</th><th>Pro &#8805;2,000 IFR</th><th>Elite &#8805;6,000 IFR</th></tr></thead>
+    <tbody>
+    <tr><td>Overlay encryption</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+    <tr><td>Whitelisted apps</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+    <tr><td>Manual geofencing</td><td>3 zones max</td><td>Unlimited</td><td>Unlimited</td></tr>
+    <tr><td>Private Zone</td><td>100 MB cap</td><td>Unlimited</td><td>Unlimited</td></tr>
+    <tr><td>Automation rules</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+    <tr><td>Automatic geofencing triggers</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+    <tr><td>Decoy profile</td><td>No</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Advanced threat detection</td><td>No</td><td>No</td><td>Yes</td></tr>
+    <tr><td>Zero telemetry mode</td><td>No</td><td>No</td><td>Yes</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ FIRST-TIME SETUP ═══ -->
+  <span class="section-label" id="setup">First-Time Setup</span>
+
+  <h2>Step 1 &mdash; Enable the Accessibility Service</h2>
+  <p>Chameleon&rsquo;s overlay encryption requires the Android Accessibility Service. Without it, the app can display its dashboard but cannot intercept or encrypt any text.</p>
+  <ol>
+    <li>Open Android <strong>Settings</strong></li>
+    <li>Go to <strong>Accessibility</strong></li>
+    <li>Find <strong>Chameleon</strong> in the list of installed services</li>
+    <li>Tap it and toggle <strong>Use service</strong> on</li>
+    <li>Confirm the system warning dialog</li>
+  </ol>
+  <div class="callout warn"><strong>Important:</strong> The Accessibility Service must remain enabled for overlay encryption to function. Android may disable it after certain system updates or security policy changes &mdash; check back in Accessibility Settings if encryption stops working.</div>
+
+  <h2>Step 2 &mdash; Enable the Overlay</h2>
+  <p>Open Chameleon &#8594; <strong>Settings</strong> &#8594; <strong>Overlay Encryption</strong>. Toggle <strong>Overlay Active</strong> on. Enable the apps you want Chameleon to monitor. WhatsApp, Telegram, Signal, Discord, and Gmail are pre-configured.</p>
+
+  <h2>Step 3 &mdash; Set Your Security Level</h2>
+  <p>The Dashboard shows your current security level. Tap the level indicator to change it manually. To have Chameleon change it automatically based on context, configure the Rule Engine (Pro tier).</p>
+
+  <h2>Step 4 &mdash; Unlock Features (Optional)</h2>
+  <p>If you hold IFR tokens and want Pro or Elite features, open Settings &#8594; <strong>IFR Token</strong> and connect your Ethereum wallet.</p>
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <span class="section-label" id="dashboard">Dashboard</span>
+
+  <h2>Dashboard Overview</h2>
+  <p>The Dashboard is the home screen. It shows:</p>
+  <ul>
+    <li><strong>Current security level</strong> &mdash; color-coded icon and label</li>
+    <li><strong>Tier badge</strong> &mdash; top right (FREE, PRO, or ELITE)</li>
+    <li><strong>Active Rules</strong> &mdash; a live list of automation rules currently matching your context</li>
+    <li><strong>Quick action buttons</strong> &mdash; Overlay, Messenger, Keys</li>
+  </ul>
+
+  <!-- ═══ SECURITY LEVELS ═══ -->
+  <span class="section-label" id="security-levels">Security Levels</span>
+
+  <h2>The Four Security Levels</h2>
+  <table>
+    <thead><tr><th>Level</th><th>Color</th><th>Description</th></tr></thead>
+    <tbody>
+    <tr><td>Public <span class="level-badge level-public">&#9679;</span></td><td>Green</td><td>No encryption. Use only in fully trusted, private environments.</td></tr>
+    <tr><td>Protected <span class="level-badge level-protected">&#9679;</span></td><td>Yellow</td><td>Standard encryption. The default level.</td></tr>
+    <tr><td>Private <span class="level-badge level-private">&#9679;</span></td><td>Orange</td><td>High encryption with stricter key parameters.</td></tr>
+    <tr><td>Camouflage <span class="level-badge level-camouflage">&#9679;</span></td><td>Red</td><td>Maximum protection. All security features active. Stealth mode.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">When multiple rules match simultaneously, the <strong>highest security level always wins</strong>. Chameleon never downgrades security automatically.</div>
+
+  <!-- ═══ SETTINGS: IFR ═══ -->
+  <span class="section-label" id="ifr">Settings — IFR Token</span>
+
+  <h2>IFR Token Unlock</h2>
+  <p>The top of Settings shows your current tier and an Upgrade button. Tap it to open the IFR Unlock screen.</p>
+
+  <h3>Tier Status Card</h3>
+  <p>Shows: current tier badge, locked IFR amount, wallet address, and cache expiry (30-day window).</p>
+
+  <h3>Connect Wallet (WalletConnect)</h3>
+  <p>Tap <strong>Connect Wallet</strong>. Chameleon launches your installed Ethereum wallet app (MetaMask, Trust Wallet, etc.). Your wallet signs a challenge proving ownership of the address. Chameleon then queries the IFR contract on Ethereum Mainnet directly via public RPC endpoints &mdash; no account or API key required.</p>
+  <table>
+    <thead><tr><th>IFR Locked</th><th>Tier</th><th>Expiry</th></tr></thead>
+    <tbody>
+    <tr><td>&#8805; 6,000 IFR</td><td>Elite</td><td>Never expires</td></tr>
+    <tr><td>&#8805; 2,000 IFR</td><td>Pro</td><td>Never expires</td></tr>
+    <tr><td>&lt; 2,000 IFR</td><td>Free</td><td>Balance shown, no unlock</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Manual Address Entry</h3>
+  <p>Paste your Ethereum address (0x format). Chameleon verifies the locked balance on-chain. Manual verifications expire after <strong>30 days</strong> and re-verify every 24 hours. If re-verification fails (offline), the cached tier is kept until expiry.</p>
+  <p>The verification result is stored in an encrypted local database protected by an HMAC-SHA256 tag computed with a hardware-backed key from Android Keystore. Any tampering with the cache causes the tier to revert to Free.</p>
+
+  <!-- ═══ SETTINGS: OVERLAY ═══ -->
+  <span class="section-label" id="overlay">Settings — Overlay Encryption</span>
+
+  <h2>Overlay Encryption</h2>
+  <p>Controls the core text encryption feature. Access via Settings &#8594; Overlay Encryption.</p>
+
+  <h3>Overlay Active</h3>
+  <p>Master toggle for the entire overlay system. When off, Chameleon does not intercept any text in any app. Default: <strong>On</strong>.</p>
+
+  <h3>Whitelisted Apps</h3>
+  <p>Pre-configured apps (each with an on/off toggle):</p>
+  <ul>
+    <li>WhatsApp</li>
+    <li>Telegram</li>
+    <li>Signal</li>
+    <li>Discord</li>
+    <li>Gmail</li>
+  </ul>
+  <p>Toggle any app on to enable text interception in that app.</p>
+
+  <h3>Custom Apps</h3>
+  <p>To add any other app, enter its package name in the input field (e.g. <code>com.custom.messenger</code>) and tap <strong>Add</strong>. The package name must contain at least one dot. All added apps appear in the list with their own toggle.</p>
+  <div class="callout"><strong>How to find a package name:</strong> In Android Settings &#8594; Apps, find the app and look at its entry. You can also find package names in the Google Play Store URL for that app.</div>
+
+  <h3>Security Properties of the Overlay</h3>
+  <ul>
+    <li>FLAG_SECURE applied to the overlay window &mdash; cannot be screenshotted independently</li>
+    <li>FLAG_NOT_FOCUSABLE &mdash; overlay never steals keyboard focus from the underlying app</li>
+    <li>Never drawn on the lock screen</li>
+  </ul>
+
+  <!-- ═══ SETTINGS: PRIVATE ZONE ═══ -->
+  <span class="section-label" id="private-zone">Settings — Private Zone</span>
+
+  <h2>Private Zone</h2>
+  <p>An encrypted file vault stored locally on your device. Files are encrypted with XChaCha20-Poly1305. File names on disk are SHA-256 hashed &mdash; the original names are never written to storage in plaintext. The vault key is generated randomly on first use and stored in encrypted SharedPreferences (AES-256-GCM). It is never uploaded or backed up. Access via Settings &#8594; Private Zone.</p>
+
+  <h3>File Count &amp; List</h3>
+  <p>The top of the screen shows the total number of encrypted files. Below is a scrollable list of all stored files, each labeled &ldquo;Encrypted vault item&rdquo;.</p>
+
+  <h3>Import File</h3>
+  <p>Opens the system file picker. Select any file type. The file is encrypted and stored in the vault. <strong>The original file is not deleted</strong> from its source &mdash; delete it manually after import if needed.</p>
+
+  <h3>Secure Photo</h3>
+  <p>Opens the camera. Take a photo. It is immediately compressed to JPEG (92% quality) and stored encrypted as <code>photo_TIMESTAMP.jpg</code>. The photo is <strong>never saved to your gallery or camera roll</strong>.</p>
+
+  <h3>Storage Limits</h3>
+  <table>
+    <thead><tr><th>Tier</th><th>Storage Limit</th></tr></thead>
+    <tbody>
+    <tr><td>Free</td><td>100 MB total. An error is shown if you exceed the limit.</td></tr>
+    <tr><td>Pro &amp; Elite</td><td>Unlimited</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ═══ SETTINGS: GEOFENCING ═══ -->
+  <span class="section-label" id="geofencing">Settings — Geofencing</span>
+
+  <h2>Geofencing</h2>
+  <p>Define geographic zones. When you are physically inside a zone, the Rule Engine can use it as a trigger to automatically change your security level (Pro and Elite). Free tier: up to 3 zones. Pro / Elite: unlimited zones. Access via Settings &#8594; Geofencing.</p>
+
+  <h3>Granting Location Permissions</h3>
+  <p>Before adding zones, Chameleon needs location access:</p>
+  <ol>
+    <li>Tap <strong>Allow Location</strong> &mdash; grants <code>ACCESS_FINE_LOCATION</code> at runtime.</li>
+    <li>On Android 10+: Tap <strong>Allow Background Location</strong>.
+      <ul>
+        <li><em>Android 11+:</em> You are redirected to Android Settings. Choose &ldquo;Allow all the time&rdquo; for Chameleon.</li>
+        <li><em>Android 10:</em> The permission is requested directly.</li>
+      </ul>
+    </li>
+  </ol>
+  <div class="callout warn"><strong>Background location is required</strong> for geofencing to trigger when Chameleon is not in the foreground. On some devices (Samsung, Huawei, Xiaomi), additional battery optimization settings must also be disabled.</div>
+
+  <h3>Adding a Zone</h3>
+  <p>Fill in all four fields and tap <strong>Add Geofence Zone</strong>:</p>
+  <ul>
+    <li><strong>Zone name</strong> &mdash; a label (e.g. &ldquo;Office&rdquo;, &ldquo;Airport&rdquo;)</li>
+    <li><strong>Latitude</strong> &mdash; between -90.0 and 90.0</li>
+    <li><strong>Longitude</strong> &mdash; between -180.0 and 180.0</li>
+    <li><strong>Radius (meters)</strong> &mdash; minimum 100 m (enforced by Android&rsquo;s geofencing API)</li>
+  </ul>
+  <div class="callout"><strong>GPS accuracy tip:</strong> Typical GPS drift is &#177;5&ndash;10 meters. For office buildings or enclosed spaces, set a radius of at least 150&ndash;200 m to avoid false exits/entries.</div>
+  <p>Each zone appears as a card showing name, coordinates, and radius. Zones are active immediately after creation.</p>
+
+  <!-- ═══ SETTINGS: RULE ENGINE ═══ -->
+  <span class="section-label" id="rules">Settings — Rule Engine</span>
+
+  <h2>Rule Engine <span class="badge pro">Pro &amp; Elite</span></h2>
+  <p>Define context-aware rules that automatically set your security level. This setting is locked on Free tier. Tap <strong>Unlock</strong> to open the IFR unlock flow.</p>
+
+  <h3>Rule Trigger Types</h3>
+  <table>
+    <thead><tr><th>Trigger</th><th>How It Works</th><th>Example</th></tr></thead>
+    <tbody>
+    <tr><td>App</td><td>Activates when a specific app is in the foreground</td><td>Telegram open &#8594; Private</td></tr>
+    <tr><td>WiFi</td><td>Activates when connected to a specific SSID</td><td>&ldquo;Airport_Free&rdquo; SSID &#8594; Camouflage</td></tr>
+    <tr><td>Location</td><td>Activates when inside a named geofence zone</td><td>&ldquo;Work&rdquo; zone &#8594; Protected</td></tr>
+    <tr><td>Time</td><td>Activates during a defined time window</td><td>Weekdays 09:00&ndash;17:00 &#8594; Protected</td></tr>
+    <tr><td>Bluetooth</td><td>Activates when a specific BT device is connected</td><td>Car BT &#8594; Protected</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Conflict Resolution</h3>
+  <p>If multiple rules match at the same time, Chameleon always applies the <strong>highest security level</strong>. It never downgrades. If no rules match, the default is <strong>Protected</strong>.</p>
+  <p><em>Example:</em> &ldquo;Work WiFi &#8594; Protected&rdquo; and &ldquo;Evening hours &#8594; Private&rdquo; both active = result is <strong>Private</strong>.</p>
+
+  <h3>Dashboard Display</h3>
+  <p>Active rules are listed on the Dashboard under &ldquo;Active Rules&rdquo;, showing each rule&rsquo;s name, trigger type, and resulting security level.</p>
+
+  <!-- ═══ SETTINGS: DECOY ═══ -->
+  <span class="section-label" id="decoy">Settings — Decoy Profile</span>
+
+  <h2>Decoy Profile <span class="badge elite">Elite only</span></h2>
+  <p>The Decoy Profile creates a second, empty identity accessible via a wrong PIN. If someone forces you to unlock the device, you enter the decoy PIN and they see a clean, empty app with no messages, no files, and no zones configured. Access via Settings &#8594; Decoy Profile.</p>
+  <div class="callout critical"><strong>This setting is locked on Free and Pro tiers.</strong> Unlock Elite via IFR token locking to access it.</div>
+
+  <h3>Setup</h3>
+  <ol>
+    <li>Enter <strong>Real PIN</strong> &mdash; 4&ndash;12 digits. This unlocks your actual data.</li>
+    <li>Enter <strong>Decoy PIN</strong> &mdash; 4&ndash;12 digits. Must not match the Real PIN.</li>
+    <li>Enter <strong>Confirm Decoy PIN</strong> &mdash; re-enter the decoy PIN.</li>
+    <li>Tap <strong>Save Decoy Profile</strong>.</li>
+  </ol>
+  <p>Status changes to <strong>&ldquo;Status: Enabled&rdquo;</strong> (shown in green).</p>
+
+  <h3>How It Works on Launch</h3>
+  <p>When Decoy is enabled, Chameleon shows a PIN unlock screen on every app launch.</p>
+  <ul>
+    <li>Enter the <strong>Real PIN</strong> &#8594; actual profile loads (all data accessible)</li>
+    <li>Enter the <strong>Decoy PIN</strong> &#8594; decoy mode loads (empty: no messages, no files, no zones)</li>
+    <li>While in decoy mode, tap <strong>Lock</strong> to return to the PIN screen</li>
+  </ul>
+
+  <h3>Disabling</h3>
+  <p>Return to Settings &#8594; Decoy Profile &#8594; tap <strong>Disable Decoy Profile</strong>.</p>
+
+  <h3>PIN Storage</h3>
+  <p>Both PINs are hashed with <strong>Argon2id</strong> (64 MB memory cost, 3 iterations) with a unique random salt per PIN. The hashes and salts are stored in encrypted SharedPreferences. The raw PINs are never stored anywhere.</p>
+  <div class="callout warn"><strong>There is no PIN recovery.</strong> If you forget your Real PIN after enabling Decoy, you will be locked into the decoy profile. Reinstalling the app is the only option, which destroys all data.</div>
+
+  <!-- ═══ PERMISSIONS ═══ -->
+  <span class="section-label" id="permissions">Permissions</span>
+
+  <h2>Permissions Reference</h2>
+  <table>
+    <thead><tr><th>Permission</th><th>Purpose</th><th>How It Is Granted</th></tr></thead>
+    <tbody>
+    <tr><td>Accessibility Service</td><td>Text interception for overlay encryption</td><td>Manually in Android Settings &#8594; Accessibility</td></tr>
+    <tr><td>System Alert Window</td><td>Overlay display over other apps</td><td>Checked at overlay activation</td></tr>
+    <tr><td>Camera</td><td>QR code scanning for key exchange</td><td>Runtime, on first use</td></tr>
+    <tr><td>Fine Location</td><td>Geofencing zone detection</td><td>Runtime, when adding first zone</td></tr>
+    <tr><td>Background Location</td><td>Geofencing while app is in background</td><td>Runtime, after fine location granted</td></tr>
+    <tr><td>Foreground Service</td><td>Location tracking worker for geofencing</td><td>Declared, no user prompt</td></tr>
+    <tr><td>Biometric</td><td>Optional PIN/face/fingerprint auth</td><td>Declared, used if configured</td></tr>
+    <tr><td>Vibrate</td><td>Security alert haptics</td><td>Declared, no user prompt</td></tr>
+    <tr><td>Boot Completed</td><td>Auto-restart rule engine after reboot</td><td>Declared, no user prompt</td></tr>
+    <tr><td>NFC</td><td>Key exchange via NFC (future)</td><td>Runtime, future feature</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">Chameleon has <strong>no internet permission</strong>. IFR verification is performed by your external wallet app. Chameleon communicates with the wallet via Android Intents, not direct network calls.</div>
+
+  <!-- ═══ TROUBLESHOOTING ═══ -->
+  <span class="section-label" id="troubleshooting">Troubleshooting</span>
+
+  <h2>Common Issues</h2>
+  <ul>
+    <li><strong>Overlay is not encrypting text</strong> &mdash; Check that the Accessibility Service is still enabled: Android Settings &#8594; Accessibility &#8594; Chameleon &#8594; Use service: On. Verify the target app is in your whitelist and <strong>Overlay Active</strong> is on.</li>
+    <li><strong>Geofencing not triggering</strong> &mdash; Ensure background location is set to &ldquo;Allow all the time&rdquo;: Android Settings &#8594; Apps &#8594; Chameleon &#8594; Permissions &#8594; Location. On Samsung/Huawei/Xiaomi, also disable battery optimization for Chameleon.</li>
+    <li><strong>Decoy PIN screen not appearing</strong> &mdash; Decoy must be enabled and saved. Open Settings &#8594; Decoy Profile and confirm the status shows &ldquo;Status: Enabled&rdquo; (green). Force-close the app (not just minimize) and reopen.</li>
+    <li><strong>Files missing from Private Zone</strong> &mdash; Files imported into the vault exist only in the encrypted vault directory. They do not appear in your gallery, file manager, or any other app.</li>
+    <li><strong>Tier shows Free after IFR verification</strong> &mdash; Ensure your tokens are <em>locked</em> in the IFR contract, not just held in your wallet. Visit <a href="https://ifrunit.tech" target="_blank" rel="noopener">ifrunit.tech</a> to lock tokens. Then return to Settings &#8594; IFR Token and verify again.</li>
+    <li><strong>App crashes on new device after reinstall</strong> &mdash; If Decoy Profile was enabled on the previous installation, the hashed PINs are gone with the old install. The app will open normally (no PIN screen). Reconfigure Decoy if needed.</li>
+  </ul>
+
+  <div class="footer-note">
+    Chameleon &mdash; StealthX Platform &middot; &copy; 2026 Vendetta Labs &middot; Greece &middot; GPL-3.0<br>
+    <a href="../privacy.html" style="color:var(--muted)">Privacy Policy</a> &middot;
+    <a href="https://github.com/NeaBouli/chameleon" target="_blank" rel="noopener" style="color:var(--muted)">GitHub</a> &middot;
+    <a href="https://ifrunit.tech" target="_blank" rel="noopener" style="color:var(--muted)">IFR Token</a> &middot;
+    <a href="../chameleon.html" style="color:var(--muted)">Chameleon Landing Page</a>
+  </div>
+</main>
+
+</body>
+</html>
