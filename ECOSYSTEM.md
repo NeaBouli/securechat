@@ -33,7 +33,7 @@ StealthX Platform
 ├── SecureCall (stealthx.tech) — Voice App
 └── SecureChat (securechat.stealthx.tech) — Messaging Ecosystem
     ├── SecureChat App — the Messenger
-    └── Chameleon (securechat.stealthx.tech/chameleon)
+    └── Chameleon (chameleon.stealthx.tech)
         └── Privacy OS / Overlay Layer
 ```
 
