@@ -34,6 +34,13 @@ fun NewContactScreen(
         result.contents?.let { qrContent = it }
     }
 
+    LaunchedEffect(state.contactAdded) {
+        if (state.contactAdded) {
+            onContactAdded()
+            vm.consumeContactAdded()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -139,7 +146,7 @@ fun NewContactScreen(
                 Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
             }
             Button(
-                onClick = { vm.addFromQrContent(qrContent, onContactAdded) },
+                onClick = { vm.addFromQrContent(qrContent) },
                 enabled = !limitState.isAtLimit && !state.isSaving && qrContent.startsWith("stealthx://add/"),
                 modifier = Modifier.fillMaxWidth()
             ) {

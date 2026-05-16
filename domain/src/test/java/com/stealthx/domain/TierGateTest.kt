@@ -111,6 +111,7 @@ class TierGateTest {
     @DisplayName("isCacheValid delegates to repo")
     fun `cache validity check`() = runTest {
         val repo = mockk<IfrTierRepository>()
+        coEvery { repo.getCachedTier() } returns IfrTier.FREE
         coEvery { repo.isCacheValid() } returns true
         val gate = TierGateImpl(repo)
         assertTrue(gate.isCacheValid())

@@ -5,6 +5,7 @@
  */
 package com.stealthx.data.repository
 
+import android.database.sqlite.SQLiteConstraintException
 import com.stealthx.crypto.ChameleonCrypto
 import com.stealthx.data.dao.ContactKeyDao
 import com.stealthx.data.entity.ContactKeyEntity
@@ -45,18 +46,24 @@ class ContactRepository @Inject constructor(
 
     suspend fun addContactBundle(bundle: PublicKeyBundle) {
         validateBundle(bundle)
-        addContact(
-            ContactKeyEntity(
-                id = bundle.sxId,
-                displayName = bundle.customHandle ?: bundle.sxId,
-                identityKey = bundle.ed25519PublicKey,
-                dhPublicKey = bundle.x25519PublicKey,
-                signature = bundle.signature,
-                isVerified = true,
-                createdAt = System.currentTimeMillis(),
-                lastUsedAt = null
+        require(getById(bundle.sxId) == null) { "Contact already exists" }
+
+        try {
+            addContact(
+                ContactKeyEntity(
+                    id = bundle.sxId,
+                    displayName = bundle.customHandle ?: bundle.sxId,
+                    identityKey = bundle.ed25519PublicKey,
+                    dhPublicKey = bundle.x25519PublicKey,
+                    signature = bundle.signature,
+                    isVerified = true,
+                    createdAt = System.currentTimeMillis(),
+                    lastUsedAt = null
+                )
             )
-        )
+        } catch (e: SQLiteConstraintException) {
+            throw IllegalArgumentException("Contact already exists", e)
+        }
     }
 
     fun observeAll(): Flow<List<ContactKeyEntity>> = contactKeyDao.observeAll()

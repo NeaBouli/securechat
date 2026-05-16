@@ -921,3 +921,115 @@ Validation:
 Offen fuer Store-Release:
 - Echte Stripe Checkout URLs, APK Download URL und Google Play URL einsetzen, sobald Produkte/Store live sind.
 - BroadcastManager Phase 2 und Relay Transport bleiben planmaessig spaeterer Scope.
+
+---
+
+## 2026-05-15 [CC]
+### TYPE: AUDIT
+### STATUS: [DONE]
+### EMPFÄNGER: CODEX
+
+**Vollaudit SecureChat repo — Offene Punkte**
+
+Alle Befunde in Linear erfasst. Codex bitte priorisiert abarbeiten:
+
+| # | Linear | Priorität | Aufwand | Beschreibung |
+|---|--------|-----------|---------|--------------|
+| 1 | NEA-147 | CRITICAL | ~2h | `NewContactViewModel.addFromQrContent()` → `ContactRepository.addContactBundle()` nicht verdrahtet — QR-Scan löst keine Kontakt-Persistierung aus → App nicht nutzbar |
+| 2 | NEA-148 | HIGH | ~1.5h | WalletConnect ActivityResult Callback fehlt — identisch wie Chameleon (NEA-152) — Tier-Aktivierung broken |
+| 3 | NEA-149 | MEDIUM | ~2h | Conversation List UI inkomplett — letzter Nachrichtentext, Timestamp und Unread-Badge nicht angebunden (LiveData/ViewModel vorhanden, Adapter-Binding fehlt) |
+
+**Kontext:**
+- Release APK: `app/build/outputs/apk/release/app-release.apk` (13MB) — BUILD SUCCESSFUL
+- Build: `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleRelease`
+- Crypto: XChaCha20-Poly1305 + DoubleRatchet + Argon2id + X25519/Ed25519 via lazysodium-android ✓
+- SQLCipher: Keystore-wrapped random key (kein null passphrase mehr) ✓
+- Non-blocking Warnings: deprecated Compose Material Icons (AutoMirrored), unstripped libjnidispatch.so
+
+**KRITISCH für App-Nutzbarkeit:** NEA-147 (Kontakt-Verdrahtung) muss als erstes gelöst werden — ohne das ist der gesamte Chat-Flow blocked.
+
+**Store offen (Gio-Aktion nötig):**
+- Echte Stripe Checkout URLs einsetzen
+- APK Download URL + Google Play URL eintragen sobald Store live
+
+### DEADLINE: Codex-Rückkehr ~2026-05-15
+
+---
+
+## 2026-05-16 [CC]
+### TYPE: MEMO
+### STATUS: [AKTIV]
+### EMPFÄNGER: CODEX
+### PRIORITÄT: KRITISCH — HIER STARTEN
+
+**Codex — Tokens sind wieder frei. Starte sofort mit NEA-147.**
+
+Token-Reset bestätigt (Gio 08:18 Uhr). Linear Status auf "In Progress" gesetzt.
+
+### STARTAUFGABE: NEA-147 — NewContact QR-Add verdrahten (~2h)
+
+```
+Datei: app/src/main/java/.../contact/NewContactViewModel.kt
+Problem: addFromQrContent() fehlt oder ruft ContactRepository.addContactBundle() nicht auf
+Fix:
+  1. addFromQrContent(qrContent: String) in ViewModel implementieren
+  2. PublicKeyBundleQr.parse(qrContent) → ContactRepository.addContactBundle(bundle)
+  3. Error State: ungültiger QR / Duplikat / FREE-Tier Limit (>10)
+  4. NewContactScreen auf ViewModel-State hören, nicht direkt popBackStack()
+Validation: QR scannen → Kontakt erscheint in ContactsScreen
+```
+
+### DANACH (Reihenfolge):
+1. NEA-148 — WalletConnect ActivityResult Callback verdrahten (~1.5h)
+2. NEA-149 — Conversation List last message/timestamp/unread badge (~2h)
+
+Build: `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug`
+
+### EMPFÄNGER: CC|GIO nach jedem abgeschlossenen Issue
+
+---
+
+## 2026-05-16 [CODEX]
+### TYPE: FIX
+### STATUS: DONE
+### EMPFÄNGER: CC|GIO
+### ISSUE: NEA-147
+
+NewContact QR-Add ist jetzt an die Kontakt-Persistierung verdrahtet.
+
+- `NewContactViewModel.addFromQrContent()` ruft nach QR-Parsing `ContactRepository.addContactBundle()` auf und setzt Erfolg/Fehler im `uiState`.
+- `NewContactScreen` navigiert nur noch nach erfolgreichem ViewModel-State (`contactAdded`), nicht direkt aus dem Button-Callback.
+- `ContactRepository.addContactBundle()` meldet Duplikate klar als `Contact already exists` und laesst FREE-Tier-Limits weiter ueber `addContact()` enforce'n.
+- `PublicKeyBundleQr` persistiert `createdAt` im QR-Inhalt (`c=`), damit Signaturvalidierung nach dem Scan denselben Payload prueft, der beim Erzeugen signiert wurde.
+- Test ergaenzt: `PublicKeyBundleQrTest` prueft QR-Roundtrip inklusive `createdAt` und Missing-`createdAt`-Fehler.
+- Nebenfix: `TierGateTest.cache validity check` mockt den init-load von `TierGateImpl`, damit `./gradlew test` wieder deterministisch gruen ist.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew :data:testDebugUnitTest` — PASS
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` — PASS
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew test` — PASS
+
+Next: NEA-148 — WalletConnect ActivityResult Callback verdrahten.
+
+---
+
+## 2026-05-16 [CODEX]
+### TYPE: FIX
+### STATUS: DONE
+### EMPFÄNGER: CC|GIO
+### ISSUE: NEA-148
+
+WalletConnect hat jetzt einen ActivityResult-Rueckkanal fuer die Tier-Aktivierung.
+
+- `IFRUnlockScreen` startet WalletConnect ueber `rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult())`.
+- `IFRViewModel` erzeugt den WalletConnect-Intent, meldet fehlende Wallet-Apps im UI-State und verarbeitet ActivityResult-Daten.
+- `WalletConnectManager` stellt `createWalletConnectIntent()` und `processActivityResult()` bereit.
+- Result-Parsing akzeptiert gaengige Wallet-Keys (`walletAddress`, `address`, `account`, `accounts`, `selectedAddress`) aus Extras oder Data-URI und extrahiert als Fallback die erste `0x...`-Adresse.
+- Address-Validierung ist jetzt echtes Hex (`0x` + 40 Hex-Zeichen), nicht mehr beliebige alphanumerische Zeichen.
+- Erfolgreicher Wallet-Callback laeuft in denselben `activateTier(walletAddress)`-Pfad wie manuelle Adressen.
+
+Validation:
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew assembleDebug` — PASS
+- `JAVA_HOME=/private/tmp/jdk-21.0.7+6/Contents/Home ./gradlew test` — PASS
+
+Next: NEA-149 — Conversation List last message/timestamp/unread badge anbinden.

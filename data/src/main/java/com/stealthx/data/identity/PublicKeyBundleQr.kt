@@ -10,21 +10,24 @@
  */
 package com.stealthx.data.identity
 
-import android.net.Uri
-import android.util.Base64
 import com.stealthx.shared.model.PublicKeyBundle
+import java.net.URI
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.util.Base64
 
 object PublicKeyBundleQr {
 
-    private const val FLAGS = Base64.URL_SAFE or Base64.NO_WRAP or Base64.NO_PADDING
     private const val SCHEME_PREFIX = "stealthx://add/"
+    private val encoder = Base64.getUrlEncoder().withoutPadding()
+    private val decoder = Base64.getUrlDecoder()
 
     fun toQrContent(bundle: PublicKeyBundle): String {
-        val x = Base64.encodeToString(bundle.x25519PublicKey, FLAGS)
-        val e = Base64.encodeToString(bundle.ed25519PublicKey, FLAGS)
-        val s = Base64.encodeToString(bundle.signature, FLAGS)
-        val handle = bundle.customHandle?.let { "&h=$it" } ?: ""
-        return "$SCHEME_PREFIX${bundle.sxId}?x=$x&e=$e&s=$s$handle"
+        val x = encoder.encodeToString(bundle.x25519PublicKey)
+        val e = encoder.encodeToString(bundle.ed25519PublicKey)
+        val s = encoder.encodeToString(bundle.signature)
+        val handle = bundle.customHandle?.let { "&h=${encodeQueryValue(it)}" } ?: ""
+        return "$SCHEME_PREFIX${bundle.sxId}?x=$x&e=$e&s=$s&c=${bundle.createdAt}$handle"
     }
 
     fun fromQrContent(content: String): Result<PublicKeyBundle> {
@@ -32,27 +35,52 @@ object PublicKeyBundleQr {
             if (!content.startsWith(SCHEME_PREFIX)) {
                 return Result.failure(IllegalArgumentException("Not a StealthX link"))
             }
-            val uri = Uri.parse(content)
-            val sxId = uri.pathSegments.lastOrNull()
+            val uri = URI(content)
+            val sxId = uri.path.removePrefix("/").takeIf { it.isNotBlank() }
                 ?: return Result.failure(IllegalArgumentException("Missing sxId"))
-            val xB64 = uri.getQueryParameter("x")
+            val params = parseQuery(uri.rawQuery.orEmpty())
+            val xB64 = params["x"]
                 ?: return Result.failure(IllegalArgumentException("Missing x25519"))
-            val eB64 = uri.getQueryParameter("e")
+            val eB64 = params["e"]
                 ?: return Result.failure(IllegalArgumentException("Missing ed25519"))
-            val sB64 = uri.getQueryParameter("s")
+            val sB64 = params["s"]
                 ?: return Result.failure(IllegalArgumentException("Missing signature"))
+            val createdAt = params["c"]?.toLongOrNull()
+                ?: return Result.failure(IllegalArgumentException("Missing createdAt"))
             Result.success(
                 PublicKeyBundle(
                     sxId = sxId,
-                    customHandle = uri.getQueryParameter("h"),
-                    x25519PublicKey = Base64.decode(xB64, FLAGS),
-                    ed25519PublicKey = Base64.decode(eB64, FLAGS),
-                    signature = Base64.decode(sB64, FLAGS),
-                    createdAt = System.currentTimeMillis()
+                    customHandle = params["h"],
+                    x25519PublicKey = decoder.decode(xB64),
+                    ed25519PublicKey = decoder.decode(eB64),
+                    signature = decoder.decode(sB64),
+                    createdAt = createdAt
                 )
             )
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
+    private fun parseQuery(query: String): Map<String, String> {
+        if (query.isBlank()) return emptyMap()
+        return query.split("&")
+            .mapNotNull { part ->
+                val separator = part.indexOf("=")
+                if (separator <= 0) {
+                    null
+                } else {
+                    val key = decodeQueryValue(part.substring(0, separator))
+                    val value = decodeQueryValue(part.substring(separator + 1))
+                    key to value
+                }
+            }
+            .toMap()
+    }
+
+    private fun encodeQueryValue(value: String): String =
+        URLEncoder.encode(value, Charsets.UTF_8.name())
+
+    private fun decodeQueryValue(value: String): String =
+        URLDecoder.decode(value, Charsets.UTF_8.name())
 }

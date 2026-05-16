@@ -31,7 +31,8 @@ data class ContactLimitState(
 data class NewContactUiState(
     val isSaving: Boolean = false,
     val statusMessage: String? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val contactAdded: Boolean = false
 )
 
 @HiltViewModel
@@ -55,7 +56,7 @@ class NewContactViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ContactLimitState())
 
-    fun addFromQrContent(content: String, onAdded: () -> Unit) {
+    fun addFromQrContent(content: String) {
         val trimmed = content.trim()
         if (trimmed.isBlank()) {
             _uiState.value = NewContactUiState(errorMessage = "QR content is required")
@@ -71,11 +72,19 @@ class NewContactViewModel @Inject constructor(
             _uiState.value = NewContactUiState(isSaving = true)
             try {
                 contactRepository.addContactBundle(bundle)
-                _uiState.value = NewContactUiState(statusMessage = "Contact added")
-                onAdded()
+                _uiState.value = NewContactUiState(
+                    statusMessage = "Contact added",
+                    contactAdded = true
+                )
             } catch (e: Exception) {
                 _uiState.value = NewContactUiState(errorMessage = e.message ?: "Could not add contact")
             }
+        }
+    }
+
+    fun consumeContactAdded() {
+        if (_uiState.value.contactAdded) {
+            _uiState.value = _uiState.value.copy(contactAdded = false)
         }
     }
 }
