@@ -76,8 +76,8 @@ class MainActivity : FragmentActivity() {
             BiometricManager.Authenticators.DEVICE_CREDENTIAL
         val manager = BiometricManager.from(this)
         if (manager.canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) {
-            authState.value = AuthState.Unavailable
-            finish()
+            // No biometric/device credential enrolled — unlock directly instead of closing
+            authState.value = AuthState.Unlocked
             return
         }
 
