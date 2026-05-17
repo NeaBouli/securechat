@@ -48,7 +48,7 @@ class IFRLockVerifier @Inject constructor() {
      */
     suspend fun getLockedAmount(walletAddress: String): BigInteger = withContext(Dispatchers.IO) {
         val function = org.web3j.abi.datatypes.Function(
-            "lockedAmount",
+            "lockedBalance",
             listOf(Address(walletAddress)),
             listOf(object : TypeReference<Uint256>() {})
         )
@@ -67,7 +67,7 @@ class IFRLockVerifier @Inject constructor() {
                 continue
             }
         }
-        throw Exception("All RPC endpoints failed for lockedAmount($walletAddress)")
+        throw Exception("All RPC endpoints failed for lockedBalance($walletAddress)")
     }
 
     /**
