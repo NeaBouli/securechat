@@ -1215,3 +1215,21 @@ Validation:
 
 Next:
 - `stealth/BRIDGE.md` nach weiteren offenen Tasks prüfen.
+
+## 2026-05-17 [CC]
+### TYPE: FIX | TEST
+
+**IFRLockVerifier — Bug Fix (Commit adf2a30)**
+
+Bug: `lockedAmount(address)` aufgerufen, Contract hat `lockedBalance(address)`.
+Fix: Funktion auf `lockedBalance` korrigiert.
+
+On-device Test auf S7 (ce10160adc00152604):
+- SecureChat debug APK mit Fix installiert
+- IFR Token Unlock Screen → "Enter Address Manually"
+- Community Adresse 0xaC5687547B2B21d80F8fd345B51e608d476667C7 eingegeben
+- Verify getippt → RPC Call erfolgreich → FREE Tier angezeigt ✅
+- 30-Tage Cache "Expires: 30 days" gesetzt ✅
+
+Offener Punkt: IFR Lock Contract totalLocked = 0 (niemand hat bisher gelockt).
+Real PRO/ELITE Test erst möglich wenn ein Holder seine Tokens lockt.
