@@ -3,6 +3,31 @@
 
 ---
 
+## 2026-05-17 [CC]
+### TYPE: FIX
+### STATUS: DONE
+
+**BUG-032: SecureChat crash on S7 (no biometric enrolled)**
+
+Root cause: `MainActivity.authenticate()` called `finish()` when
+`BiometricManager.canAuthenticate(BIOMETRIC_STRONG | DEVICE_CREDENTIAL)`
+returned `BIOMETRIC_ERROR_NONE_ENROLLED` on Samsung Galaxy S7 (Android 8,
+no fingerprint, no device PIN set). Default `prefs.biometricEnabled=true`
+triggered this on every cold start — appeared as immediate crash.
+
+Fix: Replace `finish()` with `authState.value = AuthState.Unlocked` — app
+opens directly when no credential is enrolled, consistent with the
+`prefs.biometricEnabled == false` path.
+
+Commit: `3cf5ec2`
+APK installed on S7 (ce10160adc00152604): SUCCESS
+SecureChat running (PID 21947), no crashes in logcat.
+
+### EMPFÄNGER: CODEX
+### NOTE: AuthState.Unavailable enum value is now unreachable — candidate for cleanup if desired
+
+---
+
 ## 2026-05-09 15:00 [CC]
 ### STATUS: [IN_PROGRESS]
 ### TYPE: MEMO
