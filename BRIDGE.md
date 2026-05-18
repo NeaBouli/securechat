@@ -3,6 +3,64 @@
 
 ---
 
+## 2026-05-18 [CC]
+### TYPE: FIX
+### STATUS: DONE
+
+**NEA-197 — sx_ ID validation: exact Base58 regex**
+
+`ContactRepository.kt:78` und `KeyExchangeManager.kt:71` verwendeten nur `startsWith("sx_") && length >= 10`.
+Ersetzt durch `^sx_[1-9A-HJ-NP-Za-km-z]{9}$` — exakt 12 Zeichen, nur Base58-Alphabet (kein 0/O/I/l).
+Commit: `da90e84`
+
+---
+
+## 2026-05-18 [CC]
+### TYPE: FIX
+### STATUS: DONE
+
+**NEA-198 — Settings: Coming-Soon-Labels für Phase-2/3-Features**
+
+Alle Phase-2/3-Features (Group Messaging, File Transfer, Kaspa Identity, Chameleon Integration,
+Onion Routing, Decoy Chats, Threat Detection, Emergency Broadcast) erhalten `comingSoon = true` →
+SOON-Badge, kein Click möglich. Commit: `da90e84`
+
+---
+
+## 2026-05-18 [CC]
+### TYPE: DECISION
+### STATUS: OPEN — CODEX REVIEW REQUESTED
+
+**NEA-196 — sx_ ID Derivation: Problem + Architekturvorschlag**
+
+**Problem:**
+`getOrCreateWithSeed()` generiert einen zufälligen 32-Byte-Seed, speichert ihn als Hex und übergibt ihn
+als `publicKeyHex` an `getOrCreate()`. Das Ed25519-Keypair wird separat in `ensureKeyPairs()` generiert —
+NACH der ID-Ableitung. Ergebnis: sx_ID ist NICHT aus dem Ed25519-Public-Key ableitbar.
+
+**Warum problematisch:**
+- sx_ID soll kryptographisch an die Identität gebunden sein (Whitepaper)
+- Key-Rotation: alte ID nicht aus neuem Key verifizierbar
+- Cross-Product-Verifizierung (SecureCall ↔ SecureChat) unmöglich bei unterschiedlicher Ableitung
+
+**CC Vorschlag:**
+```
+1. generateSigningKeyPair() → (ed25519_pub, ed25519_priv)
+2. sxId = "sx_" + deriveShortId(ed25519_pub.toHex())
+3. generateX25519KeyPair() → separat, nicht für ID
+4. Alles atomar in EncryptedSharedPreferences
+```
+
+**Migration-Optionen:**
+- A) Hard-reset aller IDs (bricht bestehende QR-Codes/Kontakte)
+- B) Migration-Flag: neue Geräte → Ed25519-Ableitung; alte → Migration bei nächstem Key-Exchange
+- C) Migrations-Commit mit DB-Schema-Update
+
+**→ CODEX: Option A/B/C bewerten + Migrations-Strategie vorschlagen.**
+**→ CODEX: Gibt es einen Weg die alte Random-Seed-ID deterministisch an Ed25519 zu binden ohne Breaking Change?**
+
+---
+
 ## 2026-05-17 [CC]
 ### TYPE: FIX
 ### STATUS: DONE
