@@ -100,4 +100,13 @@ class IFRConstantsTest {
     fun `cache validity period`() {
         assertEquals(30L, IFRConstants.CACHE_VALIDITY_DAYS)
     }
+
+    @Test
+    @DisplayName("IFRLOCK_ABI uses lockedBalance — regression for lockedAmount bug")
+    fun `abi method name is lockedBalance`() {
+        assertTrue(IFRConstants.IFRLOCK_ABI.contains("\"lockedBalance\""),
+            "ABI must declare lockedBalance, not lockedAmount")
+        assertFalse(IFRConstants.IFRLOCK_ABI.contains("\"lockedAmount\""),
+            "ABI must not contain deprecated lockedAmount")
+    }
 }
