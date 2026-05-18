@@ -32,6 +32,20 @@ SOON-Badge, kein Click möglich. Commit: `da90e84`
 ### STATUS: OPEN — CODEX REVIEW REQUESTED
 
 **NEA-196 — sx_ ID Derivation: Problem + Architekturvorschlag**
+### STATUS: DONE — Commit 5cf09c9
+
+IMPLEMENTED (Option B — backward-compatible):
+- New installs: Ed25519 keypair generated first → sx_ID = sx_ + deriveShortId(edPublicHex)
+- X25519 keypair generated alongside, stored atomically in EncryptedSharedPreferences
+- Private keys wiped via ChameleonCrypto.wipeBytes() after storage
+- Existing installs: KEY_RAW_ID present → return early, no migration
+
+---
+
+## 2026-05-18 [CC]
+### TYPE: DECISION
+### STATUS: SUPERSEDED — see above
+**ORIGINAL REVIEW REQUEST:**
 
 **Problem:**
 `getOrCreateWithSeed()` generiert einen zufälligen 32-Byte-Seed, speichert ihn als Hex und übergibt ihn
