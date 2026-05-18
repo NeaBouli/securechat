@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SecureChat — Encrypted Messaging, Zero Metadata</title>
-<meta name="description" content="SecureChat: decentralized E2E encrypted messaging for Android. No phone number, no server, no metadata. XChaCha20 + Double Ratchet. Open source.">
-<meta name="keywords" content="encrypted messaging, secure chat, XChaCha20, end-to-end encryption, privacy, decentralized, Kaspa, IFR Token, Android, open source, Double Ratchet">
+<meta name="description" content="SecureChat: decentralized E2E encrypted messaging for Android. No phone number, no server, no metadata. XChaCha20 + Double Ratchet. Source-available.">
+<meta name="keywords" content="encrypted messaging, secure chat, XChaCha20, end-to-end encryption, privacy, decentralized, Kaspa, IFR Token, Android, source-available, Double Ratchet">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="author" content="NeaBouli / StealthX Platform">
 <meta name="copyright" content="© 2026 Vendetta Labs">
@@ -22,7 +22,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SecureChat">
 <meta property="og:title" content="SecureChat — Encrypted Messaging, Zero Metadata">
-<meta property="og:description" content="Decentralized E2E encrypted messaging. No phone number, no server, no metadata. XChaCha20 + Double Ratchet. GPL-3.0 open source.">
+<meta property="og:description" content="Decentralized E2E encrypted messaging. No phone number, no server, no metadata. XChaCha20 + Double Ratchet. Source-Available source-available.">
 <meta property="og:url" content="https://securechat.stealthx.tech/">
 <meta property="og:image" content="https://securechat.stealthx.tech/logo.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -31,8 +31,8 @@
 <meta name="twitter:image" content="https://securechat.stealthx.tech/logo.png">
 <link rel="alternate" hreflang="en" href="https://securechat.stealthx.tech/">
 <link rel="alternate" hreflang="x-default" href="https://securechat.stealthx.tech/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SecureChat","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"Decentralized end-to-end encrypted messaging with zero metadata.","url":"https://securechat.stealthx.tech","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://opensource.org/licenses/GPL-3.0","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses X25519 key pairs for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat open source?","acceptedAnswer":{"@type":"Answer","text":"Yes. GPL-3.0 licensed. Full source code on GitHub."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. Lock tokens on-chain for lifetime Pro or Elite access. No subscriptions."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"No central server. Messages route through ephemeral Kaspa relay nodes. Relay operators see only encrypted blobs."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SecureChat","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"Decentralized end-to-end encrypted messaging with zero metadata.","url":"https://securechat.stealthx.tech","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://github.com/NeaBouli/securechat/blob/main/LICENSE"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses X25519 key pairs for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat source-available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. Lock tokens on-chain for lifetime Pro or Elite access. No subscriptions."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"No central server. Messages route through ephemeral Kaspa relay nodes. Relay operators see only encrypted blobs."}}]}</script>
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -378,8 +378,8 @@
     <p style="color:var(--text-dim);font-size:14px;padding-left:1rem;margin-bottom:1.5rem;">Tap the logo 5 times. Everything on the app disappears in under a second. Messages, contacts, everything. Gone.</p>
     <p style="margin-bottom:1rem;"><strong style="color:var(--green);font-size:15px;">Can you read my messages?</strong></p>
     <p style="color:var(--text-dim);font-size:14px;padding-left:1rem;margin-bottom:1.5rem;">No. Not possible. Your messages are locked with a key only you and your friend have. We never have that key. Ever.</p>
-    <p style="margin-bottom:1rem;"><strong style="color:var(--green);font-size:15px;">Is it free?</strong></p>
-    <p style="color:var(--text-dim);font-size:14px;padding-left:1rem;">Yes. The basic app is free forever. Extra features unlock if you choose to support us &mdash; but the core privacy? Always free.</p>
+    <p style="margin-bottom:1rem;"><strong style="color:var(--green);font-size:15px;">Can I use the GitHub source directly?</strong></p>
+    <p style="color:var(--text-dim);font-size:14px;padding-left:1rem;">No. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires permission from Vendetta Labs.</p>
   </div>
 </section>
 
@@ -396,7 +396,7 @@
     <div class="badge"><span class="badge-icon">💥</span> STEALTH-DELETE</div>
     <div class="badge"><span class="badge-icon">⛓</span> Kaspa Identity Layer</div>
     <div class="badge"><span class="badge-icon">🔑</span> Lifetime via IFR Token</div>
-    <div class="badge"><span class="badge-icon">📦</span> GPL-3.0 Open Source</div>
+    <div class="badge"><span class="badge-icon">📦</span> Source-Available</div>
     <div class="badge"><span class="badge-icon">🦎</span> Chameleon Overlay Compatible</div>
   </div>
 
@@ -588,7 +588,7 @@
       <tr><td>Blockchain identity anchor</td><td class="ours">✓ Kaspa</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>IFR Token lifetime access</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>Chameleon overlay compatible</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>GPL-3.0 Open Source</td><td class="ours">✓</td><td class="ours">✓</td><td class="ours">✓</td><td class="no">✗</td></tr>
+      <tr><td>Source-Available</td><td class="ours">✓</td><td class="ours">✓</td><td class="ours">✓</td><td class="no">✗</td></tr>
       <tr><td>Zero metadata</td><td class="ours">✓</td><td class="warn">⚠️</td><td class="ours">✓</td><td class="no">✗</td></tr>
     </tbody>
   </table>
@@ -773,7 +773,7 @@
     <a href="#" class="btn btn-secondary" aria-disabled="true" data-release-artifact="google-play" data-release-status="pending" style="opacity:0.6; cursor:not-allowed; pointer-events:none;">Google Play — Pending</a>
     <a href="https://github.com/NeaBouli/securechat" class="btn btn-secondary">View Source on GitHub</a>
   </div>
-  <p style="font-size:13px; color:var(--muted);">Requires Android 8.0+ · GPL-3.0 Open Source · No account required</p>
+  <p style="font-size:13px; color:var(--muted);">Requires Android 8.0+ · Source-Available · No account required</p>
 </section>
 
 <!-- FOOTER -->
@@ -809,13 +809,13 @@
       <div class="footer-col">
         <h4>Legal</h4>
         <a href="privacy.html">Privacy Policy</a>
-        <a href="https://github.com/NeaBouli/securechat/blob/main/LICENSE">License (GPL-3.0)</a>
+        <a href="https://github.com/NeaBouli/securechat/blob/main/LICENSE">License</a>
         <a href="https://github.com/NeaBouli/securechat/blob/main/SECURITY.md">Security Policy</a>
       </div>
     </div>
     <div class="footer-bottom">
       <p>© 2026 Vendetta Labs — Greece &nbsp;|&nbsp; SecureChat is a product of the <a href="https://stealthx.tech">StealthX Platform</a></p>
-      <p>GPL-3.0 · <a href="https://github.com/NeaBouli/securechat">github.com/NeaBouli/securechat</a></p>
+      <p>Source-Available · <a href="https://github.com/NeaBouli/securechat">github.com/NeaBouli/securechat</a></p>
     </div>
   </div>
 </footer>

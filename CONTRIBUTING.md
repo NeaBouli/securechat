@@ -1,30 +1,21 @@
 # Contributing to SecureChat
 
-Thank you for your interest in contributing to SecureChat. This document outlines the process for contributing to the project.
+Thank you for your interest in SecureChat. We value transparency, security review, and responsible vulnerability reports.
 
-## Getting Started
+## What We Accept
 
-1. **Fork** the repository on GitHub
-2. **Clone** your fork locally:
-   ```
-   git clone https://github.com/YOUR-USERNAME/securechat.git
-   ```
-3. **Create a branch** for your changes:
-   ```
-   git checkout -b feature/your-feature-name
-   ```
-4. **Make your changes** and commit them with clear, descriptive messages
-5. **Push** your branch to your fork:
-   ```
-   git push origin feature/your-feature-name
-   ```
-6. **Open a Pull Request** against the `main` branch
+- Bug reports via [GitHub Issues](https://github.com/NeaBouli/securechat/issues)
+- Feature requests via [GitHub Issues](https://github.com/NeaBouli/securechat/issues)
+- Security vulnerability reports via the process in [SECURITY.md](SECURITY.md)
 
-## Code Review
+## What We Do Not Accept
 
-- **All pull requests require code review** before merging.
-- At least one maintainer must approve the PR.
-- CI checks must pass before merging.
+We do not accept code contributions or pull requests.
+
+This repository is source-available for transparency and independent security auditing only. Forks, builds, derivative works, redistribution, rebranding, hosting, and any use of SecureChat or official StealthX services require prior written permission from Vendetta Labs.
+
+- Pull requests will be closed without review.
+- Patches, code suggestions, or implementation changes submitted via issues or other channels will not be incorporated.
 
 ### Security-Critical Changes
 
@@ -46,11 +37,7 @@ Changes to the following areas require **additional review** from a security-foc
 
 ## License
 
-SecureChat is licensed under **GPL-3.0**. By submitting a pull request, you agree that your contributions will be licensed under the same license.
-
-- All contributions must be compatible with GPL-3.0.
-- **No proprietary dependencies allowed.** All dependencies must be open-source with a GPL-compatible license.
-- If you are unsure whether a dependency is compatible, ask in the PR discussion.
+SecureChat is licensed under the StealthX Source-Available License. You may read and inspect the source code for transparency and security review, but you may not copy, modify, build, run, distribute, rebrand, host, or use SecureChat without prior written permission from Vendetta Labs.
 
 ## Reporting Bugs
 

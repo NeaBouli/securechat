@@ -2,7 +2,7 @@
 > Decentralized end-to-end encrypted messaging for Android.
 > No phone number, no server, no metadata.
 > XChaCha20-Poly1305 + Double Ratchet + Kaspa identity layer.
-> GPL-3.0 Open Source. IFR Token lifetime access.
+> Source available for transparency and security review. IFR Token lifetime access.
 
 ## Key Facts
 - Encryption: XChaCha20-Poly1305 (192-bit nonce, AEAD)
@@ -13,7 +13,7 @@
 - Key Storage: Android Keystore (StrongBox/TEE)
 - Identity Layer: Kaspa BlockDAG (decentralized, on-chain anchoring)
 - Platform: Android 8.0+ (API 26)
-- License: GPL-3.0-or-later
+- License: StealthX Source-Available License
 - Crypto Library: lazysodium-android 5.1.0 (wraps libsodium)
 - Database: Room + SQLCipher (encrypted at rest)
 - IFR Pro: Lock >= 2,000 IFR tokens on Ethereum
@@ -41,5 +41,5 @@
 - Integrates with SecureChat as overlay encryption layer
 - URL: https://securechat.stealthx.tech/chameleon
 - GitHub: https://github.com/NeaBouli/chameleon
-- License: GPL-3.0
+- License: StealthX Source-Available License
 - Crypto: XChaCha20-Poly1305, same stack as SecureChat
