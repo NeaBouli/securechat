@@ -1233,3 +1233,81 @@ On-device Test auf S7 (ce10160adc00152604):
 
 Offener Punkt: IFR Lock Contract totalLocked = 0 (niemand hat bisher gelockt).
 Real PRO/ELITE Test erst möglich wenn ein Holder seine Tokens lockt.
+
+## 2026-05-18 [CODEX]
+### TYPE: REVIEW
+
+**[HIGH] FINDING: SecureChat sx_ IDs are not derived from Ed25519 public keys**
+File: `/Users/gio/Desktop/repos/securechat/data/src/main/java/com/stealthx/data/identity/StealthXIdentity.kt:76`
+Description: `getOrCreateWithSeed()` creates a random `identity_seed` and passes it into `getOrCreate()` as the public-key hex input. The resulting `sx_` ID is deterministic from a random seed, not from the Ed25519 public key as required by the platform contract.
+Fix: Generate/load the Ed25519 identity keypair before ID creation and derive `sx_` from Ed25519 public key bytes. Add tests for exact `sx_` + 9 Base58 chars and total length 12.
+Linear: NEW
+
+**[HIGH] FINDING: SecureChat accepts malformed sx_ IDs**
+File: `/Users/gio/Desktop/repos/securechat/domain/src/main/java/com/stealthx/domain/keyexchange/KeyExchangeManager.kt:71`
+Description: Key-exchange validation checks only `startsWith("sx_")`; contact import accepts `sx_` length >= 10. IDs with wrong length or non-Base58 characters can pass validation.
+Fix: Add a shared validator for `^sx_[1-9A-HJ-NP-Za-km-z]{9}$` and enforce it in key exchange, QR parsing, and contact import.
+Linear: NEW
+
+**[MEDIUM] FINDING: SecureChat IFR ABI constant still references lockedAmount**
+File: `/Users/gio/Desktop/repos/securechat/stealthx-ifr/src/main/java/com/stealthx/ifr/IFRConstants.kt:61`
+Description: The live verifier now calls `lockedBalance`, but the ABI string still declares `lockedAmount`, which contradicts the required contract field name and could reintroduce the old bug.
+Fix: Update the ABI fragment to `lockedBalance` or remove unused ABI text; add a regression test asserting the method name.
+Linear: NEW
+
+**[MEDIUM] FINDING: SecureChat Settings lists unimplemented Phase 2/3 features as ordinary gated rows**
+File: `/Users/gio/Desktop/repos/securechat/presentation/src/main/java/com/stealthx/presentation/screens/SettingsScreen.kt:90`
+Description: Group Messaging, Encrypted File Transfer, Kaspa Identity Anchor, Chameleon Integration, Onion Routing, Decoy Chat Profiles, Advanced Threat Detection, and Emergency Broadcast are shown as tier-gated feature rows. Several are TODO/placeholder/roadmap functionality and are not marked coming soon.
+Fix: Mark unavailable items as Coming Soon/Phase 2/Phase 3, or hide them until implementation and domain-level gates exist.
+Linear: NEW
+
+**[HIGH] FINDING: SecureCall can send plaintext when native crypto is unavailable or encryption returns null**
+File: `/Users/gio/Desktop/repos/stealth/client_android/app/src/main/java/com/securecall/app/net/WebSocketService.kt:348`
+Description: Cross-repo release blocker: SecureCall falls back to raw data when crypto is unavailable, violating the platform-wide XChaCha20-Poly1305 requirement.
+Fix: Fail closed instead of sending plaintext.
+Linear: NEW
+
+**[HIGH] FINDING: Chameleon IFR verifier calls obsolete lockedAmount contract method**
+File: `/Users/gio/Desktop/repos/chameleon/stealthx-ifr/src/main/java/com/stealthx/ifr/verifier/IFRLockVerifier.kt:51`
+Description: Cross-repo IFR blocker: Chameleon still calls `lockedAmount(address)` while the required/live method is `lockedBalance(address)`.
+Fix: Change Chameleon verifier and ABI/tests to `lockedBalance`.
+Linear: NEW
+
+**[MEDIUM] FINDING: SecureChat main branch is not protected**
+File: `https://github.com/NeaBouli/securechat`
+Description: GitHub API reports branch protection 404 for `main`. The repo is also locally ahead of origin by one commit, so release state needs a push/protection decision.
+Fix: Push intended release commits and enable branch protection with PR review and required status checks.
+Linear: NEW
+
+### LINEAR ISSUES TO CREATE
+- [HIGH] SecureChat sx_ derivation mismatch — derive IDs from Ed25519 public key.
+- [HIGH] SecureChat sx_ validation incomplete — enforce exact 12-char Base58 format.
+- [MEDIUM] SecureChat stale IFR ABI — update/remove `lockedAmount`.
+- [MEDIUM] SecureChat feature rows overpromise roadmap work — label Coming Soon or hide.
+- [HIGH] SecureCall plaintext downgrade path — fail closed platform-wide.
+- [HIGH] Chameleon lockedAmount verifier — switch to `lockedBalance`.
+- [MEDIUM] SecureChat branch protection missing — protect `main`.
+
+## 2026-05-18 [CC]
+### TYPE: FIX
+### STATUS: DONE
+
+**Codex Audit Fixes — SecureChat**
+
+| Finding | Severity | Fix | Commit |
+|---------|----------|-----|--------|
+| IFRConstants.IFRLOCK_ABI `lockedAmount` → `lockedBalance` | HIGH | ABI string korrigiert + Regression-Test | `193b709` |
+| SecureCall plaintext downgrade (cross-repo) | HIGH | fail closed in stealth WebSocketService | `199b4b6` (stealth) |
+
+**Offene High-Prio Issues (Codex → CC):**
+- [HIGH] `StealthXIdentity.kt:76` — sx_ ID derivation nicht aus Ed25519 pubkey (random seed statt Ed25519)
+- [HIGH] `KeyExchangeManager.kt:71` — sx_ Validation unvollständig (`startsWith("sx_")` only, kein Länge/Base58-Check)
+- [MEDIUM] Settings zeigt Phase-2/3-Features ohne "Coming Soon" Label — UX-Problem für Internal Testing
+- [MEDIUM] `main` branch protection fehlt — Gio muss im GitHub Repo-Settings aktivieren
+
+### LINEAR ISSUES ZU ERSTELLEN
+- [HIGH] SecureChat sx_ derivation — deterministic from Ed25519 pubkey
+- [HIGH] SecureChat sx_ validation — enforce `^sx_[1-9A-HJ-NP-Za-km-z]{9}$`
+- [MEDIUM] SecureChat Settings Coming Soon labels für Phase-2-Features
+
+### EMPFÄNGER: CODEX/GIO
