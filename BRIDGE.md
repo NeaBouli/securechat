@@ -1402,3 +1402,16 @@ Linear: NEW
 - Known vector regression
 
 BUILD SUCCESSFUL. Commit: 479cb59
+
+---
+
+## 2026-05-18 [CC]
+### TYPE: TEST
+### STATUS: DONE
+
+**NEA-196 — Regression Tests implementiert**
+
+`data/src/test/.../identity/StealthXIdentityTest.kt` — 6 Tests:
+- deriveShortId length = 9, Base58 charset, deterministic, unique, regex, no ambiguous chars, known vector
+
+BUILD SUCCESSFUL. Commit: e82a0da
