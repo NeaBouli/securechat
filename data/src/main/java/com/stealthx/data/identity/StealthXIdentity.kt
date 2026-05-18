@@ -69,22 +69,57 @@ object StealthXIdentity {
     private val B64 = Base64.NO_WRAP
 
     /**
-     * Returns the Unified ID using a random device seed — creates it on first call.
-     * No biometric required — seed is stored in EncryptedSharedPreferences.
-     * Call from Application.onCreate() before any UI reads the identity.
+     * Returns the Unified StealthX ID, creating it on first call.
+     *
+     * NEW INSTALLS: derives sx_ID deterministically from a freshly generated Ed25519
+     * public key — all four keys (Ed25519 + X25519) are written atomically.
+     *
+     * EXISTING INSTALLS: if KEY_RAW_ID is already present the stored ID is returned
+     * unchanged (backward-compatible migration path — Option B).
+     *
+     * The old random-seed path is intentionally removed. Existing IDs derived from
+     * a random seed remain valid; new devices always get a cryptographically bound ID.
      */
     fun getOrCreateWithSeed(context: Context): StealthXId {
         val prefs = getEncryptedPrefs(context)
-        val existingSeed = prefs.getString("identity_seed", null)
-        val seedHex = if (existingSeed != null) {
-            existingSeed
-        } else {
-            val seed = java.security.SecureRandom().generateSeed(32)
-            val hex = seed.joinToString("") { "%02x".format(it) }
-            prefs.edit().putString("identity_seed", hex).apply()
-            hex
+
+        // Backward-compat: return existing identity untouched
+        val existingId = prefs.getString(KEY_RAW_ID, null)
+        if (existingId != null) {
+            return StealthXId(
+                raw = existingId,
+                customHandle = prefs.getString(KEY_CUSTOM_HANDLE, null),
+                publicKeyHex = prefs.getString(KEY_PUBLIC_KEY, "")!!,
+                createdAt = prefs.getLong(KEY_CREATED_AT, 0L)
+            )
         }
-        return getOrCreate(context, seedHex)
+
+        // First install: generate Ed25519 keypair, derive sx_ID from public key
+        val (edPublic, edPrivate) = ChameleonCrypto.generateSigningKeyPair()
+        val (xPublic, xPrivate) = ChameleonCrypto.generateX25519KeyPair()
+        val edPublicHex = edPublic.joinToString("") { "%02x".format(it) }
+        val newId = ID_PREFIX + deriveShortId(edPublicHex)
+        val now = System.currentTimeMillis()
+
+        prefs.edit()
+            .putString(KEY_RAW_ID, newId)
+            .putString(KEY_PUBLIC_KEY, edPublicHex)
+            .putLong(KEY_CREATED_AT, now)
+            .putString(KEY_ED25519_PUBLIC, edPublic.toBase64())
+            .putString(KEY_ED25519_PRIVATE, edPrivate.toBase64())
+            .putString(KEY_X25519_PUBLIC, xPublic.toBase64())
+            .putString(KEY_X25519_PRIVATE, xPrivate.toBase64())
+            .apply()
+
+        ChameleonCrypto.wipeBytes(edPrivate)
+        ChameleonCrypto.wipeBytes(xPrivate)
+
+        return StealthXId(
+            raw = newId,
+            customHandle = null,
+            publicKeyHex = edPublicHex,
+            createdAt = now
+        )
     }
 
     /**
