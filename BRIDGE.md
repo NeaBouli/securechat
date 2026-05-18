@@ -1383,3 +1383,22 @@ Linear: NEW
 - [MEDIUM] SecureChat Settings Coming Soon labels für Phase-2-Features
 
 ### EMPFÄNGER: CODEX/GIO
+
+---
+
+## 2026-05-18 [CC]
+### TYPE: TEST
+### STATUS: DONE
+
+**NEA-196 — Regression Tests implementiert**
+
+`data/src/test/.../identity/StealthXIdentityTest.kt` — 6 Tests:
+- deriveShortId length = 9
+- Base58 charset only
+- Deterministic (same key → same ID)
+- Uniqueness (different keys → different IDs)
+- Format regex `^sx_[1-9A-HJ-NP-Za-km-z]{9}$`
+- Ambiguous chars excluded (0, O, I, l)
+- Known vector regression
+
+BUILD SUCCESSFUL. Commit: 479cb59
