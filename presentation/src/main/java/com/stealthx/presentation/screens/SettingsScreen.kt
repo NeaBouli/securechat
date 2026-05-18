@@ -87,17 +87,17 @@ fun SettingsScreen(
 
             // Pro features
             SectionHeader("Pro  ≥ 2,000 IFR")
-            GatedFeatureRow(Icons.Default.Group, "Group Messaging", "Encrypted group chats", tier, IfrTier.PRO, onIfrClick)
-            GatedFeatureRow(Icons.Default.AttachFile, "Encrypted File Transfer", "E2E via Kaspa XFTP", tier, IfrTier.PRO, onIfrClick)
-            GatedFeatureRow(Icons.Default.AccountTree, "Kaspa Identity Anchor", "Public key on BlockDAG", tier, IfrTier.PRO, onIfrClick)
-            GatedFeatureRow(Icons.Default.Security, "Chameleon Integration", "Context-aware overlay", tier, IfrTier.PRO, onIfrClick)
+            GatedFeatureRow(Icons.Default.Group, "Group Messaging", "Encrypted group chats", tier, IfrTier.PRO, onIfrClick, comingSoon = true)
+            GatedFeatureRow(Icons.Default.AttachFile, "Encrypted File Transfer", "E2E via Kaspa XFTP", tier, IfrTier.PRO, onIfrClick, comingSoon = true)
+            GatedFeatureRow(Icons.Default.AccountTree, "Kaspa Identity Anchor", "Public key on BlockDAG", tier, IfrTier.PRO, onIfrClick, comingSoon = true)
+            GatedFeatureRow(Icons.Default.Security, "Chameleon Integration", "Context-aware overlay", tier, IfrTier.PRO, onIfrClick, comingSoon = true)
 
             // Elite features
             SectionHeader("Elite  ≥ 6,000 IFR")
-            GatedFeatureRow(Icons.Default.Router, "Onion Routing (3-hop)", "Full IP protection", tier, IfrTier.ELITE, onIfrClick)
-            GatedFeatureRow(Icons.Default.FaceRetouchingNatural, "Decoy Chat Profiles", "Fake conversations on demand", tier, IfrTier.ELITE, onIfrClick)
-            GatedFeatureRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis", tier, IfrTier.ELITE, onIfrClick)
-            GatedFeatureRow(Icons.Default.Send, "Emergency Broadcast", "Encrypted alert to all contacts", tier, IfrTier.ELITE, onIfrClick, onBroadcastClick)
+            GatedFeatureRow(Icons.Default.Router, "Onion Routing (3-hop)", "Full IP protection", tier, IfrTier.ELITE, onIfrClick, comingSoon = true)
+            GatedFeatureRow(Icons.Default.FaceRetouchingNatural, "Decoy Chat Profiles", "Fake conversations on demand", tier, IfrTier.ELITE, onIfrClick, comingSoon = true)
+            GatedFeatureRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis", tier, IfrTier.ELITE, onIfrClick, comingSoon = true)
+            GatedFeatureRow(Icons.Default.Send, "Emergency Broadcast", "Encrypted alert to all contacts", tier, IfrTier.ELITE, onIfrClick, onBroadcastClick, comingSoon = true)
 
             SectionHeader("Access")
             ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Lock tokens for lifetime access", onIfrClick)
@@ -135,29 +135,37 @@ private fun GatedFeatureRow(
     currentTier: IfrTier,
     requiredTier: IfrTier,
     onUnlock: () -> Unit,
-    onOpen: (() -> Unit)? = null
+    onOpen: (() -> Unit)? = null,
+    comingSoon: Boolean = false
 ) {
     val locked = currentTier < requiredTier
     val eliteColor = Color(0xFFFFD700)
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .then(if (!locked && onOpen != null) Modifier.clickable(onClick = onOpen) else Modifier)
+            .then(if (!locked && !comingSoon && onOpen != null) Modifier.clickable(onClick = onOpen) else Modifier)
             .padding(16.dp, 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             icon, null,
-            tint = if (locked) Color.Gray.copy(alpha = 0.4f)
+            tint = if (locked || comingSoon) Color.Gray.copy(alpha = 0.4f)
                    else if (requiredTier == IfrTier.ELITE) eliteColor
                    else MaterialTheme.colorScheme.primary
         )
         Spacer(Modifier.width(16.dp))
         Column(Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.bodyMedium, color = if (locked) Color.Gray else MaterialTheme.colorScheme.onSurface)
+            Text(title, style = MaterialTheme.typography.bodyMedium, color = if (locked || comingSoon) Color.Gray else MaterialTheme.colorScheme.onSurface)
             Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
         }
-        if (locked) {
+        if (comingSoon) {
+            Text(
+                "SOON",
+                style = MaterialTheme.typography.labelSmall,
+                color = Color(0xFF888888),
+                modifier = Modifier.padding(horizontal = 6.dp)
+            )
+        } else if (locked) {
             TextButton(onClick = onUnlock) {
                 Icon(Icons.Default.Lock, null, tint = Color.Gray, modifier = Modifier.size(14.dp))
                 Spacer(Modifier.width(4.dp))

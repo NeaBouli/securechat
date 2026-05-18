@@ -75,8 +75,8 @@ class ContactRepository @Inject constructor(
     suspend fun count(): Int = contactKeyDao.count()
 
     private fun validateBundle(bundle: PublicKeyBundle) {
-        require(bundle.sxId.startsWith("sx_") && bundle.sxId.length >= 10) {
-            "Invalid sx_ID"
+        require(bundle.sxId.matches(Regex("^sx_[1-9A-HJ-NP-Za-km-z]{9}\$"))) {
+            "Invalid sx_ID format"
         }
         require(bundle.x25519PublicKey.size == 32) { "Invalid X25519 public key" }
         require(bundle.ed25519PublicKey.size == 32) { "Invalid Ed25519 public key" }
