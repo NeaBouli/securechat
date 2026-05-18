@@ -1,5 +1,7 @@
 package com.stealthx.presentation.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.stealthx.ifr.compose.TierStatusCard
@@ -28,6 +31,8 @@ fun SettingsScreen(
     val tier by vm.currentTier.collectAsState()
     val biometricsEnabled by vm.biometricEnabled.collectAsState()
     val stealthDeleteEnabled by vm.stealthDeleteEnabled.collectAsState()
+    val context = LocalContext.current
+    fun openUrl(url: String) = context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 
     Scaffold(
         topBar = {
@@ -101,6 +106,14 @@ fun SettingsScreen(
 
             SectionHeader("Access")
             ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Lock tokens for lifetime access", onIfrClick)
+
+            SectionHeader("Help")
+            ClickRow(Icons.Default.MenuBook, "User Manual", "How SecureChat works + first setup") {
+                openUrl("https://securechat.stealthx.tech/wiki/user-manual.html")
+            }
+            ClickRow(Icons.Default.RocketLaunch, "Getting Started", "Step-by-step setup guide") {
+                openUrl("https://securechat.stealthx.tech/wiki/user-manual.html#getting-started")
+            }
 
             SectionHeader("About")
             ClickRow(Icons.Default.Shield, "Version 0.1.0-alpha", "SecureChat — StealthX Platform") {}
