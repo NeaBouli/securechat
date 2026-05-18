@@ -19,7 +19,7 @@ BUILD SUCCESSFUL — Debug 42 MB / Release 21 MB (minified + shrunk)
 - Safety numbers for manual verification (6x4 digit groups)
 - **Emergency Broadcast** (Elite tier, Phase 2)
 - No phone number, no account, no metadata
-- GPL-3.0 open source
+- BUSL-1.1 source-available: publicly auditable, personal non-commercial use permitted
 
 ## Crypto Stack
 
@@ -94,7 +94,12 @@ See [PRICING.md](docs/PRICING.md).
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
-GPL-3.0-or-later. Source-available. Audit every line.
+BUSL-1.1. Source-available and independently auditable.
+
+You may build and use SecureChat for personal, non-commercial purposes.
+Copying, rebranding, distributing, or using SecureChat commercially requires
+a separate license from Vendetta Labs. After 2030-05-04 the code becomes
+GPL-3.0-only. See [LICENSE](LICENSE).
 
 ## Website
 See https://securechat.stealthx.tech
