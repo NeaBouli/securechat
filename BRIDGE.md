@@ -7,6 +7,17 @@
 ### TYPE: FIX
 ### STATUS: DONE
 
+**NEA-204 — Website Mobile Navigation**
+
+- `securechat/index.html`: Hamburger-Button `#nav-toggle` + `.nav-links.open` CSS + JS Toggle
+- Commit: `d7b5b91` | Pushed ✅
+
+---
+
+## 2026-05-19 [CC]
+### TYPE: FIX
+### STATUS: DONE
+
 **NEA-201 — Identity Recovery + NEA-202 — In-App Setup Wizard**
 
 - `SecureChatApp.onCreate`: SodiumInitializer + getOrCreateWithSeed in try-catch; silent failure no longer hides identity crash
