@@ -4,6 +4,27 @@
 ---
 
 ## 2026-05-19 [CC]
+### TYPE: MEMO
+### STATUS: DONE
+
+**Vollständiger Geräte-Test — S7 + Tab S4 — securechat 0.1.1-alpha**
+
+| Test | S7 (SM-G930F) | Tab S4 (SM-T835) |
+|------|--------------|-----------------|
+| App-Start ohne Crash | ✅ | ✅ |
+| SQLCipher kein mNativeHandle-Fehler | ✅ | ✅ |
+| Identity initialisiert | ✅ | ✅ |
+| Deep Link `stealthx://add/` → SecureChat öffnet | ✅ | ✅ |
+| Logcat: kein FATAL EXCEPTION | ✅ | ✅ |
+
+APK: `0.1.1-alpha` (versionCode 2), installiert 18:48 Uhr.
+Alle NEA-200–206 Fixes enthalten.
+
+**Linear**: NEA-200, 201, 202, 204, 205, 206 → Done. NEA-203 → In Progress (Arch-Entscheidung ausstehend).
+
+---
+
+## 2026-05-19 [CC]
 ### TYPE: FIX
 ### STATUS: DONE
 
