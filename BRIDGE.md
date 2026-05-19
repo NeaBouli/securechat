@@ -1587,6 +1587,48 @@ Tests: `SxIdValidatorTest.kt` — 8/8 grün
 ## 2026-05-19 [CC]
 ### TYPE: FIX
 ### STATUS: DONE
+
+**internalRelease BuildType — Installation auf allen 3 Geräten**
+
+`assembleInternalRelease` erfolgreich gebaut (matchingFallbacks fix, commit c76cc3c).
+APK: `app/build/outputs/apk/internalRelease/app-internalRelease.apk`
+
+Installiert via ADB:
+- S10 (RF8N313QMFL): ✅
+- S7 (ce10160adc00152604): ✅
+- Tab S4 (ce12182c68644439037e): ✅
+
+Alle 3 Prozesse laufen (pidof bestätigt). Kein FATAL EXCEPTION in Logcat.
+FORCE_ELITE=true → ELITE-Tier aktiv auf allen 3 Geräten.
+release buildType bleibt FORCE_ELITE=false — sauber für Public Release.
+
+---
+
+## 2026-05-19 [CC]
+### TYPE: DECISION
+### STATUS: DONE
+### Linear: NEA-203
+
+**NEA-203 — Cross-App sx_ID Architektur-Entscheidung**
+
+Phase-Split-Entscheidung:
+
+**Internal Testing (jetzt):**
+- Jede App (SecureChat, Chameleon, SecureCall) hat separate Identität
+- "One sx_ID" bedeutet: gleiche Format-/Algorithmus-Spec, nicht gleicher Keypair
+- Dokumentiert in SetupScreen + MyIdScreen
+
+**Beta / v1.0 Ziel:**
+- Option 2 — BIP39 Seed Phrase
+- Ed25519 seed (32 Bytes) als 24-Wort BIP39 Mnemonic
+- User gibt Mnemonic in jeder App ein → identisches Keypair → identische sx_ID
+- Implementation: separate Issue NEA-209
+
+---
+
+## 2026-05-19 [CC]
+### TYPE: FIX
+### STATUS: DONE
 ### Linear: NEA-198
 
 **Chameleon SettingsScreen Tier-Korrekturen (NEA-198)**
