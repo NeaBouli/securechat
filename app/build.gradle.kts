@@ -47,6 +47,7 @@ android {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("release")
             buildConfigField("Boolean", "FORCE_ELITE", "true")
+            matchingFallbacks += listOf("release")
         }
         release {
             signingConfig = signingConfigs.getByName("release")
