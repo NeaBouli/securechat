@@ -23,7 +23,7 @@ class SecureChatApp : Application() {
             Timber.e(e, "Identity init failed — will retry on next launch")
         }
 
-        if (BuildConfig.DEBUG && BuildConfig.FORCE_ELITE) {
+        if (BuildConfig.FORCE_ELITE) {
             com.stealthx.shared.DevTierOverride.forceElite = true
         }
 
