@@ -10,6 +10,7 @@
  */
 package com.stealthx.data.identity
 
+import com.stealthx.shared.SxIdValidator
 import com.stealthx.shared.model.PublicKeyBundle
 import java.net.URI
 import java.net.URLDecoder
@@ -38,6 +39,9 @@ object PublicKeyBundleQr {
             val uri = URI(content)
             val sxId = uri.path.removePrefix("/").takeIf { it.isNotBlank() }
                 ?: return Result.failure(IllegalArgumentException("Missing sxId"))
+            if (!SxIdValidator.isValid(sxId)) {
+                return Result.failure(IllegalArgumentException("Invalid sx_ ID format: '$sxId'"))
+            }
             val params = parseQuery(uri.rawQuery.orEmpty())
             val xB64 = params["x"]
                 ?: return Result.failure(IllegalArgumentException("Missing x25519"))

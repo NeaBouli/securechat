@@ -8,6 +8,7 @@
  */
 package com.stealthx.domain.keyexchange
 
+import com.stealthx.shared.SxIdValidator
 import com.stealthx.shared.model.PublicKeyBundle
 import java.security.MessageDigest
 import javax.inject.Inject
@@ -68,8 +69,8 @@ class KeyExchangeManager @Inject constructor(
      * Returns the verified bundle or failure with reason.
      */
     fun verifyBundle(bundle: PublicKeyBundle): Result<PublicKeyBundle> {
-        if (!bundle.sxId.matches(Regex("^sx_[1-9A-HJ-NP-Za-km-z]{9}\$"))) {
-            return Result.failure(IllegalArgumentException("Invalid sx_ ID format"))
+        if (!SxIdValidator.isValid(bundle.sxId)) {
+            return Result.failure(IllegalArgumentException("Invalid sx_ ID format: '${bundle.sxId}'"))
         }
         if (bundle.x25519PublicKey.size != 32) {
             return Result.failure(IllegalArgumentException("Invalid X25519 key length"))
