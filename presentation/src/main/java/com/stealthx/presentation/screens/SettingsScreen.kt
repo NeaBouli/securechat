@@ -32,8 +32,18 @@ fun SettingsScreen(
     val tier by vm.currentTier.collectAsState()
     val biometricsEnabled by vm.biometricEnabled.collectAsState()
     val stealthDeleteEnabled by vm.stealthDeleteEnabled.collectAsState()
+    val activationState by vm.activationState.collectAsState()
     val context = LocalContext.current
+    var showActivationDialog by remember { mutableStateOf(false) }
     fun openUrl(url: String) = context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+
+    if (showActivationDialog) {
+        ActivationCodeDialog(
+            state = activationState,
+            onDismiss = { showActivationDialog = false; vm.resetActivationState() },
+            onSubmit = vm::activateCode
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -107,6 +117,7 @@ fun SettingsScreen(
 
             SectionHeader("Access")
             ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Lock tokens for lifetime access", onIfrClick)
+            ClickRow(Icons.Default.Key, "Activation Code", "Enter code to unlock Pro or Elite tier") { showActivationDialog = true }
 
             SectionHeader("Help")
             ClickRow(Icons.Default.MenuBook, "User Manual", "How SecureChat works + first setup") {
@@ -242,4 +253,63 @@ private fun ClickRow(icon: ImageVector, title: String, subtitle: String, onClick
         }
         Icon(Icons.Default.ChevronRight, null)
     }
+}
+
+@Composable
+private fun ActivationCodeDialog(
+    state: ActivationState,
+    onDismiss: () -> Unit,
+    onSubmit: (String) -> Unit
+) {
+    var code by remember { mutableStateOf("") }
+    val isLoading = state is ActivationState.Loading
+    val isDone = state is ActivationState.Success
+
+    AlertDialog(
+        onDismissRequest = { if (!isLoading) onDismiss() },
+        title = { Text("Enter Activation Code") },
+        text = {
+            Column {
+                OutlinedTextField(
+                    value = code,
+                    onValueChange = { code = it.uppercase() },
+                    label = { Text("Code") },
+                    placeholder = { Text("XXXX-XXXX-XXXX") },
+                    singleLine = true,
+                    enabled = !isLoading && !isDone,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(8.dp))
+                when (state) {
+                    is ActivationState.Error -> Text(
+                        state.message,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    is ActivationState.Success -> Text(
+                        "Unlocked: ${state.tier.name}",
+                        color = Color(0xFF00E676),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    is ActivationState.Loading -> LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    else -> {}
+                }
+            }
+        },
+        confirmButton = {
+            if (isDone) {
+                TextButton(onClick = onDismiss) { Text("Done") }
+            } else {
+                TextButton(
+                    onClick = { onSubmit(code) },
+                    enabled = code.isNotBlank() && !isLoading
+                ) { Text("Activate") }
+            }
+        },
+        dismissButton = {
+            if (!isDone) {
+                TextButton(onClick = { if (!isLoading) onDismiss() }) { Text("Cancel") }
+            }
+        }
+    )
 }

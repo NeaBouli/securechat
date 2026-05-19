@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.sqlite.ktx)
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.datastore)
+    implementation(libs.okhttp)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
