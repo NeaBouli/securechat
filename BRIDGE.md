@@ -1415,3 +1415,24 @@ BUILD SUCCESSFUL. Commit: 479cb59
 - deriveShortId length = 9, Base58 charset, deterministic, unique, regex, no ambiguous chars, known vector
 
 BUILD SUCCESSFUL. Commit: e82a0da
+
+---
+
+## 2026-05-19 [CC]
+### TYPE: FIX
+### STATUS: DONE
+
+**BUG: Release-Crash SQLCipher mNativeHandle — NoSuchFieldError**
+
+Root cause: `isMinifyEnabled = true` in release build + fehlende ProGuard-Regel.
+R8 hat `mNativeHandle` in `net.sqlcipher.database.SQLiteDatabase` umbenannt.
+SQLCipher's nativer `.so` sucht dieses Feld per JNI-Name → `NoSuchFieldError` → sofortiger Crash.
+Debug-Builds nicht betroffen (kein Minify).
+
+Fix: `-keep class net.sqlcipher.** { *; }` in `app/proguard-rules.pro`.
+Commit: 92f3f98
+
+Deployments nach Fix:
+- S7 (ce10160adc00152604): SecureChat ✅ Chameleon ✅ kein Crash
+- Tab S4 (ce12182c68644439037e): SecureChat ✅ Chameleon ✅ kein Crash + chameleon.debug entfernt
+- S10 (RF8N313QMFL): SecureChat ✅ Chameleon ✅ SecureCall Premium ✅ premium.test entfernt
