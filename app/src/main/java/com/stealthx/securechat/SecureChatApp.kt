@@ -11,10 +11,17 @@ class SecureChatApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        SodiumInitializer.ensureInit()
+        try {
+            SodiumInitializer.ensureInit()
+        } catch (e: Exception) {
+            Timber.e(e, "SodiumInitializer failed — crypto unavailable")
+        }
 
-        // Create per-device identity on first launch — idempotent on subsequent launches
-        StealthXIdentity.getOrCreateWithSeed(this)
+        try {
+            StealthXIdentity.getOrCreateWithSeed(this)
+        } catch (e: Exception) {
+            Timber.e(e, "Identity init failed — will retry on next launch")
+        }
 
         if (BuildConfig.DEBUG && BuildConfig.FORCE_ELITE) {
             com.stealthx.shared.DevTierOverride.forceElite = true

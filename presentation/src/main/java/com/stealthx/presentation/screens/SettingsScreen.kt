@@ -26,6 +26,7 @@ fun SettingsScreen(
     onBack: () -> Unit,
     onIfrClick: () -> Unit,
     onBroadcastClick: () -> Unit,
+    onSetupClick: () -> Unit = {},
     vm: SettingsViewModel = hiltViewModel()
 ) {
     val tier by vm.currentTier.collectAsState()
@@ -111,9 +112,7 @@ fun SettingsScreen(
             ClickRow(Icons.Default.MenuBook, "User Manual", "How SecureChat works + first setup") {
                 openUrl("https://securechat.stealthx.tech/wiki/user-manual.html")
             }
-            ClickRow(Icons.Default.RocketLaunch, "Getting Started", "Step-by-step setup guide") {
-                openUrl("https://securechat.stealthx.tech/wiki/user-manual.html#getting-started")
-            }
+            ClickRow(Icons.Default.RocketLaunch, "Getting Started", "Step-by-step setup guide", onSetupClick)
 
             SectionHeader("About")
             ClickRow(Icons.Default.Shield, "Version 0.1.0-alpha", "SecureChat — StealthX Platform") {}

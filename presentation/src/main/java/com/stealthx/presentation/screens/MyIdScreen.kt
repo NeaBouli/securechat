@@ -8,7 +8,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.runtime.*
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -26,13 +29,17 @@ import com.stealthx.data.identity.StealthXIdentity
 @Composable
 fun MyIdScreen(onBack: () -> Unit) {
     val context = LocalContext.current
-    val identity = remember { StealthXIdentity.get(context) }
+    var identity by remember { mutableStateOf(StealthXIdentity.get(context)) }
     val sxId = identity?.raw ?: "not initialized"
     val handle = identity?.customHandle
-    val qrContent = remember {
-        runCatching {
-            PublicKeyBundleQr.toQrContent(StealthXIdentity.createPublicKeyBundle(context))
-        }.getOrNull()
+    var qrContent by remember(identity) {
+        mutableStateOf(
+            runCatching {
+                if (identity != null)
+                    PublicKeyBundleQr.toQrContent(StealthXIdentity.createPublicKeyBundle(context))
+                else null
+            }.getOrNull()
+        )
     }
     val qrBitmap = remember(qrContent) { qrContent?.let(::qrBitmap) }
 
@@ -88,13 +95,28 @@ fun MyIdScreen(onBack: () -> Unit) {
                 }
             }
             Spacer(Modifier.height(24.dp))
-            Text("Works in SecureCall AND SecureChat",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
-            Spacer(Modifier.height(8.dp))
-            Text("Share once — your contact can reach you on both.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+            if (identity == null) {
+                Spacer(Modifier.height(16.dp))
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text("Identity not initialized", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onErrorContainer)
+                        Text("This can happen after a fresh install if the first launch failed. Tap below to generate your identity.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onErrorContainer)
+                        OutlinedButton(onClick = {
+                            runCatching { StealthXIdentity.getOrCreateWithSeed(context) }
+                                .onSuccess { id -> identity = id }
+                        }, modifier = Modifier.fillMaxWidth()) {
+                            Text("Generate / Repair Identity")
+                        }
+                    }
+                }
+            } else {
+                Text("Your SecureChat identity. Share this to receive encrypted messages.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+            }
 
             Spacer(Modifier.weight(1f))
             Button(onClick = {
