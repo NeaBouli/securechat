@@ -229,10 +229,15 @@
   .footer-bottom a { color:var(--muted); text-decoration:none; }
   .footer-bottom a:hover { color:var(--green); }
 
+  /* ── HAMBURGER ── */
+  .nav-toggle { display:none; background:none; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:6px; cursor:pointer; font-size:18px; line-height:1; }
   /* ── RESPONSIVE ── */
   @media(max-width:768px) {
-    nav { padding:0 1rem; }
-    .nav-links { display:none; }
+    nav { padding:0 1rem; flex-wrap:wrap; height:auto; min-height:60px; }
+    .nav-toggle { display:block; }
+    .nav-links { display:none; width:100%; flex-direction:column; gap:0; padding:0.5rem 0 1rem; border-top:1px solid var(--border); margin-top:4px; }
+    .nav-links.open { display:flex; }
+    .nav-links a { padding:10px 0; font-size:15px; border-bottom:1px solid rgba(255,255,255,0.04); }
     .hero { padding:3rem 1rem 2rem; }
     .hero-inner { grid-template-columns:1fr; text-align:center; }
     .hero-visual { margin-top:2rem; }
@@ -256,7 +261,8 @@
       <span class="nav-logo-app">SecureChat</span>
     </div>
   </a>
-  <div class="nav-links">
+  <button class="nav-toggle" id="nav-toggle" aria-label="Open menu">☰</button>
+  <div class="nav-links" id="nav-links">
     <a href="#features">Features</a>
     <a href="#architecture">Architecture</a>
     <a href="#security">Security</a>
@@ -271,6 +277,16 @@
     <a href="#download" class="cta">Download</a>
   </div>
 </nav>
+<script>
+  document.getElementById('nav-toggle').addEventListener('click', function() {
+    document.getElementById('nav-links').classList.toggle('open');
+  });
+  document.querySelectorAll('#nav-links a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      document.getElementById('nav-links').classList.remove('open');
+    });
+  });
+</script>
 
 <!-- STATUS -->
 <div class="status-bar">
