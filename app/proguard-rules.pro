@@ -31,6 +31,11 @@
 -dontwarn org.identityconnectors.**
 -dontwarn okhttp3.internal.platform.**
 
+# ── SQLCipher — JNI fields looked up by name, must not be renamed ─
+-keep class net.sqlcipher.** { *; }
+-keep class net.sqlcipher.database.** { *; }
+-dontwarn net.sqlcipher.**
+
 # ── Room ──────────────────────────────────────────────────────
 -keep class * extends androidx.room.RoomDatabase
 -keep @androidx.room.Entity class *
