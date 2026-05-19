@@ -1640,3 +1640,21 @@ Tier-Mismatches zwischen SettingsScreen und NavGraph behoben:
 - Decoy Profile (NavGraph: ELITE) → aus Pro-Sektion in Elite-Sektion verschoben
 
 SecureChat SettingsScreen: bereits korrekt mit `comingSoon = true` — kein Fix nötig.
+
+---
+
+## 2026-05-19 [CC]
+### TYPE: FIX
+### STATUS: DONE
+### Linear: NEA-218
+
+**NEA-218 — Activation Code Flow (SecureChat)**
+
+- `data/activation/ActivationCodeClient.kt`: OkHttp WebSocket → `wss://api.stealthx.tech/signal`, sendet `{"type":"ACTIVATE_CODE","code":"XXXX"}`, empfängt `ACTIVATE_CODE_RESULT`
+- `SettingsViewModel`: `activateCode(code)` → WS-Result → `IfrTierRepository.saveTierResult("activation_code", 0L, ifrTier)` → `TierGate.getTier()` refresh; `ActivationState` (Idle/Loading/Success/Error)
+- `SettingsScreen`: Activation Code ClickRow unter "Access" → AlertDialog mit Code-Input, Loading-Indicator, Success/Error-State
+
+Commit: `2a105df` | Pushed ✅
+Installed: S7 (ce10160adc00152604) ✅ Tab S4 (ce12182c68644439037e) ✅
+
+### EMPFÄNGER: CODEX
