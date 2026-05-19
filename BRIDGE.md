@@ -3,6 +3,36 @@
 
 ---
 
+## 2026-05-19 [CC]
+### TYPE: FIX
+### STATUS: DONE
+
+**NEA-201 — Identity Recovery + NEA-202 — In-App Setup Wizard**
+
+- `SecureChatApp.onCreate`: SodiumInitializer + getOrCreateWithSeed in try-catch; silent failure no longer hides identity crash
+- `MyIdScreen`: `var identity by remember { mutableStateOf(...) }` — reaktiv; errorContainer-Card mit "Generate / Repair Identity" Button wenn identity == null
+- `SetupScreen` (NEU): 3-Step-Checkliste (Identity, Notifications, Add Contact) mit inline Repair-Button
+- `SettingsScreen`: `onSetupClick` param; "Getting Started" navigiert in-app statt Browser
+- NavGraph: Screen.Setup registriert
+- Commits: `1202b04`, `721e6e1` | Pushed: `d3c5dc6..ec8e8ef`
+- Installed: S7 + Tab S4 ✅
+
+**NEA-205 — STEALTH-DELETE Subtitle**
+
+- `ToggleRow` um `subtitle: String? = null` erweitert
+- STEALTH-DELETE toggle zeigt jetzt: "Tap the lock icon in the chat list 5× to wipe"
+
+**NEA-206 — Encrypted Deep Link Invitation**
+
+- `AndroidManifest.xml`: intent-filter `stealthx://add/` registriert
+- `Screen.NewContact`: `withLink(uri)` + `DEEP_LINK_ROUTE` + `ARG_LINK` hinzugefügt
+- `StealthXNavGraph`: liest `intent.data` bei Compose und navigiert zu NewContact mit pre-filled URI
+- `NewContactScreen`: `initialContent: String = ""` param; `qrContent` initialisiert damit
+- `MyIdScreen`: Share-Button umbenannt zu "Invite via Secure Link"
+- Commit: `ec8e8ef` | Pushed ✅
+
+---
+
 ## 2026-05-18 [CC]
 ### TYPE: FIX
 ### STATUS: DONE
