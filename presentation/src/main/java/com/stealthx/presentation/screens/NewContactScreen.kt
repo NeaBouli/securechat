@@ -25,9 +25,10 @@ fun NewContactScreen(
     onBack: () -> Unit,
     onContactAdded: () -> Unit,
     onUpgrade: () -> Unit = {},
+    initialContent: String = "",
     vm: NewContactViewModel = hiltViewModel()
 ) {
-    var qrContent by remember { mutableStateOf("") }
+    var qrContent by remember { mutableStateOf(initialContent) }
     val limitState by vm.limitState.collectAsState()
     val state by vm.uiState.collectAsState()
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->

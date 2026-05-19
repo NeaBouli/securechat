@@ -129,7 +129,7 @@ fun MyIdScreen(onBack: () -> Unit) {
                 modifier = Modifier.fillMaxWidth()) {
                 Icon(Icons.Default.Share, null)
                 Spacer(Modifier.width(8.dp))
-                Text("Share Deep Link")
+                Text("Invite via Secure Link")
             }
         }
     }

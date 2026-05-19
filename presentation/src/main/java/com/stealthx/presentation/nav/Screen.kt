@@ -6,7 +6,11 @@ sealed class Screen(val route: String) {
         companion object { const val ROUTE = "chat/{sxId}" }
     }
     data object MyId : Screen("my_id")
-    data object NewContact : Screen("new_contact")
+    object NewContact : Screen("new_contact") {
+        const val DEEP_LINK_ROUTE = "new_contact?link={link}"
+        const val ARG_LINK = "link"
+        fun withLink(uri: String) = "new_contact?link=${java.net.URLEncoder.encode(uri, "UTF-8")}"
+    }
     data object IFRUnlock : Screen("ifr_unlock")
     data object Settings : Screen("settings")
     data object Broadcast : Screen("broadcast")

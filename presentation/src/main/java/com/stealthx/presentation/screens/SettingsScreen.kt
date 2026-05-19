@@ -83,7 +83,7 @@ fun SettingsScreen(
             // Security section
             SectionHeader("Security")
             ToggleRow(Icons.Default.Fingerprint, "Biometric Unlock", biometricsEnabled) { vm.setBiometricEnabled(it) }
-            ToggleRow(Icons.Default.Shield, "STEALTH-DELETE (5-tap)", stealthDeleteEnabled) { vm.setStealthDeleteEnabled(it) }
+            ToggleRow(Icons.Default.Shield, "STEALTH-DELETE (5-tap)", stealthDeleteEnabled, "Tap the lock icon in the chat list 5× to wipe") { vm.setStealthDeleteEnabled(it) }
 
             // Free features
             SectionHeader("Free")
@@ -211,11 +211,16 @@ private fun SectionHeader(title: String) {
 }
 
 @Composable
-private fun ToggleRow(icon: ImageVector, title: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+private fun ToggleRow(icon: ImageVector, title: String, checked: Boolean, subtitle: String? = null, onCheckedChange: (Boolean) -> Unit) {
     Row(modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp), verticalAlignment = Alignment.CenterVertically) {
         Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
         Spacer(Modifier.width(16.dp))
-        Text(title, modifier = Modifier.weight(1f))
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyMedium)
+            if (subtitle != null) {
+                Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+            }
+        }
         Switch(checked = checked, onCheckedChange = onCheckedChange)
     }
 }
