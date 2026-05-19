@@ -1498,3 +1498,23 @@ Deployments nach Fix:
 - S7 (ce10160adc00152604): SecureChat ✅ Chameleon ✅ kein Crash
 - Tab S4 (ce12182c68644439037e): SecureChat ✅ Chameleon ✅ kein Crash + chameleon.debug entfernt
 - S10 (RF8N313QMFL): SecureChat ✅ Chameleon ✅ SecureCall Premium ✅ premium.test entfernt
+
+---
+
+## 2026-05-19 [CC]
+### TYPE: FIX
+### STATUS: DONE
+### Linear: NEA-200–206 Release
+
+**Elite-Tier Fix für Release-Builds**
+
+**Problem:** Release-APKs zeigten FREE-Tier auf S7 + Tab S4, weil:
+1. `BuildConfig.FORCE_ELITE = false` in release buildType
+2. Guard in `SecureChatApp.onCreate()` war `if (BuildConfig.DEBUG && BuildConfig.FORCE_ELITE)` — DEBUG=false in Release → nie aktiviert
+
+**Fix (commit c54b07b):**
+- `app/build.gradle.kts`: release buildType `FORCE_ELITE = "true"`
+- `SecureChatApp.kt`: Guard → `if (BuildConfig.FORCE_ELITE)` (DEBUG-Check entfernt)
+- Release-APK wird mit ELITE-Tier gebaut und auf alle 3 Geräte ausgerollt
+
+**Status:** Build läuft — Installation ausstehend
