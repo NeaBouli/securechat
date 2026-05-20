@@ -36,17 +36,18 @@ fun MyIdScreen(onBack: () -> Unit) {
     var isLoading by remember { mutableStateOf(true) }
 
     suspend fun loadIdentity() {
-        withContext(Dispatchers.IO) {
+        val (id, qr) = withContext(Dispatchers.IO) {
             val id = runCatching { StealthXIdentity.getOrCreateWithSeed(context) }.getOrNull()
             val qr = if (id != null) {
                 runCatching {
                     PublicKeyBundleQr.toQrContent(StealthXIdentity.createPublicKeyBundle(context))
                 }.getOrNull()
             } else null
-            identity = id
-            qrContent = qr
-            isLoading = false
+            Pair(id, qr)
         }
+        identity = id
+        qrContent = qr
+        isLoading = false
     }
 
     LaunchedEffect(Unit) { loadIdentity() }
