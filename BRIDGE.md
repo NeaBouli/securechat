@@ -13,6 +13,7 @@
 `Pair(id, qr)` wird im IO-Kontext berechnet; State-Zuweisung (`identity = id`, `qrContent = qr`, `isLoading = false`) erfolgt im Main-Kontext nach `withContext(IO)`.
 
 Commit: `120c943` | Pushed ✅
+Installed: S7 ✅ Tab S4 ✅ S10 ✅ (S10 nachinstalliert 2026-05-20)
 
 ---
 
