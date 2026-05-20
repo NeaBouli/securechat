@@ -5,6 +5,7 @@
  */
 package com.stealthx.data.activation
 
+import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -15,10 +16,18 @@ import java.util.concurrent.TimeUnit
 
 object ActivationCodeClient {
 
+    // Leaf pin: api.stealthx.tech (Let's Encrypt, expires 2026-08-14 — rotate before then)
+    // Backup pin: Let's Encrypt R12 intermediate CA (stable across leaf rotations)
+    private val certPinner = CertificatePinner.Builder()
+        .add("api.stealthx.tech", "sha256/1e85xNSEj+dcImOJS0iNkfMZOrZdvJJzzPCqT1/CZDc=")
+        .add("api.stealthx.tech", "sha256/kZwN96eHtZftBWrOZUsd6cA4es80n3NzSk/XtYz2EqQ=")
+        .build()
+
     private val client by lazy {
         OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(20, TimeUnit.SECONDS)
+            .certificatePinner(certPinner)
             .build()
     }
 
