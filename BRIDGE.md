@@ -3,6 +3,20 @@
 
 ---
 
+## 2026-05-21 [CC]
+### TYPE: REVIEW
+### STATUS: DONE
+
+**Live-Test Report — SecureChat auf allen 3 Geräten (2026-05-21)**
+
+T1 QR: PASS — S7 `sx_Fnr7zPNgg` ✅, Tab S4 `sx_4pEP7ksAb` ✅ (ImageView gerendert, content-desc="Contact QR Code")
+T2 WS: PASS — okhttp WS-Pings zu `api.stealthx.tech` in S10-Logcat bestätigt; S7+Tab S4 App geladen
+T3 Deeplink: PASS — Add-Contact-Screen auf S7 mit geparsten QR-Parametern korrekt geöffnet
+T7 Settings: PASS — IFR Tier ELITE, alle Feature-Tiers korrekt angezeigt
+T6 Nachricht: N/A — keine Kontakte auf Testgeräten, E2E-Messaging nicht testbar
+
+---
+
 ## 2026-05-20 [CC]
 ### TYPE: FIX
 ### STATUS: DONE
