@@ -3,6 +3,23 @@
 
 ---
 
+## 2026-05-20 [CC]
+### TYPE: FIX
+### STATUS: DONE
+
+**QR-Code Fix — MyIdScreen async identity + QR loading**
+
+Root-Cause: `createPublicKeyBundle()` + `EncryptedSharedPreferences`-Init wurden synchron im Compose-Main-Thread innerhalb `remember{}` aufgerufen. Jede Keystore-Exception wurde von `runCatching.getOrNull()` still gefangen → `qrBitmap = null` → "QR unavailable".
+
+Fix: `LaunchedEffect(Unit)` + `withContext(Dispatchers.IO)` — Identity + QR werden jetzt off-thread geladen.
+- `get()` → `getOrCreateWithSeed()` (immer erstellen, nie nur lesen)
+- `isLoading`-State → CircularProgressIndicator während Load, kein falsches "QR unavailable"-Flash
+- Repair-Button nutzt jetzt `scope.launch { loadIdentity() }` (coroutine)
+
+Commit: pending
+
+---
+
 ## 2026-05-19 [CC]
 ### TYPE: MEMO
 ### STATUS: DONE

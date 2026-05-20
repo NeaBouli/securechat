@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,24 +20,39 @@ import androidx.compose.ui.unit.sp
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.stealthx.data.identity.PublicKeyBundleQr
+import com.stealthx.data.identity.StealthXId
 import com.stealthx.data.identity.StealthXIdentity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyIdScreen(onBack: () -> Unit) {
     val context = LocalContext.current
-    var identity by remember { mutableStateOf(StealthXIdentity.get(context)) }
+    val scope = rememberCoroutineScope()
+    var identity by remember { mutableStateOf<StealthXId?>(null) }
+    var qrContent by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    suspend fun loadIdentity() {
+        withContext(Dispatchers.IO) {
+            val id = runCatching { StealthXIdentity.getOrCreateWithSeed(context) }.getOrNull()
+            val qr = if (id != null) {
+                runCatching {
+                    PublicKeyBundleQr.toQrContent(StealthXIdentity.createPublicKeyBundle(context))
+                }.getOrNull()
+            } else null
+            identity = id
+            qrContent = qr
+            isLoading = false
+        }
+    }
+
+    LaunchedEffect(Unit) { loadIdentity() }
+
     val sxId = identity?.raw ?: "not initialized"
     val handle = identity?.customHandle
-    var qrContent by remember(identity) {
-        mutableStateOf(
-            runCatching {
-                if (identity != null)
-                    PublicKeyBundleQr.toQrContent(StealthXIdentity.createPublicKeyBundle(context))
-                else null
-            }.getOrNull()
-        )
-    }
     val qrBitmap = remember(qrContent) { qrContent?.let(::qrBitmap) }
 
     Scaffold(
@@ -45,7 +60,7 @@ fun MyIdScreen(onBack: () -> Unit) {
             TopAppBar(
                 title = { Text("My ID") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.Default.ArrowBack, "Back") }
+                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") }
                 }
             )
         }
@@ -80,37 +95,38 @@ fun MyIdScreen(onBack: () -> Unit) {
                 shape = MaterialTheme.shapes.large
             ) {
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-                    if (qrBitmap != null) {
-                        Image(
+                    when {
+                        isLoading -> CircularProgressIndicator()
+                        qrBitmap != null -> Image(
                             bitmap = qrBitmap.asImageBitmap(),
                             contentDescription = "Contact QR Code",
                             modifier = Modifier.size(196.dp)
                         )
-                    } else {
-                        Text("QR unavailable", color = MaterialTheme.colorScheme.error)
+                        else -> Text("QR unavailable", color = MaterialTheme.colorScheme.error)
                     }
                 }
             }
             Spacer(Modifier.height(24.dp))
-            if (identity == null) {
-                Spacer(Modifier.height(16.dp))
-                Card(
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Identity not initialized", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onErrorContainer)
-                        Text("This can happen after a fresh install if the first launch failed. Tap below to generate your identity.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onErrorContainer)
-                        OutlinedButton(onClick = {
-                            runCatching { StealthXIdentity.getOrCreateWithSeed(context) }
-                                .onSuccess { id -> identity = id }
-                        }, modifier = Modifier.fillMaxWidth()) {
-                            Text("Generate / Repair Identity")
+            when {
+                isLoading -> {}
+                identity == null -> {
+                    Spacer(Modifier.height(16.dp))
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("Identity not initialized", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onErrorContainer)
+                            Text("This can happen after a fresh install if the first launch failed. Tap below to generate your identity.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onErrorContainer)
+                            OutlinedButton(onClick = {
+                                scope.launch { loadIdentity() }
+                            }, modifier = Modifier.fillMaxWidth()) {
+                                Text("Generate / Repair Identity")
+                            }
                         }
                     }
                 }
-            } else {
-                Text("Your SecureChat identity. Share this to receive encrypted messages.",
+                else -> Text("Your SecureChat identity. Share this to receive encrypted messages.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
             }
