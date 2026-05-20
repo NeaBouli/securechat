@@ -1720,3 +1720,9 @@ Commit: `2a105df` | Pushed ✅
 Installed: S7 (ce10160adc00152604) ✅ Tab S4 (ce12182c68644439037e) ✅
 
 ### EMPFÄNGER: CODEX
+
+## ⚠️ Certificate Pinning Rotation — vor 2026-08-14 erledigen!
+
+Leaf-Cert api.stealthx.tech rotiert 2026-08-14.
+ActivationCodeClient.kt Pin muss erneuert werden.
+Anleitung: stealth/docs/agent-bridge/BRIDGE.md
