@@ -6,6 +6,19 @@
 ## 2026-05-20 [CC]
 ### TYPE: FIX
 ### STATUS: DONE
+### Codex-Findings: RESOLVED
+
+**FIX-2 (MEDIUM): Compose State-Mutation aus IO-Dispatcher heraus — MyIdScreen**
+
+`Pair(id, qr)` wird im IO-Kontext berechnet; State-Zuweisung (`identity = id`, `qrContent = qr`, `isLoading = false`) erfolgt im Main-Kontext nach `withContext(IO)`.
+
+Commit: `120c943` | Pushed ✅
+
+---
+
+## 2026-05-20 [CC]
+### TYPE: FIX
+### STATUS: DONE
 
 **QR-Code Fix — MyIdScreen async identity + QR loading**
 
