@@ -16,7 +16,7 @@ Fix: `LaunchedEffect(Unit)` + `withContext(Dispatchers.IO)` — Identity + QR we
 - `isLoading`-State → CircularProgressIndicator während Load, kein falsches "QR unavailable"-Flash
 - Repair-Button nutzt jetzt `scope.launch { loadIdentity() }` (coroutine)
 
-Commit: pending
+Commit: `3ad4378` | Pushed ✅
 
 ---
 
