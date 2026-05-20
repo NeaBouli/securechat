@@ -3,6 +3,23 @@
 
 ---
 
+## 2026-05-20 [CC]
+### TYPE: SECURITY
+### STATUS: DONE
+### REF: NEA-218
+
+**Certificate Pinning — ActivationCodeClient.kt**
+
+Pin-Hash api.stealthx.tech:
+- Leaf: `sha256/1e85xNSEj+dcImOJS0iNkfMZOrZdvJJzzPCqT1/CZDc=` (Let's Encrypt, läuft ab **2026-08-14** — vor dem Datum rotieren!)
+- Backup: `sha256/kZwN96eHtZftBWrOZUsd6cA4es80n3NzSk/XtYz2EqQ=` (Let's Encrypt R12 Intermediate CA)
+
+Commit `dd2600f` | Build ✅ | S7 ✅ Tab S4 ✅ (S10 disconnected während Install) | Push ✅
+
+⚠️ **Reminder**: Leaf-Cert rotiert 2026-08-14 — Pin in beiden Repos updaten.
+
+---
+
 ## 2026-05-21 [CC]
 ### TYPE: REVIEW
 ### STATUS: DONE
