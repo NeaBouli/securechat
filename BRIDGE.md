@@ -3,6 +3,32 @@
 
 ---
 
+## 2026-05-21 [CC]
+### TYPE: FEAT
+### STATUS: DONE
+### REF: NEA-213
+
+**QR Scan Flow Fix + Bidirectional Contact Exchange**
+
+Probleme behoben:
+1. `NewContactScreen`: Nach QR-Scan → `addFromQrContent` wird automatisch aufgerufen (kein manueller Button-Druck mehr nötig)
+2. `NewContactScreen`: "Paste QR content" Card liest jetzt aus System-Clipboard
+3. `NewContactViewModel`: Nach erfolgreichem Save → `contactExchangeManager.sendExchange(bundle.sxId)`
+4. `ConversationsViewModel`: Startet `contactExchangeManager.startListening()` bei Init
+
+Neue Datei: `data/.../exchange/ContactExchangeManager.kt`
+- `sendExchange(toSxId)`: Fire-and-forget WebSocket → `wss://api.stealthx.tech/signal`
+  Message: `{type: "CONTACT_EXCHANGE", to: sxId, bundle: myQrUri}`
+- `startListening()`: Persistente WebSocket-Verbindung, `IDENTIFY` + `CONTACT_EXCHANGE` Handler
+  → Incoming Bundle wird geparst + automatisch als Kontakt gespeichert
+
+⚠️ Server-seitig: erfordert Routing-Support für `CONTACT_EXCHANGE` + `IDENTIFY` auf dem StealthX-Signal-Server.
+Ohne Server-Support: outgoing sendet, aber B empfängt nichts. Client-Seite ist fertig.
+
+Commit SecureChat: `2960139` | Build ✅ | S10 ✅ S7 ✅ Tab S4 ✅ | Push ✅
+
+---
+
 ## 2026-05-20 [CC]
 ### TYPE: SECURITY
 ### STATUS: DONE
