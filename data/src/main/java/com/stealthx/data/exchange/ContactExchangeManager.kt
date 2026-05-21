@@ -26,6 +26,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
+
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,11 +42,6 @@ class ContactExchangeManager @Inject constructor(
     private val certPinner = CertificatePinner.Builder()
         .add("api.stealthx.tech", "sha256/1e85xNSEj+dcImOJS0iNkfMZOrZdvJJzzPCqT1/CZDc=")
         .add("api.stealthx.tech", "sha256/kZwN96eHtZftBWrOZUsd6cA4es80n3NzSk/XtYz2EqQ=")
-        .build()
-
-    private val sendClient = OkHttpClient.Builder()
-        .connectTimeout(10, TimeUnit.SECONDS)
-        .certificatePinner(certPinner)
         .build()
 
     private val listenClient = OkHttpClient.Builder()
@@ -66,33 +62,14 @@ class ContactExchangeManager @Inject constructor(
     fun sendExchange(toSxId: String) {
         scope.launch {
             try {
-                val mySxId = runCatching { StealthXIdentity.get(context)?.raw }.getOrNull() ?: return@launch
                 val myBundle = PublicKeyBundleQr.toQrContent(
                     StealthXIdentity.createPublicKeyBundle(context)
                 )
-                val req = Request.Builder().url(SIGNAL_URL).build()
-                sendClient.newWebSocket(req, object : WebSocketListener() {
-                    override fun onOpen(ws: WebSocket, response: Response) {
-                        ws.send(JSONObject().apply {
-                            put("type", "IDENTIFY")
-                            put("sxId", mySxId)
-                        }.toString())
-                    }
-                    override fun onMessage(ws: WebSocket, text: String) {
-                        try {
-                            val json = JSONObject(text)
-                            if (json.optString("type") == "IDENTIFY_ACK") {
-                                ws.send(JSONObject().apply {
-                                    put("type", "CONTACT_EXCHANGE")
-                                    put("to", toSxId)
-                                    put("bundle", myBundle)
-                                }.toString())
-                                ws.close(1000, null)
-                            }
-                        } catch (_: Exception) {}
-                    }
-                    override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) { /* silent */ }
-                })
+                listenerWs?.send(JSONObject().apply {
+                    put("type", "CONTACT_EXCHANGE")
+                    put("to", toSxId)
+                    put("bundle", myBundle)
+                }.toString())
             } catch (_: Exception) {}
         }
     }
