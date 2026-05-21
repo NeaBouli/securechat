@@ -66,6 +66,7 @@ class ContactExchangeManager @Inject constructor(
     fun sendExchange(toSxId: String) {
         scope.launch {
             try {
+                val mySxId = runCatching { StealthXIdentity.get(context)?.raw }.getOrNull() ?: return@launch
                 val myBundle = PublicKeyBundleQr.toQrContent(
                     StealthXIdentity.createPublicKeyBundle(context)
                 )
@@ -73,11 +74,22 @@ class ContactExchangeManager @Inject constructor(
                 sendClient.newWebSocket(req, object : WebSocketListener() {
                     override fun onOpen(ws: WebSocket, response: Response) {
                         ws.send(JSONObject().apply {
-                            put("type", "CONTACT_EXCHANGE")
-                            put("to", toSxId)
-                            put("bundle", myBundle)
+                            put("type", "IDENTIFY")
+                            put("sxId", mySxId)
                         }.toString())
-                        ws.close(1000, null)
+                    }
+                    override fun onMessage(ws: WebSocket, text: String) {
+                        try {
+                            val json = JSONObject(text)
+                            if (json.optString("type") == "IDENTIFY_ACK") {
+                                ws.send(JSONObject().apply {
+                                    put("type", "CONTACT_EXCHANGE")
+                                    put("to", toSxId)
+                                    put("bundle", myBundle)
+                                }.toString())
+                                ws.close(1000, null)
+                            }
+                        } catch (_: Exception) {}
                     }
                     override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) { /* silent */ }
                 })

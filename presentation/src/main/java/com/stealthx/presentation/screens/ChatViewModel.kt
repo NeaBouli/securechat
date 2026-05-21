@@ -81,7 +81,6 @@ class ChatViewModel @Inject constructor(
             error.value = null
             try {
                 messageRepository.sendLocalMessage(contactSxId, trimmed)
-                exportedMessage.value = messageRepository.exportLatestOutgoingMessage(contactSxId)
             } catch (e: Exception) {
                 error.value = e.message ?: "Could not send message"
             } finally {
