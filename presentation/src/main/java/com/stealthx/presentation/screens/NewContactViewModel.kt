@@ -7,6 +7,7 @@ package com.stealthx.presentation.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.identity.PublicKeyBundleQr
 import com.stealthx.data.repository.ContactRepository
 import com.stealthx.domain.tier.TierGate
@@ -38,7 +39,8 @@ data class NewContactUiState(
 @HiltViewModel
 class NewContactViewModel @Inject constructor(
     private val contactRepository: ContactRepository,
-    private val tierGate: TierGate
+    private val tierGate: TierGate,
+    private val contactExchangeManager: ContactExchangeManager
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NewContactUiState())
     val uiState: StateFlow<NewContactUiState> = _uiState.asStateFlow()
@@ -72,6 +74,7 @@ class NewContactViewModel @Inject constructor(
             _uiState.value = NewContactUiState(isSaving = true)
             try {
                 contactRepository.addContactBundle(bundle)
+                contactExchangeManager.sendExchange(bundle.sxId)
                 _uiState.value = NewContactUiState(
                     statusMessage = "Contact added",
                     contactAdded = true

@@ -1,5 +1,7 @@
 package com.stealthx.presentation.screens
 
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -14,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.journeyapps.barcodescanner.ScanContract
@@ -31,8 +34,15 @@ fun NewContactScreen(
     var qrContent by remember { mutableStateOf(initialContent) }
     val limitState by vm.limitState.collectAsState()
     val state by vm.uiState.collectAsState()
+    val context = LocalContext.current
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
-        result.contents?.let { qrContent = it }
+        result.contents?.let { content ->
+            qrContent = content
+            // Auto-trigger: scan intent == add intent, skip manual button press
+            if (content.startsWith("stealthx://add/") && !limitState.isAtLimit) {
+                vm.addFromQrContent(content)
+            }
+        }
     }
 
     LaunchedEffect(state.contactAdded) {
@@ -129,7 +139,11 @@ fun NewContactScreen(
                 title = "Paste QR content",
                 subtitle = "stealthx://add/... signed bundle",
                 enabled = !limitState.isAtLimit,
-                onClick = {}
+                onClick = {
+                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val pasted = clipboard.primaryClip?.getItemAt(0)?.text?.toString().orEmpty()
+                    if (pasted.isNotEmpty()) qrContent = pasted
+                }
             )
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(

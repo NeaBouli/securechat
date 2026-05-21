@@ -3,6 +3,7 @@ package com.stealthx.presentation.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stealthx.data.entity.ContactKeyEntity
+import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.prefs.AppPreferences
 import com.stealthx.data.repository.ContactRepository
 import com.stealthx.data.repository.MessageRepository
@@ -32,9 +33,14 @@ class ConversationsViewModel @Inject constructor(
     contactRepository: ContactRepository,
     private val messageRepository: MessageRepository,
     private val appPreferences: AppPreferences,
-    private val wipeManager: WipeManager
+    private val wipeManager: WipeManager,
+    private val contactExchangeManager: ContactExchangeManager
 ) : ViewModel() {
     private val wipeState = MutableStateFlow(WipeState())
+
+    init {
+        contactExchangeManager.startListening()
+    }
 
     val uiState: StateFlow<ConversationUiState> = combine(
         contactRepository.observeAll()
