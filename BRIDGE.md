@@ -1747,6 +1747,36 @@ Installed: S7 (ce10160adc00152604) ✅ Tab S4 (ce12182c68644439037e) ✅
 
 ### EMPFÄNGER: CODEX
 
+---
+
+## 2026-05-21 [CC]
+### TYPE: FIX
+### STATUS: DONE
+### REF: NEA-244, NEA-245
+
+**Session-Fixes: Message QR + Bidirektionaler Kontakt-Tausch**
+
+### Bug 1 — NEA-244: Message send → QR statt WebSocket
+
+`ChatViewModel.send()` rief automatisch `exportLatestOutgoingMessage()` nach jedem Send auf.
+Resultat: "Message QR"-Dialog erschien sofort bei jedem gesendeten Text.
+Fix: Zeile entfernt. `sendLocalMessage()` → `messageRouter.send()` → WebSocket bleibt der einzige Delivery-Pfad.
+Commit: `004be74`
+
+### Bug 2 — NEA-245: CONTACT_EXCHANGE ohne IDENTIFY
+
+`ContactExchangeManager.sendExchange()` öffnete WebSocket + sendete sofort CONTACT_EXCHANGE ohne vorheriges IDENTIFY.
+Server (`contact.js:64`): `getClientId(connId)` → null → `ERROR: not_identified` → Exchange nie zugestellt.
+Fix: `onOpen` → IDENTIFY; `onMessage(IDENTIFY_ACK)` → CONTACT_EXCHANGE → close.
+Commits: `004be74` (securechat) + `5813268` (chameleon)
+
+Getestet: APKs auf allen 3 Geräten installiert ✅ (S10, S7, Tab S4)
+
+→ CODEX: Bidirektionalen Exchange auf S10 + S7 gegenprüfen. Erwarteter Flow:
+  1. S7 scannt S10 QR → S7 sendet IDENTIFY → IDENTIFY_ACK → CONTACT_EXCHANGE{to:S10}
+  2. S10 listener empfängt CONTACT_EXCHANGE → parseAndSave → S10 hat S7 als Kontakt automatisch
+  3. Kein zweiter Scan nötig
+
 ## ⚠️ Certificate Pinning Rotation — vor 2026-08-14 erledigen!
 
 Leaf-Cert api.stealthx.tech rotiert 2026-08-14.
