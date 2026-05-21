@@ -1,6 +1,8 @@
 package com.stealthx.presentation.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,7 +31,7 @@ data class ConversationItem(
     val unreadCount: Int = 0
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ConversationsScreen(
     state: ConversationUiState,
@@ -37,9 +39,28 @@ fun ConversationsScreen(
     onNewContact: () -> Unit,
     onMyId: () -> Unit,
     onSettings: () -> Unit,
-    onStealthDelete: () -> Unit
+    onStealthDelete: () -> Unit,
+    onDeleteContact: (String) -> Unit = {}
 ) {
     var logoTapCount by remember { mutableIntStateOf(0) }
+    var deleteTarget by remember { mutableStateOf<ConversationItem?>(null) }
+
+    deleteTarget?.let { target ->
+        AlertDialog(
+            onDismissRequest = { deleteTarget = null },
+            title = { Text("Kontakt löschen") },
+            text = { Text("${target.displayName} und alle Nachrichten löschen?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDeleteContact(target.sxId)
+                    deleteTarget = null
+                }) { Text("Löschen", color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = {
+                TextButton(onClick = { deleteTarget = null }) { Text("Abbrechen") }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -93,18 +114,23 @@ fun ConversationsScreen(
                 }
             }
             items(state.items) { item ->
-                ConversationRow(item = item, onClick = { onChatClick(item.sxId) })
+                ConversationRow(
+                    item = item,
+                    onClick = { onChatClick(item.sxId) },
+                    onLongClick = { deleteTarget = item }
+                )
                 HorizontalDivider()
             }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ConversationRow(item: ConversationItem, onClick: () -> Unit) {
+private fun ConversationRow(item: ConversationItem, onClick: () -> Unit, onLongClick: () -> Unit = {}) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .clickable(onClick = onClick)
+        .combinedClickable(onClick = onClick, onLongClick = onLongClick)
         .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically) {
         Icon(Icons.Default.Lock, contentDescription = null,

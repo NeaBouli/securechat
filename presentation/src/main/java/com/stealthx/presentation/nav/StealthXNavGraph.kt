@@ -51,7 +51,8 @@ fun StealthXNavGraph() {
                 onNewContact = { navController.navigate(Screen.NewContact.route) },
                 onMyId = { navController.navigate(Screen.MyId.route) },
                 onSettings = { navController.navigate(Screen.Settings.route) },
-                onStealthDelete = conversationsVm::triggerStealthDelete
+                onStealthDelete = conversationsVm::triggerStealthDelete,
+                onDeleteContact = conversationsVm::deleteContact
             )
         }
         composable(

@@ -30,7 +30,7 @@ data class ConversationUiState(
 @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ConversationsViewModel @Inject constructor(
-    contactRepository: ContactRepository,
+    private val contactRepository: ContactRepository,
     private val messageRepository: MessageRepository,
     private val appPreferences: AppPreferences,
     private val wipeManager: WipeManager,
@@ -60,6 +60,12 @@ class ConversationsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = ConversationUiState()
         )
+
+    fun deleteContact(sxId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            contactRepository.deleteById(sxId)
+        }
+    }
 
     fun triggerStealthDelete() {
         if (!appPreferences.stealthDeleteEnabled || wipeState.value.inProgress) return
