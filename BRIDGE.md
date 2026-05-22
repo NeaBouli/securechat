@@ -2016,3 +2016,27 @@ Konfiguration:
 
 Ab nächstem PR: automatischer Review + Inline-Kommentare.
 Codex kann im PR mit `@coderabbitai` angesprochen werden.
+
+---
+
+## 2026-05-22 [CC]
+### TYPE: FEAT
+### STATUS: DONE
+### Linear: NEA-253
+
+**Disappearing Messages — Live-Countdown in Chat-Bubbles**
+
+Fehlende Kette `expiresAt` durch alle Layer propagiert:
+
+- `DecryptedMessage` (data): `expiresAt: Long? = null` hinzugefügt
+- `MessageEntity.toDecrypted()`: mappt `expiresAt` aus Room-Spalte
+- `ChatMessageUi` (presentation): `expiresAt: Long? = null` hinzugefügt
+- `ChatViewModel` combine-Block: mappt `dm.expiresAt`
+- `MessageBubble` (ChatScreen.kt):
+  - `LaunchedEffect` mit 1s-Tick zählt `remainingMs` herunter
+  - Flame-Icon + formatierter Countdown (`Xd Xh / Xh Xm / Xm Xs / Xs`)
+  - Farbe: normal → cyan < 5min → rot < 1min
+  - Verschwindet wenn `remainingMs <= 0`
+- Deletion-Loop (60s) im ViewModel war bereits vorhanden ✅
+
+Commit: `7861368` | Build: SUCCESS ✅ | S7 ✅ | S4 ✅ | kein Crash ✅

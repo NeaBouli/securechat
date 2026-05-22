@@ -1,8 +1,10 @@
 package com.stealthx.securechat
 
 import android.app.Application
+import android.content.Intent
 import com.stealthx.crypto.SodiumInitializer
 import com.stealthx.data.identity.StealthXIdentity
+import com.stealthx.securechat.service.MessageListenerService
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
@@ -30,5 +32,7 @@ class SecureChatApp : Application() {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+
+        startForegroundService(Intent(this, MessageListenerService::class.java))
     }
 }

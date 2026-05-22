@@ -141,12 +141,13 @@ class ContactExchangeManager @Inject constructor(
             runCatching {
                 val ratchetMessage = RatchetMessageQr.fromQrContent(payload).getOrThrow()
                 messageRepository.get().receiveLocalMessage(fromSxId, ratchetMessage)
-                showMessageNotification(fromSxId)
+                val displayName = contactRepository.getById(fromSxId)?.displayName
+                showMessageNotification(fromSxId, displayName)
             }
         }
     }
 
-    private fun showMessageNotification(fromSxId: String) {
+    private fun showMessageNotification(fromSxId: String, displayName: String?) {
         val channelId = "securechat_messages"
         val nm = context.getSystemService(android.app.NotificationManager::class.java)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -160,12 +161,24 @@ class ContactExchangeManager @Inject constructor(
             }
             nm?.createNotificationChannel(channel)
         }
+
+        val tapIntent = context.packageManager
+            .getLaunchIntentForPackage(context.packageName)
+            ?.apply { flags = android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP }
+        val pendingIntent = android.app.PendingIntent.getActivity(
+            context, fromSxId.hashCode(), tapIntent ?: android.content.Intent(),
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val senderLabel = displayName ?: fromSxId.take(12)
         val notification = androidx.core.app.NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_email)
-            .setContentTitle("New encrypted message")
-            .setContentText("From $fromSxId")  // intentionally vague — never show content
+            .setSmallIcon(android.R.drawable.ic_lock_lock)
+            .setContentTitle(senderLabel)
+            .setContentText("New encrypted message")
             .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setVisibility(androidx.core.app.NotificationCompat.VISIBILITY_SECRET)
             .build()
         nm?.notify(fromSxId.hashCode(), notification)
     }
