@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.identity.StealthXIdentity
 import com.stealthx.data.repository.ContactRepository
 import com.stealthx.data.repository.MessageRepository
@@ -44,6 +45,7 @@ class ChatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val messageRepository: MessageRepository,
     private val contactRepository: ContactRepository,
+    private val contactExchangeManager: ContactExchangeManager,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val contactSxId: String = checkNotNull(savedStateHandle["sxId"])
@@ -96,6 +98,7 @@ class ChatViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             messageRepository.markRead(contactSxId)
+            contactExchangeManager.sendReadReceipt(contactSxId)
             displayName.value = contactRepository.getById(contactSxId)?.displayName ?: contactSxId
         }
         viewModelScope.launch {

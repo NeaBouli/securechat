@@ -173,6 +173,10 @@ class MessageRepository @Inject constructor(
         messageDao.markRead(contactId)
     }
 
+    suspend fun markOutgoingMessagesRead(contactId: String) {
+        messageDao.markOutgoingRead(contactId)
+    }
+
     suspend fun clearMessages(contactId: String) {
         messageDao.deleteForContact(contactId)
     }

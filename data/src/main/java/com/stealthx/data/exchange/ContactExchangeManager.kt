@@ -67,6 +67,17 @@ class ContactExchangeManager @Inject constructor(
     /** Send a raw JSON string on the authenticated listener connection. Returns false if not connected. */
     fun sendRaw(json: String): Boolean = listenerWs?.send(json) ?: false
 
+    fun sendReadReceipt(toSxId: String) {
+        scope.launch {
+            try {
+                listenerWs?.send(JSONObject().apply {
+                    put("type", "READ_RECEIPT")
+                    put("to", toSxId)
+                }.toString())
+            } catch (_: Exception) {}
+        }
+    }
+
     /**
      * After A saves B's contact, A sends its own QR bundle to B via server relay.
      * Fire-and-forget — server routes CONTACT_EXCHANGE to B's listening session.
@@ -108,6 +119,7 @@ class ContactExchangeManager @Inject constructor(
                     when (json.optString("type")) {
                         "CONTACT_EXCHANGE" -> handleContactExchange(json)
                         "MESSAGE" -> handleIncomingMessage(json)
+                        "READ_RECEIPT" -> handleReadReceipt(json)
                     }
                 } catch (_: Exception) {}
             }
@@ -143,6 +155,15 @@ class ContactExchangeManager @Inject constructor(
                 messageRepository.get().receiveLocalMessage(fromSxId, ratchetMessage)
                 val displayName = contactRepository.getById(fromSxId)?.displayName
                 showMessageNotification(fromSxId, displayName)
+            }
+        }
+    }
+
+    private fun handleReadReceipt(json: JSONObject) {
+        val fromSxId = json.optString("from").ifEmpty { return }
+        scope.launch {
+            runCatching {
+                messageRepository.get().markOutgoingMessagesRead(fromSxId)
             }
         }
     }
