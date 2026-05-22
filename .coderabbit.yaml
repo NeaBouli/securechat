@@ -1,0 +1,61 @@
+language: "de-DE"
+
+reviews:
+  profile: "assertive"
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+
+  path_filters:
+    - "!**/BRIDGE.md"
+    - "!**/*.md"
+    - "!**/build/**"
+    - "!**/.gradle/**"
+    - "!**/local.properties"
+
+  path_instructions:
+    - path: "**/*.kt"
+      instructions: |
+        Sicherheitskritische Kotlin/Android App (E2E-Verschlüsselung, XChaCha20-Poly1305, Double Ratchet, X25519/Ed25519).
+        Prüfe auf:
+        - Android API-Kompatibilität: minSdk 26 — keine API > 26 ohne @RequiresApi oder Fallback
+        - Kryptographie: kein Klartext-Fallback, kein fail-open, kein null-Handling bei Crypto-Ergebnissen
+        - Hilt DI: kein zirkulärer Inject, kein @Singleton mit mutableem State ohne Thread-Safety
+        - Coroutines: kein Compose-State aus IO-Dispatcher, kein runBlocking im Main-Thread
+        - Room/SQLCipher: kein raw query ohne Parameter-Binding, keine Migrations ohne Fallback
+        - Jetpack Compose: kein side-effect ohne LaunchedEffect/DisposableEffect, kein remember ohne Key
+        - Secrets: keine hardcodierten Keys, keine Tokens im Code
+        - sx_ID-Format: muss Regex `^sx_[1-9A-HJ-NP-Za-km-z]{9}$` einhalten
+        - WipeManager: bei Stealth-Delete muss exitProcess(0) nach wipeAll() folgen
+
+    - path: "**/crypto/**/*.kt"
+      instructions: |
+        Crypto-Kernmodul — höchste Priorität.
+        Prüfe: korrekte Nonce-Generierung (nie wiederverwendet), AAD-Validierung, paddedLength-Korrektheit,
+        DoubleRatchet Chain-Advancement, X25519 Shared Secret Ableitung, Ed25519 Signatur-Verifikation vor jedem Kontakt-Import.
+
+    - path: "**/MainActivity.kt"
+      instructions: |
+        Auth-Gate der App. Prüfe: BiometricPrompt fail-closed (kein Bypass bei Fehler),
+        Duress-PIN-Handling (wipeAll + exitProcess), AuthState-Übergänge vollständig.
+
+    - path: "**/*Repository*.kt"
+      instructions: |
+        Prüfe: Thread-Safety bei count+insert (TOCTOU), FREE-Tier Kontaktlimit atomisch enforced,
+        TierGate.requiresElite() bei Elite-Features am Sink (nicht nur UI).
+
+    - path: "**/*ViewModel*.kt"
+      instructions: |
+        Prüfe: StateFlow korrekt initialisiert, kein ephemerer remember{}-State für persistente Settings,
+        Error-States vollständig exponiert (kein silent failure).
+
+chat:
+  auto_reply: true
