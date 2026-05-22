@@ -1,18 +1,24 @@
 /*
- * SecureChat — Bidirectional Contact Exchange via WebSocket
+ * SecureChat — Bidirectional Contact Exchange + Message Relay via WebSocket
  * Copyright (C) 2026 Vendetta Labs / StealthX Platform
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
  * When A scans B's QR and saves B as contact, A sends its own
  * bundle to api.stealthx.tech/signal with type=CONTACT_EXCHANGE.
  * B's persistent listener receives it and auto-saves A.
+ *
+ * The same persistent connection is used for real-time message delivery
+ * via type=MESSAGE / type=MESSAGE (incoming).
  */
 package com.stealthx.data.exchange
 
 import android.content.Context
 import com.stealthx.data.identity.PublicKeyBundleQr
+import com.stealthx.data.identity.RatchetMessageQr
 import com.stealthx.data.identity.StealthXIdentity
 import com.stealthx.data.repository.ContactRepository
+import com.stealthx.data.repository.MessageRepository
+import dagger.Lazy
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +39,8 @@ import javax.inject.Singleton
 @Singleton
 class ContactExchangeManager @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val contactRepository: ContactRepository
+    private val contactRepository: ContactRepository,
+    private val messageRepository: Lazy<MessageRepository>
 ) {
     private companion object {
         const val SIGNAL_URL = "wss://api.stealthx.tech/signal"
@@ -46,14 +53,19 @@ class ContactExchangeManager @Inject constructor(
 
     private val listenClient = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
-        .readTimeout(0, TimeUnit.SECONDS)   // no timeout — persistent connection
-        .pingInterval(30, TimeUnit.SECONDS) // keep-alive
+        .readTimeout(0, TimeUnit.SECONDS)
+        .pingInterval(30, TimeUnit.SECONDS)
         .certificatePinner(certPinner)
         .build()
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     @Volatile private var listenerWs: WebSocket? = null
+
+    val isConnected: Boolean get() = listenerWs != null
+
+    /** Send a raw JSON string on the authenticated listener connection. Returns false if not connected. */
+    fun sendRaw(json: String): Boolean = listenerWs?.send(json) ?: false
 
     /**
      * After A saves B's contact, A sends its own QR bundle to B via server relay.
@@ -76,7 +88,7 @@ class ContactExchangeManager @Inject constructor(
 
     /**
      * Open a persistent WebSocket, identify as self, and listen for incoming
-     * CONTACT_EXCHANGE messages. Idempotent — only one listener at a time.
+     * CONTACT_EXCHANGE and MESSAGE frames. Idempotent — only one listener at a time.
      */
     fun startListening() {
         if (listenerWs != null) return
@@ -93,16 +105,9 @@ class ContactExchangeManager @Inject constructor(
             override fun onMessage(ws: WebSocket, text: String) {
                 try {
                     val json = JSONObject(text)
-                    if (json.optString("type") == "CONTACT_EXCHANGE") {
-                        val bundle = json.optString("bundle").ifEmpty { return }
-                        scope.launch {
-                            runCatching {
-                                val parsed = PublicKeyBundleQr.fromQrContent(bundle).getOrThrow()
-                                if (contactRepository.getById(parsed.sxId) == null) {
-                                    contactRepository.addContactBundle(parsed)
-                                }
-                            }
-                        }
+                    when (json.optString("type")) {
+                        "CONTACT_EXCHANGE" -> handleContactExchange(json)
+                        "MESSAGE" -> handleIncomingMessage(json)
                     }
                 } catch (_: Exception) {}
             }
@@ -115,5 +120,53 @@ class ContactExchangeManager @Inject constructor(
                 listenerWs = null
             }
         })
+    }
+
+    private fun handleContactExchange(json: JSONObject) {
+        val bundle = json.optString("bundle").ifEmpty { return }
+        scope.launch {
+            runCatching {
+                val parsed = PublicKeyBundleQr.fromQrContent(bundle).getOrThrow()
+                if (contactRepository.getById(parsed.sxId) == null) {
+                    contactRepository.addContactBundle(parsed)
+                }
+            }
+        }
+    }
+
+    private fun handleIncomingMessage(json: JSONObject) {
+        val fromSxId = json.optString("from").ifEmpty { return }
+        val payload = json.optString("payload").ifEmpty { return }
+        scope.launch {
+            runCatching {
+                val ratchetMessage = RatchetMessageQr.fromQrContent(payload).getOrThrow()
+                messageRepository.get().receiveLocalMessage(fromSxId, ratchetMessage)
+                showMessageNotification(fromSxId)
+            }
+        }
+    }
+
+    private fun showMessageNotification(fromSxId: String) {
+        val channelId = "securechat_messages"
+        val nm = context.getSystemService(android.app.NotificationManager::class.java)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = android.app.NotificationChannel(
+                channelId,
+                "Encrypted Messages",
+                android.app.NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "New message notifications"
+                setShowBadge(true)
+            }
+            nm?.createNotificationChannel(channel)
+        }
+        val notification = androidx.core.app.NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_email)
+            .setContentTitle("New encrypted message")
+            .setContentText("From $fromSxId")  // intentionally vague — never show content
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .build()
+        nm?.notify(fromSxId.hashCode(), notification)
     }
 }

@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.stealthx.data.NfcUriRelay
 import com.stealthx.features.broadcast.BroadcastLockedScreen
 import com.stealthx.features.broadcast.BroadcastScreen
 import com.stealthx.presentation.screens.*
@@ -45,6 +46,13 @@ fun StealthXNavGraph() {
                     kotlin.system.exitProcess(0)
                 }
             }
+            val pendingNfcUri by NfcUriRelay.uri.collectAsState()
+            LaunchedEffect(pendingNfcUri) {
+                pendingNfcUri?.let { uri ->
+                    NfcUriRelay.consume()
+                    navController.navigate(Screen.NewContact.withLink(uri))
+                }
+            }
             ConversationsScreen(
                 state = state,
                 onChatClick = { sxId -> navController.navigate("chat/$sxId") },
@@ -52,7 +60,10 @@ fun StealthXNavGraph() {
                 onMyId = { navController.navigate(Screen.MyId.route) },
                 onSettings = { navController.navigate(Screen.Settings.route) },
                 onStealthDelete = conversationsVm::triggerStealthDelete,
-                onDeleteContact = conversationsVm::deleteContact
+                onDeleteContact = conversationsVm::deleteContact,
+                onRenameContact = conversationsVm::renameContact,
+                onClearMessages = conversationsVm::clearMessages,
+                onTogglePin = conversationsVm::togglePin
             )
         }
         composable(
@@ -68,7 +79,8 @@ fun StealthXNavGraph() {
                 onExportLatest = chatVm::exportLatestMessage,
                 onClearExport = chatVm::clearExportedMessage,
                 onImport = chatVm::importMessage,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onSetDisappearTimer = chatVm::setDisappearTimer
             )
         }
         composable(Screen.MyId.route) {

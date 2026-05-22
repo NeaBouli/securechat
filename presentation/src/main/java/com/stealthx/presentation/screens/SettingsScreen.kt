@@ -33,8 +33,10 @@ fun SettingsScreen(
     val biometricsEnabled by vm.biometricEnabled.collectAsState()
     val stealthDeleteEnabled by vm.stealthDeleteEnabled.collectAsState()
     val activationState by vm.activationState.collectAsState()
+    val duressPin by vm.duressPin.collectAsState()
     val context = LocalContext.current
     var showActivationDialog by remember { mutableStateOf(false) }
+    var showDuressPinDialog by remember { mutableStateOf(false) }
     fun openUrl(url: String) = context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 
     if (showActivationDialog) {
@@ -42,6 +44,50 @@ fun SettingsScreen(
             state = activationState,
             onDismiss = { showActivationDialog = false; vm.resetActivationState() },
             onSubmit = vm::activateCode
+        )
+    }
+
+    if (showDuressPinDialog) {
+        var pinInput by remember { mutableStateOf("") }
+        AlertDialog(
+            onDismissRequest = { showDuressPinDialog = false },
+            title = { Text("Set Duress PIN") },
+            text = {
+                Column {
+                    Text(
+                        "Enter a PIN that, when used to unlock the app, triggers an immediate wipe and shows an empty decoy screen.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = pinInput,
+                        onValueChange = { pinInput = it },
+                        label = { Text("Duress PIN (≥4 digits)") },
+                        keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                            keyboardType = androidx.compose.ui.text.input.KeyboardType.NumberPassword
+                        ),
+                        visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                        singleLine = true
+                    )
+                    if (duressPin != null) {
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            "Current PIN is set. Leave blank to remove it.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    vm.setDuressPin(if (pinInput.isBlank()) null else pinInput)
+                    showDuressPinDialog = false
+                }) { Text(if (pinInput.isBlank() && duressPin != null) "Remove" else "Save") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDuressPinDialog = false }) { Text("Cancel") }
+            }
         )
     }
 
@@ -94,6 +140,11 @@ fun SettingsScreen(
             SectionHeader("Security")
             ToggleRow(Icons.Default.Fingerprint, "Biometric Unlock", biometricsEnabled) { vm.setBiometricEnabled(it) }
             ToggleRow(Icons.Default.Shield, "STEALTH-DELETE (5-tap)", stealthDeleteEnabled, "Tap the lock icon in the chat list 5× to wipe") { vm.setStealthDeleteEnabled(it) }
+            ClickRow(
+                Icons.Default.Warning,
+                "Duress PIN",
+                if (duressPin != null) "Active — fake PIN triggers wipe" else "Not set — tap to configure"
+            ) { showDuressPinDialog = true }
 
             // Free features
             SectionHeader("Free")
@@ -116,8 +167,11 @@ fun SettingsScreen(
             GatedFeatureRow(Icons.Default.Send, "Emergency Broadcast", "Encrypted alert to all contacts", tier, IfrTier.ELITE, onIfrClick, onBroadcastClick, comingSoon = true)
 
             SectionHeader("Access")
-            ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Lock tokens for lifetime access", onIfrClick)
-            ClickRow(Icons.Default.Key, "Activation Code", "Enter code to unlock Pro or Elite tier") { showActivationDialog = true }
+            ClickRow(Icons.Default.CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · pay once, no subscription") {
+                context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://securechat.stealthx.tech/#lifetime")))
+            }
+            ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Lock IFR tokens on-chain for lifetime access", onIfrClick)
+            ClickRow(Icons.Default.Key, "Activation Code", "Enter code received after purchase") { showActivationDialog = true }
 
             SectionHeader("Help")
             ClickRow(Icons.Default.MenuBook, "User Manual", "How SecureChat works + first setup") {

@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -127,13 +129,49 @@ fun NewContactScreen(
                     )
                 }
             )
+            val nfcAdapter = remember { android.nfc.NfcAdapter.getDefaultAdapter(context) }
+            var nfcListening by remember { mutableStateOf(false) }
+
             OptionCard(
                 icon = Icons.Default.Nfc,
                 title = "NFC Tap",
-                subtitle = "Coming after QR bundle import",
-                enabled = false,
-                onClick = {}
+                subtitle = if (nfcAdapter != null) "Tap devices together to exchange" else "NFC not available on this device",
+                enabled = nfcAdapter != null && !limitState.isAtLimit,
+                onClick = {
+                    if (nfcAdapter != null) {
+                        nfcListening = !nfcListening
+                    }
+                }
             )
+
+            DisposableEffect(nfcListening) {
+                if (nfcListening) {
+                    val activity = context as? android.app.Activity ?: return@DisposableEffect onDispose {}
+                    val pendingIntent = android.app.PendingIntent.getActivity(
+                        context, 0,
+                        android.content.Intent(context, activity::class.java).addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                        android.app.PendingIntent.FLAG_MUTABLE
+                    )
+                    val filters = arrayOf(android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED))
+                    nfcAdapter!!.enableForegroundDispatch(activity, pendingIntent, filters, null)
+                    onDispose { runCatching { nfcAdapter.disableForegroundDispatch(activity) } }
+                } else {
+                    onDispose {}
+                }
+            }
+
+            if (nfcListening) {
+                Card(modifier = Modifier.fillMaxWidth()) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            "NFC active — hold devices together",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    }
+                }
+            }
             OptionCard(
                 icon = Icons.Default.Edit,
                 title = "Paste QR content",

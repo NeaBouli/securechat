@@ -11,6 +11,7 @@ import com.stealthx.data.repository.IfrTierRepositoryImpl
 import com.stealthx.domain.repository.IfrTierRepository
 import com.stealthx.domain.tier.TierGate
 import com.stealthx.domain.tier.TierGateImpl
+import com.stealthx.data.transport.SignalingRelayTransport
 import com.stealthx.domain.transport.MessageRouter
 import com.stealthx.security.KeystoreManager
 import com.stealthx.transport.LocalTransport
@@ -62,8 +63,14 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideMessageRouter(localTransport: LocalTransport): MessageRouter =
-        MessageRouter(mapOf<TransportType, RelayTransport>(TransportType.LOCAL to localTransport))
+    fun provideMessageRouter(
+        signalingTransport: SignalingRelayTransport,
+        localTransport: LocalTransport
+    ): MessageRouter =
+        MessageRouter(mapOf<TransportType, RelayTransport>(
+            TransportType.TOR_RELAY to signalingTransport,
+            TransportType.LOCAL to localTransport
+        ))
 
     @Provides
     @Singleton

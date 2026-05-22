@@ -52,6 +52,9 @@ class AppPreferences @Inject constructor(
         private const val KEY_IFR_VERIFICATION_METHOD = "ifr_verification_method"
         private const val KEY_BIOMETRIC_ENABLED = "biometric_enabled"
         private const val KEY_STEALTH_DELETE_ENABLED = "stealth_delete_enabled"
+        private const val KEY_PINNED_CONTACTS = "pinned_contacts"
+        private const val KEY_DISAPPEAR_TIMER_PREFIX = "disappear_timer_"
+        private const val KEY_DURESS_PIN = "duress_pin"
     }
 
     var isOnboardingDone: Boolean
@@ -77,6 +80,26 @@ class AppPreferences @Inject constructor(
     var stealthDeleteEnabled: Boolean
         get() = prefs.getBoolean(KEY_STEALTH_DELETE_ENABLED, true)
         set(value) = prefs.edit().putBoolean(KEY_STEALTH_DELETE_ENABLED, value).apply()
+
+    var pinnedContactIds: Set<String>
+        get() = prefs.getStringSet(KEY_PINNED_CONTACTS, emptySet()) ?: emptySet()
+        set(value) = prefs.edit().putStringSet(KEY_PINNED_CONTACTS, value).apply()
+
+    fun getDisappearTimer(contactId: String): Long? {
+        val v = prefs.getLong("${KEY_DISAPPEAR_TIMER_PREFIX}${contactId}", -1L)
+        return if (v < 0) null else v
+    }
+
+    fun setDisappearTimer(contactId: String, durationMs: Long?) {
+        val key = "${KEY_DISAPPEAR_TIMER_PREFIX}${contactId}"
+        if (durationMs == null) prefs.edit().remove(key).apply()
+        else prefs.edit().putLong(key, durationMs).apply()
+    }
+
+    var duressPin: String?
+        get() = prefs.getString(KEY_DURESS_PIN, null)
+        set(value) = if (value == null) prefs.edit().remove(KEY_DURESS_PIN).apply()
+                     else prefs.edit().putString(KEY_DURESS_PIN, value).apply()
 
     fun clear() {
         prefs.edit().clear().apply()

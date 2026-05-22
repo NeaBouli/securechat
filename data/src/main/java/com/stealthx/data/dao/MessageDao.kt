@@ -40,4 +40,13 @@ interface MessageDao {
 
     @Query("UPDATE messages SET delivery_status = 'READ' WHERE contact_id = :contactId AND direction = 'INCOMING'")
     suspend fun markRead(contactId: String)
+
+    @Query("DELETE FROM messages WHERE contact_id = :contactId")
+    suspend fun deleteForContact(contactId: String)
+
+    @Query("DELETE FROM messages WHERE expires_at IS NOT NULL AND expires_at < :now")
+    suspend fun deleteExpired(now: Long = System.currentTimeMillis())
+
+    @Query("UPDATE messages SET expires_at = :expiresAt WHERE contact_id = :contactId AND direction = 'INCOMING' AND expires_at IS NULL")
+    suspend fun setExpiryForContact(contactId: String, expiresAt: Long)
 }

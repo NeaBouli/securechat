@@ -10,6 +10,7 @@ import com.stealthx.data.dao.MessageDao
 import com.stealthx.data.entity.ContactKeyEntity
 import com.stealthx.data.entity.MessageEntity
 import com.stealthx.data.identity.RatchetMessageQr
+import com.stealthx.data.prefs.AppPreferences
 import com.stealthx.domain.transport.MessageRouter
 import com.stealthx.shared.model.EncryptedPayload
 import com.stealthx.shared.model.RatchetMessage
@@ -27,7 +28,8 @@ data class DecryptedMessage(
     val text: String,
     val isOutgoing: Boolean,
     val timestamp: Long,
-    val deliveryStatus: String
+    val deliveryStatus: String,
+    val expiresAt: Long? = null
 )
 
 data class ConversationSummary(
@@ -42,7 +44,8 @@ class MessageRepository @Inject constructor(
     private val messageDao: MessageDao,
     private val contactRepository: ContactRepository,
     private val chatSessionRepository: ChatSessionRepository,
-    private val messageRouter: MessageRouter
+    private val messageRouter: MessageRouter,
+    private val appPreferences: AppPreferences
 ) {
     fun observeMessages(contactId: String): Flow<List<DecryptedMessage>> =
         messageDao.observeForContact(contactId).map { messages ->
@@ -81,6 +84,8 @@ class MessageRepository @Inject constructor(
         val payload = ChameleonCrypto.encrypt(plaintext.toByteArray(Charsets.UTF_8), key, aad)
         ChameleonCrypto.wipeBytes(key)
 
+        val disappearDurationMsOut = appPreferences.getDisappearTimer(contactId)
+        val expiresAtOut = disappearDurationMsOut?.let { sentAt + it }
         val entity = MessageEntity(
             id = UUID.randomUUID().toString(),
             contactId = contactId,
@@ -101,7 +106,8 @@ class MessageRepository @Inject constructor(
             ratchetAad = outbound.message.payload.aad,
             ratchetPaddedLength = outbound.message.payload.paddedLength,
             ratchetAlgorithm = outbound.message.payload.algorithm,
-            ratchetPayloadVersion = outbound.message.payload.version
+            ratchetPayloadVersion = outbound.message.payload.version,
+            expiresAt = expiresAtOut
         )
         messageDao.insert(entity)
         return entity.toDecrypted(contact)
@@ -134,6 +140,8 @@ class MessageRepository @Inject constructor(
             ChameleonCrypto.wipeBytes(plaintextBytes)
         }
 
+        val disappearDurationMsIn = appPreferences.getDisappearTimer(contactId)
+        val expiresAtIn = disappearDurationMsIn?.let { receivedAt + it }
         val entity = MessageEntity(
             id = UUID.randomUUID().toString(),
             contactId = contactId,
@@ -154,7 +162,8 @@ class MessageRepository @Inject constructor(
             ratchetAad = message.payload.aad,
             ratchetPaddedLength = message.payload.paddedLength,
             ratchetAlgorithm = message.payload.algorithm,
-            ratchetPayloadVersion = message.payload.version
+            ratchetPayloadVersion = message.payload.version,
+            expiresAt = expiresAtIn
         )
         messageDao.insert(entity)
         return entity.toDecrypted(contact).copy(text = plaintext)
@@ -162,6 +171,20 @@ class MessageRepository @Inject constructor(
 
     suspend fun markRead(contactId: String) {
         messageDao.markRead(contactId)
+    }
+
+    suspend fun clearMessages(contactId: String) {
+        messageDao.deleteForContact(contactId)
+    }
+
+    suspend fun setDisappearTimer(contactId: String, durationMs: Long?) {
+        appPreferences.setDisappearTimer(contactId, durationMs)
+    }
+
+    fun getDisappearTimer(contactId: String): Long? = appPreferences.getDisappearTimer(contactId)
+
+    suspend fun deleteExpiredMessages() {
+        messageDao.deleteExpired()
     }
 
     private fun MessageEntity.toDecrypted(contact: ContactKeyEntity?): DecryptedMessage {
@@ -176,7 +199,8 @@ class MessageRepository @Inject constructor(
             text = text,
             isOutgoing = direction == DIRECTION_OUTGOING,
             timestamp = sentAt,
-            deliveryStatus = deliveryStatus
+            deliveryStatus = deliveryStatus,
+            expiresAt = expiresAt
         )
     }
 

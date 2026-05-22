@@ -66,7 +66,9 @@ data class MessageEntity(
     @ColumnInfo(name = "ratchet_algorithm")
     val ratchetAlgorithm: String? = null,
     @ColumnInfo(name = "ratchet_payload_version")
-    val ratchetPayloadVersion: Int? = null
+    val ratchetPayloadVersion: Int? = null,
+    @ColumnInfo(name = "expires_at", defaultValue = "NULL")
+    val expiresAt: Long? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

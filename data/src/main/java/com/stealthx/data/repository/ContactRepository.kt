@@ -72,6 +72,11 @@ class ContactRepository @Inject constructor(
 
     suspend fun deleteById(id: String) = contactKeyDao.deleteById(id)
 
+    suspend fun renameContact(id: String, newName: String) {
+        require(newName.isNotBlank()) { "Name cannot be blank" }
+        contactKeyDao.updateDisplayName(id, newName.trim())
+    }
+
     suspend fun count(): Int = contactKeyDao.count()
 
     private fun validateBundle(bundle: PublicKeyBundle) {

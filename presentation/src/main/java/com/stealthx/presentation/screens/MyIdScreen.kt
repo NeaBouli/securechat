@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Nfc
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -147,6 +148,36 @@ fun MyIdScreen(onBack: () -> Unit) {
                 Icon(Icons.Default.Share, null)
                 Spacer(Modifier.width(8.dp))
                 Text("Invite via Secure Link")
+            }
+
+            // NFC share button
+            val nfcAdapter = remember { android.nfc.NfcAdapter.getDefaultAdapter(context) }
+            if (nfcAdapter != null && qrContent != null) {
+                var nfcReady by remember { mutableStateOf(false) }
+                Spacer(Modifier.height(16.dp))
+                OutlinedButton(
+                    onClick = { nfcReady = !nfcReady },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Default.Nfc, null)
+                    Spacer(Modifier.width(8.dp))
+                    Text(if (nfcReady) "NFC ready — hold devices together" else "Share via NFC Tap")
+                }
+                if (nfcReady) {
+                    DisposableEffect(Unit) {
+                        val activity = context as? android.app.Activity ?: return@DisposableEffect onDispose {}
+                        val pendingIntent = android.app.PendingIntent.getActivity(
+                            context, 0,
+                            android.content.Intent(context, activity::class.java).addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                            android.app.PendingIntent.FLAG_MUTABLE
+                        )
+                        val filters = arrayOf(android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED))
+                        nfcAdapter.enableForegroundDispatch(activity, pendingIntent, filters, null)
+                        onDispose {
+                            runCatching { nfcAdapter.disableForegroundDispatch(activity) }
+                        }
+                    }
+                }
             }
         }
     }

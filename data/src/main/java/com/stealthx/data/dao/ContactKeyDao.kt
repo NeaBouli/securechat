@@ -41,4 +41,7 @@ interface ContactKeyDao {
 
     @Query("DELETE FROM contact_keys WHERE id = :id")
     suspend fun deleteById(id: String)
+
+    @Query("UPDATE contact_keys SET display_name = :displayName WHERE id = :id")
+    suspend fun updateDisplayName(id: String, displayName: String)
 }

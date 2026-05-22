@@ -43,6 +43,9 @@ class SettingsViewModel @Inject constructor(
     private val _activationState = MutableStateFlow<ActivationState>(ActivationState.Idle)
     val activationState: StateFlow<ActivationState> = _activationState.asStateFlow()
 
+    private val _duressPin = MutableStateFlow(prefs.duressPin)
+    val duressPin: StateFlow<String?> = _duressPin.asStateFlow()
+
     fun setBiometricEnabled(enabled: Boolean) {
         _biometricEnabled.value = enabled
         viewModelScope.launch(Dispatchers.IO) { prefs.biometricEnabled = enabled }
@@ -85,5 +88,10 @@ class SettingsViewModel @Inject constructor(
 
     fun resetActivationState() {
         _activationState.value = ActivationState.Idle
+    }
+
+    fun setDuressPin(pin: String?) {
+        prefs.duressPin = pin
+        _duressPin.value = pin
     }
 }

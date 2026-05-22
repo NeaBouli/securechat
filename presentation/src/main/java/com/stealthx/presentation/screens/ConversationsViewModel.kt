@@ -37,6 +37,7 @@ class ConversationsViewModel @Inject constructor(
     private val contactExchangeManager: ContactExchangeManager
 ) : ViewModel() {
     private val wipeState = MutableStateFlow(WipeState())
+    private val pinnedIds = MutableStateFlow(appPreferences.pinnedContactIds)
 
     init {
         contactExchangeManager.startListening()
@@ -44,27 +45,55 @@ class ConversationsViewModel @Inject constructor(
 
     val uiState: StateFlow<ConversationUiState> = combine(
         contactRepository.observeAll()
-        .flatMapLatest { contacts ->
-            if (contacts.isEmpty()) {
-                flowOf(ConversationUiState())
-            } else {
-                conversationState(contacts)
-            }
-        },
-        wipeState
-    ) { state, wipe ->
-        state.copy(wipeInProgress = wipe.inProgress, wipeCompleted = wipe.completed)
-    }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = ConversationUiState()
+            .flatMapLatest { contacts ->
+                if (contacts.isEmpty()) flowOf(emptyList())
+                else conversationItems(contacts)
+            },
+        wipeState,
+        pinnedIds
+    ) { items, wipe, pinned ->
+        val sorted = items
+            .map { it.copy(isPinned = it.sxId in pinned) }
+            .sortedWith(
+                compareByDescending<ConversationItem> { it.isPinned }
+                    .thenByDescending { it.timestamp ?: Long.MIN_VALUE }
+                    .thenBy { it.displayName.lowercase() }
+            )
+        ConversationUiState(
+            items = sorted,
+            wipeInProgress = wipe.inProgress,
+            wipeCompleted = wipe.completed
         )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = ConversationUiState()
+    )
 
     fun deleteContact(sxId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             contactRepository.deleteById(sxId)
         }
+    }
+
+    fun renameContact(sxId: String, newName: String) {
+        if (newName.isBlank()) return
+        viewModelScope.launch(Dispatchers.IO) {
+            contactRepository.renameContact(sxId, newName)
+        }
+    }
+
+    fun clearMessages(sxId: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            messageRepository.clearMessages(sxId)
+        }
+    }
+
+    fun togglePin(sxId: String) {
+        val current = pinnedIds.value.toMutableSet()
+        if (sxId in current) current.remove(sxId) else current.add(sxId)
+        appPreferences.pinnedContactIds = current
+        pinnedIds.value = current
     }
 
     fun triggerStealthDelete() {
@@ -76,28 +105,22 @@ class ConversationsViewModel @Inject constructor(
         }
     }
 
-    private fun conversationState(contacts: List<ContactKeyEntity>): Flow<ConversationUiState> =
+    private fun conversationItems(contacts: List<ContactKeyEntity>): Flow<List<ConversationItem>> =
         combine(
             flowOf(contacts),
             messageRepository.observeConversationSummaries(contacts)
         ) { contactList, summaries ->
             val summaryByContact = summaries.associateBy { it.contactId }
-            ConversationUiState(
-                items = contactList.map { contact ->
-                    val summary = summaryByContact[contact.id]
-                    ConversationItem(
-                        sxId = contact.id,
-                        displayName = contact.displayName.ifBlank { contact.id },
-                        lastMessage = summary?.lastMessage ?: "No messages yet",
-                        timestamp = summary?.timestamp,
-                        unreadCount = summary?.unreadCount ?: 0
-                    )
-                }
-                    .sortedWith(
-                        compareByDescending<ConversationItem> { it.timestamp ?: Long.MIN_VALUE }
-                            .thenBy { it.displayName.lowercase() }
-                    )
-            )
+            contactList.map { contact ->
+                val summary = summaryByContact[contact.id]
+                ConversationItem(
+                    sxId = contact.id,
+                    displayName = contact.displayName.ifBlank { contact.id },
+                    lastMessage = summary?.lastMessage ?: "No messages yet",
+                    timestamp = summary?.timestamp,
+                    unreadCount = summary?.unreadCount ?: 0
+                )
+            }
         }
 
     private data class WipeState(
