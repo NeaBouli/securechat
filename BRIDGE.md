@@ -4,6 +4,39 @@
 ---
 
 ## 2026-05-21 [CC]
+### TYPE: FIX
+### STATUS: DEPLOYED — awaiting live test
+### REF: NEA-246
+
+**Message Delivery via Signaling WS + Chat Contact Name**
+
+**Root Cause (Message Delivery)**:
+`DataModule.provideMessageRouter()` bound only `LocalTransport` — queues in-memory, never transmits.
+No `SignalingRelayTransport` existed.
+
+**Fixes**:
+1. New `data/.../transport/SignalingRelayTransport.kt` — implements `RelayTransport` with `TransportType.TOR_RELAY`
+   - Reuses `ContactExchangeManager`'s authenticated `listenerWs` via `sendRaw(json)`
+   - Serializes `RatchetMessage` → `stealthx://msg?...` URI via `RatchetMessageQr.toQrContent()`
+   - Sends `{type:"MESSAGE", to: sxId, payload: uri}` over WS
+2. `ContactExchangeManager`: 
+   - Added `Lazy<MessageRepository>` (breaks DI cycle: `ContactExchangeManager` → `MessageRepository` → `MessageRouter` → `SignalingRelayTransport` → `ContactExchangeManager`)
+   - Added `isConnected: Boolean` property
+   - Added `sendRaw(json: String): Boolean`
+   - Handles incoming `MESSAGE` frames → `RatchetMessageQr.fromQrContent()` → `messageRepository.get().receiveLocalMessage(from, message)`
+3. `DataModule`: Updated `provideMessageRouter()` to include `SignalingRelayTransport` at `TOR_RELAY` priority
+4. Server `contact.js`: Added `MESSAGE` handler — routes opaque `stealthx://msg` payload to recipient's WS, logs `[MESSAGE] A -> B ✓ delivered`
+
+**Chat Contact Name**:
+5. `ChatUiState`: Added `displayName: String` field
+6. `ChatViewModel`: Injects `ContactRepository`, loads `displayName` via `getById()` in `init`
+7. `ChatScreen` TopAppBar: Shows `displayName` as title, `contactSxId` as subtitle
+
+Build: ✅ | Installed: S10 ✅ S7 ✅ Tab S4 ✅ | Server: pm2 restart signaling ✅
+
+---
+
+## 2026-05-21 [CC]
 ### TYPE: FEAT
 ### STATUS: DONE
 ### REF: NEA-213
@@ -1782,3 +1815,204 @@ Getestet: APKs auf allen 3 Geräten installiert ✅ (S10, S7, Tab S4)
 Leaf-Cert api.stealthx.tech rotiert 2026-08-14.
 ActivationCodeClient.kt Pin muss erneuert werden.
 Anleitung: stealth/docs/agent-bridge/BRIDGE.md
+
+---
+
+## 2026-05-22 [CC]
+### TYPE: FIX + FEAT
+
+**Session: Feature-Completion + Crash-Fix**
+
+### Compile-Fehler behoben:
+1. `StealthXNavGraph.kt` — Zirkel-Import auf `MainActivity` aus `:presentation` → `NfcUriRelay`-Singleton im `:data`-Modul als Relay (cc: `NfcUriRelay.kt`)
+2. `MyIdScreen.kt` — `setNdefPushMessage()` (Android Beam, seit API 29 entfernt) → entfernt; `enableForegroundDispatch` bleibt für Empfang
+
+### Features implementiert:
+- **Duress PIN Lockscreen**: `MainActivity` zeigt bei `AuthState.Locked` vollständige Lock-UI mit "Enter PIN" → AlertDialog → bei Treffer: `WipeManager.wipeAll()` + `exitProcess(0)`
+- **LocalBroadcastManager**: Sendet jetzt tatsächlich via `MessageRepository.sendLocalMessage()` an alle Kontakte (statt nur zu zählen); `Success/PartialSuccess/Failure` korrekt
+- **NFC NewContactScreen**: NFC-Karte aktiviert foreground dispatch (war disabled mit Stub-Text)
+- **NFC MyIdScreen**: NPE gefixt (`context as? Activity ?: return@DisposableEffect onDispose {}`)
+- **POST_NOTIFICATIONS**: Manifest + Runtime-Request (Android 13+)
+- **NfcUriRelay**: Sauberer Singleton in `:data` für NFC-URI-Routing Activity→NavGraph
+
+### Test:
+- `assembleInternalRelease` BUILD SUCCESSFUL ✅
+- Beide Geräte (S7 ce10160adc00152604, S4 ce12182c68644439037e) installiert + gestartet ✅
+- Kein FATAL/AndroidRuntime aus `com.stealthx.securechat` in Logcat ✅
+- Alle Screens navigierbar ohne Crash ✅
+
+→ CODEX: Bitte testen: Duress PIN (Settings → setzen → Lockscreen → Enter PIN → Wipe), Broadcast-Send (Elite-Tier), NFC-Tausch zwischen S7 und S4.
+
+---
+
+## 2026-05-22 [CC]
+### TYPE: FIX + FEAT + DESIGN
+### STATUS: DEPLOYED — S7 ✅ S4 ✅ kein Crash
+### REF: BUG-029, NEA-250, NEA-251, NEA-252
+
+---
+
+### VOLLSTÄNDIGER SESSION-REPORT 2026-05-22
+
+---
+
+#### BUG-029 — CRASH FIX: S7 (Android 8.0 / API 26) — NoSuchMethodError Arrays.compare
+
+**Root Cause:**
+`ChatViewModel.computeSafetyNumber()` nutzte `java.util.Arrays.compare(byte[], byte[])`.
+Diese Methode existiert erst ab Android API 33. S7 läuft API 26 → `NoSuchMethodError` bei jedem Chat-Öffnen → sofortiger Crash.
+
+**Fix (`ChatViewModel.kt`):**
+```kotlin
+// ALT (crash auf API < 33):
+val combined = if (java.util.Arrays.compare(myKey, theirKey) <= 0) myKey + theirKey else theirKey + myKey
+
+// NEU (API 1+ kompatibel):
+val cmp = myKey.zip(theirKey)
+    .map { (a, b) -> (a.toInt() and 0xFF).compareTo(b.toInt() and 0xFF) }
+    .firstOrNull { it != 0 } ?: 0
+val combined = if (cmp <= 0) myKey + theirKey else theirKey + myKey
+```
+
+**Validierung:** assembleInternalRelease ✅ | S7 kein Crash ✅ | S4 kein Crash ✅
+
+---
+
+#### NEA-250 — FEAT: Stripe / Card-Kauf in IFRUnlockScreen + SettingsScreen
+
+**Anforderung (Gio):** Kauf-Option per Karte (Stripe) direkt in der App — einfachster Weg: Link zur Website-Kaufseite, welche Stripe-Checkout bereits einrichtet hat.
+
+**Umsetzung:**
+
+`IFRUnlockScreen.kt` — komplett überarbeitet:
+- Title: "Upgrade" (war "IFR Token Unlock")
+- Neue `Surface`-Karte "Lifetime Access — One-Time Payment":
+  - Pro-Button (€9, `ScGreen`-Outline) + Elite-Button (€19, `ScGold`-Outline)
+  - "Buy with Card (Stripe)" Button — Stripe-Lila `Color(0xFF635BFF)`, öffnet `https://securechat.stealthx.tech/#lifetime`
+  - Hinweis: "You will receive an activation code by email. Enter it in Settings → Activation Code."
+- Trennzeile "OR unlock with IFR tokens" → bestehender `IFRUnlockSheet` darunter
+
+`SettingsScreen.kt` — Access-Sektion:
+- Neue erste Zeile: `ClickRow(CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · pay once, no subscription")` → `https://securechat.stealthx.tech/#lifetime`
+- IFR-Zeile: Subtitle geändert zu "Lock IFR tokens on-chain for lifetime access"
+- Activation Code: Subtitle geändert zu "Enter code received after purchase"
+
+Kein Backend-Flow in der App nötig — Stripe-Checkout läuft auf der Website, Nutzer erhält Aktivierungscode per E-Mail und gibt diesen in Settings → Activation Code ein.
+
+---
+
+#### NEA-251 — DESIGN: ConversationsScreen Dark Wine-Red + Activity-Green
+
+**Anforderung (Gio):** Dunkler weinroter schimmernder Hintergrund. Chat-Items grün hinterlegt, Helligkeit proportional zur Nutzungsintensität (am meisten genutzt = am hellsten).
+
+**Palette-Update (`StealthXTheme.kt`):**
+```kotlin
+val ScBg          = Color(0xFF0D0208)  // dark wine-red black
+val ScSurface     = Color(0xFF160509)  // deep crimson surface
+val ScSurface2    = Color(0xFF1E0810)  // card surface
+val ScSurface3    = Color(0xFF280C16)  // elevated surface
+val ScBorder      = Color(0xFF3D1522)  // subtle wine border
+val ScText        = Color(0xFFEDD8DC)  // warm white
+val ScTextDim     = Color(0xFF8A6870)  // muted rose
+val ScWineShimmer = Color(0xFF3D0A18)  // shimmer accent (NEU)
+// ScGreen, ScGold, ScCyan, ScRed unverändert
+```
+
+**Hintergrund (`ConversationsScreen.kt`):**
+```kotlin
+val shimmerBrush = Brush.linearGradient(
+    colors = listOf(ScBg, ScWineShimmer, ScBg, ScWineShimmer.copy(alpha = 0.6f), ScBg),
+    start = Offset(0f, 0f),
+    end = Offset(1200f, 1800f)
+)
+// Box(Modifier.fillMaxSize().background(shimmerBrush)) wraps LazyColumn
+// Scaffold containerColor = Color.Transparent
+// TopAppBar containerColor = ScBg
+```
+
+**Activity-basiertes Grün pro Chat-Item:**
+```kotlin
+private fun recencyAlpha(timestamp: Long?): Float = when {
+    timestamp == null             -> 0.04f
+    ageMs < 3_600_000L            -> 0.30f  // < 1 Stunde  (hellstes Grün)
+    ageMs < 86_400_000L           -> 0.20f  // < 1 Tag
+    ageMs < 604_800_000L          -> 0.12f  // < 1 Woche
+    else                          -> 0.05f  // älter (dimmstes Grün)
+}
+// ConversationRow Background:
+Brush.linearGradient(listOf(ScGreen.copy(alpha = greenAlpha), ScGreen.copy(alpha = greenAlpha * 0.5f)))
+// Pinned: +0.08f zusätzliches Alpha
+```
+
+---
+
+#### NEA-252 — FEAT: Stealth Delete sichtbar machen
+
+**Problem (Gio):** "alarm delet button ist nirgendwo zu sehen" — War nur ein kleines Lock-Icon in der TopBar das man 5× tippen musste, ohne jeglichen Hinweis.
+
+**Lösung:**
+1. **Lock-Icon TopAppBar**: Farbe jetzt `ScGreen.copy(0.85f)` im Ruhezustand, wechselt zu `ScRed` nach erstem Tap
+2. **Badge mit Countdown**: `BadgedBox` zeigt rotes Badge mit Anzahl verbleibender Taps (`"4"`, `"3"`, ...) sobald Tap-Sequenz beginnt
+3. **Dauerhafte Zeile am Listenende** (immer sichtbar, auch bei leerer Liste):
+   ```
+   [DeleteForever-Icon (rot)] STEALTH DELETE — tap 🔒 5×  (0/5)
+   ```
+   Live-Zähler aktualisiert sich beim Tippen des Lock-Icons. Die ganze Zeile ist selbst tappbar und zählt mit.
+
+---
+
+### ZUSAMMENFASSUNG ALLE SESSIONS 2026-05-22
+
+| # | Typ | Beschreibung | Status |
+|---|-----|-------------|--------|
+| BUG-029 | Crash Fix | `Arrays.compare` API 33 → Kotlin-Fallback API 1+ | ✅ DONE |
+| - | Crash Fix | `MyIdScreen.kt` `setNdefPushMessage` (Android Beam) entfernt | ✅ DONE |
+| - | Arch Fix | `NfcUriRelay` Singleton in `:data` — kein Zirkel-Import mehr | ✅ DONE |
+| - | Security | Duress PIN Lockscreen in `MainActivity` | ✅ DONE |
+| - | Feature | `LocalBroadcastManager` sendet jetzt wirklich via `MessageRepository` | ✅ DONE |
+| - | Feature | NFC `NewContactScreen` foreground dispatch aktiv | ✅ DONE |
+| - | Feature | `POST_NOTIFICATIONS` Runtime-Request (Android 13+) | ✅ DONE |
+| NEA-250 | Feature | Stripe/Card-Kauf in `IFRUnlockScreen` + `SettingsScreen` | ✅ DONE |
+| NEA-251 | Design | Dark Wine-Red Shimmer + Activity-Green pro Chat-Item | ✅ DONE |
+| NEA-252 | Feature | Stealth Delete: Badge-Countdown + dauerhafte Anzeige | ✅ DONE |
+
+**Build:** `assembleInternalRelease` BUILD SUCCESSFUL ✅
+**Deployed:** S7 (ce10160adc00152604) ✅ | S4 (ce12182c68644439037e) ✅
+**Crashes:** keine FATAL EXCEPTION in Logcat auf beiden Geräten ✅
+
+---
+
+### OFFENE PUNKTE — für Codex
+
+1. **Cert-Rotation** ⚠️ vor 2026-08-14: `ActivationCodeClient.kt` Pin erneuern (Leaf-Cert api.stealthx.tech läuft ab)
+2. **Bidirektionaler Kontakt-Exchange live testen**: S7 ↔ S4 QR-Scan → automatischer Gegen-Exchange via WebSocket (NEA-245)
+3. **BroadcastManager Phase 2**: Relay Transport, per-recipient Encryption, Delivery Status (Q3 2026)
+4. **BIP39 Seed Phrase Cross-App Identity** (NEA-209, Beta-Scope)
+
+### EMPFÄNGER: CODEX
+
+---
+
+## 2026-05-22 [CC]
+### TYPE: CHORE
+### STATUS: DONE
+### EMPFÄNGER: CODEX|GIO
+
+**CodeRabbit AI Code Review — aktiviert auf NeaBouli/securechat**
+
+GitHub App `coderabbitai` installiert auf NeaBouli-Organisation (Gio autorisiert).
+`.coderabbit.yaml` committed + gepusht (commit `22d6518`).
+
+Konfiguration:
+- Sprache: Deutsch
+- Profil: assertive (meldet alle Findings, nicht nur kritische)
+- Auto-Review auf jedem PR gegen `main`
+- Pfad-spezifische Instruktionen:
+  - `**/*.kt` — minSdk 26 Compat, Crypto fail-closed, Hilt DI, Coroutine Safety, sx_ID Regex, Room/SQLCipher
+  - `**/crypto/**` — Nonce-Einzigartigkeit, AAD, paddedLength, DoubleRatchet, Ed25519 vor Kontakt-Import
+  - `**/MainActivity.kt` — BiometricPrompt fail-closed, Duress PIN, AuthState-Übergänge
+  - `**/*Repository*.kt` — TOCTOU, atomischer Tier-Check, TierGate am Sink
+  - `**/*ViewModel*.kt` — StateFlow-Init, kein ephemerer State, Error-States vollständig
+
+Ab nächstem PR: automatischer Review + Inline-Kommentare.
+Codex kann im PR mit `@coderabbitai` angesprochen werden.
