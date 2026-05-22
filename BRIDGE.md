@@ -3,6 +3,62 @@
 
 ---
 
+## 2026-05-22 [CC]
+### TYPE: FEAT
+### STATUS: DONE — DEPLOYED
+### REF: NEA-260
+
+**Read Receipts — Full E2E Implementation**
+
+Flow: User öffnet Chat → `markRead(contactId)` → `sendReadReceipt(contactId)` via WS
+→ Server routet `READ_RECEIPT` zum Sender → Sender empfängt Frame → `markOutgoingMessagesRead(fromSxId)` → UI zeigt ✓✓ blau (ScCyan)
+
+**Geänderte Dateien:**
+1. `data/dao/MessageDao.kt`: `markOutgoingRead(contactId)` — UPDATE OUTGOING messages to READ
+2. `data/repository/MessageRepository.kt`: `markOutgoingMessagesRead(contactId)` — public wrapper
+3. `data/exchange/ContactExchangeManager.kt`:
+   - `sendReadReceipt(toSxId)`: sendet `{type:"READ_RECEIPT", to: sxId}` via `listenerWs`
+   - `handleReadReceipt(json)`: empfängt Frame, ruft `markOutgoingMessagesRead(fromSxId)` auf
+   - `onMessage`: case `"READ_RECEIPT"` → `handleReadReceipt(json)` ergänzt
+4. `presentation/screens/ChatViewModel.kt`: Injiziert `ContactExchangeManager`, ruft `sendReadReceipt(contactSxId)` nach `markRead()` in `init`-Block auf
+5. `backend/signaling/src/ws/handlers/contact.js` (stealth repo): `READ_RECEIPT` handler bereits in Vorperiode hinzugefügt, jetzt committed + gepusht → Railway auto-deployed
+
+**Commits:**
+- securechat: `92b7b7c` feat(read-receipts)
+- stealth: `7cbae1c` feat(signaling): add MESSAGE and READ_RECEIPT relay handlers
+
+**Build:** ✅ BUILD SUCCESSFUL (53s) | Installed: S7 ✅ S4 ✅
+
+---
+
+## 2026-05-22 [CC]
+### TYPE: SESSION REPORT
+### STATUS: DONE
+
+**Session Summary 2026-05-22 — Alle gebauten Features**
+
+| Feature | Status | Commit |
+|---------|--------|--------|
+| S7 API26 crash (Arrays.compare) | ✅ FIXED | prior session |
+| Conversations dark wine-red shimmer background | ✅ DONE | prior session |
+| Chat items: activity-based green brightness | ✅ DONE | prior session |
+| Stealth delete: sichtbar (BadgedBox + Statuszeile) | ✅ DONE | prior session |
+| Stripe/Card-Kauf: IFRUnlockScreen + SettingsScreen | ✅ DONE | prior session |
+| Disappearing messages: Live-Countdown in Bubbles | ✅ DONE | prior session |
+| Foreground MessageListenerService (WS keeps alive) | ✅ DONE | prior session |
+| Message notifications mit Display-Name | ✅ DONE | prior session |
+| Signal server: MESSAGE relay handler | ✅ DONE | `7cbae1c` |
+| Signal server: READ_RECEIPT relay handler | ✅ DONE | `7cbae1c` |
+| Android: Read Receipts vollständig E2E | ✅ DONE | `92b7b7c` |
+| CodeRabbit AI Code Review (alle 3 Repos) | ✅ DONE | .coderabbit.yaml |
+
+**Offene Punkte (für nächste Session):**
+- Chameleon repo: selbes MessageListenerService-Pattern wie securechat
+- Cert-Rotation Reminder: api.stealthx.tech Leaf läuft **2026-08-14** ab — Pins updaten
+- Codex CLI: `codex login` muss Gio manuell ausführen (Browser-Auth nötig)
+
+---
+
 ## 2026-05-21 [CC]
 ### TYPE: FIX
 ### STATUS: DEPLOYED — awaiting live test
