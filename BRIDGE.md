@@ -2040,3 +2040,41 @@ Fehlende Kette `expiresAt` durch alle Layer propagiert:
 - Deletion-Loop (60s) im ViewModel war bereits vorhanden ✅
 
 Commit: `7861368` | Build: SUCCESS ✅ | S7 ✅ | S4 ✅ | kein Crash ✅
+
+---
+
+## 2026-05-22 [CC]
+### TYPE: FEAT
+### STATUS: DONE
+### Linear: NEA-254
+
+**MessageListenerService — WebSocket Background Keep-Alive**
+
+Problem: `ContactExchangeManager.startListening()` wurde nur von `ConversationsViewModel` aufgerufen.
+App im Hintergrund → ViewModel zerstört → WS tot → keine Nachrichten empfangen.
+
+**Lösung:**
+
+`app/.../service/MessageListenerService.kt` (NEU):
+- `@AndroidEntryPoint` Foreground Service, Hilt-injiziert
+- Startet `contactExchangeManager.startListening()` in `onCreate()`
+- Reconnect-Loop: alle 30s prüfen ob `isConnected`, bei Abbruch neu verbinden
+- `START_STICKY` — Android startet Service nach Kill neu
+- Foreground Notification: `IMPORTANCE_MIN`, silent, ongoing — kein Lärm für User
+
+`SecureChatApp.onCreate()`:
+- `startForegroundService(Intent(this, MessageListenerService::class.java))`
+
+`AndroidManifest.xml`:
+- `FOREGROUND_SERVICE` + `FOREGROUND_SERVICE_DATA_SYNC` Permissions
+- `<service android:foregroundServiceType="dataSync" android:exported="false" />`
+
+`ContactExchangeManager.showMessageNotification()` verbessert:
+- Lookup `contactRepository.getById(fromSxId)?.displayName` → als Notification-Titel
+- `PendingIntent` → Tap öffnet App
+- `VISIBILITY_SECRET` — kein Content-Preview auf dem Sperrbildschirm
+
+Verifikation:
+- `ServiceRecord{... com.stealthx.securechat/.service.MessageListenerService}` in dumpsys ✅
+- Kein FATAL in aktuellem Build (15:50 Crashes = alter Build vor Arrays.compare-Fix) ✅
+- Commit: `3fe32a5` | S7 ✅ | S4 ✅
