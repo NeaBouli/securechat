@@ -36,8 +36,8 @@ class LocalBroadcastManager @Inject constructor(
             return BroadcastResult.Failure("Emergency Broadcast requires Elite tier.")
         }
 
-        if (!contactExchangeManager.isConnected) {
-            return BroadcastResult.Failure("Signaling offline — reconnect and try again. Messages are NOT sent while offline.")
+        if (!contactExchangeManager.isIdentified) {
+            return BroadcastResult.Failure("Signaling not ready — reconnect and try again. Messages are NOT sent while offline.")
         }
 
         val contacts = contactRepository.observeAll().first()

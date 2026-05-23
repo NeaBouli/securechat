@@ -66,6 +66,7 @@ class ContactExchangeManager @Inject constructor(
     private val pendingFrames = ConcurrentLinkedQueue<String>()
 
     val isConnected: Boolean get() = listenerWs != null
+    val isIdentified: Boolean get() = identified
 
     private fun sendOrQueue(frame: String) {
         if (identified) listenerWs?.send(frame) else pendingFrames.add(frame)

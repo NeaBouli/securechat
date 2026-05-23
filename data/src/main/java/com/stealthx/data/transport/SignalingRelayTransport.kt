@@ -27,7 +27,7 @@ class SignalingRelayTransport @Inject constructor(
 
     override val type: TransportType = TransportType.TOR_RELAY
 
-    override val isAvailable: Boolean get() = exchangeManager.isConnected
+    override val isAvailable: Boolean get() = exchangeManager.isIdentified
 
     override suspend fun send(recipientSxId: String, message: RatchetMessage): TransportResult {
         val messageId = UUID.randomUUID().toString()
