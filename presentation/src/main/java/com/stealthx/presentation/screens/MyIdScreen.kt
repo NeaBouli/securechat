@@ -154,25 +154,37 @@ fun MyIdScreen(onBack: () -> Unit) {
             val nfcAdapter = remember { android.nfc.NfcAdapter.getDefaultAdapter(context) }
             if (nfcAdapter != null && qrContent != null) {
                 var nfcReady by remember { mutableStateOf(false) }
+                val nfcWriteState by com.stealthx.data.NfcWriteRelay.state.collectAsState()
                 Spacer(Modifier.height(16.dp))
                 OutlinedButton(
-                    onClick = { nfcReady = !nfcReady },
+                    onClick = {
+                        nfcReady = !nfcReady
+                        if (!nfcReady) com.stealthx.data.NfcWriteRelay.reset()
+                    },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Nfc, null)
                     Spacer(Modifier.width(8.dp))
-                    Text(if (nfcReady) "NFC ready — hold devices together" else "Share via NFC Tap")
+                    Text(if (nfcReady) "NFC ready — tap to cancel" else "Share via NFC Tap")
                 }
                 if (nfcReady) {
+                    val (statusText, statusColor) = when (val s = nfcWriteState) {
+                        is com.stealthx.data.NfcWriteState.Pending ->
+                            "Touch an NFC tag to write your contact" to MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        is com.stealthx.data.NfcWriteState.Success ->
+                            "Tag written — recipient can tap to add you" to MaterialTheme.colorScheme.primary
+                        is com.stealthx.data.NfcWriteState.Failure ->
+                            s.reason to MaterialTheme.colorScheme.error
+                        else -> "Initialising NFC..." to MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                    }
                     Text(
-                        "Touch an NFC tag to write your contact — or hold phones together (API ≤ 28)",
+                        statusText,
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        color = statusColor,
                         modifier = Modifier.padding(horizontal = 4.dp)
                     )
                     DisposableEffect(Unit) {
                         val activity = context as? android.app.Activity ?: return@DisposableEffect onDispose {}
-                        // Signal MainActivity to write bundle to next NFC tag tapped
                         com.stealthx.data.NfcWriteRelay.post(qrContent)
                         val pendingIntent = android.app.PendingIntent.getActivity(
                             context, 0,
@@ -185,7 +197,7 @@ fun MyIdScreen(onBack: () -> Unit) {
                         )
                         nfcAdapter.enableForegroundDispatch(activity, pendingIntent, filters, null)
                         onDispose {
-                            com.stealthx.data.NfcWriteRelay.post(null)
+                            com.stealthx.data.NfcWriteRelay.reset()
                             runCatching { nfcAdapter.disableForegroundDispatch(activity) }
                         }
                     }

@@ -234,7 +234,7 @@ class MainActivity : FragmentActivity() {
             android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED,
             android.nfc.NfcAdapter.ACTION_TAG_DISCOVERED -> {
                 // Write mode: if MyIdScreen posted a bundle, write it to the tag
-                val writeUri = com.stealthx.data.NfcWriteRelay.pendingUri.value
+                val writeUri = com.stealthx.data.NfcWriteRelay.pendingUri
                 if (writeUri != null) {
                     val tag = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                         intent.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG, android.nfc.Tag::class.java)
@@ -242,7 +242,13 @@ class MainActivity : FragmentActivity() {
                         @Suppress("DEPRECATION")
                         intent.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG)
                     }
-                    tag?.let { tryWriteNdefTag(it, writeUri) }
+                    if (tag != null) {
+                        val ok = tryWriteNdefTag(tag, writeUri)
+                        if (ok) com.stealthx.data.NfcWriteRelay.reportSuccess()
+                        else com.stealthx.data.NfcWriteRelay.reportFailure("Tag write failed — tag may be read-only or too small")
+                    } else {
+                        com.stealthx.data.NfcWriteRelay.reportFailure("No writable NFC tag detected")
+                    }
                     return
                 }
                 // Read mode: parse incoming NDEF and route to NewContactScreen
@@ -269,22 +275,33 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    private fun tryWriteNdefTag(tag: android.nfc.Tag, uri: String) {
-        runCatching {
-            val ndef = android.nfc.tech.Ndef.get(tag) ?: android.nfc.tech.NdefFormatable.get(tag)?.let { formatable ->
-                formatable.connect()
-                val record = android.nfc.NdefRecord.createUri(uri)
-                formatable.format(android.nfc.NdefMessage(arrayOf(record)))
-                formatable.close()
-                null
-            }
-            if (ndef != null) {
+    private fun tryWriteNdefTag(tag: android.nfc.Tag, uri: String): Boolean {
+        val record = android.nfc.NdefRecord.createUri(uri)
+        val msg = android.nfc.NdefMessage(arrayOf(record))
+        val ndef = android.nfc.tech.Ndef.get(tag)
+        if (ndef != null) {
+            return runCatching {
                 ndef.connect()
-                val record = android.nfc.NdefRecord.createUri(uri)
-                ndef.writeNdefMessage(android.nfc.NdefMessage(arrayOf(record)))
-                ndef.close()
-            }
+                try {
+                    if (!ndef.isWritable) return@runCatching false
+                    if (ndef.maxSize < msg.toByteArray().size) return@runCatching false
+                    ndef.writeNdefMessage(msg)
+                    true
+                } finally {
+                    runCatching { ndef.close() }
+                }
+            }.getOrDefault(false)
         }
+        val formatable = android.nfc.tech.NdefFormatable.get(tag) ?: return false
+        return runCatching {
+            formatable.connect()
+            try {
+                formatable.format(msg)
+                true
+            } finally {
+                runCatching { formatable.close() }
+            }
+        }.getOrDefault(false)
     }
 
     fun checkDuressPin(input: String): Boolean {

@@ -5,6 +5,7 @@
  */
 package com.stealthx.presentation.screens
 
+import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.repository.ContactRepository
 import com.stealthx.data.repository.MessageRepository
 import com.stealthx.domain.tier.TierGate
@@ -23,7 +24,8 @@ import kotlinx.coroutines.flow.first
 class LocalBroadcastManager @Inject constructor(
     private val tierGate: TierGate,
     private val contactRepository: ContactRepository,
-    private val messageRepository: MessageRepository
+    private val messageRepository: MessageRepository,
+    private val contactExchangeManager: ContactExchangeManager
 ) : BroadcastManager {
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
@@ -32,6 +34,10 @@ class LocalBroadcastManager @Inject constructor(
     override suspend fun sendBroadcast(message: String): BroadcastResult {
         if (!tierGate.requiresElite()) {
             return BroadcastResult.Failure("Emergency Broadcast requires Elite tier.")
+        }
+
+        if (!contactExchangeManager.isConnected) {
+            return BroadcastResult.Failure("Signaling offline — reconnect and try again. Messages are NOT sent while offline.")
         }
 
         val contacts = contactRepository.observeAll().first()
