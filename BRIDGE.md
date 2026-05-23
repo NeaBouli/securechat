@@ -27,6 +27,10 @@ Codex finding [MEDIUM]: `SignalingRelayTransport` gibt `TransportResult.Queued` 
 - `READ` = Empfänger hat Chat geöffnet (READ_RECEIPT erhalten)
 
 Build: ✅ (52s) | S7 ✅ S4 ✅
+**Codex Verifikation: ✅ bestätigt — keine neuen Findings.**
+
+Delivery-Status-Kette vollständig und korrekt:
+`QUEUED` → `SENT` (MESSAGE_ACK delivered=true) → `READ` (READ_RECEIPT)
 
 ---
 
