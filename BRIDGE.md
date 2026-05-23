@@ -6,6 +6,25 @@
 ## 2026-05-23 [CC]
 ### TYPE: FIX
 ### STATUS: DONE — DEPLOYED
+### Source: Codex Audit Round 3 — NFC Retry nach Failure
+
+**NFC Write Retry-Bug — `reportFailure` ohne URI**
+
+Codex [MEDIUM]: Nach `reportFailure(reason)` → State = `Failure(reason)` ohne URI-Feld → `pendingUri` returned `null` → nächstes NFC-Tap geht in Read-Modus statt Write-Retry. User muss NFC off/on togglen.
+
+**Fix:**
+- `NfcWriteState.Failure`: `data class Failure(val uri: String, val reason: String)` — URI im Failure-State bewahrt
+- `NfcWriteRelay.pendingUri`: returned URI aus BEIDEN `Pending` und `Failure` States → automatischer Retry beim nächsten Tap
+- `NfcWriteRelay.reportFailure(uri, reason)` — neue Signatur
+- `MainActivity.handleNfcIntent`: beide `reportFailure`-Aufrufe mit `writeUri` als erstem Argument
+
+Build: ✅ (23s) | S7 ✅ S4 ✅
+
+---
+
+## 2026-05-23 [CC]
+### TYPE: FIX
+### STATUS: DONE — DEPLOYED
 ### Commit: 286fae4
 ### Source: Codex Audit Round 2 — 2026-05-23
 

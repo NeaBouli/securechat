@@ -245,9 +245,9 @@ class MainActivity : FragmentActivity() {
                     if (tag != null) {
                         val ok = tryWriteNdefTag(tag, writeUri)
                         if (ok) com.stealthx.data.NfcWriteRelay.reportSuccess()
-                        else com.stealthx.data.NfcWriteRelay.reportFailure("Tag write failed — tag may be read-only or too small")
+                        else com.stealthx.data.NfcWriteRelay.reportFailure(writeUri, "Tag write failed — tag may be read-only or too small")
                     } else {
-                        com.stealthx.data.NfcWriteRelay.reportFailure("No writable NFC tag detected")
+                        com.stealthx.data.NfcWriteRelay.reportFailure(writeUri, "No writable NFC tag detected")
                     }
                     return
                 }
