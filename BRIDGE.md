@@ -3,6 +3,42 @@
 
 ---
 
+## 2026-05-23 [CC]
+### TYPE: FIX
+### STATUS: DONE — DEPLOYED
+### Commit: fcd073e
+### Source: Codex Audit 2026-05-23
+
+**Codex Findings — Bewertet + Gefixt**
+
+| # | Severity | Finding | Verdict | Fix |
+|---|----------|---------|---------|-----|
+| 1 | CRITICAL | MESSAGE handler fehlt in contact.js | ❌ FALSCH — Handler existiert seit Commit `7cbae1c` (2026-05-22). Codex hat alten State gelesen. | Kein Fix nötig |
+| 2 | HIGH | DB v5→v6 löscht Kontakte/Chats (fallbackToDestructive) | ✅ KORREKT | MIGRATION_5_6 hinzugefügt |
+| 3 | HIGH | CONTACT_EXCHANGE before IDENTIFY_ACK — silent drop | ✅ KORREKT | IDENTIFY_ACK Queue implementiert |
+
+**Fix 1 — Room Migration 5→6 (securechat `ChameleonDatabase.kt`)**
+```kotlin
+MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE messages ADD COLUMN expires_at INTEGER DEFAULT NULL")
+    }
+}
+```
+`.addMigrations(MIGRATION_5_6)` vor `.fallbackToDestructiveMigration()` — Room nutzt die Migration wenn verfügbar, fällt nur bei unbekannten Versionen auf destruktiv zurück.
+
+**Fix 2 — IDENTIFY_ACK Queue (ContactExchangeManager — securechat + chameleon)**
+- `identified: Boolean` flag + `pendingFrames: ConcurrentLinkedQueue<String>`
+- `sendOrQueue()`: sendet sofort wenn `identified`, sonst in Queue
+- `drainPending(ws)`: auf IDENTIFY_ACK → `identified = true` + alle gepufferten Frames senden
+- `onClosed/onFailure`: `identified = false` (Reset für Reconnect)
+- Alle outgoing Frames (`CONTACT_EXCHANGE`, `MESSAGE`, `READ_RECEIPT`, `sendRaw`) über `sendOrQueue()` — kein stiller Drop mehr möglich
+
+**Builds:** securechat ✅ (98s) | chameleon ✅ (52s)
+**Devices:** S7 ✅ S4 ✅
+
+---
+
 ## 2026-05-22 [CC]
 ### TYPE: FEAT
 ### STATUS: DONE — DEPLOYED
