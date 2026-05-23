@@ -164,16 +164,28 @@ fun MyIdScreen(onBack: () -> Unit) {
                     Text(if (nfcReady) "NFC ready — hold devices together" else "Share via NFC Tap")
                 }
                 if (nfcReady) {
+                    Text(
+                        "Touch an NFC tag to write your contact — or hold phones together (API ≤ 28)",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    )
                     DisposableEffect(Unit) {
                         val activity = context as? android.app.Activity ?: return@DisposableEffect onDispose {}
+                        // Signal MainActivity to write bundle to next NFC tag tapped
+                        com.stealthx.data.NfcWriteRelay.post(qrContent)
                         val pendingIntent = android.app.PendingIntent.getActivity(
                             context, 0,
                             android.content.Intent(context, activity::class.java).addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP),
                             android.app.PendingIntent.FLAG_MUTABLE
                         )
-                        val filters = arrayOf(android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED))
+                        val filters = arrayOf(
+                            android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED),
+                            android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_TAG_DISCOVERED)
+                        )
                         nfcAdapter.enableForegroundDispatch(activity, pendingIntent, filters, null)
                         onDispose {
+                            com.stealthx.data.NfcWriteRelay.post(null)
                             runCatching { nfcAdapter.disableForegroundDispatch(activity) }
                         }
                     }

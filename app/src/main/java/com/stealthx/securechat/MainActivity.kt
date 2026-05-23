@@ -233,6 +233,19 @@ class MainActivity : FragmentActivity() {
         when (intent?.action) {
             android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED,
             android.nfc.NfcAdapter.ACTION_TAG_DISCOVERED -> {
+                // Write mode: if MyIdScreen posted a bundle, write it to the tag
+                val writeUri = com.stealthx.data.NfcWriteRelay.pendingUri.value
+                if (writeUri != null) {
+                    val tag = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG, android.nfc.Tag::class.java)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        intent.getParcelableExtra(android.nfc.NfcAdapter.EXTRA_TAG)
+                    }
+                    tag?.let { tryWriteNdefTag(it, writeUri) }
+                    return
+                }
+                // Read mode: parse incoming NDEF and route to NewContactScreen
                 val rawMsgs = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                     intent.getParcelableArrayExtra(android.nfc.NfcAdapter.EXTRA_NDEF_MESSAGES, android.nfc.NdefMessage::class.java)
                 } else {
@@ -252,6 +265,24 @@ class MainActivity : FragmentActivity() {
                 if (uri?.startsWith("stealthx://add/") == true) {
                     NfcUriRelay.post(uri)
                 }
+            }
+        }
+    }
+
+    private fun tryWriteNdefTag(tag: android.nfc.Tag, uri: String) {
+        runCatching {
+            val ndef = android.nfc.tech.Ndef.get(tag) ?: android.nfc.tech.NdefFormatable.get(tag)?.let { formatable ->
+                formatable.connect()
+                val record = android.nfc.NdefRecord.createUri(uri)
+                formatable.format(android.nfc.NdefMessage(arrayOf(record)))
+                formatable.close()
+                null
+            }
+            if (ndef != null) {
+                ndef.connect()
+                val record = android.nfc.NdefRecord.createUri(uri)
+                ndef.writeNdefMessage(android.nfc.NdefMessage(arrayOf(record)))
+                ndef.close()
             }
         }
     }

@@ -1,5 +1,5 @@
 package com.stealthx.securechat.di
 
-// DI is handled in :data/DataModule (database, DAOs, TierGate)
-// and :security (KeystoreManager @Inject constructor).
+// BroadcastManager bound in :presentation/di/BroadcastModule via LocalBroadcastManager.
+// DataModule (database, DAOs, TierGate) lives in :data.
 // Nothing extra needed at the :app level.

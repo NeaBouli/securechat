@@ -164,7 +164,7 @@ fun SettingsScreen(
             GatedFeatureRow(Icons.Default.Router, "Onion Routing (3-hop)", "Full IP protection", tier, IfrTier.ELITE, onIfrClick, comingSoon = true)
             GatedFeatureRow(Icons.Default.FaceRetouchingNatural, "Decoy Chat Profiles", "Fake conversations on demand", tier, IfrTier.ELITE, onIfrClick, comingSoon = true)
             GatedFeatureRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis", tier, IfrTier.ELITE, onIfrClick, comingSoon = true)
-            GatedFeatureRow(Icons.Default.Send, "Emergency Broadcast", "Encrypted alert to all contacts", tier, IfrTier.ELITE, onIfrClick, onBroadcastClick, comingSoon = true)
+            GatedFeatureRow(Icons.Default.Send, "Emergency Broadcast", "Encrypted alert to all contacts", tier, IfrTier.ELITE, onIfrClick, onBroadcastClick)
 
             SectionHeader("Access")
             ClickRow(Icons.Default.CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · pay once, no subscription") {
