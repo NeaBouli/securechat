@@ -4,6 +4,29 @@
 ---
 
 ## 2026-05-23 [CC]
+### TYPE: FIX
+### STATUS: DONE — DEPLOYED
+### Commit: 2c82e80
+### Source: Codex Audit 2026-05-23
+
+**Broadcast WS Gate + NFC Write Lifecycle**
+
+**[HIGH] Broadcast silently fällt auf LocalTransport zurück — gefixt:**
+- `LocalBroadcastManager`: `ContactExchangeManager` injiziert
+- `isConnected`-Check vor dem Send-Loop: wenn WS offline → `BroadcastResult.Failure("Signaling offline — ...")` ohne Senden
+- Kein falsches "queued for X contacts" wenn Empfänger nie erreichbar war
+
+**[MEDIUM] NFC Write — kein Feedback, Relay nie gecleart — gefixt:**
+- `NfcWriteRelay` → sealed `NfcWriteState` (Idle/Pending/Success/Failure)
+- `tryWriteNdefTag()` gibt `Boolean` zurück; `isWritable` + `maxSize`-Check; `finally`-Blöcke schließen Tag-Verbindung
+- `handleNfcIntent`: nach Write `reportSuccess()` (löscht Pending) oder `reportFailure(reason)` — kein spätes Tap landet mehr im Write-Modus
+- `MyIdScreen`: observiert `NfcWriteRelay.state` via `collectAsState()` — zeigt Pending/Success (grün)/Error (rot) Status-Text; `reset()` auf Cancel oder Dispose
+
+Build: ✅ (46s) | S7 ✅ S4 ✅
+
+---
+
+## 2026-05-23 [CC]
 ### TYPE: FEAT
 ### STATUS: DONE — DEPLOYED
 ### Commit: 9a56045
