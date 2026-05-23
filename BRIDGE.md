@@ -6,6 +6,30 @@
 ## 2026-05-23 [CC]
 ### TYPE: FIX
 ### STATUS: DONE — DEPLOYED
+### Commit: 286fae4
+### Source: Codex Audit Round 2 — 2026-05-23
+
+**isIdentified als Relay-Ready-Gate**
+
+Codex-Finding: `isConnected = listenerWs != null` ist true sobald Socket-Objekt existiert — vor IDENTIFY_ACK. WS offen aber nicht identifiziert → Broadcast-Gate passiert fälschlicherweise, Nachrichten landen in `pendingFrames` statt sofort zugestellt zu werden. `SignalingRelayTransport.isAvailable` hatte denselben Bug → MessageRouter wählte TOR_RELAY wenn Socket offen aber nicht identified.
+
+**Fixes (`286fae4`):**
+- `ContactExchangeManager`: `isIdentified: Boolean get() = identified` — neues Public Property, nur true nach IDENTIFY_ACK
+- `SignalingRelayTransport.isAvailable`: `isIdentified` statt `isConnected` — MessageRouter wählt LOCAL-Fallback nur wenn Server Identity nicht bestätigt hat
+- `LocalBroadcastManager`: Gate auf `isIdentified` — Broadcast schlägt explizit fehl wenn Socket offen aber nicht authenticated
+
+**Garantie jetzt:**
+- `isConnected`: Socket-Objekt vorhanden (technisch verbunden)
+- `isIdentified`: Server hat IDENTIFY_ACK gesendet (relay-fähig)
+- Broadcast + MessageRouter-TOR_RELAY: nur wenn `isIdentified = true`
+
+Build: ✅ (42s) | S7 ✅ S4 ✅
+
+---
+
+## 2026-05-23 [CC]
+### TYPE: FIX
+### STATUS: DONE — DEPLOYED
 ### Commit: 2c82e80
 ### Source: Codex Audit 2026-05-23
 
