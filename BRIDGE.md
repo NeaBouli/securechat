@@ -6,6 +6,27 @@
 ## 2026-05-23 [CC]
 ### TYPE: FIX
 ### STATUS: DONE — DEPLOYED
+### Commit: a8037e0
+### Source: Codex Audit [LOW] — Broadcast WS-Abbruch mid-loop
+
+**Relay-only Send-Pfad für Emergency Broadcast**
+
+Codex [LOW]: `LocalBroadcastManager` prüft `isIdentified` einmalig vor dem Loop. Wenn WS mid-loop abbricht → `MessageRouter.selectTransport()` fällt auf `LocalTransport` zurück → spätere Kontakte bekommen Message als QUEUED gespeichert, ohne jemals über Netz gesendet zu werden.
+
+**Fix:**
+- `MessageRouter.sendRelayOnly()`: wählt nur ONION/TOR — kein LOCAL-Fallback. Gibt `TransportResult.Failed` zurück wenn kein Relay verfügbar.
+- `MessageRepository.sendBroadcastMessage()`: wirft `IllegalStateException` bei `Failed`-Result — Message wird NICHT in Room gespeichert wenn Relay nicht verfügbar.
+- `LocalBroadcastManager`: `sendLocalMessage` → `sendBroadcastMessage` — WS-Abbruch mid-loop = `onFailure { failed++ }` pro Kontakt, kein phantommäßiges QUEUED.
+
+**Invariante:** Emergency Broadcast speichert nur Nachrichten lokal die tatsächlich ans Relay gesendet wurden.
+
+Build: ✅ (24s) | S7 ✅ S4 ✅
+
+---
+
+## 2026-05-23 [CC]
+### TYPE: FIX
+### STATUS: DONE — DEPLOYED
 ### Source: Codex Audit Round 3 — NFC Retry nach Failure
 
 **NFC Write Retry-Bug — `reportFailure` ohne URI**
