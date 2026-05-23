@@ -113,6 +113,51 @@ class MessageRepository @Inject constructor(
         return entity.toDecrypted(contact)
     }
 
+    /** Relay-only send for Emergency Broadcast — throws if no relay is available mid-loop. */
+    suspend fun sendBroadcastMessage(contactId: String, plaintext: String): DecryptedMessage {
+        val contact = contactRepository.getById(contactId)
+            ?: throw IllegalArgumentException("Contact not found: $contactId")
+        val sentAt = System.currentTimeMillis()
+        val aad = aadFor(contactId, sentAt)
+        val outbound = chatSessionRepository.encryptForSend(
+            contact = contact,
+            plaintext = plaintext.toByteArray(Charsets.UTF_8),
+            aad = aad
+        )
+        val transportResult = messageRouter.sendRelayOnly(contactId, outbound.message)
+        if (transportResult is TransportResult.Failed) {
+            throw IllegalStateException(transportResult.reason)
+        }
+        val key = localMessageKey(contact)
+        val payload = ChameleonCrypto.encrypt(plaintext.toByteArray(Charsets.UTF_8), key, aad)
+        ChameleonCrypto.wipeBytes(key)
+        val entity = MessageEntity(
+            id = UUID.randomUUID().toString(),
+            contactId = contactId,
+            direction = DIRECTION_OUTGOING,
+            ciphertext = payload.ciphertext,
+            nonce = payload.nonce,
+            aad = payload.aad,
+            paddedLength = payload.paddedLength,
+            algorithm = payload.algorithm,
+            payloadVersion = payload.version,
+            sentAt = sentAt,
+            deliveryStatus = transportResult.toDeliveryStatus(),
+            ratchetDhPublic = outbound.dhPublicKey,
+            ratchetCounter = outbound.counter,
+            ratchetPrevCounter = outbound.message.prevCounter,
+            ratchetCiphertext = outbound.message.payload.ciphertext,
+            ratchetNonce = outbound.message.payload.nonce,
+            ratchetAad = outbound.message.payload.aad,
+            ratchetPaddedLength = outbound.message.payload.paddedLength,
+            ratchetAlgorithm = outbound.message.payload.algorithm,
+            ratchetPayloadVersion = outbound.message.payload.version,
+            expiresAt = appPreferences.getDisappearTimer(contactId)?.let { sentAt + it }
+        )
+        messageDao.insert(entity)
+        return entity.toDecrypted(contact)
+    }
+
     suspend fun exportLatestOutgoingMessage(contactId: String): String? {
         val entity = messageDao.latestOutgoingForContact(contactId) ?: return null
         return entity.toRatchetMessage()?.let(RatchetMessageQr::toQrContent)

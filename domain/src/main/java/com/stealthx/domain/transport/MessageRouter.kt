@@ -38,6 +38,17 @@ class MessageRouter @Inject constructor(
         return transport.send(recipientSxId, message)
     }
 
+    /** Like send() but never falls back to LOCAL — fails if no relay is available. */
+    suspend fun sendRelayOnly(
+        recipientSxId: String,
+        message: RatchetMessage
+    ): TransportResult {
+        val transport = transports[TransportType.ONION_RELAY]?.takeIf { it.isAvailable }
+            ?: transports[TransportType.TOR_RELAY]?.takeIf { it.isAvailable }
+            ?: return TransportResult.Failed("no-relay", "No relay transport available")
+        return transport.send(recipientSxId, message)
+    }
+
     fun getActiveTransportType(): TransportType? = selectTransport()?.type
 
     private fun selectTransport(): RelayTransport? {

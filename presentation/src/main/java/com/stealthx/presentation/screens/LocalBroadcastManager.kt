@@ -46,7 +46,7 @@ class LocalBroadcastManager @Inject constructor(
         var sent = 0
         var failed = 0
         contacts.forEach { contact ->
-            runCatching { messageRepository.sendLocalMessage(contact.id, message) }
+            runCatching { messageRepository.sendBroadcastMessage(contact.id, message) }
                 .onSuccess { sent++ }
                 .onFailure { failed++ }
         }
