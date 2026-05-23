@@ -6,6 +6,33 @@
 ## 2026-05-23 [CC]
 ### TYPE: FIX
 ### STATUS: DONE — DEPLOYED
+### Commit: 76d8e93
+### Source: Codex Audit Round 2 — 2026-05-23
+
+**MESSAGE_ACK.delivered — QUEUED→SENT Upgrade**
+
+Codex finding [MEDIUM]: `SignalingRelayTransport` gibt `TransportResult.Queued` bei jedem erfolgreichen WS-Write zurück. Wenn Empfänger offline → Server sendet `MESSAGE_ACK { delivered: false }`, Client ignorierte das Frame. Nachrichten blieben dauerhaft QUEUED ohne SENT-Signal.
+
+**Fix (`76d8e93`):**
+- `MessageDao`: `markLatestQueuedSent(contactId)` — UPDATE via Subquery auf `sent_at DESC LIMIT 1` nur QUEUED→SENT (keine Read-Regression)
+- `MessageRepository`: `markOutgoingDelivered(contactId)` — public wrapper
+- `ContactExchangeManager.handleMessageAck()`:
+  - `delivered=true` → `markOutgoingDelivered(to)` — Nachricht als SENT markieren
+  - `delivered=false` → QUEUED bleibt (korrekt: Server puffert keine Offline-Nachrichten; Client muss ggf. Retry anbieten — Phase 2)
+- `onMessage`: `"MESSAGE_ACK"` case ergänzt
+
+**Semantik QUEUED vs SENT:**
+- `QUEUED` = lokal gespeichert, WS-Send bestätigt, aber Empfänger war offline
+- `SENT` = Server hat Nachricht an aktive WS-Session des Empfängers zugestellt
+- `READ` = Empfänger hat Chat geöffnet (READ_RECEIPT erhalten)
+
+Build: ✅ (52s) | S7 ✅ S4 ✅
+
+---
+
+## 2026-05-23 [CC]
+### TYPE: FIX
+### STATUS: DONE — DEPLOYED
 ### Commit: fcd073e
 ### Source: Codex Audit 2026-05-23
 
