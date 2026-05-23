@@ -44,6 +44,16 @@ interface MessageDao {
     @Query("UPDATE messages SET delivery_status = 'READ' WHERE contact_id = :contactId AND direction = 'OUTGOING'")
     suspend fun markOutgoingRead(contactId: String)
 
+    @Query("""
+        UPDATE messages SET delivery_status = 'SENT'
+        WHERE id = (
+            SELECT id FROM messages
+            WHERE contact_id = :contactId AND direction = 'OUTGOING' AND delivery_status = 'QUEUED'
+            ORDER BY sent_at DESC LIMIT 1
+        )
+    """)
+    suspend fun markLatestQueuedSent(contactId: String)
+
     @Query("DELETE FROM messages WHERE contact_id = :contactId")
     suspend fun deleteForContact(contactId: String)
 

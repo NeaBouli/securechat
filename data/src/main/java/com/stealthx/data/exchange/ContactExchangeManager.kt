@@ -135,6 +135,7 @@ class ContactExchangeManager @Inject constructor(
                         "IDENTIFY_ACK" -> { identified = true; drainPending(ws) }
                         "CONTACT_EXCHANGE" -> handleContactExchange(json)
                         "MESSAGE" -> handleIncomingMessage(json)
+                        "MESSAGE_ACK" -> handleMessageAck(json)
                         "READ_RECEIPT" -> handleReadReceipt(json)
                     }
                 } catch (_: Exception) {}
@@ -173,6 +174,13 @@ class ContactExchangeManager @Inject constructor(
                 showMessageNotification(fromSxId, displayName)
             }
         }
+    }
+
+    private fun handleMessageAck(json: JSONObject) {
+        val to = json.optString("to").ifEmpty { return }
+        val delivered = json.optBoolean("delivered", false)
+        if (!delivered) return
+        scope.launch { runCatching { messageRepository.get().markOutgoingDelivered(to) } }
     }
 
     private fun handleReadReceipt(json: JSONObject) {
