@@ -4,6 +4,34 @@
 ---
 
 ## 2026-05-23 [CC]
+### TYPE: FEAT
+### STATUS: DONE — DEPLOYED
+### Commit: 9a56045
+
+**Emergency Broadcast aktiviert + NFC Tag Write**
+
+**Emergency Broadcast:**
+- `comingSoon = true` aus SettingsScreen entfernt — Feature ist live für Elite-User
+- `LocalBroadcastManager` (in `:presentation`) ist die vollständige Impl:
+  - TierGate-Check: `requiresElite()` muss true sein
+  - Iteriert alle Kontakte via `contactRepository.observeAll().first()`
+  - `messageRepository.sendLocalMessage(contact.id, message)` pro Kontakt
+  - `BroadcastResult.Success/PartialSuccess/Failure` je nach Ergebnis
+  - History in Memory (nicht persistent — Phase 2)
+
+**NFC Tag Write:**
+- `NfcWriteRelay` (neu): Singleton StateFlow — MyIdScreen postet Bundle-URI wenn NFC-Modus aktiv, cleared auf dispose
+- `MyIdScreen`: `NfcWriteRelay.post(qrContent)` + foreground dispatch für TAG_DISCOVERED + NDEF_DISCOVERED; Hinweistext für User
+- `MainActivity.handleNfcIntent`: write-path vor read-path — wenn `NfcWriteRelay.pendingUri != null` → `tryWriteNdefTag(tag, uri)`
+- `tryWriteNdefTag()`: Verbindet `Ndef` (bestehendes Tag) oder formatiert `NdefFormatable` (leeres Tag), schreibt `stealthx://add/...` URI-Record
+
+User-Flow: MyIdScreen → "Share via NFC Tap" → NFC Ready → Handy auf NFC-Tag → Tag beschrieben → Empfänger tippt Tag → NewContactScreen öffnet
+
+Build: ✅ (45s) | S7 ✅ S4 ✅
+
+---
+
+## 2026-05-23 [CC]
 ### TYPE: FIX
 ### STATUS: DONE — DEPLOYED
 ### Commit: 76d8e93
