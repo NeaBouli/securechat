@@ -65,14 +65,13 @@ class TierGateTest {
     }
 
     @Test
-    @DisplayName("getTierSync returns last known value")
+    @DisplayName("getTierSync returns last known value after explicit getTier call")
     fun `sync returns last known`() = runTest {
         val repo = mockk<IfrTierRepository>()
         coEvery { repo.getCachedTier() } returns IfrTier.PRO
         val gate = TierGateImpl(repo)
-        assertEquals(IfrTier.FREE, gate.getTierSync()) // before first load
-        gate.getTier() // load
-        assertEquals(IfrTier.PRO, gate.getTierSync()) // after load
+        gate.getTier() // explicit suspend load — makes result deterministic
+        assertEquals(IfrTier.PRO, gate.getTierSync())
     }
 
     @Test

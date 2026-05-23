@@ -18,7 +18,7 @@ class PublicKeyBundleQrTest {
     @DisplayName("roundtrip preserves createdAt for signature validation")
     fun `roundtrip preserves createdAt`() {
         val bundle = PublicKeyBundle(
-            sxId = "sx_1234567890",
+            sxId = "sx_aB3dE7gH9",
             customHandle = "@alice",
             x25519PublicKey = ByteArray(32) { it.toByte() },
             ed25519PublicKey = ByteArray(32) { (it + 32).toByte() },
@@ -41,7 +41,7 @@ class PublicKeyBundleQrTest {
     @DisplayName("missing createdAt is rejected")
     fun `missing createdAt is rejected`() {
         val result = PublicKeyBundleQr.fromQrContent(
-            "stealthx://add/sx_1234567890?x=AA&e=AA&s=AA"
+            "stealthx://add/sx_aB3dE7gH9?x=AA&e=AA&s=AA"
         )
 
         assertTrue(result.isFailure)
