@@ -31,6 +31,7 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.TimeUnit
 
 import javax.inject.Inject
@@ -61,20 +62,34 @@ class ContactExchangeManager @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     @Volatile private var listenerWs: WebSocket? = null
+    @Volatile private var identified = false
+    private val pendingFrames = ConcurrentLinkedQueue<String>()
 
     val isConnected: Boolean get() = listenerWs != null
 
-    /** Send a raw JSON string on the authenticated listener connection. Returns false if not connected. */
-    fun sendRaw(json: String): Boolean = listenerWs?.send(json) ?: false
+    private fun sendOrQueue(frame: String) {
+        if (identified) listenerWs?.send(frame) else pendingFrames.add(frame)
+    }
+
+    private fun drainPending(ws: WebSocket) {
+        var frame = pendingFrames.poll()
+        while (frame != null) { ws.send(frame); frame = pendingFrames.poll() }
+    }
+
+    /** Send a raw JSON string — queued until IDENTIFY_ACK if not yet identified. */
+    fun sendRaw(json: String): Boolean {
+        sendOrQueue(json)
+        return true
+    }
 
     fun sendReadReceipt(toSxId: String) {
         scope.launch {
-            try {
-                listenerWs?.send(JSONObject().apply {
+            runCatching {
+                sendOrQueue(JSONObject().apply {
                     put("type", "READ_RECEIPT")
                     put("to", toSxId)
                 }.toString())
-            } catch (_: Exception) {}
+            }
         }
     }
 
@@ -84,16 +99,16 @@ class ContactExchangeManager @Inject constructor(
      */
     fun sendExchange(toSxId: String) {
         scope.launch {
-            try {
+            runCatching {
                 val myBundle = PublicKeyBundleQr.toQrContent(
                     StealthXIdentity.createPublicKeyBundle(context)
                 )
-                listenerWs?.send(JSONObject().apply {
+                sendOrQueue(JSONObject().apply {
                     put("type", "CONTACT_EXCHANGE")
                     put("to", toSxId)
                     put("bundle", myBundle)
                 }.toString())
-            } catch (_: Exception) {}
+            }
         }
     }
 
@@ -117,6 +132,7 @@ class ContactExchangeManager @Inject constructor(
                 try {
                     val json = JSONObject(text)
                     when (json.optString("type")) {
+                        "IDENTIFY_ACK" -> { identified = true; drainPending(ws) }
                         "CONTACT_EXCHANGE" -> handleContactExchange(json)
                         "MESSAGE" -> handleIncomingMessage(json)
                         "READ_RECEIPT" -> handleReadReceipt(json)
@@ -125,11 +141,11 @@ class ContactExchangeManager @Inject constructor(
             }
 
             override fun onClosed(ws: WebSocket, code: Int, reason: String) {
-                listenerWs = null
+                listenerWs = null; identified = false
             }
 
             override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) {
-                listenerWs = null
+                listenerWs = null; identified = false
             }
         })
     }

@@ -24,6 +24,8 @@ import com.stealthx.data.entity.CryptoKeyEntity
 import com.stealthx.data.entity.IfrTierCacheEntity
 import com.stealthx.data.entity.MessageEntity
 import com.stealthx.data.entity.SecureRuleEntity
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import net.sqlcipher.database.SupportFactory
 
 /**
@@ -62,12 +64,12 @@ abstract class ChameleonDatabase : RoomDatabase() {
     companion object {
         private const val DB_NAME = "chameleon_secure.db"
 
-        /**
-         * Build the encrypted database.
-         *
-         * @param context  Application context
-         * @param passphrase  SQLCipher passphrase from Keystore (NEVER plaintext)
-         */
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE messages ADD COLUMN expires_at INTEGER DEFAULT NULL")
+            }
+        }
+
         fun build(context: Context, passphrase: ByteArray): ChameleonDatabase {
             val factory = SupportFactory(passphrase)
             return Room.databaseBuilder(
@@ -76,6 +78,7 @@ abstract class ChameleonDatabase : RoomDatabase() {
                 DB_NAME
             )
                 .openHelperFactory(factory)
+                .addMigrations(MIGRATION_5_6)
                 .fallbackToDestructiveMigration()
                 .build()
         }
