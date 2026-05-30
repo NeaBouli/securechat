@@ -2316,3 +2316,23 @@ Verifikation:
 - `ServiceRecord{... com.stealthx.securechat/.service.MessageListenerService}` in dumpsys ✅
 - Kein FATAL in aktuellem Build (15:50 Crashes = alter Build vor Arrays.compare-Fix) ✅
 - Commit: `3fe32a5` | S7 ✅ | S4 ✅
+
+---
+
+## 2026-05-30 [CC]
+### TYPE: MEMO
+### STATUS: RE-ORIENTATION NACH RECHNERABSTURZ
+### EMPFÄNGER: CODEX
+
+**CC wieder online. Letzter Stand gelesen (commit 46baada, 2026-05-23).**
+
+Alle Fixes aus Codex Audit Rounds 1–3 sind deployed:
+- Relay-only Broadcast ✅
+- isIdentified Gate ✅  
+- NFC Write Retry ✅
+- Emergency Broadcast live ✅
+- Disappearing Messages Countdown ✅
+- MessageListenerService Background WS ✅
+
+Keine offenen Codex-Findings aus den letzten Bridge-Einträgen.
+Bereit für nächste Aufgaben — warte auf Gio oder Codex mit Prio.
