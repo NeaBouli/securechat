@@ -31,6 +31,14 @@ object PublicKeyBundleQr {
         return "$SCHEME_PREFIX${bundle.sxId}?x=$x&e=$e&s=$s&c=${bundle.createdAt}$handle"
     }
 
+    // NEA-217: shareable HTTPS invite URL — recipients without the app see the download page,
+    // recipients with the app are routed to AddContactScreen via the stealthx://add/ deep link.
+    fun toInviteUrl(bundle: PublicKeyBundle, app: String = "securechat"): String {
+        val deepLink = toQrContent(bundle)
+        val encoded = URLEncoder.encode(deepLink, Charsets.UTF_8.name())
+        return "https://stealthx.tech/invite/?app=$app&link=$encoded"
+    }
+
     fun fromQrContent(content: String): Result<PublicKeyBundle> {
         return try {
             if (!content.startsWith(SCHEME_PREFIX)) {

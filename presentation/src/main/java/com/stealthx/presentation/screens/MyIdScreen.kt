@@ -34,20 +34,22 @@ fun MyIdScreen(onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     var identity by remember { mutableStateOf<StealthXId?>(null) }
     var qrContent by remember { mutableStateOf<String?>(null) }
+    var inviteUrl by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(true) }
 
     suspend fun loadIdentity() {
-        val (id, qr) = withContext(Dispatchers.IO) {
+        val (id, qr, url) = withContext(Dispatchers.IO) {
             val id = runCatching { StealthXIdentity.getOrCreateWithSeed(context) }.getOrNull()
-            val qr = if (id != null) {
-                runCatching {
-                    PublicKeyBundleQr.toQrContent(StealthXIdentity.createPublicKeyBundle(context))
-                }.getOrNull()
+            val bundle = if (id != null) {
+                runCatching { StealthXIdentity.createPublicKeyBundle(context) }.getOrNull()
             } else null
-            Pair(id, qr)
+            val qr = bundle?.let { runCatching { PublicKeyBundleQr.toQrContent(it) }.getOrNull() }
+            val url = bundle?.let { runCatching { PublicKeyBundleQr.toInviteUrl(it) }.getOrNull() }
+            Triple(id, qr, url)
         }
         identity = id
         qrContent = qr
+        inviteUrl = url
         isLoading = false
     }
 
@@ -135,15 +137,16 @@ fun MyIdScreen(onBack: () -> Unit) {
 
             Spacer(Modifier.weight(1f))
             Button(onClick = {
-                if (qrContent != null) {
+                val link = inviteUrl ?: qrContent
+                if (link != null) {
                     val intent = Intent(Intent.ACTION_SEND).apply {
                         type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, qrContent)
+                        putExtra(Intent.EXTRA_TEXT, link)
                     }
-                    context.startActivity(Intent.createChooser(intent, "Share StealthX ID"))
+                    context.startActivity(Intent.createChooser(intent, "Invite to SecureChat"))
                 }
             },
-                enabled = qrContent != null,
+                enabled = inviteUrl != null || qrContent != null,
                 modifier = Modifier.fillMaxWidth()) {
                 Icon(Icons.Default.Share, null)
                 Spacer(Modifier.width(8.dp))
