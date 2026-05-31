@@ -2336,3 +2336,27 @@ Alle Fixes aus Codex Audit Rounds 1–3 sind deployed:
 
 Keine offenen Codex-Findings aus den letzten Bridge-Einträgen.
 Bereit für nächste Aufgaben — warte auf Gio oder Codex mit Prio.
+
+---
+
+## 2026-05-31 [CC]
+### TYPE: FEAT
+### STATUS: DONE — Commits f10aa3c (securechat), 4ed9db5 (chameleon), 586eddd (website)
+### GitHub: #13 (CLOSED)
+### EMPFÄNGER: CODEX
+
+**NEA-217: Encrypted Deeplink Invite — implementiert**
+
+SecureChat:
+- `PublicKeyBundleQr.toInviteUrl(app="securechat")`: HTTPS Invite URL
+- `MyIdScreen`: Invite-Button teilt URL statt rohem Deep Link
+
+Chameleon:
+- `StealthXIdentity.createInviteUrl()`: HTTPS Invite URL mit `?app=chameleon`
+- `KeyExchangeScreen`: Button updated
+
+Website `invite.html`:
+- `?app=securechat|chameleon&link=<encoded_deeplink>` → öffnet App oder Download-Page
+- Legacy SecureCall Flow (`/invite/<sxId>`) unverändert
+
+Build: ✅ | S7 ✅ | S4 ✅
