@@ -20,9 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
+import com.stealthx.data.exchange.ContactExchangeEvent
+import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.identity.PublicKeyBundleQr
 import com.stealthx.data.identity.StealthXId
 import com.stealthx.data.identity.StealthXIdentity
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,10 +38,18 @@ import kotlinx.coroutines.withContext
 fun MyIdScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val exchangeManager = remember(context) {
+        EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            MyIdScreenEntryPoint::class.java
+        ).contactExchangeManager()
+    }
     var identity by remember { mutableStateOf<StealthXId?>(null) }
     var qrContent by remember { mutableStateOf<String?>(null) }
     var inviteUrl by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(true) }
+    var lastContactExchange by remember { mutableStateOf<ContactExchangeEvent?>(null) }
 
     suspend fun loadIdentity() {
         val (id, qr, url) = withContext(Dispatchers.IO) {
@@ -54,12 +68,19 @@ fun MyIdScreen(onBack: () -> Unit) {
     }
 
     LaunchedEffect(Unit) { loadIdentity() }
+    LaunchedEffect(exchangeManager) {
+        exchangeManager.contactExchangeEvents.collect { event ->
+            lastContactExchange = event
+            snackbarHostState.showSnackbar("${event.displayName} added you")
+        }
+    }
 
     val sxId = identity?.raw ?: "not initialized"
     val handle = identity?.customHandle
     val qrBitmap = remember(qrContent) { qrContent?.let(::qrBitmap) }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("My ID") },
@@ -133,6 +154,32 @@ fun MyIdScreen(onBack: () -> Unit) {
                 else -> Text("Your SecureChat identity. Share this to receive encrypted messages.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f))
+            }
+            lastContactExchange?.let { event ->
+                Spacer(Modifier.height(16.dp))
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            "Contact added you",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                        Text(
+                            "${event.displayName} added you to SecureChat.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
             }
 
             Spacer(Modifier.weight(1f))
@@ -208,6 +255,12 @@ fun MyIdScreen(onBack: () -> Unit) {
             }
         }
     }
+}
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+private interface MyIdScreenEntryPoint {
+    fun contactExchangeManager(): ContactExchangeManager
 }
 
 private fun qrBitmap(content: String): Bitmap {

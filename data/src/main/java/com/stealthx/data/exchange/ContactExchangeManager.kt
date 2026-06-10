@@ -23,6 +23,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
@@ -36,6 +39,11 @@ import java.util.concurrent.TimeUnit
 
 import javax.inject.Inject
 import javax.inject.Singleton
+
+data class ContactExchangeEvent(
+    val sxId: String,
+    val displayName: String
+)
 
 @Singleton
 class ContactExchangeManager @Inject constructor(
@@ -64,9 +72,14 @@ class ContactExchangeManager @Inject constructor(
     @Volatile private var listenerWs: WebSocket? = null
     @Volatile private var identified = false
     private val pendingFrames = ConcurrentLinkedQueue<String>()
+    private val _contactExchangeEvents = MutableSharedFlow<ContactExchangeEvent>(
+        replay = 0,
+        extraBufferCapacity = 8
+    )
 
     val isConnected: Boolean get() = listenerWs != null
     val isIdentified: Boolean get() = identified
+    val contactExchangeEvents: SharedFlow<ContactExchangeEvent> = _contactExchangeEvents.asSharedFlow()
 
     private fun sendOrQueue(frame: String) {
         if (identified) listenerWs?.send(frame) else pendingFrames.add(frame)
@@ -160,6 +173,10 @@ class ContactExchangeManager @Inject constructor(
                 if (contactRepository.getById(parsed.sxId) == null) {
                     contactRepository.addContactBundle(parsed)
                 }
+                val displayName = parsed.customHandle ?: parsed.sxId
+                val event = ContactExchangeEvent(parsed.sxId, displayName)
+                _contactExchangeEvents.tryEmit(event)
+                showContactExchangeNotification(event)
             }
         }
     }
@@ -227,5 +244,40 @@ class ContactExchangeManager @Inject constructor(
             .setVisibility(androidx.core.app.NotificationCompat.VISIBILITY_SECRET)
             .build()
         nm?.notify(fromSxId.hashCode(), notification)
+    }
+
+    private fun showContactExchangeNotification(event: ContactExchangeEvent) {
+        val channelId = "securechat_contacts"
+        val nm = context.getSystemService(android.app.NotificationManager::class.java)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = android.app.NotificationChannel(
+                channelId,
+                "Contact Exchange",
+                android.app.NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Contact exchange confirmations"
+                setShowBadge(true)
+            }
+            nm?.createNotificationChannel(channel)
+        }
+
+        val tapIntent = context.packageManager
+            .getLaunchIntentForPackage(context.packageName)
+            ?.apply { flags = android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP }
+        val pendingIntent = android.app.PendingIntent.getActivity(
+            context, event.sxId.hashCode(), tapIntent ?: android.content.Intent(),
+            android.app.PendingIntent.FLAG_UPDATE_CURRENT or android.app.PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = androidx.core.app.NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle("Contact added you")
+            .setContentText("${event.displayName} added you to SecureChat")
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setVisibility(androidx.core.app.NotificationCompat.VISIBILITY_SECRET)
+            .build()
+        nm?.notify(("contact:${event.sxId}").hashCode(), notification)
     }
 }

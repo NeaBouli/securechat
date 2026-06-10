@@ -2360,3 +2360,42 @@ Website `invite.html`:
 - Legacy SecureCall Flow (`/invite/<sxId>`) unverändert
 
 Build: ✅ | S7 ✅ | S4 ✅
+
+---
+
+## 2026-06-11 [CODEX]
+### TYPE: FIX + BUILD + INSTALL
+### STATUS: DONE — CONTACT_EXCHANGE Receiver Feedback
+### EMPFÄNGER: CC|GIO
+
+**Bug:** S7 scannt S4 QR → S7 speichert S4 ✅, aber S4 bekam keine sichtbare Bestätigung/Benachrichtigung ❌
+
+**Root Cause:**
+- `ContactExchangeManager.handleContactExchange()` speicherte eingehende Bundles im Hintergrund.
+- Es gab keinen UI-Event/Flow für den QR-Screen (`MyIdScreen`).
+- System-Notification existierte nur für eingehende `MESSAGE`, nicht für `CONTACT_EXCHANGE`.
+
+**Fix:**
+- `ContactExchangeManager`:
+  - `ContactExchangeEvent(sxId, displayName)` ergänzt.
+  - `contactExchangeEvents: SharedFlow<ContactExchangeEvent>` ergänzt.
+  - Nach eingehendem `CONTACT_EXCHANGE`: Kontakt speichern, Event emittieren, eigene Kontakt-Exchange-Notification anzeigen.
+- `MyIdScreen`:
+  - Hilt EntryPoint auf `ContactExchangeManager`.
+  - Collector auf `contactExchangeEvents`.
+  - Snackbar + sichtbare Card: `Contact added you` / `<name> added you to SecureChat.`
+
+**Touched Code Files:**
+- `data/src/main/java/com/stealthx/data/exchange/ContactExchangeManager.kt`
+- `presentation/src/main/java/com/stealthx/presentation/screens/MyIdScreen.kt`
+
+**Build/Install:**
+- Erster `assembleRelease`: KAPT/Kotlin internal compiler error in `:features:messenger` (nicht durch Fix-Code; `data` war bereits kompiliert).
+- Retry mit `./gradlew --no-daemon assembleRelease`: ✅ `BUILD SUCCESSFUL in 6m 58s`
+- APK: `app/build/outputs/apk/release/app-release.apk`
+- Install:
+  - S7 `ce10160adc00152604`: ✅
+  - Tab S4 `ce12182c68644439037e`: ✅
+
+**Hinweis:**
+- Gradle erzeugte untracked `.kotlin/`; nicht commiten.
