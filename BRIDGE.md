@@ -2399,3 +2399,21 @@ Build: ✅ | S7 ✅ | S4 ✅
 
 **Hinweis:**
 - Gradle erzeugte untracked `.kotlin/`; nicht commiten.
+
+---
+
+## 2026-06-10 [CODEX]
+### TYPE: ASSET
+### STATUS: DONE
+### EMPFÄNGER: CC|GIO
+
+**SecureChat App Icon aus `/Users/gio/Desktop/icons` platziert**
+
+- Quelle: `/Users/gio/Desktop/icons/SecureChat-Icon.png` (1024x1024)
+- Ziel:
+  - `app/src/main/res/drawable/ic_launcher_bitmap.png` (432x432 adaptive foreground)
+  - `app/src/main/res/mipmap-*/ic_launcher.png`
+  - `app/src/main/res/mipmap-*/ic_launcher_round.png`
+  - `app/src/main/res/mipmap-*/ic_launcher_foreground.png`
+- Manifest nutzt bereits `@mipmap/ic_launcher` und `@mipmap/ic_launcher_round`; keine XML-Änderung nötig.
+- `.kotlin/` bleibt untracked und wurde nicht committed.
