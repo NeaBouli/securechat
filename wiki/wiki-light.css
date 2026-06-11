@@ -1,0 +1,163 @@
+:root {
+  --bg: #f7f9fc !important;
+  --surface: #ffffff !important;
+  --surface2: #f1f5f9 !important;
+  --border: rgba(15,23,42,.1) !important;
+  --cyan: #3269d8 !important;
+  --green: #3269d8 !important;
+  --green-dim: #1d4ed8 !important;
+  --gold: #c58100 !important;
+  --muted: #526071 !important;
+  --text: #121926 !important;
+  --text-dim: #526071 !important;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  color: var(--text) !important;
+  background:
+    linear-gradient(180deg, rgba(50,105,216,.08), transparent 620px),
+    var(--bg) !important;
+}
+
+nav,
+nav.topbar {
+  background: rgba(247,249,252,.88) !important;
+  border-bottom: 1px solid var(--border) !important;
+  backdrop-filter: blur(18px);
+}
+
+nav a,
+nav.topbar a,
+.nav-right a {
+  color: var(--muted) !important;
+}
+
+nav a:hover,
+nav.topbar a:hover,
+.nav-right a:hover,
+.nav-right a.wiki-link {
+  color: var(--green) !important;
+  background: #eaf4ff !important;
+}
+
+aside,
+.toc,
+.info-box,
+.tip-box,
+.warn-box,
+.layer,
+.wiki-card,
+.contract,
+.arch {
+  background: rgba(255,255,255,.86) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 14px 34px rgba(15,23,42,.05);
+}
+
+aside {
+  border-right: 1px solid var(--border) !important;
+}
+
+aside h4,
+.wiki-label,
+.guide-label,
+.toc-title,
+.section-num,
+.wiki-card-type,
+.layer-num {
+  color: var(--green) !important;
+}
+
+aside a,
+p,
+.meta,
+.guide-sub,
+.wiki-card p,
+.toc li,
+td,
+.step-list li,
+footer {
+  color: var(--muted) !important;
+}
+
+aside a:hover,
+aside a.active {
+  color: var(--green) !important;
+  border-left-color: var(--green) !important;
+  background: #eaf4ff !important;
+}
+
+h1,
+h2,
+h3,
+strong,
+.logo-name,
+.nav-logo-app,
+.wiki-card h3,
+td:first-child,
+.guide-title,
+.section-heading {
+  color: var(--text) !important;
+}
+
+.guide-title span {
+  color: var(--green) !important;
+}
+
+.wiki-card:hover {
+  background: #eaf4ff !important;
+  border-color: rgba(50,105,216,.32) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(50,105,216,.12);
+}
+
+table {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+th {
+  background: var(--surface2) !important;
+  color: var(--green) !important;
+  border-color: var(--border) !important;
+}
+
+td {
+  border-color: var(--border) !important;
+}
+
+tr:nth-child(even) td {
+  background: #f8fbff !important;
+}
+
+code,
+.arch,
+.adb {
+  color: #1d4ed8 !important;
+  background: rgba(50,105,216,.08) !important;
+}
+
+.lang-toggle {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+.lang-btn {
+  color: var(--muted) !important;
+}
+
+.lang-btn.active,
+.nav-logo-icon,
+.logo-bg {
+  background: var(--green) !important;
+  color: #fff !important;
+}
+
+footer {
+  border-top-color: var(--border) !important;
+}
+
+@media (max-width: 768px) {
+  main { background: transparent !important; }
+}

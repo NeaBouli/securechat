@@ -2464,3 +2464,10 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Release build: `./gradlew assembleRelease` ✅ BUILD SUCCESSFUL.
 - Desktop artifact: `/Users/gio/Desktop/SecureChat-LATEST.apk` (13 MB).
 - GitHub release created: `v0.1.1-alpha-securechat`.
+## 2026-06-11 22:17 UTC — Codex SecureChat Site/Wiki Refresh
+
+- SecureChat public site audited for stale “in development”/pre-alpha messaging.
+- Header Wiki link removed from main and FAQ navigation; Wiki remains in footer resources.
+- Wiki pages now load `wiki/wiki-light.css`, giving all SecureChat wiki pages the same light StealthX landing-page style with readable dark text, white cards, and light-blue hover states.
+- Wiki status updated: Android APK is published (`v0.1.1-alpha`), core messaging release is available, IFR integration is marked integrated, and old “website/documentation only” build instructions were replaced with `./gradlew assembleRelease` guidance.
+- Roadmap clarified: QR contact exchange is current; NFC/Kaspa/relay decentralization remain roadmap items rather than “unbuilt” current blockers.

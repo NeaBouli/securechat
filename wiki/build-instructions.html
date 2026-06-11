@@ -56,6 +56,7 @@
   code { background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:2px 6px; font-family:monospace; font-size:13px; color:var(--green); }
   @media(max-width:768px) { aside { display:none; } main { margin-left:0; padding:70px 1.2rem 2rem; } }
 </style>
+<link rel="stylesheet" href="wiki-light.css">
 </head>
 <body>
 <nav class="topbar">
@@ -90,7 +91,7 @@
   <h1>Build Instructions</h1>
   <p class="meta">Classification: Developer · Last updated: April 2026</p>
 
-  <p>SecureChat is currently a website and documentation project. The Android app source code will be published when Phase 1 development is complete (Q2-Q3 2026). In the meantime, you can build the Chameleon overlay encryption component from source.</p>
+  <p>SecureChat now includes the Android application, website and documentation. The current release APK is published on GitHub Releases, and local builds use the Gradle wrapper in this repository.</p>
 
   <h2>Requirements</h2>
   <div class="layer">
@@ -114,7 +115,7 @@
 <span class="cy">$ git clone https://github.com/NeaBouli/securechat</span>
 <span class="cy">$ cd securechat</span>
     </div>
-    <p><strong>Note:</strong> SecureChat is currently a website + documentation project. The Android app source code will be published when Phase 1 development is complete (Q2-Q3 2026). The repository currently contains the project website, wiki, privacy policy, and technical documentation.</p>
+    <p><strong>Build:</strong> Run <code>./gradlew assembleRelease</code> from the repository root. The release APK is written to <code>app/build/outputs/apk/release/app-release.apk</code>. Official distribution remains through Vendetta Labs GitHub Releases and approved store channels.</p>
   </div>
 
   <h2>Chameleon</h2>

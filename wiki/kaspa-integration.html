@@ -55,6 +55,7 @@
   ul li::before { content:'->'; color:var(--green); flex-shrink:0; }
   @media(max-width:768px) { aside { display:none; } main { margin-left:0; padding:70px 1.2rem 2rem; } }
 </style>
+<link rel="stylesheet" href="wiki-light.css">
 </head>
 <body>
 <nav class="topbar">
@@ -87,7 +88,7 @@
 </aside>
 <main>
   <h1>Kaspa Identity Layer</h1>
-  <p class="meta">Classification: Technical · Status: Phase 2 (Q3 2026) — in design · Last updated: April 2026</p>
+  <p class="meta">Classification: Technical · Status: Roadmap after core APK release · Last updated: June 2026</p>
 
   <p>SecureChat uses the Kaspa BlockDAG as a decentralized identity layer. Instead of phone numbers or email addresses, your cryptographic public key is anchored on-chain — giving you a permanent, self-sovereign identity that no company can revoke.</p>
 
@@ -165,8 +166,8 @@
   <h2>Implementation Status</h2>
   <div class="layer">
     <div class="layer-num">Roadmap</div>
-    <h3>Phase 2 — Q3 2026</h3>
-    <p>The Kaspa identity layer is currently in the design phase. The core cryptographic primitives (X25519, Ed25519) are already implemented in the SecureChat crypto stack via lazysodium-android. The on-chain integration, relay registry, and micropayment system are planned for Phase 2.</p>
+    <h3>Roadmap — after core APK release</h3>
+    <p>The Kaspa identity layer remains a roadmap layer after the core Android APK release. The cryptographic primitives (X25519, Ed25519) are already implemented in the SecureChat crypto stack via lazysodium-android. The on-chain integration, relay registry, and micropayment system are scheduled as post-v1 expansion work.</p>
     <ul>
       <li><strong>Completed:</strong> X25519 + Ed25519 key generation and management</li>
       <li><strong>In design:</strong> OP_RETURN transaction format and parsing</li>
