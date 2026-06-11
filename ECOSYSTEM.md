@@ -20,9 +20,7 @@
 | IFR Lock | SecureCall | SecureChat | Chameleon | Suite |
 |----------|------------|------------|-----------|-------|
 | 0 | Free | Free | Free | — |
-| >= 1,000 | Pro | — | — | — |
 | >= 2,000 | Pro | Pro | Pro | — |
-| >= 5,000 | Premium | Pro | Pro | — |
 | >= 6,000 | Premium | Elite | Elite | — |
 | >= 8,000 | Premium | Elite | Elite | Suite (all) |
 

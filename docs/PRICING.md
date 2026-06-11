@@ -4,8 +4,8 @@
 
 | Product | Tier | Launch Price | Max Price | IFR Alternative |
 |---------|------|-------------|-----------|-----------------|
-| SecureCall | Pro | €15 | €50 | >= 1.000 IFR |
-| SecureCall | Premium | €25 | €100 | >= 5.000 IFR |
+| SecureCall | Pro | €15 | €50 | >= 2.000 IFR |
+| SecureCall | Premium | €25 | €100 | >= 6.000 IFR |
 | SecureChat | Pro | €9 | €14.99 | >= 2.000 IFR |
 | SecureChat | Elite | €19 | €23.99 | >= 6.000 IFR |
 | Chameleon | Pro | €9 | €14.99 | >= 2.000 IFR |
@@ -21,6 +21,6 @@
 
 ## Status
 - SecureCall: AVAILABLE on Google Play
-- SecureChat: COMING SOON (launch Q3 2026)
-- Chameleon: COMING SOON (launch Q3 2026)
-- Suite: COMING SOON
+- SecureChat: Internal Alpha; Stripe lifetime checkout wired on product site
+- Chameleon: Internal Alpha; Stripe lifetime checkout wired on product site
+- Suite: Stripe lifetime checkout wired on SecureChat and Chameleon sites

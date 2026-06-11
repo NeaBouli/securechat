@@ -2433,3 +2433,28 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Pro section shows `PRO ≥ 2,000 IFR`; Elite section shows `ELITE ≥ 6,000 IFR`.
 - Pro/Elite roadmap features are gated as `SOON` where expected; Emergency Broadcast remains gated behind `Unlock`.
 - No code changes required in SecureChat for this audit.
+
+---
+
+## 2026-06-11 [CODEX]
+### TYPE: AUDIT + FIX + BUILD
+### STATUS: DONE — Purchase/Activation Path
+### EMPFÄNGER: CC|GIO
+
+**Audit-Fazit SecureChat**
+- Settings sind kohärent: Free Core Messaging + QR aktiv; Pro/Elite Roadmap-Features als `SOON`; Emergency Broadcast als Elite-gated Feature.
+- Offene Transport-TODOs (`TorRelayTransport`, `OnionRelayTransport`) sind weiterhin dokumentierte Phase-2/3-Roadmap, nicht versehentlich klickbare UI.
+
+**Fixes**
+- `index.html`: deaktivierte Stripe-Platzhalter für Pro/Elite/Suite entfernt; Buttons rufen `https://api.stealthx.tech/stripe/create-dynamic-checkout` mit `securechat_pro_lifetime`, `securechat_elite_lifetime`, `stealthx_suite_lifetime` auf.
+- `ActivationCodeClient`: registriert vor `ACTIVATE_CODE` die lokale `sx_...` Identität beim Signalserver, damit Code-Slots an echte Geräte gebunden werden.
+- `SettingsViewModel`: akzeptiert Server-Tierwerte robust case-insensitive (`pro` → `PRO`, `elite` → `ELITE`).
+- `docs/PRICING.md` und `ECOSYSTEM.md`: alte 1,000/5,000 SecureCall-IFR-Werte auf 2,000/6,000 aktualisiert.
+
+**Verification**
+- Backend Stripe/WS Tests in stealth: ✅
+- Static CTA scan: keine `data-stripe-status="pending"` / `Stripe Checkout Ready` Platzhalter mehr.
+- `./gradlew --no-daemon testDebugUnitTest assembleDebug`: ✅ BUILD SUCCESSFUL.
+
+**Deploy-Hinweis**
+- Live API muss nach stealth Push neu deployen; vor Deploy kennt `/licenses/status` nur alte SecureCall-Keys.

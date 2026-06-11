@@ -905,7 +905,7 @@
         <li>Early adopter pricing</li>
       </ul>
       <br>
-      <a href="#" aria-disabled="true" data-stripe-product="securechat-pro-lifetime" data-stripe-status="pending" style="display:block;text-align:center;padding:10px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:14px;opacity:0.55;cursor:not-allowed;pointer-events:none;text-decoration:none;" title="Stripe Checkout pending">Stripe Checkout Ready</a>
+      <button type="button" data-checkout-tier="securechat_pro_lifetime" style="display:block;width:100%;text-align:center;padding:10px;border:1px solid var(--green);border-radius:8px;background:var(--green);color:#000;font-weight:700;font-size:14px;cursor:pointer;">Buy Pro Lifetime</button>
     </div>
     <div class="tier-card featured">
       <div style="font-size:11px;font-weight:700;letter-spacing:1px;background:var(--gold);color:#000;display:inline-block;padding:3px 10px;border-radius:4px;margin-bottom:0.8rem;">LIMITED — 100 Licenses at &euro;19</div>
@@ -919,7 +919,7 @@
         <li>Early adopter pricing</li>
       </ul>
       <br>
-      <a href="#" aria-disabled="true" data-stripe-product="securechat-elite-lifetime" data-stripe-status="pending" style="display:block;text-align:center;padding:10px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:14px;opacity:0.55;cursor:not-allowed;pointer-events:none;text-decoration:none;" title="Stripe Checkout pending">Stripe Checkout Ready</a>
+      <button type="button" data-checkout-tier="securechat_elite_lifetime" style="display:block;width:100%;text-align:center;padding:10px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;font-size:14px;cursor:pointer;">Buy Elite Lifetime</button>
     </div>
   </div>
 
@@ -928,7 +928,7 @@
     <h3 style="font-size:1.3rem;color:var(--gold);margin-bottom:0.5rem;">StealthX Suite &mdash; &euro;54 one-time</h3>
     <p style="color:var(--text-dim);font-size:14px;margin-bottom:1rem;">SecureCall Premium + SecureChat Elite + Chameleon Elite. Everything. Forever.</p>
     <p style="color:var(--muted);font-size:13px;margin-bottom:1.5rem;">OR: Lock &ge; 8,000 IFR for the same access.</p>
-    <a href="#" aria-disabled="true" data-stripe-product="stealthx-suite-lifetime" data-stripe-status="pending" style="display:inline-block;padding:10px 24px;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-weight:700;font-size:14px;opacity:0.55;cursor:not-allowed;pointer-events:none;text-decoration:none;" title="Stripe Checkout pending">Stripe Checkout Ready</a>
+    <button type="button" data-checkout-tier="stealthx_suite_lifetime" style="display:inline-block;padding:10px 24px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;font-size:14px;cursor:pointer;">Buy Suite Lifetime</button>
   </div>
 
   <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:1.5rem;">All lifetime prices limited to 100 licenses at launch price. Price rises with every sale. IFR lock is always the most cost-effective option.</p>
@@ -995,6 +995,34 @@
 </footer>
 
 <script>
+(function(){
+  var API='https://api.stealthx.tech';
+  async function startCheckout(button){
+    if(!button||button.disabled)return;
+    var label=button.textContent;
+    button.disabled=true;
+    button.textContent='Opening Stripe...';
+    try{
+      var r=await fetch(API+'/stripe/create-dynamic-checkout',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({tier:button.dataset.checkoutTier})
+      });
+      var d=await r.json().catch(function(){return{}});
+      if(!r.ok||!d.url)throw new Error(d.error||'Checkout unavailable');
+      window.location.href=d.url;
+    }catch(e){
+      button.textContent='Try again';
+      button.disabled=false;
+      button.title=e.message;
+      setTimeout(function(){ if(!button.disabled) button.textContent=label; },2500);
+    }
+  }
+  document.querySelectorAll('[data-checkout-tier]').forEach(function(button){
+    button.addEventListener('click',function(){startCheckout(button);});
+  });
+})();
+
 // Chat animation
 (function() {
   const msgs = document.getElementById('chatMessages');

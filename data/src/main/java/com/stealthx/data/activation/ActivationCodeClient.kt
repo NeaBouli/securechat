@@ -5,6 +5,8 @@
  */
 package com.stealthx.data.activation
 
+import android.content.Context
+import com.stealthx.data.identity.StealthXIdentity
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -33,25 +35,42 @@ object ActivationCodeClient {
 
     private const val SIGNAL_URL = "wss://api.stealthx.tech/signal"
 
-    fun activate(code: String, onResult: (tier: String?, error: String?) -> Unit) {
+    fun activate(context: Context, code: String, onResult: (tier: String?, error: String?) -> Unit) {
         val request = Request.Builder().url(SIGNAL_URL).build()
         client.newWebSocket(request, object : WebSocketListener() {
+            private var activationSent = false
+
             override fun onOpen(ws: WebSocket, response: Response) {
+                val clientId = runCatching { StealthXIdentity.getOrCreateWithSeed(context).raw }.getOrNull()
+                if (clientId.isNullOrBlank()) {
+                    ws.close(1008, "identity_missing")
+                    onResult(null, "identity_missing")
+                    return
+                }
                 ws.send(JSONObject().apply {
-                    put("type", "ACTIVATE_CODE")
-                    put("code", code.trim())
+                    put("type", "REGISTER")
+                    put("clientId", clientId)
                 }.toString())
             }
 
             override fun onMessage(ws: WebSocket, text: String) {
                 try {
                     val json = JSONObject(text)
-                    if (json.optString("type") == "ACTIVATE_CODE_RESULT") {
-                        ws.close(1000, null)
-                        if (json.optBoolean("success", false)) {
-                            onResult(json.optString("tier").takeIf { it.isNotEmpty() }, null)
-                        } else {
-                            onResult(null, json.optString("error", "invalid_code"))
+                    when (json.optString("type")) {
+                        "REGISTERED" -> if (!activationSent) {
+                            activationSent = true
+                            ws.send(JSONObject().apply {
+                                put("type", "ACTIVATE_CODE")
+                                put("code", code.trim())
+                            }.toString())
+                        }
+                        "ACTIVATE_CODE_RESULT" -> {
+                            ws.close(1000, null)
+                            if (json.optBoolean("success", false)) {
+                                onResult(json.optString("tier").takeIf { it.isNotEmpty() }, null)
+                            } else {
+                                onResult(null, json.optString("error", "invalid_code"))
+                            }
                         }
                     }
                 } catch (_: Exception) {}
