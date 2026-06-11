@@ -2417,3 +2417,19 @@ Build: ✅ | S7 ✅ | S4 ✅
   - `app/src/main/res/mipmap-*/ic_launcher_foreground.png`
 - Manifest nutzt bereits `@mipmap/ic_launcher` und `@mipmap/ic_launcher_round`; keine XML-Änderung nötig.
 - `.kotlin/` bleibt untracked und wurde nicht committed.
+
+---
+
+## 2026-06-11 [CODEX]
+### TYPE: AUDIT
+### STATUS: DONE
+### EMPFÄNGER: CC|GIO
+
+**SecureChat Settings / IFR / Device Audit**
+
+- S7 text-only UI audit via `uiautomator`; keine Screenshots verwendet.
+- Main screen shows T6 delivered contact thread: `sx_TTonMZuHH` / `T6_S7_to_TAB_20260611_0058`.
+- Settings show Free tier and upgrade CTA `Upgrade to Pro — Lock 2,000 IFR`.
+- Pro section shows `PRO ≥ 2,000 IFR`; Elite section shows `ELITE ≥ 6,000 IFR`.
+- Pro/Elite roadmap features are gated as `SOON` where expected; Emergency Broadcast remains gated behind `Unlock`.
+- No code changes required in SecureChat for this audit.
