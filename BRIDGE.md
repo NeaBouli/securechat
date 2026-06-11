@@ -2471,3 +2471,8 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Wiki pages now load `wiki/wiki-light.css`, giving all SecureChat wiki pages the same light StealthX landing-page style with readable dark text, white cards, and light-blue hover states.
 - Wiki status updated: Android APK is published (`v0.1.1-alpha`), core messaging release is available, IFR integration is marked integrated, and old “website/documentation only” build instructions were replaced with `./gradlew assembleRelease` guidance.
 - Roadmap clarified: QR contact exchange is current; NFC/Kaspa/relay decentralization remain roadmap items rather than “unbuilt” current blockers.
+
+## 2026-06-11 22:36 UTC — Codex IFR Uniswap CTA
+
+- SecureChat public IFR CTAs now point directly to the official Uniswap $IFR token page.
+- Footer/FAQ/wiki labels updated from generic IFR/info wording to `Buy $IFR` / `Buy $IFR on Uniswap` where the action is token purchase.
