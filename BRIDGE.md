@@ -2458,3 +2458,9 @@ Build: ✅ | S7 ✅ | S4 ✅
 
 **Deploy-Hinweis**
 - Live API muss nach stealth Push neu deployen; vor Deploy kennt `/licenses/status` nur alte SecureCall-Keys.
+
+## 2026-06-11 Codex — Release APK published
+- Version: `0.1.1-alpha` (`versionCode 2`).
+- Release build: `./gradlew assembleRelease` ✅ BUILD SUCCESSFUL.
+- Desktop artifact: `/Users/gio/Desktop/SecureChat-LATEST.apk` (13 MB).
+- GitHub release created: `v0.1.1-alpha-securechat`.
