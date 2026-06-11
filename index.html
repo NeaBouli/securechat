@@ -246,6 +246,164 @@
     section { padding:3rem 1rem; }
     .stats-bar { gap:1.5rem; }
   }
+
+  /* Light StealthX product layout override, aligned with /securecall product.css */
+  :root {
+    --bg: #f7fbf9;
+    --surface: #ffffff;
+    --surface2: #eef8f3;
+    --border: rgba(14, 56, 42, 0.12);
+    --cyan: #1787d6;
+    --green: #0aa66d;
+    --green-dim: #078f5d;
+    --gold: #b77900;
+    --red: #cf3348;
+    --orange: #d4662b;
+    --muted: #64748b;
+    --text: #14211c;
+    --text-dim: #4f635b;
+    --logo-glow: rgba(10, 166, 109, 0.18);
+  }
+  body {
+    background:
+      linear-gradient(180deg, rgba(10,166,109,.11), transparent 560px),
+      var(--bg);
+    color: var(--text);
+    font-family: "Hanken Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  body::before {
+    opacity: .045;
+    background-image:
+      linear-gradient(30deg, rgba(10,166,109,.24) 12%, transparent 12.5%, transparent 87%, rgba(10,166,109,.24) 87.5%, rgba(10,166,109,.24)),
+      linear-gradient(150deg, rgba(23,135,214,.18) 12%, transparent 12.5%, transparent 87%, rgba(23,135,214,.18) 87.5%, rgba(23,135,214,.18));
+    background-size: 96px 120px;
+  }
+  nav {
+    background: rgba(247,251,249,.9);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 10px 32px rgba(15, 23, 42, .05);
+  }
+  .nav-logo-bg,
+  .footer-logo-bg {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+  .nav-logo-bg img { height: 42px; border-radius: 10px; }
+  .footer-logo-bg img { height: 30px; border-radius: 8px; }
+  .nav-logo-brand,
+  .section-label,
+  .hero-eyebrow,
+  .stat-value,
+  .footer-col a:hover,
+  .tier-lock span,
+  .tier-features li::before { color: var(--green); }
+  .nav-logo-app,
+  .feature-card h3,
+  .crypto-table td:first-child,
+  .compare-table th:first-child,
+  .footer-logo-name { color: var(--text); }
+  .nav-links a { color: var(--muted); }
+  .nav-links a:hover {
+    color: var(--green);
+    background: rgba(10,166,109,.08);
+  }
+  .nav-links a.cta,
+  .btn-primary {
+    background: var(--green);
+    color: #fff;
+    border: 1px solid var(--green);
+  }
+  .nav-links a.cta:hover,
+  .btn-primary:hover {
+    background: var(--green-dim);
+    color: #fff;
+  }
+  .btn-secondary {
+    color: var(--text);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.72);
+  }
+  .btn-secondary:hover {
+    color: var(--green);
+    border-color: var(--green);
+    background: #fff;
+  }
+  .hero { max-width: 1120px; text-align: left; }
+  .hero-inner { gap: 56px; }
+  .hero-title {
+    font-family: "Schibsted Grotesk", system-ui, sans-serif;
+    color: var(--text);
+    letter-spacing: -0.035em;
+  }
+  .hero-title span { color: var(--green); }
+  .hero-sub,
+  .feature-card p,
+  .section-sub,
+  .roadmap-content p,
+  .footer-bottom p,
+  .footer-bottom a,
+  .footer-col a,
+  .tier-features li,
+  .crypto-table td,
+  .compare-table td:first-child { color: var(--text-dim); }
+  .tag,
+  .badge,
+  .feature-card,
+  .tier-card,
+  .roadmap-item,
+  .arch-diagram,
+  .code-block,
+  .hero-phone,
+  .stats-bar,
+  .status-bar,
+  footer {
+    background: rgba(255,255,255,.86);
+    border-color: var(--border);
+    box-shadow: 0 18px 48px rgba(15,23,42,.06);
+  }
+  .hero-phone-content {
+    background: linear-gradient(180deg, #ffffff 0%, #eef8f3 100%);
+  }
+  .hero-phone::before { background: #dceee6; }
+  .chat-msg.recv {
+    background: #eef8f3;
+    color: var(--text);
+    border-color: var(--border);
+  }
+  .chat-msg.encrypted {
+    background: rgba(23,135,214,.08);
+    color: var(--cyan);
+    border-color: rgba(23,135,214,.2);
+  }
+  .feature-card:hover,
+  .roadmap-item.done,
+  .tier-card.featured { border-color: var(--green); }
+  .crypto-table th,
+  .compare-table th {
+    background: #eef8f3;
+    color: var(--text);
+    border-color: var(--border);
+  }
+  .crypto-table td,
+  .compare-table td { border-color: var(--border); }
+  .compare-table th.ours,
+  .compare-table td.ours,
+  .tier-card.featured {
+    background: rgba(10,166,109,.07);
+    color: var(--green);
+  }
+  .arch-diagram,
+  .code-block {
+    color: #315046;
+    background: #ffffff;
+  }
+  hr.divider { border-top-color: var(--border); }
+  @media(max-width:768px) {
+    .hero { text-align: left; }
+    .hero-inner { gap: 32px; }
+    .nav-links { background: rgba(247,251,249,.96); }
+  }
 </style>
 </head>
 <body>
