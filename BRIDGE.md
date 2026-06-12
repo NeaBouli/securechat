@@ -2488,3 +2488,18 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Verification: `testDebugUnitTest assembleRelease` gruen.
 - Desktop-Artefakt: `/Users/gio/Desktop/SecureChat-LATEST.apk` aktualisiert.
 - Device refresh: S4, S7, S10 frisch installiert; text-only launch smoke ohne Crash.
+
+## 2026-06-12 16:01 PT — Codex Final SecureChat Audit Pass
+
+- SecureChat auf allen drei Geräten geprüft:
+  - Tab S4 `ce12182c68644439037e`: `com.stealthx.securechat` v0.1.1-alpha.
+  - S7 `ce10160adc00152604`: `com.stealthx.securechat` v0.1.1-alpha.
+  - S10 `RF8N313QMFL`: `com.stealthx.securechat` v0.1.1-alpha.
+- Text-only UI/logcat:
+  - Startscreen zeigt erwartete Conversation-Empty-State/ID UI, keine alten `Lock IFR`/`WalletConnect v2` Starttexte.
+  - Monkey Stabilitätslauf je Gerät: 180 Events, keine SecureChat Fatal Exceptions/ANRs.
+- Public/Wiki Fix:
+  - Elite-Tabelle im User Manual verkauft nicht mehr Onion Routing, Decoy Chat und Advanced Threat Detection als aktuelle fertige Features.
+  - Aktuell bleibt Emergency Broadcast als Elite-Feature; Onion/Decoy/Threat Detection klar als Roadmap.
+- Checkout:
+  - Hetzner-local Test erzeugt Checkout-URLs fuer `securechat_elite_lifetime`; Live-Status kennt `securechat_pro_lifetime` und `securechat_elite_lifetime`.
