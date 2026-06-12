@@ -22,17 +22,17 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SecureChat">
 <meta property="og:title" content="SecureChat — Encrypted Messaging, Zero Metadata">
-<meta property="og:description" content="Decentralized E2E encrypted messaging. No phone number, no server, no metadata. XChaCha20 + Double Ratchet. Source-Available source-available.">
+<meta property="og:description" content="E2E encrypted messaging with StealthX ID, QR contact exchange, relay delivery, XChaCha20, and Double Ratchet.">
 <meta property="og:url" content="https://securechat.stealthx.tech/">
 <meta property="og:image" content="https://securechat.stealthx.tech/logo.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SecureChat — Encrypted Messaging, Zero Metadata">
-<meta name="twitter:description" content="Decentralized E2E encrypted messaging. No phone number, no server. XChaCha20 + Double Ratchet.">
+<meta name="twitter:description" content="E2E encrypted messaging with StealthX ID, QR contact exchange, XChaCha20, and Double Ratchet.">
 <meta name="twitter:image" content="https://securechat.stealthx.tech/logo.png">
 <link rel="alternate" hreflang="en" href="https://securechat.stealthx.tech/">
 <link rel="alternate" hreflang="x-default" href="https://securechat.stealthx.tech/">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SecureChat","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"Decentralized end-to-end encrypted messaging with zero metadata.","url":"https://securechat.stealthx.tech","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://github.com/NeaBouli/securechat/blob/main/LICENSE"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses X25519 key pairs for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat source-available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. Lock tokens on-chain for lifetime Pro or Elite access. No subscriptions."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"No central server. Messages route through ephemeral Kaspa relay nodes. Relay operators see only encrypted blobs."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SecureChat","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"End-to-end encrypted messaging with StealthX ID, QR contact exchange, and relay delivery.","url":"https://securechat.stealthx.tech","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://github.com/NeaBouli/securechat/blob/main/LICENSE"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses cryptographic key pairs and a StealthX ID for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat source-available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. Hold tokens in your wallet for lifetime Pro or Elite access. No subscriptions."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"SecureChat uses StealthX relay delivery for encrypted payloads. Message content remains end-to-end encrypted."}}]}</script>
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -582,7 +582,7 @@
     <div class="feature-card">
       <div class="feature-icon">⛓</div>
       <h3>Kaspa Identity Layer</h3>
-      <p>Your public key is anchored once to the Kaspa BlockDAG. Decentralized identity without a central server. Your identity is yours forever.</p>
+      <p>StealthX ID is generated from your cryptographic key bundle. Kaspa BlockDAG identity anchoring remains a roadmap hardening layer.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🔄</div>
@@ -591,13 +591,13 @@
     </div>
     <div class="feature-card">
       <div class="feature-icon">📡</div>
-      <h3>Zero Server Architecture</h3>
-      <p>Messages route through ephemeral Kaspa relay nodes — incentivized with KAS micropayments. No central server to hack, subpoena, or censor.</p>
+      <h3>Encrypted Relay Delivery</h3>
+      <p>Messages are encrypted on-device and delivered as ratchet payloads through the StealthX relay. Kaspa relay incentives remain roadmap.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🌐</div>
       <h3>Group Messaging</h3>
-      <p>Encrypted group chats with per-member key derivation. No group server. Group state lives on Kaspa. Members join via QR or NFC.</p>
+      <p>Roadmap feature. Current release focuses on one-to-one E2E messaging, QR contact exchange, and emergency broadcast.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">💥</div>
@@ -607,7 +607,7 @@
     <div class="feature-card">
       <div class="feature-icon">📎</div>
       <h3>Encrypted File Transfer</h3>
-      <p>Send files encrypted end-to-end via Kaspa XFTP protocol. Files are chunked, encrypted, and deleted from relay after delivery.</p>
+      <p>Roadmap feature. The current APK ships encrypted text messaging and QR message import/export.</p>
     </div>
     <div class="feature-card" style="border-color:var(--green);">
       <div class="feature-icon">🦎</div>
@@ -617,7 +617,7 @@
     <div class="feature-card">
       <div class="feature-icon">🔑</div>
       <h3>IFR Token Lifetime Access</h3>
-      <p>Lock IFR tokens on-chain for lifetime Pro or Elite access. No subscriptions. No renewals. Your tokens stay yours.</p>
+      <p>Hold IFR tokens in your wallet for lifetime Pro or Elite access. No subscriptions. No renewals. Your tokens stay yours.</p>
     </div>
     <div class="feature-card" style="border-color:var(--red);">
       <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--gold);margin-bottom:0.4rem;">ELITE</div>
@@ -640,7 +640,7 @@
       <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--cyan);margin-bottom:1rem;">THE MESSENGER</div>
       <div style="font-size:2.5rem;margin-bottom:0.5rem;">&#128172;</div>
       <h3 style="font-size:1.3rem;margin-bottom:0.8rem;">SecureChat</h3>
-      <p style="font-size:14px;color:var(--text-dim);line-height:1.7;">Decentralized E2E messaging on Kaspa BlockDAG. No phone number. No server. No metadata.</p>
+      <p style="font-size:14px;color:var(--text-dim);line-height:1.7;">E2E messaging with StealthX ID, QR contact exchange, and relay delivery. No phone number required.</p>
       <div style="margin-top:1.2rem;font-size:12px;color:var(--cyan);font-weight:700;">APK AVAILABLE</div>
     </div>
     <div class="feature-card" style="border-color:var(--green);text-align:center;padding:2.5rem;">
@@ -659,23 +659,23 @@
 <section id="architecture">
   <div class="section-label">Architecture</div>
   <h2 class="section-title">How SecureChat works.</h2>
-  <p class="section-sub">Three independent layers. Zero central authority. Every component is replaceable and auditable.</p>
+  <p class="section-sub">Auditable device-side crypto, local identity, and relay delivery today; Kaspa identity anchoring remains roadmap.</p>
 
   <div class="arch-diagram">
 <span class="hl">SecureChat Architecture — StealthX Platform</span>
 <span class="dim">────────────────────────────────────────────────────────</span>
 
-<span class="cyan">LAYER 1 — Identity (Kaspa BlockDAG)</span>
-  <span class="hl">KaspaIdentityManager</span>    ← Public key anchored on-chain (once)
-  <span class="hl">ContactDiscovery</span>         ← Find contacts by Kaspa address
-  <span class="hl">NodeIncentives</span>           ← KAS micropayments to relay operators
-  <span class="dim">No message content on-chain. Only identity hashes.</span>
+<span class="cyan">LAYER 1 — Identity</span>
+  <span class="hl">StealthXIdentity</span>         ← Ed25519/X25519 key bundle and sx_ID
+  <span class="hl">QR Contact Exchange</span>      ← Device-to-device public key exchange
+  <span class="hl">Kaspa Anchor</span>             ← Roadmap identity hardening
+  <span class="dim">No message content on-chain.</span>
 
 <span class="cyan">LAYER 2 — Transport (Ephemeral Relay Nodes)</span>
-  <span class="hl">EphemeralRelayPool</span>       ← Community-operated, KAS-incentivized
-  <span class="hl">SMP-style Queues</span>         ← Unidirectional, anonymous message queues
-  <span class="hl">OnionRouting</span>             ← 2-hop routing, IP protected
-  <span class="dim">Relay sees only encrypted blobs. Deleted after delivery.</span>
+  <span class="hl">StealthX Signaling Relay</span> ← Encrypted message delivery
+  <span class="hl">QR Import/Export</span>         ← Air-gapped message transfer fallback
+  <span class="hl">OnionRouting</span>             ← Roadmap transport anonymity
+  <span class="dim">Relay sees encrypted ratchet payloads.</span>
 
 <span class="cyan">LAYER 3 — Crypto (Device-side, lazysodium)</span>
   <span class="hl">XChaCha20Poly1305</span>        ← Symmetric encryption (24-byte nonce)
@@ -753,16 +753,16 @@
     </thead>
     <tbody>
       <tr><td>No phone number required</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✓</td><td class="no">✗</td></tr>
-      <tr><td>No central server</td><td class="ours">✓</td><td class="no">✗</td><td class="warn">⚠️</td><td class="no">✗</td></tr>
-      <tr><td>Decentralized identity</td><td class="ours">✓ Kaspa</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>No phone number required</td><td class="ours">✓</td><td class="no">✗</td><td class="ours">✓</td><td class="no">✗</td></tr>
+      <tr><td>Decentralized identity</td><td class="warn">Roadmap</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>Double Ratchet E2E</td><td class="ours">✓</td><td class="ours">✓</td><td class="ours">✓</td><td class="warn">⚠️ opt-in</td></tr>
       <tr><td>XChaCha20-Poly1305</td><td class="ours">✓</td><td class="no">✗ AES</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>STEALTH-DELETE</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Blockchain identity anchor</td><td class="ours">✓ Kaspa</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>Blockchain identity anchor</td><td class="warn">Roadmap</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>IFR Token lifetime access</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>Chameleon overlay compatible</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>Source-Available</td><td class="ours">✓</td><td class="ours">✓</td><td class="ours">✓</td><td class="no">✗</td></tr>
-      <tr><td>Zero metadata</td><td class="ours">✓</td><td class="warn">⚠️</td><td class="ours">✓</td><td class="no">✗</td></tr>
+      <tr><td>Reduced metadata</td><td class="ours">✓</td><td class="warn">⚠️</td><td class="ours">✓</td><td class="no">✗</td></tr>
     </tbody>
   </table>
 </section>
@@ -820,7 +820,7 @@
 <section id="ifr">
   <div class="section-label">Inferno Integration</div>
   <h2 class="section-title">IFR Lifetime Unlock.</h2>
-  <p class="section-sub">Lock IFR tokens once. Unlock forever. Works across all StealthX products — one lock, lifetime benefit.</p>
+  <p class="section-sub">Hold IFR tokens. Unlock forever. Works across all StealthX products — one wallet balance, lifetime benefit.</p>
 
   <div class="tier-grid">
     <div class="tier-card">
@@ -836,25 +836,26 @@
     </div>
     <div class="tier-card featured">
       <div class="tier-name" style="color:var(--green)">Pro</div>
-      <div class="tier-lock">Lock <span>≥ 2,000 IFR</span> — lifetime</div>
+      <div class="tier-lock">Hold <span>≥ 2,000 IFR</span> — lifetime</div>
       <ul class="tier-features">
         <li>Everything in Free</li>
         <li>Unlimited contacts</li>
-        <li>Group messaging</li>
-        <li>Encrypted file transfer</li>
-        <li>Kaspa identity anchor</li>
-        <li>Chameleon integration</li>
-        <li>Priority relay routing</li>
+        <li>Unlimited contacts</li>
+        <li>Priority feature access</li>
+        <li>Roadmap: group messaging</li>
+        <li>Roadmap: file transfer</li>
+        <li>Roadmap: Kaspa identity anchor</li>
       </ul>
     </div>
     <div class="tier-card">
       <div class="tier-name" style="color:var(--gold)">Elite</div>
-      <div class="tier-lock">Lock <span>≥ 6,000 IFR</span> — lifetime</div>
+      <div class="tier-lock">Hold <span>≥ 6,000 IFR</span> — lifetime</div>
       <ul class="tier-features">
         <li>Everything in Pro</li>
-        <li>Onion routing (3-hop)</li>
-        <li>Decoy chat profiles</li>
-        <li>Advanced threat detection</li>
+        <li>Emergency Broadcast</li>
+        <li>Roadmap: onion routing</li>
+        <li>Roadmap: decoy chat profiles</li>
+        <li>Roadmap: advanced threat detection</li>
         <li>Zero telemetry</li>
         <li>Run your own relay node</li>
         <li>Early access to features</li>
@@ -863,13 +864,13 @@
     <div class="tier-card featured" style="border-color:var(--gold);background:rgba(255,184,0,0.05);">
       <div style="font-size:11px;font-weight:700;letter-spacing:1px;background:var(--gold);color:#000;display:inline-block;padding:3px 10px;border-radius:4px;margin-bottom:0.8rem;">BEST VALUE</div>
       <div class="tier-name" style="color:var(--gold)">StealthX Suite</div>
-      <div class="tier-lock">Lock <span>≥ 8,000 IFR</span> — lifetime</div>
+      <div class="tier-lock">Hold <span>≥ 8,000 IFR</span> — lifetime</div>
       <ul class="tier-features">
         <li>SecureCall Premium (lifetime)</li>
         <li>SecureChat Elite (lifetime)</li>
         <li>Chameleon Elite (lifetime)</li>
         <li>All future StealthX products</li>
-        <li>Everything. One lock.</li>
+        <li>Everything. One wallet balance.</li>
       </ul>
       <br>
       <a href="https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B" style="display:block;text-align:center;padding:10px;border:1px solid var(--gold);border-radius:8px;color:var(--gold);text-decoration:none;font-weight:700;font-size:14px;" target="_blank" rel="noopener">Buy $IFR on Uniswap</a>
@@ -878,7 +879,7 @@
 
   <br>
   <p style="font-size:13px; color:var(--muted); text-align:center;">
-    IFR Lock contract: <code style="color:var(--cyan); font-size:12px;">0x769928aBDfc949D0718d8766a1C2d7dBb63954Eb</code> (Ethereum Mainnet)
+    IFR token contract: <code style="color:var(--cyan); font-size:12px;">0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code> (Ethereum Mainnet)
     &nbsp;·&nbsp; <a href="https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B" style="color:var(--green)">Buy $IFR on Uniswap →</a>
   </p>
 </section>
@@ -926,11 +927,11 @@
   <div style="margin-top:2rem;background:rgba(255,184,0,0.05);border:1px solid rgba(255,184,0,0.2);border-radius:12px;padding:2rem;text-align:center;">
     <h3 style="font-size:1.3rem;color:var(--gold);margin-bottom:0.5rem;">StealthX Suite &mdash; &euro;54 one-time</h3>
     <p style="color:var(--text-dim);font-size:14px;margin-bottom:1rem;">SecureCall Premium + SecureChat Elite + Chameleon Elite. Everything. Forever.</p>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:1.5rem;">OR: Lock &ge; 8,000 IFR for the same access.</p>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:1.5rem;">OR: Hold &ge; 8,000 IFR for the same access.</p>
     <button type="button" data-checkout-tier="stealthx_suite_lifetime" style="display:inline-block;padding:10px 24px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;font-size:14px;cursor:pointer;">Buy Suite Lifetime</button>
   </div>
 
-  <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:1.5rem;">All lifetime prices limited to 100 licenses at launch price. Price rises with every sale. IFR lock is always the most cost-effective option.</p>
+  <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:1.5rem;">All lifetime prices limited to 100 licenses at launch price. Price rises with every sale. Holding IFR is always the most cost-effective option.</p>
 </section>
 
 <hr class="divider">
