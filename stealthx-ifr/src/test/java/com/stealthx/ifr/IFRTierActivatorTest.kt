@@ -29,7 +29,7 @@ class IFRTierActivatorTest {
     private val testWallet = "0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B"
 
     @Test
-    @DisplayName("2000 IFR locked → PRO tier activated")
+    @DisplayName("2000 IFR held → PRO tier activated")
     fun `pro activation`() = runTest {
         coEvery { verifier.getLockedAmount(testWallet) } returns BigInteger("2000000000000")
         coEvery { repo.saveTierResult(any(), any(), any()) } returns Unit
@@ -44,7 +44,7 @@ class IFRTierActivatorTest {
     }
 
     @Test
-    @DisplayName("6000 IFR locked → ELITE tier activated")
+    @DisplayName("6000 IFR held → ELITE tier activated")
     fun `elite activation`() = runTest {
         coEvery { verifier.getLockedAmount(testWallet) } returns BigInteger("6000000000000")
         coEvery { repo.saveTierResult(any(), any(), any()) } returns Unit
@@ -56,7 +56,7 @@ class IFRTierActivatorTest {
     }
 
     @Test
-    @DisplayName("0 IFR locked → FREE tier")
+    @DisplayName("0 IFR held → FREE tier")
     fun `zero balance is free`() = runTest {
         coEvery { verifier.getLockedAmount(testWallet) } returns BigInteger.ZERO
         coEvery { repo.saveTierResult(any(), any(), any()) } returns Unit

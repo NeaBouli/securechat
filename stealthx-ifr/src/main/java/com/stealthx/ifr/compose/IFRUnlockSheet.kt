@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
  * Bottom sheet for IFR wallet connection and verification.
  *
  * Options:
- * 1. WalletConnect deep link (opens MetaMask/Trust Wallet)
+ * 1. Wallet app deep link (opens MetaMask/Trust Wallet)
  * 2. Manual wallet address entry (30-day expiry)
  */
 @Composable
@@ -58,7 +58,7 @@ fun IFRUnlockSheet(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Lock IFR tokens on Ethereum to unlock premium features.\nOne-time verification — no data leaves your device.",
+            text = "Hold IFR tokens in your Ethereum wallet to unlock premium features.\nOne-time read-only verification — no data leaves your device.",
             style = MaterialTheme.typography.bodySmall,
             color = Color.Gray,
             textAlign = TextAlign.Center
@@ -72,7 +72,7 @@ fun IFRUnlockSheet(
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E5FF))
         ) {
             Text(
-                text = if (isVerifying) "Verifying..." else "Connect Wallet",
+                text = if (isVerifying) "Verifying..." else "Open Wallet",
                 color = Color.Black
             )
         }
@@ -104,7 +104,7 @@ fun IFRUnlockSheet(
                 Text("Verify")
             }
             Text(
-                text = "Manual verification expires after 30 days",
+                text = "Manual balance verification expires after 30 days",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 modifier = Modifier.padding(top = 4.dp)

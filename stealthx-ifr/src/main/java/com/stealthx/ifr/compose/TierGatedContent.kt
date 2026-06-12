@@ -89,7 +89,7 @@ fun LockedFeatureCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Lock ${requiredTier.minLockAmount / 1_000_000_000L} IFR to unlock",
+                text = "Hold ${requiredTier.minLockAmount / 1_000_000_000L} IFR to unlock",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 textAlign = TextAlign.Center

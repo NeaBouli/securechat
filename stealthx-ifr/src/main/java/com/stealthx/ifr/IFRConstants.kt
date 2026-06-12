@@ -36,29 +36,20 @@ object IFRConstants {
     const val HMAC_KEY_ALIAS = "ifr_tier_hmac_v1"
 
     // ── Ethereum RPC (public read-only) ───────────────────────
-    // Fallback public endpoints — no API key required for eth_call
+    // Fallback public endpoints — no API key required for eth_call.
+    // eth.llamarpc.com is intentionally not used; it rejects some app/server clients.
     val RPC_ENDPOINTS = listOf(
-        "https://eth.llamarpc.com",
-        "https://rpc.ankr.com/eth",
-        "https://cloudflare-eth.com"
+        "https://ethereum.publicnode.com",
+        "https://cloudflare-eth.com",
+        "https://rpc.ankr.com/eth"
     )
 
-    // ── IFRLock ABI fragment (isLocked function only) ─────────
-    val IFRLOCK_ABI = """
+    // ── ERC-20 ABI fragment used for the IFR hold model ───────
+    val IFR_TOKEN_ABI = """
         [
           {
-            "inputs": [
-              {"internalType": "address", "name": "user",      "type": "address"},
-              {"internalType": "uint256", "name": "minAmount", "type": "uint256"}
-            ],
-            "name": "isLocked",
-            "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
             "inputs": [{"internalType": "address", "name": "user", "type": "address"}],
-            "name": "lockedBalance",
+            "name": "balanceOf",
             "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
             "stateMutability": "view",
             "type": "function"
@@ -66,8 +57,10 @@ object IFRConstants {
         ]
     """.trimIndent()
 
+    val IFRLOCK_ABI = IFR_TOKEN_ABI
+
     /**
-     * Determine tier from raw locked amount.
+     * Determine tier from raw held token balance.
      */
     fun tierFromAmount(amount: BigInteger): IfrTier = when {
         amount >= ELITE_THRESHOLD -> IfrTier.ELITE

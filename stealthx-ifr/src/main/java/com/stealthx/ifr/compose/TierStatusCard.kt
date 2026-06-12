@@ -78,7 +78,7 @@ fun TierStatusCard(
             if (ifrBalance > 0) {
                 val displayBalance = ifrBalance / 1_000_000_000L
                 Text(
-                    text = "$displayBalance IFR locked",
+                    text = "$displayBalance IFR held",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White
                 )

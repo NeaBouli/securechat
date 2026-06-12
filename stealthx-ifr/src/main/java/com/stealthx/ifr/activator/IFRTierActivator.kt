@@ -13,10 +13,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * IFR Tier Activator — verifies on-chain IFR lock and activates tier.
+ * IFR Tier Activator — verifies on-chain IFR holdings and activates tier.
  *
  * Flow:
- * 1. Call IFRLockVerifier.getLockedAmount(wallet) — eth_call
+ * 1. Call IFRLockVerifier.getLockedAmount(wallet) — ERC-20 balanceOf eth_call
  * 2. Compute tier via IFRConstants.tierFromAmount()
  * 3. Save via IfrTierRepository.saveTierResult() — HMAC computed internally
  *
@@ -40,7 +40,7 @@ class IFRTierActivator @Inject constructor(
     )
 
     /**
-     * Verify IFR lock for a wallet and activate the corresponding tier.
+     * Verify IFR balance for a wallet and activate the corresponding tier.
      *
      * @param walletAddress  EIP-55 Ethereum address
      * @return ActivationResult with tier and status

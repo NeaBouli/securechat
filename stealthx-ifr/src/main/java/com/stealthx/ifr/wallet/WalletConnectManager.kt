@@ -14,18 +14,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * WalletConnect Manager — connects to external wallet apps via deep links.
+ * Wallet manager — opens external wallet apps via deep links.
  *
  * CRITICAL: Chameleon makes NO direct HTTP calls for WalletConnect.
  * The external wallet app (MetaMask, Trust Wallet, etc.) handles all RPC.
  * We only send Intent.ACTION_VIEW with wc:// or metamask:// deep links.
  *
  * Flow:
- * 1. User taps "Connect Wallet"
- * 2. We open deep link to wallet app
- * 3. User approves connection in wallet
- * 4. Wallet returns wallet address via callback/activity result
- * 5. We verify IFR lock amount via web3j eth_call (separate from WC)
+ * 1. User taps "Open Wallet"
+ * 2. We open an installed wallet app
+ * 3. User copies their public Ethereum address
+ * 4. SecureChat verifies held IFR balance via web3j eth_call
  */
 @Singleton
 class WalletConnectManager @Inject constructor(
@@ -33,9 +32,12 @@ class WalletConnectManager @Inject constructor(
 ) {
 
     companion object {
-        private const val METAMASK_DEEP_LINK = "metamask://wc"
-        private const val TRUST_DEEP_LINK = "trust://wc"
-        private const val GENERIC_WC_SCHEME = "wc:"
+        private const val METAMASK_PACKAGE = "io.metamask"
+        private const val TRUST_PACKAGE = "com.wallet.crypto.trustapp"
+        private const val RAINBOW_PACKAGE = "me.rainbow"
+        private const val COINBASE_PACKAGE = "org.toshi"
+        private const val METAMASK_DEEP_LINK = "metamask://"
+        private const val TRUST_DEEP_LINK = "trust://"
         private val ETH_ADDRESS_REGEX = Regex("0x[a-fA-F0-9]{40}")
     }
 
@@ -44,6 +46,25 @@ class WalletConnectManager @Inject constructor(
      */
     fun createWalletConnectIntent(wcUri: String): Intent {
         return Intent(Intent.ACTION_VIEW, Uri.parse(wcUri))
+    }
+
+    fun createWalletOpenIntent(): Intent {
+        val preferredPackage = listOf(
+            METAMASK_PACKAGE,
+            TRUST_PACKAGE,
+            RAINBOW_PACKAGE,
+            COINBASE_PACKAGE
+        ).firstOrNull(::isPackageInstalled)
+
+        val uri = when (preferredPackage) {
+            METAMASK_PACKAGE -> METAMASK_DEEP_LINK
+            TRUST_PACKAGE -> TRUST_DEEP_LINK
+            else -> "https://metamask.app.link/"
+        }
+
+        return Intent(Intent.ACTION_VIEW, Uri.parse(uri)).apply {
+            preferredPackage?.let { setPackage(it) }
+        }
     }
 
     /**
@@ -84,9 +105,12 @@ class WalletConnectManager @Inject constructor(
      * Check if a compatible wallet app is installed.
      */
     fun isWalletAppInstalled(): Boolean {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("wc:"))
-        val resolvedApps = context.packageManager.queryIntentActivities(intent, 0)
-        return resolvedApps.isNotEmpty()
+        return listOf(
+            METAMASK_PACKAGE,
+            TRUST_PACKAGE,
+            RAINBOW_PACKAGE,
+            COINBASE_PACKAGE
+        ).any(::isPackageInstalled)
     }
 
     /**
@@ -152,4 +176,13 @@ class WalletConnectManager @Inject constructor(
         return ETH_ADDRESS_REGEX.find(value)?.value?.takeIf(::isValidAddress)
     }
 
+    private fun isPackageInstalled(packageName: String): Boolean {
+        return try {
+            @Suppress("DEPRECATION")
+            context.packageManager.getPackageInfo(packageName, 0)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
 }

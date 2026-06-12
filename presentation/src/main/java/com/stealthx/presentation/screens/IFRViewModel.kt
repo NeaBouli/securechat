@@ -38,12 +38,13 @@ class IFRViewModel @Inject constructor(
     val uiState: StateFlow<IFRUiState> = _uiState.asStateFlow()
 
     fun createWalletConnectIntent(): Intent? {
-        val wcUri = "wc:securechat-ifr-verify"
         return if (walletManager.isWalletAppInstalled()) {
-            _uiState.value = _uiState.value.copy(error = null)
-            walletManager.createWalletConnectIntent(wcUri)
+            _uiState.value = _uiState.value.copy(
+                error = "Wallet opened. Copy your Ethereum address and use manual balance verification below."
+            )
+            walletManager.createWalletOpenIntent()
         } else {
-            _uiState.value = _uiState.value.copy(error = "No compatible wallet app found")
+            _uiState.value = _uiState.value.copy(error = "No compatible wallet app found. Paste your Ethereum address manually.")
             null
         }
     }

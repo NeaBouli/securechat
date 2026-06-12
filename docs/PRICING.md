@@ -15,7 +15,7 @@
 ## Rules
 - Price rises with every sold license
 - Maximum 100 licenses per tier at launch price
-- IFR lock is always the most cost-effective option
+- Holding IFR is always the most cost-effective option
 - Lifetime = no subscription, no renewal, forever
 - Suite includes all products at all tiers
 

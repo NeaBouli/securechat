@@ -2476,3 +2476,15 @@ Build: ✅ | S7 ✅ | S4 ✅
 
 - SecureChat public IFR CTAs now point directly to the official Uniswap $IFR token page.
 - Footer/FAQ/wiki labels updated from generic IFR/info wording to `Buy $IFR` / `Buy $IFR on Uniswap` where the action is token purchase.
+## 2026-06-12 15:22 PT — Codex SecureChat IFR Hold + Settings Audit
+
+- IFR-Modell auf HOLD umgestellt: `balanceOf()` gegen IFR Token statt altem `lockedBalance()`/Lock-Contract.
+- Wallet-Flow korrigiert: kaputter Dummy-`wc:securechat-ifr-verify` wird nicht mehr als echte WalletConnect-Session verwendet. App oeffnet installierte Wallets (MetaMask/Trust/Rainbow/Coinbase package visibility) und nutzt manuelle read-only Balance-Verifikation.
+- UI/Doku von Lock/Stake auf Hold-Modell aktualisiert.
+- Settings-Audit:
+  - Wirklich aktive kaufrelevante Features bleiben sichtbar: Unlimited Contacts (Pro), Emergency Broadcast (Elite), Stripe/Activation, IFR Hold.
+  - Nicht implementierte Zusatzfunktionen werden nicht mehr als aktive Pro/Elite-Leistung verkauft; sie sind als Roadmap dargestellt.
+- Release-Pipeline-Fix: `isMinifyEnabled=false`, `isShrinkResources=false`, weil R8 bei `:app:minifyReleaseWithR8` reproduzierbar hing. Tests/Release bauen damit sauber.
+- Verification: `testDebugUnitTest assembleRelease` gruen.
+- Desktop-Artefakt: `/Users/gio/Desktop/SecureChat-LATEST.apk` aktualisiert.
+- Device refresh: S4, S7, S10 frisch installiert; text-only launch smoke ohne Crash.

@@ -78,7 +78,7 @@ Requirements: JDK 17, Android SDK 35, Android 8.0+ (API 26+) target devices.
 | Elite | >= 6,000 IFR | EUR 19 | 3-hop onion, decoy profile, Emergency Broadcast |
 | Suite | >= 8,000 IFR | EUR 54 | All StealthX products, lifetime |
 
-Same IFR lock works across SecureCall + SecureChat + Chameleon.
+The same IFR holding unlock model works across SecureCall + SecureChat + Chameleon.
 See [PRICING.md](docs/PRICING.md).
 
 ## Documentation

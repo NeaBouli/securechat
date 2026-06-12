@@ -13,7 +13,6 @@ import org.web3j.abi.FunctionEncoder
 import org.web3j.abi.FunctionReturnDecoder
 import org.web3j.abi.TypeReference
 import org.web3j.abi.datatypes.Address
-import org.web3j.abi.datatypes.Bool
 import org.web3j.abi.datatypes.generated.Uint256
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameterName
@@ -24,13 +23,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * IFRLock Smart Contract verifier — read-only eth_call only.
+ * IFR token balance verifier — read-only eth_call only.
  *
  * SECURITY:
  * - NUR eth_call — keine Transaktionen, kein eth_sendTransaction
  * - Timeout: 10 Sekunden pro RPC Call
  * - Fallback: versucht mehrere RPC Endpoints
- * - Contract Adresse aus IFRConstants (nie doppelt hardcodiert)
+ * - Contract address from IFRConstants (never duplicated)
  */
 @Singleton
 class IFRLockVerifier @Inject constructor() {
@@ -40,15 +39,15 @@ class IFRLockVerifier @Inject constructor() {
     }
 
     /**
-     * Get the locked IFR amount for a wallet address.
+     * Get the held IFR amount for a wallet address.
      *
      * @param walletAddress  EIP-55 Ethereum address
-     * @return               Locked amount as BigInteger (raw, with 9 decimals)
+     * @return               Held amount as BigInteger (raw, with 9 decimals)
      * @throws Exception     If all RPC endpoints fail
      */
     suspend fun getLockedAmount(walletAddress: String): BigInteger = withContext(Dispatchers.IO) {
         val function = org.web3j.abi.datatypes.Function(
-            "lockedBalance",
+            "balanceOf",
             listOf(Address(walletAddress)),
             listOf(object : TypeReference<Uint256>() {})
         )
@@ -67,38 +66,18 @@ class IFRLockVerifier @Inject constructor() {
                 continue
             }
         }
-        throw Exception("All RPC endpoints failed for lockedBalance($walletAddress)")
+        throw Exception("All RPC endpoints failed for balanceOf($walletAddress)")
     }
 
     /**
-     * Check if wallet has at least minAmount locked.
+     * Check if wallet holds at least minAmount.
      *
      * @param walletAddress  EIP-55 Ethereum address
-     * @param minAmount      Minimum locked amount (raw)
-     * @return               true if locked >= minAmount
+     * @param minAmount      Minimum held amount (raw)
+     * @return               true if balance >= minAmount
      */
     suspend fun isLocked(walletAddress: String, minAmount: BigInteger): Boolean = withContext(Dispatchers.IO) {
-        val function = org.web3j.abi.datatypes.Function(
-            "isLocked",
-            listOf(Address(walletAddress), Uint256(minAmount)),
-            listOf(object : TypeReference<Bool>() {})
-        )
-        val encodedFunction = FunctionEncoder.encode(function)
-
-        for (endpoint in IFRConstants.RPC_ENDPOINTS) {
-            try {
-                val result = withTimeout(RPC_TIMEOUT_MS) {
-                    callContract(endpoint, encodedFunction)
-                }
-                val decoded = FunctionReturnDecoder.decode(result, function.outputParameters)
-                if (decoded.isNotEmpty()) {
-                    return@withContext (decoded[0] as Bool).value
-                }
-            } catch (_: Exception) {
-                continue
-            }
-        }
-        throw Exception("All RPC endpoints failed for isLocked($walletAddress)")
+        getLockedAmount(walletAddress) >= minAmount
     }
 
     private fun callContract(rpcEndpoint: String, encodedFunction: String): String {
@@ -106,7 +85,7 @@ class IFRLockVerifier @Inject constructor() {
         try {
             val transaction = Transaction.createEthCallTransaction(
                 "0x0000000000000000000000000000000000000000",
-                IFRConstants.IFR_LOCK_ADDRESS,
+                IFRConstants.IFR_TOKEN_ADDRESS,
                 encodedFunction
             )
             val response = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send()

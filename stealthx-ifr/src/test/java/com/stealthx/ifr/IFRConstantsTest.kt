@@ -70,9 +70,8 @@ class IFRConstantsTest {
     @Test
     @DisplayName("Contract addresses are valid hex")
     fun `contract addresses format`() {
-        assertTrue(IFRConstants.IFR_LOCK_ADDRESS.startsWith("0x"))
-        assertEquals(42, IFRConstants.IFR_LOCK_ADDRESS.length)
         assertTrue(IFRConstants.IFR_TOKEN_ADDRESS.startsWith("0x"))
+        assertEquals(42, IFRConstants.IFR_TOKEN_ADDRESS.length)
         assertTrue(IFRConstants.BUILDER_REGISTRY_ADDRESS.startsWith("0x"))
     }
 
@@ -102,10 +101,12 @@ class IFRConstantsTest {
     }
 
     @Test
-    @DisplayName("IFRLOCK_ABI uses lockedBalance — regression for lockedAmount bug")
-    fun `abi method name is lockedBalance`() {
-        assertTrue(IFRConstants.IFRLOCK_ABI.contains("\"lockedBalance\""),
-            "ABI must declare lockedBalance, not lockedAmount")
+    @DisplayName("IFR token ABI uses balanceOf for hold-model verification")
+    fun `abi method name is balanceOf`() {
+        assertTrue(IFRConstants.IFR_TOKEN_ABI.contains("\"balanceOf\""),
+            "ABI must declare balanceOf for held IFR verification")
+        assertFalse(IFRConstants.IFR_TOKEN_ABI.contains("\"lockedBalance\""),
+            "ABI must not use old lock-contract verification")
         assertFalse(IFRConstants.IFRLOCK_ABI.contains("\"lockedAmount\""),
             "ABI must not contain deprecated lockedAmount")
     }

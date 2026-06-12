@@ -129,7 +129,7 @@ fun SettingsScreen(
                     Icon(Icons.Default.Lock, null, tint = Color.Black)
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        if (tier == IfrTier.FREE) "Upgrade to Pro — Lock 2,000 IFR" else "Upgrade to Elite — Lock 6,000 IFR",
+                        if (tier == IfrTier.FREE) "Upgrade to Pro — Hold 2,000 IFR" else "Upgrade to Elite — Hold 6,000 IFR",
                         color = Color.Black
                     )
                 }
@@ -152,25 +152,27 @@ fun SettingsScreen(
             FeatureRow(Icons.Default.QrCode, "QR Key Exchange", "Device-to-device, no server", false)
             ContactLimitRow(tier)
 
-            // Pro features
-            SectionHeader("Pro  ≥ 2,000 IFR")
-            GatedFeatureRow(Icons.Default.Group, "Group Messaging", "Encrypted group chats", tier, IfrTier.PRO, onIfrClick, comingSoon = true)
-            GatedFeatureRow(Icons.Default.AttachFile, "Encrypted File Transfer", "E2E via Kaspa XFTP", tier, IfrTier.PRO, onIfrClick, comingSoon = true)
-            GatedFeatureRow(Icons.Default.AccountTree, "Kaspa Identity Anchor", "Public key on BlockDAG", tier, IfrTier.PRO, onIfrClick, comingSoon = true)
-            GatedFeatureRow(Icons.Default.Security, "Chameleon Integration", "Context-aware overlay", tier, IfrTier.PRO, onIfrClick, comingSoon = true)
+            // Current paid features
+            SectionHeader("Pro  >= 2,000 IFR")
+            FeatureRow(Icons.Default.Contacts, "Unlimited Contacts", "Remove the Free tier 10-contact limit", tier < IfrTier.PRO)
 
-            // Elite features
-            SectionHeader("Elite  ≥ 6,000 IFR")
-            GatedFeatureRow(Icons.Default.Router, "Onion Routing (3-hop)", "Full IP protection", tier, IfrTier.ELITE, onIfrClick, comingSoon = true)
-            GatedFeatureRow(Icons.Default.FaceRetouchingNatural, "Decoy Chat Profiles", "Fake conversations on demand", tier, IfrTier.ELITE, onIfrClick, comingSoon = true)
-            GatedFeatureRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis", tier, IfrTier.ELITE, onIfrClick, comingSoon = true)
+            SectionHeader("Elite  >= 6,000 IFR")
             GatedFeatureRow(Icons.Default.Send, "Emergency Broadcast", "Encrypted alert to all contacts", tier, IfrTier.ELITE, onIfrClick, onBroadcastClick)
+
+            SectionHeader("Roadmap")
+            RoadmapRow(Icons.Default.Group, "Group Messaging", "Encrypted group chats")
+            RoadmapRow(Icons.Default.AttachFile, "Encrypted File Transfer", "E2E file sharing")
+            RoadmapRow(Icons.Default.AccountTree, "Kaspa Identity Anchor", "Public key on BlockDAG")
+            RoadmapRow(Icons.Default.Security, "Chameleon Integration", "Context-aware overlay")
+            RoadmapRow(Icons.Default.Router, "Onion Routing", "Multi-hop transport")
+            RoadmapRow(Icons.Default.FaceRetouchingNatural, "Decoy Chat Profiles", "Fake conversations on demand")
+            RoadmapRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis")
 
             SectionHeader("Access")
             ClickRow(Icons.Default.CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · pay once, no subscription") {
                 context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://securechat.stealthx.tech/#lifetime")))
             }
-            ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Lock IFR tokens on-chain for lifetime access", onIfrClick)
+            ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Hold IFR tokens for lifetime access", onIfrClick)
             ClickRow(Icons.Default.Key, "Activation Code", "Enter code received after purchase") { showActivationDialog = true }
 
             SectionHeader("Help")
@@ -262,6 +264,19 @@ private fun FeatureRow(icon: ImageVector, title: String, subtitle: String, locke
             Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
         }
         Icon(Icons.Default.CheckCircle, null, tint = Color(0xFF00FF88), modifier = Modifier.size(20.dp))
+    }
+}
+
+@Composable
+private fun RoadmapRow(icon: ImageVector, title: String, subtitle: String) {
+    Row(modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Icon(icon, null, tint = Color.Gray.copy(alpha = 0.5f))
+        Spacer(Modifier.width(16.dp))
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+        }
+        Text("ROADMAP", style = MaterialTheme.typography.labelSmall, color = Color(0xFF888888))
     }
 }
 

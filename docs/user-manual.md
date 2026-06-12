@@ -138,7 +138,7 @@ Open Settings from the toolbar (gear icon on the right).
 
 At the top of Settings, a card shows:
 - Your current tier (FREE / PRO / ELITE) with color coding
-- Your locked IFR balance, if verified
+- Your held IFR balance, if verified
 - Your wallet address, if connected
 - Cache status: "30 days" (fresh) or "From cache" (re-verified within the window)
 
@@ -216,14 +216,14 @@ Send an encrypted alert message to all your contacts simultaneously with one tap
 Tap **IFR Token Unlock** to open the unlock screen.
 
 **Connect Wallet**
-Opens the wallet connection flow. SecureChat launches your installed Ethereum wallet app (MetaMask, Trust Wallet, etc.). Your wallet signs a challenge message proving you own the address. SecureChat then queries the IFR token contract directly on Ethereum to check your locked balance.
+Opens your installed Ethereum wallet app (MetaMask, Trust Wallet, etc.). Copy your public wallet address, return to SecureChat, and run read-only balance verification. SecureChat queries the IFR token contract directly on Ethereum to check your held balance.
 
 - ≥ 6,000 IFR → Elite tier (permanent, no expiry)
 - ≥ 2,000 IFR → Pro tier (permanent, no expiry)
 - < 2,000 IFR → Free tier (balance is shown but no unlock)
 
 **Manual Address Entry**
-Enter your Ethereum address (0x format) manually. SecureChat verifies your locked balance against the on-chain contract. Manual verifications expire after 30 days. The app re-checks every 24 hours while the cache is valid. If re-verification fails (network unavailable), the cached tier is kept until the cache expires.
+Enter your Ethereum address (0x format) manually. SecureChat verifies your held IFR balance against the on-chain token contract. Manual verifications expire after 30 days. The app re-checks every 24 hours while the cache is valid. If re-verification fails (network unavailable), the cached tier is kept until the cache expires.
 
 IFR verification is done by SecureChat directly against public Ethereum RPC endpoints — no account or API key required.
 
@@ -286,7 +286,7 @@ Ensure you are scanning the contact's QR from their My ID screen, not a screensh
 The app closes when biometric authentication fails to protect your data. Check your device's biometric enrollment in Android Settings.
 
 **My tier shows Free after verifying IFR**
-Ensure your tokens are locked in the IFR contract, not simply held in your wallet. Visit ifrunit.tech to lock tokens. After locking, return to Settings → IFR Token Unlock and verify again.
+Ensure your IFR tokens are held in the wallet address you verify. If you need IFR, use the Uniswap link on ifrunit.tech, then return to Settings -> IFR Token Unlock and verify again.
 
 **I wiped by accident**
 The wipe is irreversible by design. There is no backup and no recovery. Your contacts will need to re-add you using your new identity after you reinstall.
