@@ -2513,3 +2513,4 @@ Build: ✅ | S7 ✅ | S4 ✅
   - `/Users/gio/Desktop/SecureChat-LATEST.apk` ersetzt; SHA256 `e583fe29c9846b46d656bc38f21b3a807931e381a25c8b2d2d84717fff836150`.
   - APK auf S4, S7, S10 installiert.
   - GitHub Release `v0.1.1-alpha-securechat` Asset `SecureChat-LATEST.apk` neu hochgeladen.
+  - Post-install Smoke: S4/S7/S10 melden `versionName=0.1.1-alpha`; je 80 Monkey-Events ohne SecureChat Fatal Exception/ANR.
