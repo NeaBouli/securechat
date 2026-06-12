@@ -2503,3 +2503,13 @@ Build: ✅ | S7 ✅ | S4 ✅
   - Aktuell bleibt Emergency Broadcast als Elite-Feature; Onion/Decoy/Threat Detection klar als Roadmap.
 - Checkout:
   - Hetzner-local Test erzeugt Checkout-URLs fuer `securechat_elite_lifetime`; Live-Status kennt `securechat_pro_lifetime` und `securechat_elite_lifetime`.
+
+## 2026-06-12 16:12 PT — Codex SecureChat Version Display Hotfix
+
+- User-facing Settings zeigte noch hartcodiert `Version 0.1.0-alpha`, obwohl Build/Package `0.1.1-alpha` ist.
+- Fix: Settings liest `versionName` jetzt dynamisch aus `PackageManager`, damit kuenftige Builds keinen stale About-Text behalten.
+- Verification:
+  - `./gradlew --no-daemon --max-workers=1 testDebugUnitTest assembleRelease` ✅ BUILD SUCCESSFUL.
+  - `/Users/gio/Desktop/SecureChat-LATEST.apk` ersetzt; SHA256 `e583fe29c9846b46d656bc38f21b3a807931e381a25c8b2d2d84717fff836150`.
+  - APK auf S4, S7, S10 installiert.
+  - GitHub Release `v0.1.1-alpha-securechat` Asset `SecureChat-LATEST.apk` neu hochgeladen.

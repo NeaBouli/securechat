@@ -35,6 +35,11 @@ fun SettingsScreen(
     val activationState by vm.activationState.collectAsState()
     val duressPin by vm.duressPin.collectAsState()
     val context = LocalContext.current
+    val appVersion = remember(context.packageName) {
+        runCatching {
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "unknown"
+        }.getOrDefault("unknown")
+    }
     var showActivationDialog by remember { mutableStateOf(false) }
     var showDuressPinDialog by remember { mutableStateOf(false) }
     fun openUrl(url: String) = context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
@@ -182,7 +187,7 @@ fun SettingsScreen(
             ClickRow(Icons.Default.RocketLaunch, "Getting Started", "Step-by-step setup guide", onSetupClick)
 
             SectionHeader("About")
-            ClickRow(Icons.Default.Shield, "Version 0.1.0-alpha", "SecureChat — StealthX Platform") {}
+            ClickRow(Icons.Default.Shield, "Version $appVersion", "SecureChat — StealthX Platform") {}
         }
     }
 }
