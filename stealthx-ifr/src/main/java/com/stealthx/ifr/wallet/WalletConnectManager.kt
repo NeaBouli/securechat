@@ -20,7 +20,7 @@ import javax.inject.Singleton
  *
  * CRITICAL: Chameleon makes NO direct HTTP calls for WalletConnect.
  * The external wallet app (MetaMask, Trust Wallet, etc.) handles all RPC.
- * We only send Intent.ACTION_VIEW with wc:// or metamask:// deep links.
+ * We only send Intent.ACTION_VIEW with wallet browser deep links.
  *
  * Flow:
  * 1. User taps "Open Wallet"
@@ -71,11 +71,13 @@ class WalletConnectManager @Inject constructor(
             .appendQueryParameter("message", message)
             .appendQueryParameter("returnScheme", "securechat")
             .appendQueryParameter("returnHost", "wc")
+            .appendQueryParameter("returnPackage", context.packageName)
             .build()
             .toString()
+        val dappPath = pageUrl.removePrefix("https://")
 
         val uri = when (preferredPackage) {
-            METAMASK_PACKAGE -> "metamask://dapp/stealthx.tech/siwe.html?deviceId=securechat&message=${Uri.encode(message)}&returnScheme=securechat&returnHost=wc"
+            METAMASK_PACKAGE -> "https://metamask.app.link/dapp/$dappPath"
             TRUST_PACKAGE -> "https://link.trustwallet.com/open_url?coin_id=60&url=${Uri.encode(pageUrl)}"
             else -> pageUrl
         }
