@@ -13,14 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,21 +24,15 @@ import androidx.compose.ui.unit.dp
 /**
  * Bottom sheet for IFR wallet connection and verification.
  *
- * Options:
- * 1. Wallet app deep link (opens MetaMask/Trust Wallet)
- * 2. Manual wallet address entry (30-day expiry)
+ * Wallet app deep link for WalletConnect-based IFR verification.
  */
 @Composable
 fun IFRUnlockSheet(
     onWalletConnectClicked: () -> Unit,
-    onManualAddressSubmit: (String) -> Unit,
     isVerifying: Boolean,
     error: String?,
     modifier: Modifier = Modifier
 ) {
-    var manualAddress by remember { mutableStateOf("") }
-    var showManualInput by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -78,38 +66,6 @@ fun IFRUnlockSheet(
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-
-        OutlinedButton(
-            onClick = { showManualInput = !showManualInput },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Enter Address Manually", color = Color(0xFF00E5FF))
-        }
-
-        if (showManualInput) {
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = manualAddress,
-                onValueChange = { manualAddress = it },
-                label = { Text("Ethereum Address (0x...)") },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
-                onClick = { onManualAddressSubmit(manualAddress) },
-                enabled = manualAddress.startsWith("0x") && manualAddress.length == 42 && !isVerifying,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Verify")
-            }
-            Text(
-                text = "Manual balance verification expires after 30 days",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-        }
 
         if (error != null) {
             Spacer(modifier = Modifier.height(8.dp))

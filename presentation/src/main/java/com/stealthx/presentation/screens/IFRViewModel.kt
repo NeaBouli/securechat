@@ -37,14 +37,26 @@ class IFRViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(IFRUiState())
     val uiState: StateFlow<IFRUiState> = _uiState.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            walletManager.walletCallbacks.collect { result ->
+                when (result) {
+                    is WalletConnectResult.Success -> activateTier(result.walletAddress)
+                    is WalletConnectResult.Error -> _uiState.value = _uiState.value.copy(error = result.message)
+                    is WalletConnectResult.Cancelled -> _uiState.value = _uiState.value.copy(error = null)
+                }
+            }
+        }
+    }
+
     fun createWalletConnectIntent(): Intent? {
         return if (walletManager.isWalletAppInstalled()) {
             _uiState.value = _uiState.value.copy(
-                error = "Wallet opened. Copy your Ethereum address and use manual balance verification below."
+                error = "Wallet opened. Approve the connection in your wallet to verify IFR."
             )
             walletManager.createWalletOpenIntent()
         } else {
-            _uiState.value = _uiState.value.copy(error = "No compatible wallet app found. Paste your Ethereum address manually.")
+            _uiState.value = _uiState.value.copy(error = "No compatible wallet app found. Install MetaMask or another WalletConnect-compatible wallet.")
             null
         }
     }
@@ -54,14 +66,6 @@ class IFRViewModel @Inject constructor(
             is WalletConnectResult.Success -> activateTier(result.walletAddress)
             is WalletConnectResult.Error -> _uiState.value = _uiState.value.copy(error = result.message)
             is WalletConnectResult.Cancelled -> _uiState.value = _uiState.value.copy(error = null)
-        }
-    }
-
-    fun verifyManualAddress(address: String) {
-        when (val result = walletManager.processManualAddress(address)) {
-            is WalletConnectResult.Success -> activateTier(result.walletAddress)
-            is WalletConnectResult.Error -> _uiState.value = _uiState.value.copy(error = result.message)
-            is WalletConnectResult.Cancelled -> {}
         }
     }
 

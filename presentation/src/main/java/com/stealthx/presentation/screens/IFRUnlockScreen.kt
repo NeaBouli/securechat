@@ -170,7 +170,6 @@ fun IFRUnlockScreen(
                 onWalletConnectClicked = {
                     vm.createWalletConnectIntent()?.let(walletLauncher::launch)
                 },
-                onManualAddressSubmit = { vm.verifyManualAddress(it) },
                 isVerifying = state.isVerifying,
                 error = state.error
             )

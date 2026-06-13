@@ -216,14 +216,11 @@ Send an encrypted alert message to all your contacts simultaneously with one tap
 Tap **IFR Token Unlock** to open the unlock screen.
 
 **Connect Wallet**
-Opens your installed Ethereum wallet app (MetaMask, Trust Wallet, etc.). Copy your public wallet address, return to SecureChat, and run read-only balance verification. SecureChat queries the IFR token contract directly on Ethereum to check your held balance.
+Opens your installed Ethereum wallet app (MetaMask, Trust Wallet, etc.) for WalletConnect-based ownership verification. After you sign the challenge, SecureChat returns automatically and checks the IFR token contract directly on Ethereum to verify your held balance.
 
 - ≥ 6,000 IFR → Elite tier (permanent, no expiry)
 - ≥ 2,000 IFR → Pro tier (permanent, no expiry)
 - < 2,000 IFR → Free tier (balance is shown but no unlock)
-
-**Manual Address Entry**
-Enter your Ethereum address (0x format) manually. SecureChat verifies your held IFR balance against the on-chain token contract. Manual verifications expire after 30 days. The app re-checks every 24 hours while the cache is valid. If re-verification fails (network unavailable), the cached tier is kept until the cache expires.
 
 IFR verification is done by SecureChat directly against public Ethereum RPC endpoints — no account or API key required.
 

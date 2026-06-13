@@ -10,6 +10,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,8 +24,8 @@ import javax.inject.Singleton
  *
  * Flow:
  * 1. User taps "Open Wallet"
- * 2. We open an installed wallet app
- * 3. User copies their public Ethereum address
+ * 2. We open the SecureCall SIWE page inside the installed wallet browser
+ * 3. The wallet signs the challenge and redirects to securechat://wc
  * 4. SecureChat verifies held IFR balance via web3j eth_call
  */
 @Singleton
@@ -36,10 +38,12 @@ class WalletConnectManager @Inject constructor(
         private const val TRUST_PACKAGE = "com.wallet.crypto.trustapp"
         private const val RAINBOW_PACKAGE = "me.rainbow"
         private const val COINBASE_PACKAGE = "org.toshi"
-        private const val METAMASK_DEEP_LINK = "metamask://"
-        private const val TRUST_DEEP_LINK = "trust://"
         private val ETH_ADDRESS_REGEX = Regex("0x[a-fA-F0-9]{40}")
+        private val ETH_SIGNATURE_REGEX = Regex("0x[a-fA-F0-9]{130}")
     }
+
+    private val _walletCallbacks = MutableSharedFlow<WalletConnectResult>(replay = 1)
+    val walletCallbacks = _walletCallbacks.asSharedFlow()
 
     /**
      * Build the WalletConnect intent used by ActivityResult launchers.
@@ -56,10 +60,24 @@ class WalletConnectManager @Inject constructor(
             COINBASE_PACKAGE
         ).firstOrNull(::isPackageInstalled)
 
+        val message = "SecureChat wants you to verify your Ethereum wallet.\n\n" +
+            "Purpose: IFR hold verification\n" +
+            "Issued At: ${System.currentTimeMillis()}"
+        val pageUrl = Uri.Builder()
+            .scheme("https")
+            .authority("stealthx.tech")
+            .path("siwe.html")
+            .appendQueryParameter("deviceId", "securechat")
+            .appendQueryParameter("message", message)
+            .appendQueryParameter("returnScheme", "securechat")
+            .appendQueryParameter("returnHost", "wc")
+            .build()
+            .toString()
+
         val uri = when (preferredPackage) {
-            METAMASK_PACKAGE -> METAMASK_DEEP_LINK
-            TRUST_PACKAGE -> TRUST_DEEP_LINK
-            else -> "https://metamask.app.link/"
+            METAMASK_PACKAGE -> "metamask://dapp/stealthx.tech/siwe.html?deviceId=securechat&message=${Uri.encode(message)}&returnScheme=securechat&returnHost=wc"
+            TRUST_PACKAGE -> "https://link.trustwallet.com/open_url?coin_id=60&url=${Uri.encode(pageUrl)}"
+            else -> pageUrl
         }
 
         return Intent(Intent.ACTION_VIEW, Uri.parse(uri)).apply {
@@ -123,18 +141,6 @@ class WalletConnectManager @Inject constructor(
     }
 
     /**
-     * Process a manually entered wallet address.
-     * Validates format and returns result.
-     */
-    fun processManualAddress(address: String): WalletConnectResult {
-        return if (isValidAddress(address)) {
-            WalletConnectResult.Success(walletAddress = address, signature = null)
-        } else {
-            WalletConnectResult.Error("Invalid Ethereum address format")
-        }
-    }
-
-    /**
      * Process data returned by a wallet ActivityResult callback.
      *
      * Wallet apps vary: some return extras, some return a data URI. Accept the
@@ -168,6 +174,22 @@ class WalletConnectManager @Inject constructor(
             walletAddress = address,
             signature = data.getStringExtra("signature")
         )
+    }
+
+    fun handleDeepLink(uri: Uri?): Boolean {
+        if (uri?.scheme != "securechat" || uri.host != "wc") return false
+        val address = uri.getQueryParameter("address")
+            ?: uri.getQueryParameter("walletAddress")
+        val signature = uri.getQueryParameter("signature")
+        val result = when {
+            address == null || !isValidAddress(address) ->
+                WalletConnectResult.Error("Wallet did not return a valid Ethereum address")
+            signature == null || !ETH_SIGNATURE_REGEX.matches(signature) ->
+                WalletConnectResult.Error("Wallet did not return a valid signature")
+            else -> WalletConnectResult.Success(address, signature)
+        }
+        _walletCallbacks.tryEmit(result)
+        return true
     }
 
     private fun extractAddress(value: String): String? {
