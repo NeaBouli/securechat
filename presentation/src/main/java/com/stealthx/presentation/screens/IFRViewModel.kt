@@ -16,7 +16,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 data class IFRUiState(
@@ -49,15 +51,21 @@ class IFRViewModel @Inject constructor(
         }
     }
 
-    fun createWalletConnectIntent(): Intent? {
-        return if (walletManager.isWalletAppInstalled()) {
+    fun createWalletConnectIntent(onReady: (Intent) -> Unit) {
+        if (walletManager.isWalletAppInstalled()) {
             _uiState.value = _uiState.value.copy(
+                isVerifying = true,
                 error = "Wallet opened. Approve the connection in your wallet to verify IFR."
             )
-            walletManager.createWalletOpenIntent()
+            viewModelScope.launch {
+                val intent = withContext(Dispatchers.IO) {
+                    walletManager.createWalletOpenIntent()
+                }
+                _uiState.value = _uiState.value.copy(isVerifying = false)
+                onReady(intent)
+            }
         } else {
             _uiState.value = _uiState.value.copy(error = "No compatible wallet app found. Install MetaMask or another WalletConnect-compatible wallet.")
-            null
         }
     }
 

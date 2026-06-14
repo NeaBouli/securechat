@@ -168,7 +168,7 @@ fun IFRUnlockScreen(
             // ── IFR Token section ──────────────────────────────────────────
             IFRUnlockSheet(
                 onWalletConnectClicked = {
-                    vm.createWalletConnectIntent()?.let(walletLauncher::launch)
+                    vm.createWalletConnectIntent(walletLauncher::launch)
                 },
                 isVerifying = state.isVerifying,
                 error = state.error

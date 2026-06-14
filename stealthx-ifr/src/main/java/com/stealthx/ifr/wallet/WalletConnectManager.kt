@@ -9,9 +9,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,8 +43,17 @@ class WalletConnectManager @Inject constructor(
         private const val TRUST_PACKAGE = "com.wallet.crypto.trustapp"
         private const val RAINBOW_PACKAGE = "me.rainbow"
         private const val COINBASE_PACKAGE = "org.toshi"
+        private const val TAG = "WalletConnect"
+        private const val BACKEND_URL = "https://api.stealthx.tech"
         private val ETH_ADDRESS_REGEX = Regex("0x[a-fA-F0-9]{40}")
         private val ETH_SIGNATURE_REGEX = Regex("0x[a-fA-F0-9]{130}")
+    }
+
+    private val httpClient by lazy {
+        OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .build()
     }
 
     private val _walletCallbacks = MutableSharedFlow<WalletConnectResult>(replay = 1)
@@ -60,18 +74,25 @@ class WalletConnectManager @Inject constructor(
             COINBASE_PACKAGE
         ).firstOrNull(::isPackageInstalled)
 
-        val message = "SecureChat wants you to verify your Ethereum wallet.\n\n" +
-            "Purpose: IFR hold verification\n" +
-            "Issued At: ${System.currentTimeMillis()}"
+        val deviceId = "securechat:${context.packageName}"
+        val challenge = fetchChallenge(deviceId)
+        val nonce = challenge?.first.orEmpty()
+        val message = challenge?.second ?: (
+            "SecureChat wants you to verify your Ethereum wallet.\n\n" +
+                "Purpose: IFR hold verification\n" +
+                "Issued At: ${System.currentTimeMillis()}"
+            )
         val pageUrl = Uri.Builder()
             .scheme("https")
             .authority("stealthx.tech")
             .path("siwe.html")
-            .appendQueryParameter("deviceId", "securechat")
+            .appendQueryParameter("nonce", nonce)
+            .appendQueryParameter("deviceId", deviceId)
             .appendQueryParameter("message", message)
             .appendQueryParameter("returnScheme", "securechat")
             .appendQueryParameter("returnHost", "wc")
             .appendQueryParameter("returnPackage", context.packageName)
+            .appendQueryParameter("ts", System.currentTimeMillis().toString())
             .build()
             .toString()
         val dappPath = pageUrl.removePrefix("https://")
@@ -82,9 +103,8 @@ class WalletConnectManager @Inject constructor(
             else -> pageUrl
         }
 
-        return Intent(Intent.ACTION_VIEW, Uri.parse(uri)).apply {
-            preferredPackage?.let { setPackage(it) }
-        }
+        Log.d(TAG, "Opening SIWE wallet browser via ${preferredPackage ?: "default"}; nonce=${nonce.take(12)}")
+        return Intent(Intent.ACTION_VIEW, Uri.parse(uri))
     }
 
     /**
@@ -191,7 +211,24 @@ class WalletConnectManager @Inject constructor(
             else -> WalletConnectResult.Success(address, signature)
         }
         _walletCallbacks.tryEmit(result)
+        Log.d(TAG, "Wallet callback handled: ${result::class.java.simpleName}")
         return true
+    }
+
+    private fun fetchChallenge(deviceId: String): Pair<String, String>? {
+        return try {
+            val url = "$BACKEND_URL/siwe/challenge?deviceId=${Uri.encode(deviceId)}"
+            val response = httpClient.newCall(Request.Builder().url(url).get().build()).execute()
+            if (!response.isSuccessful) {
+                Log.w(TAG, "SIWE challenge failed: HTTP ${response.code}")
+                return null
+            }
+            val json = JSONObject(response.body?.string() ?: return null)
+            json.getString("nonce") to json.getString("message")
+        } catch (e: Throwable) {
+            Log.w(TAG, "SIWE challenge failed: ${e.message}")
+            null
+        }
     }
 
     private fun extractAddress(value: String): String? {

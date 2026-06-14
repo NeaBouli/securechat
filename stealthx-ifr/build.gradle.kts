@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":shared"))
     // Web3j LITE — read-only eth_call, no transactions
     implementation(libs.web3j.core)
+    implementation(libs.okhttp)
     implementation(libs.kotlinx.coroutines.android)
     // Compose for IFR UI components
     implementation(platform(libs.compose.bom))
