@@ -44,7 +44,7 @@ See [UNIFIED_ID_SYSTEM.md](docs/UNIFIED_ID_SYSTEM.md).
 ```
 app/                  Entry point, Hilt DI graph
 stealthx-crypto/      THE ONLY crypto module (XChaCha20, DR, Argon2id)
-stealthx-ifr/         IFR Token, WalletConnect, AppSignature
+stealthx-ifr/         IFR web discount, AppSignature
 security/             Android Keystore, SecureMemoryWipe
 shared/               Pure JVM data models (PublicKeyBundle, StealthXContactId)
 data/                 Room + SQLCipher, StealthXIdentity, Entities
@@ -69,16 +69,16 @@ cd securechat
 
 Requirements: JDK 17, Android SDK 35, Android 8.0+ (API 26+) target devices.
 
-## IFR Token Tiers
+## IFR Holder Discount
 
-| Tier | IFR Lock | Lifetime Price | Features |
-|------|----------|---------------|----------|
-| Free | 0 IFR | — | Core messaging, 10 contacts |
-| Pro | >= 2,000 IFR | EUR 9 | Unlimited contacts, groups, Kaspa identity |
-| Elite | >= 6,000 IFR | EUR 19 | 3-hop onion, decoy profile, Emergency Broadcast |
-| Suite | >= 8,000 IFR | EUR 54 | All StealthX products, lifetime |
+The public SecureChat app does not run WalletConnect or wallet verification inside Android. IFR holder benefits are handled on the website: buy or hold $IFR, verify a browser wallet, then open Stripe checkout with a 50% discount. The app unlocks through the normal activation-code path.
 
-The same IFR holding unlock model works across SecureCall + SecureChat + Chameleon.
+| Tier | Web IFR eligibility | Checkout benefit | Features |
+|---|---:|---:|---|
+| Free | 0 IFR | EUR 0 | Core messaging, 10 contacts |
+| Pro | >= 2,000 IFR | 50% off Pro checkout | Unlimited contacts, groups, Kaspa identity |
+| Elite | >= 6,000 IFR | 50% off Elite checkout | 3-hop onion, decoy profile, Emergency Broadcast |
+| Suite | >= 6,000 IFR | 50% off Suite checkout | All StealthX products, lifetime |
 See [PRICING.md](docs/PRICING.md).
 
 ## Documentation
@@ -133,4 +133,4 @@ Mirrors stealthx.tech design — dark tactical aesthetic, green logo accent, sam
 
 - [SecureCall](https://stealthx.tech) — encrypted voice calls
 - [Chameleon](https://github.com/NeaBouli/chameleon) — privacy OS
-- [IFR Token](https://ifrunit.tech) — unified lifetime access
+- [IFR Token](https://ifrunit.tech) — browser wallet verification for 50% Stripe checkout discount

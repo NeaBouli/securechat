@@ -2,16 +2,13 @@ package com.stealthx.presentation.screens
 
 import android.content.Intent
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CreditCard
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,29 +17,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.stealthx.ifr.compose.IFRUnlockSheet
-import com.stealthx.ifr.compose.TierStatusCard
 import com.stealthx.presentation.theme.ScGold
 import com.stealthx.presentation.theme.ScGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IFRUnlockScreen(
-    onBack: () -> Unit,
-    vm: IFRViewModel = hiltViewModel()
-) {
-    val state by vm.uiState.collectAsState()
+fun IFRUnlockScreen(onBack: () -> Unit) {
     val context = LocalContext.current
-    val walletLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        vm.handleWalletConnectResult(result.resultCode, result.data)
-    }
 
-    fun openPurchasePage() {
+    fun openUrl(url: String) {
         context.startActivity(
-            Intent(Intent.ACTION_VIEW, Uri.parse("https://securechat.stealthx.tech/#lifetime"))
+            Intent(Intent.ACTION_VIEW, Uri.parse(url))
         )
     }
 
@@ -61,17 +46,6 @@ fun IFRUnlockScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            TierStatusCard(
-                tier = state.tier,
-                ifrBalance = state.lockedAmount,
-                walletAddress = state.walletAddress,
-                expiresIn = state.expiresIn,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            // ── Stripe / Card purchase section ─────────────────────────────
             Surface(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = MaterialTheme.shapes.large,
@@ -84,14 +58,14 @@ fun IFRUnlockScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Lifetime Access — One-Time Payment",
+                        "SecureChat Access",
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "No IFR tokens needed. Pay once, yours forever.",
+                        "WalletConnect was removed from the Android app. Buy normally or verify IFR in the browser for a 50% Stripe discount.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -103,7 +77,7 @@ fun IFRUnlockScreen(
                     ) {
                         // Pro
                         OutlinedButton(
-                            onClick = ::openPurchasePage,
+                            onClick = { openUrl("https://securechat.stealthx.tech/#lifetime") },
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.outlinedButtonColors(
                                 contentColor = ScGreen
@@ -117,7 +91,7 @@ fun IFRUnlockScreen(
                         }
                         // Elite
                         OutlinedButton(
-                            onClick = ::openPurchasePage,
+                            onClick = { openUrl("https://securechat.stealthx.tech/#lifetime") },
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.outlinedButtonColors(
                                 contentColor = ScGold
@@ -132,17 +106,35 @@ fun IFRUnlockScreen(
                     }
                     Spacer(Modifier.height(12.dp))
                     Button(
-                        onClick = ::openPurchasePage,
+                        onClick = { openUrl("https://securechat.stealthx.tech/#ifr") },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF635BFF))
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E676))
+                    ) {
+                        Icon(Icons.Default.ShoppingCart, null, tint = Color.Black)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Verify IFR for 50% Stripe Discount", color = Color.Black, fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = { openUrl("https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = ScGold)
+                    ) {
+                        Text("Buy IFR on Uniswap")
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = { openUrl("https://securechat.stealthx.tech/#lifetime") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF635BFF))
                     ) {
                         Icon(Icons.Default.CreditCard, null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Buy with Card (Stripe)", color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("Buy with Card (Stripe)")
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "You will receive an activation code by email.\nEnter it in Settings → Activation Code.",
+                        "You will receive an activation code by email. Enter it in Settings → Activation Code.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
@@ -151,28 +143,6 @@ fun IFRUnlockScreen(
                 }
             }
 
-            // ── Divider ────────────────────────────────────────────────────
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                HorizontalDivider(modifier = Modifier.weight(1f))
-                Text(
-                    "  OR unlock with IFR tokens  ",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                HorizontalDivider(modifier = Modifier.weight(1f))
-            }
-
-            // ── IFR Token section ──────────────────────────────────────────
-            IFRUnlockSheet(
-                onWalletConnectClicked = {
-                    vm.createWalletConnectIntent(walletLauncher::launch)
-                },
-                isVerifying = state.isVerifying,
-                error = state.error
-            )
         }
     }
 }

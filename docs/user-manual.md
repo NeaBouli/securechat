@@ -22,7 +22,7 @@ Because there is no relay server for messages, both users must be online at the 
 
 ## Tier Overview
 
-SecureChat uses IFR token locking for permanent tier access. No subscriptions.
+SecureChat does not verify wallets inside the Android app. IFR holders verify on the website for a 50% Stripe checkout discount, then unlock with an activation code.
 
 | Feature | Free | Pro (≥ 2,000 IFR) | Elite (≥ 6,000 IFR) |
 |---|---|---|---|
@@ -139,7 +139,7 @@ Open Settings from the toolbar (gear icon on the right).
 At the top of Settings, a card shows:
 - Your current tier (FREE / PRO / ELITE) with color coding
 - Your held IFR balance, if verified
-- Your wallet address, if connected
+- Website-verified wallet discount status
 - Cache status: "30 days" (fresh) or "From cache" (re-verified within the window)
 
 ---
@@ -154,7 +154,7 @@ When enabled, tapping the lock icon in the Conversations toolbar five times trig
 
 What the wipe deletes:
 - The entire encrypted message database (including WAL and SHM journal files)
-- All encrypted preferences (biometric settings, IFR wallet data)
+- All encrypted preferences and activation settings
 - Your StealthX identity (keys)
 - All app cache and code cache directories
 
@@ -211,18 +211,13 @@ Send an encrypted alert message to all your contacts simultaneously with one tap
 
 ---
 
-### IFR Token Unlock
+### IFR Holder Discount
 
-Tap **IFR Token Unlock** to open the unlock screen.
+Tap **IFR Holder Discount** to open the SecureChat website. Connect MetaMask in the browser or paste a wallet address, then the backend checks IFR balance read-only on Ethereum Mainnet. Eligible holders receive a 50% Stripe checkout discount and unlock the app with an activation code.
 
-**Connect Wallet**
-Opens your installed Ethereum wallet app (MetaMask, Trust Wallet, etc.) for WalletConnect-based ownership verification. After you sign the challenge, SecureChat returns automatically and checks the IFR token contract directly on Ethereum to verify your held balance.
-
-- ≥ 6,000 IFR → Elite tier (permanent, no expiry)
-- ≥ 2,000 IFR → Pro tier (permanent, no expiry)
-- < 2,000 IFR → Free tier (balance is shown but no unlock)
-
-IFR verification is done by SecureChat directly against public Ethereum RPC endpoints — no account or API key required.
+- >= 2,000 IFR -> Pro discount
+- >= 6,000 IFR -> Elite discount
+- WalletConnect is not used inside the Android app.
 
 ---
 
@@ -283,7 +278,7 @@ Ensure you are scanning the contact's QR from their My ID screen, not a screensh
 The app closes when biometric authentication fails to protect your data. Check your device's biometric enrollment in Android Settings.
 
 **My tier shows Free after verifying IFR**
-Ensure your IFR tokens are held in the wallet address you verify. If you need IFR, use the Uniswap link on ifrunit.tech, then return to Settings -> IFR Token Unlock and verify again.
+Verify the wallet on securechat.stealthx.tech/#ifr. If you need IFR, use the Uniswap link there, then start the discounted Stripe checkout.
 
 **I wiped by accident**
 The wipe is irreversible by design. There is no backup and no recovery. Your contacts will need to re-add you using your new identity after you reinstall.

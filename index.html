@@ -32,7 +32,7 @@
 <link rel="alternate" hreflang="en" href="https://securechat.stealthx.tech/">
 <link rel="alternate" hreflang="x-default" href="https://securechat.stealthx.tech/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SecureChat","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"End-to-end encrypted messaging with StealthX ID, QR contact exchange, and relay delivery.","url":"https://securechat.stealthx.tech","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://github.com/NeaBouli/securechat/blob/main/LICENSE"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses cryptographic key pairs and a StealthX ID for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat source-available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. Hold tokens in your wallet for lifetime Pro or Elite access. No subscriptions."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"SecureChat uses StealthX relay delivery for encrypted payloads. Message content remains end-to-end encrypted."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses cryptographic key pairs and a StealthX ID for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat source-available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. SecureChat keeps wallet code out of the Android app; eligible holders can verify in the browser for a 50% Stripe checkout discount."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"SecureChat uses StealthX relay delivery for encrypted payloads. Message content remains end-to-end encrypted."}}]}</script>
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -616,8 +616,8 @@
     </div>
     <div class="feature-card">
       <div class="feature-icon">🔑</div>
-      <h3>IFR Token Lifetime Access</h3>
-      <p>Hold IFR tokens in your wallet for lifetime Pro or Elite access. No subscriptions. No renewals. Your tokens stay yours.</p>
+      <h3>IFR Holder Discount</h3>
+      <p>Verify IFR in the browser for 50% off Pro or Elite checkout. The Android app stays wallet-free and unlocks with activation codes.</p>
     </div>
     <div class="feature-card" style="border-color:var(--red);">
       <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--gold);margin-bottom:0.4rem;">ELITE</div>
@@ -688,7 +688,7 @@
 <span class="hl">StealthX Platform compatibility:</span>
   SecureCall   ← shared XChaCha20 + X25519 stack
   Chameleon    ← overlay encryption for SecureChat messages
-  IFR Token    ← unified lifetime access across all products
+  IFR Token    ← browser wallet verification for checkout discounts
   </div>
 </section>
 
@@ -759,7 +759,7 @@
       <tr><td>XChaCha20-Poly1305</td><td class="ours">✓</td><td class="no">✗ AES</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>STEALTH-DELETE</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>Blockchain identity anchor</td><td class="warn">Roadmap</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>IFR Token lifetime access</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
+      <tr><td>IFR holder checkout discount</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>Chameleon overlay compatible</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
       <tr><td>Source-Available</td><td class="ours">✓</td><td class="ours">✓</td><td class="ours">✓</td><td class="no">✗</td></tr>
       <tr><td>Reduced metadata</td><td class="ours">✓</td><td class="warn">⚠️</td><td class="ours">✓</td><td class="no">✗</td></tr>
@@ -819,8 +819,8 @@
 <!-- IFR -->
 <section id="ifr">
   <div class="section-label">Inferno Integration</div>
-  <h2 class="section-title">IFR Lifetime Unlock.</h2>
-  <p class="section-sub">Hold IFR tokens. Unlock forever. Works across all StealthX products — one wallet balance, lifetime benefit.</p>
+  <h2 class="section-title">IFR Holder Discount.</h2>
+  <p class="section-sub">Buy IFR on Uniswap, verify your wallet in the browser, then open Stripe with a 50% discount. No WalletConnect runs inside the Android app.</p>
 
   <div class="tier-grid">
     <div class="tier-card">
@@ -836,7 +836,7 @@
     </div>
     <div class="tier-card featured">
       <div class="tier-name" style="color:var(--green)">Pro</div>
-      <div class="tier-lock">Hold <span>≥ 2,000 IFR</span> — lifetime</div>
+      <div class="tier-lock">Hold <span>≥ 2,000 IFR</span> — 50% Pro checkout</div>
       <ul class="tier-features">
         <li>Everything in Free</li>
         <li>Unlimited contacts</li>
@@ -849,7 +849,7 @@
     </div>
     <div class="tier-card">
       <div class="tier-name" style="color:var(--gold)">Elite</div>
-      <div class="tier-lock">Hold <span>≥ 6,000 IFR</span> — lifetime</div>
+      <div class="tier-lock">Hold <span>≥ 6,000 IFR</span> — 50% Elite checkout</div>
       <ul class="tier-features">
         <li>Everything in Pro</li>
         <li>Emergency Broadcast</li>
@@ -864,13 +864,13 @@
     <div class="tier-card featured" style="border-color:var(--gold);background:rgba(255,184,0,0.05);">
       <div style="font-size:11px;font-weight:700;letter-spacing:1px;background:var(--gold);color:#000;display:inline-block;padding:3px 10px;border-radius:4px;margin-bottom:0.8rem;">BEST VALUE</div>
       <div class="tier-name" style="color:var(--gold)">StealthX Suite</div>
-      <div class="tier-lock">Hold <span>≥ 8,000 IFR</span> — lifetime</div>
+      <div class="tier-lock">Hold <span>≥ 6,000 IFR</span> — 50% Suite checkout</div>
       <ul class="tier-features">
         <li>SecureCall Premium (lifetime)</li>
         <li>SecureChat Elite (lifetime)</li>
         <li>Chameleon Elite (lifetime)</li>
         <li>All future StealthX products</li>
-        <li>Everything. One wallet balance.</li>
+        <li>Everything. One browser verification.</li>
       </ul>
       <br>
       <a href="https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B" style="display:block;text-align:center;padding:10px;border:1px solid var(--gold);border-radius:8px;color:var(--gold);text-decoration:none;font-weight:700;font-size:14px;" target="_blank" rel="noopener">Buy $IFR on Uniswap</a>
@@ -878,10 +878,17 @@
   </div>
 
   <br>
-  <p style="font-size:13px; color:var(--muted); text-align:center;">
-    IFR token contract: <code style="color:var(--cyan); font-size:12px;">0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code> (Ethereum Mainnet)
-    &nbsp;·&nbsp; <a href="https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B" style="color:var(--green)">Buy $IFR on Uniswap →</a>
-  </p>
+  <div style="max-width:760px;margin:1.5rem auto 0;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.22);border-radius:12px;padding:1.5rem;">
+    <p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:1rem;">IFR token contract: <code style="color:var(--cyan);font-size:12px;">0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code> (Ethereum Mainnet)</p>
+    <input id="ifrWalletAddress" type="text" inputmode="text" autocomplete="off" placeholder="0x wallet address (optional fallback)" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);margin-bottom:10px;">
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;">
+      <button type="button" data-checkout-tier="securechat_pro_lifetime" data-ifr-discount="true" style="padding:10px;border:1px solid var(--green);border-radius:8px;background:var(--green);color:#000;font-weight:700;cursor:pointer;">Pro 50% Checkout</button>
+      <button type="button" data-checkout-tier="securechat_elite_lifetime" data-ifr-discount="true" style="padding:10px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;cursor:pointer;">Elite 50% Checkout</button>
+      <button type="button" data-checkout-tier="stealthx_suite_lifetime" data-ifr-discount="true" style="padding:10px;border:1px solid var(--gold);border-radius:8px;background:transparent;color:var(--gold);font-weight:700;cursor:pointer;">Suite 50% Checkout</button>
+    </div>
+    <p id="ifrDiscountStatus" style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;">Connect MetaMask in this browser or paste a wallet address. The backend applies the discount only after verifying IFR balance.</p>
+    <p style="text-align:center;margin-top:1rem;"><a href="https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B" style="color:var(--green)" target="_blank" rel="noopener">Buy $IFR on Uniswap →</a></p>
+  </div>
 </section>
 
 <hr class="divider">
@@ -997,24 +1004,53 @@
 <script>
 (function(){
   var API='https://api.stealthx.tech';
+  async function getIfrWalletAddress(){
+    var input=document.getElementById('ifrWalletAddress');
+    var status=document.getElementById('ifrDiscountStatus');
+    if(window.ethereum&&window.ethereum.request){
+      try{
+        if(status)status.textContent='Connecting browser wallet...';
+        var accounts=await window.ethereum.request({method:'eth_requestAccounts'});
+        if(accounts&&accounts[0]){
+          if(input)input.value=accounts[0];
+          return accounts[0];
+        }
+      }catch(e){
+        if(status)status.textContent='Wallet connection cancelled. Paste the wallet address or try again.';
+      }
+    }
+    var manual=(input&&input.value||'').trim();
+    if(/^0x[0-9a-fA-F]{40}$/.test(manual))return manual;
+    throw new Error('Connect MetaMask or enter a valid 0x wallet address for the IFR discount');
+  }
   async function startCheckout(button){
     if(!button||button.disabled)return;
     var label=button.textContent;
     button.disabled=true;
     button.textContent='Opening Stripe...';
     try{
+      var payload={tier:button.dataset.checkoutTier};
+      if(button.dataset.ifrDiscount==='true'){
+        button.textContent='Verifying IFR...';
+        payload.ifrDiscount=true;
+        payload.walletAddress=await getIfrWalletAddress();
+      }
       var r=await fetch(API+'/stripe/create-dynamic-checkout',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({tier:button.dataset.checkoutTier})
+        body:JSON.stringify(payload)
       });
       var d=await r.json().catch(function(){return{}});
       if(!r.ok||!d.url)throw new Error(d.error||'Checkout unavailable');
+      var status=document.getElementById('ifrDiscountStatus');
+      if(status&&d.ifrDiscountApplied)status.textContent='IFR verified: 50% discount applied. Redirecting to Stripe...';
       window.location.href=d.url;
     }catch(e){
       button.textContent='Try again';
       button.disabled=false;
       button.title=e.message;
+      var status=document.getElementById('ifrDiscountStatus');
+      if(status)status.textContent=e.message;
       setTimeout(function(){ if(!button.disabled) button.textContent=label; },2500);
     }
   }

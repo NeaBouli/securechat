@@ -26,7 +26,7 @@
 <h2>Messages</h2>
 <p>All messages are encrypted end-to-end on your device using XChaCha20-Poly1305. Relay nodes see only encrypted blobs. Messages are deleted from relay nodes immediately after delivery. We have no access to message content.</p>
 <h2>IFR Token Verification</h2>
-<p>When you verify your IFR tier, your wallet address is checked against the Ethereum blockchain (read-only call). Your wallet address is stored locally in an encrypted, HMAC-protected cache. It is never sent to our servers.</p>
+<p>IFR holder discounts are verified on the website, not inside the Android app. The backend checks a browser-provided wallet address read-only against Ethereum before creating a discounted Stripe checkout.</p>
 <h2>Kaspa Identity</h2>
 <p>If you choose to anchor your identity to the Kaspa blockchain, your public key is written as a Kaspa transaction. Public keys are, by definition, public. Your private key never leaves your device.</p>
 <h2>Contact Us</h2>

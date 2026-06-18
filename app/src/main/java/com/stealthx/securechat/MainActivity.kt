@@ -34,7 +34,6 @@ import androidx.fragment.app.FragmentActivity
 import com.stealthx.data.NfcUriRelay
 import com.stealthx.data.prefs.AppPreferences
 import com.stealthx.data.security.WipeManager
-import com.stealthx.ifr.wallet.WalletConnectManager
 import com.stealthx.presentation.nav.StealthXNavGraph
 import com.stealthx.presentation.theme.StealthXTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,7 +48,6 @@ import kotlin.system.exitProcess
 class MainActivity : FragmentActivity() {
     @Inject lateinit var prefs: AppPreferences
     @Inject lateinit var wipeManager: WipeManager
-    @Inject lateinit var walletConnectManager: WalletConnectManager
 
     private val authState = mutableStateOf<AuthState>(AuthState.Locked)
     private var pinInput by mutableStateOf("")
@@ -73,21 +71,13 @@ class MainActivity : FragmentActivity() {
         } else {
             authState.value = AuthState.Unlocked
         }
-        handleWalletIntent(intent)
         handleNfcIntent(intent)
     }
 
     override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        handleWalletIntent(intent)
         handleNfcIntent(intent)
-    }
-
-    private fun handleWalletIntent(intent: android.content.Intent?) {
-        if (walletConnectManager.handleDeepLink(intent?.data)) {
-            authState.value = AuthState.Unlocked
-        }
     }
 
     override fun onResume() {

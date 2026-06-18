@@ -2513,4 +2513,24 @@ Build: ✅ | S7 ✅ | S4 ✅
   - `/Users/gio/Desktop/SecureChat-LATEST.apk` ersetzt; SHA256 `e583fe29c9846b46d656bc38f21b3a807931e381a25c8b2d2d84717fff836150`.
   - APK auf S4, S7, S10 installiert.
   - GitHub Release `v0.1.1-alpha-securechat` Asset `SecureChat-LATEST.apk` neu hochgeladen.
-  - Post-install Smoke: S4/S7/S10 melden `versionName=0.1.1-alpha`; je 80 Monkey-Events ohne SecureChat Fatal Exception/ANR.
+- Post-install Smoke: S4/S7/S10 melden `versionName=0.1.1-alpha`; je 80 Monkey-Events ohne SecureChat Fatal Exception/ANR.
+
+## 2026-06-18 16:01 PT — Codex SecureChat IFR Web Checkout Discount
+
+- Product direction changed: SecureChat public Android app no longer starts WalletConnect or wallet verification.
+- Settings upgrade/IFR entries now route to the website:
+  - `https://securechat.stealthx.tech/#ifr` for IFR holder 50% Stripe discount.
+  - `https://securechat.stealthx.tech/#lifetime` for normal card checkout.
+  - Uniswap $IFR token link for purchase.
+- Removed active wallet callback path from Android:
+  - MainActivity no longer injects or calls `WalletConnectManager`.
+  - Manifest no longer declares MetaMask/Trust package queries.
+  - Manifest no longer registers `securechat://wc` or `https://stealthx.tech/return/securechat` app-return filters.
+  - `IFRViewModel` no longer depends on WalletConnect or tier activation.
+- Website changes:
+  - Landing page IFR section now verifies browser wallet/manual address and sends `ifrDiscount + walletAddress` to the shared Stripe checkout API.
+  - Pro, Elite, and Suite 50% checkout buttons added.
+  - Wiki, FAQ, privacy, user manual, README updated to describe web checkout discount and activation-code unlock.
+- Verification:
+  - `./gradlew --no-daemon --max-workers=1 :app:compileReleaseKotlin :presentation:compileReleaseKotlin` succeeded.
+  - One Kotlin string interpolation compile error on `Buy $IFR on Uniswap` was fixed to `Buy IFR on Uniswap`.

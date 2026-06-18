@@ -134,7 +134,7 @@ fun SettingsScreen(
                     Icon(Icons.Default.Lock, null, tint = Color.Black)
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        if (tier == IfrTier.FREE) "Upgrade to Pro — Hold 2,000 IFR" else "Upgrade to Elite — Hold 6,000 IFR",
+                        if (tier == IfrTier.FREE) "Buy Pro / IFR 50% Discount" else "Buy Elite / IFR 50% Discount",
                         color = Color.Black
                     )
                 }
@@ -174,10 +174,10 @@ fun SettingsScreen(
             RoadmapRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis")
 
             SectionHeader("Access")
-            ClickRow(Icons.Default.CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · pay once, no subscription") {
+            ClickRow(Icons.Default.CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · IFR holders get 50% off") {
                 context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://securechat.stealthx.tech/#lifetime")))
             }
-            ClickRow(Icons.Default.Lock, "IFR Token Unlock", "Hold IFR tokens for lifetime access", onIfrClick)
+            ClickRow(Icons.Default.Lock, "IFR Holder Discount", "Verify wallet on the website for 50% Stripe checkout", onIfrClick)
             ClickRow(Icons.Default.Key, "Activation Code", "Enter code received after purchase") { showActivationDialog = true }
 
             SectionHeader("Help")
