@@ -1006,8 +1006,7 @@
 (function(){
   var API='https://api.stealthx.tech';
   function openMetaMaskBrowser(){
-    var target=location.host+location.pathname+location.search;
-    location.href='https://link.metamask.io/dapp/'+target.replace(/^\/+/,'')+'%23ifr';
+    location.href='https://link.metamask.io/dapp/'+location.host+'/ifr.html';
   }
   async function connectIfrWallet(){
     var input=document.getElementById('ifrWalletAddress');
