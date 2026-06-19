@@ -2575,3 +2575,20 @@ Build: ✅ | S7 ✅ | S4 ✅
   - Mobile layout stacks Suite, wallet actions, and checkout actions to one column.
   - Inline JS parse check succeeded for both executable script blocks.
 - Device note: no ADB/device action was run to avoid interfering with the separate `woizz` device work.
+
+## 2026-06-19 16:33 PDT — CODEX TERMINAL FIX/STATUS
+
+- User reported SecureChat Android Settings still showed old IFR/hold/upgrade wording on-device.
+- Android app cleanup tightened:
+  - Settings/locked-feature CTAs now use website purchase / activation-code wording (`Buy Pro`, `Buy Elite`, `Buy access`) instead of generic upgrade copy that could be confused with the old IFR flow.
+  - Removed unused WalletConnect/Web3j entries from `gradle/libs.versions.toml`.
+  - Removed unused WalletConnect/Web3j ProGuard keep rules.
+  - Removed historical Room schema JSON files that still contained old `ifr_tier_cache`/wallet column names.
+  - Added migration cleanup to drop the legacy tier-cache table by constructed name while keeping current `access_tier_cache`.
+- Verification:
+  - Hard source scan over `app data domain presentation shared features stealthx-access gradle/libs.versions.toml` has no hits for `IFR/Ifr/ifr`, `Wallet`, `WalletConnect`, `MetaMask`, `Uniswap`, `web3/Web3`, `2,000`, `6,000`, or old upgrade phrases.
+  - `./gradlew --no-daemon --max-workers=1 testDebugUnitTest assembleRelease` succeeded.
+  - Desktop artifact refreshed: `/Users/gio/Desktop/SecureChat-LATEST.apk` (21 MB, 2026-06-19 16:20 PDT).
+  - Targeted APK string scan found no visible old IFR/Wallet/Connect/Uniswap phrases; raw short `IIFr`/`ifre` byte hits are non-UI false positives.
+- Device note: no ADB/device action was run to avoid interfering with separate `woizz` work.
+- Later milestone: build SecureChat AAB only after SecureChat is functionally complete and fully verified; do not produce AAB before that pass.

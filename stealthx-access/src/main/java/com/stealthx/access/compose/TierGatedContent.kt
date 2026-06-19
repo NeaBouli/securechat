@@ -101,7 +101,7 @@ fun LockedFeatureCard(
                     containerColor = Color(0xFF00E5FF)
                 )
             ) {
-                Text("Upgrade", color = Color.Black)
+                Text("Buy access", color = Color.Black)
             }
         }
     }

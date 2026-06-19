@@ -17,20 +17,6 @@
 -keep class * implements com.sun.jna.** { *; }
 -dontwarn com.sun.jna.**
 
-# ── WalletConnect ─────────────────────────────────────────────
--keep class com.walletconnect.** { *; }
--dontwarn com.walletconnect.**
-
-# ── Web3j + transitive deps ──────────────────────────────────
--keep class org.web3j.** { *; }
--dontwarn org.web3j.**
--dontwarn com.google.errorprone.**
--dontwarn groovy.**
--dontwarn org.codehaus.groovy.**
--dontwarn org.apache.tuweni.**
--dontwarn org.identityconnectors.**
--dontwarn okhttp3.internal.platform.**
-
 # ── SQLCipher — JNI fields looked up by name, must not be renamed ─
 -keep class net.sqlcipher.** { *; }
 -keep class net.sqlcipher.database.** { *; }

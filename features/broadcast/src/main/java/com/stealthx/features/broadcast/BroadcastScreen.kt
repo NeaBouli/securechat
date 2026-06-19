@@ -161,7 +161,7 @@ fun BroadcastLockedScreen(
                 onClick = onUnlock,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Upgrade to Elite")
+                Text("Buy Elite Lifetime")
             }
         }
     }

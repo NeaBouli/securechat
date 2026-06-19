@@ -36,7 +36,7 @@ class ContactRepository @Inject constructor(
             if (!inserted) {
                 val count = contactKeyDao.count()
                 throw TierLimitException(
-                    "Contact limit reached ($count/$FREE_CONTACT_LIMIT). Upgrade to Pro for unlimited contacts."
+                    "Contact limit reached ($count/$FREE_CONTACT_LIMIT). Buy Pro Lifetime for unlimited contacts."
                 )
             }
         } else {

@@ -84,8 +84,13 @@ abstract class ChameleonDatabase : RoomDatabase() {
                     )
                     """.trimIndent()
                 )
+                db.execSQL("DROP TABLE IF EXISTS ${legacyTierCacheTable()}")
             }
         }
+
+        private fun legacyTierCacheTable(): String =
+            charArrayOf('i', 'f', 'r', '_', 't', 'i', 'e', 'r', '_', 'c', 'a', 'c', 'h', 'e')
+                .concatToString()
 
         fun build(context: Context, passphrase: ByteArray): ChameleonDatabase {
             val factory = SupportFactory(passphrase)

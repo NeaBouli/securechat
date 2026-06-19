@@ -8,8 +8,6 @@ sqlcipher               = "4.5.4"
 coroutines              = "1.9.0"
 lazysodium              = "5.1.0"
 jna                     = "5.14.0"
-web3j                   = "4.12.0"
-walletconnect           = "2.7.0"
 lifecycle               = "2.8.7"
 navigation              = "2.8.4"
 datastore               = "1.1.1"
@@ -66,11 +64,6 @@ sqlite-ktx                      = { group = "androidx.sqlite", name = "sqlite-kt
 lazysodium-android              = { group = "com.goterl", name = "lazysodium-android", version.ref = "lazysodium" }
 lazysodium-java                 = { group = "com.goterl", name = "lazysodium-java", version.ref = "lazysodium" }
 jna                             = { group = "net.java.dev.jna", name = "jna", version.ref = "jna" }
-
-# Web3 / IFR
-web3j-core                      = { group = "org.web3j", name = "core", version.ref = "web3j" }
-walletconnect-modal             = { group = "com.walletconnect", name = "android-core", version.ref = "walletconnect" }
-walletconnect-sign              = { group = "com.walletconnect", name = "sign", version.ref = "walletconnect" }
 
 # Location / Geofencing
 play-services-location          = { group = "com.google.android.gms", name = "play-services-location", version = "21.3.0" }
