@@ -881,6 +881,7 @@
   <div style="max-width:760px;margin:1.5rem auto 0;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.22);border-radius:12px;padding:1.5rem;">
     <p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:1rem;">IFR token contract: <code style="color:var(--cyan);font-size:12px;">0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code> (Ethereum Mainnet)</p>
     <button id="connectIfrWallet" type="button" style="width:100%;padding:12px;border:1px solid var(--cyan);border-radius:8px;background:transparent;color:var(--cyan);font-weight:700;cursor:pointer;margin-bottom:10px;">Connect Wallet</button>
+    <button id="disconnectIfrWallet" type="button" style="width:100%;padding:12px;border:1px solid var(--cyan);border-radius:8px;background:transparent;color:var(--cyan);font-weight:700;cursor:pointer;margin-bottom:10px;">Disconnect Wallet</button>
     <input id="ifrWalletAddress" type="text" readonly placeholder="Connected wallet address" style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.28);background:#f8fafc;color:#07111f;margin-bottom:10px;font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;">
       <button type="button" data-checkout-tier="securechat_pro_lifetime" data-ifr-discount="true" style="padding:10px;border:1px solid var(--green);border-radius:8px;background:var(--green);color:#000;font-weight:700;cursor:pointer;">Pro 50% Checkout</button>
@@ -1090,6 +1091,15 @@
     setIfrStatus('Wallet connected: '+walletAddress.slice(0,6)+'...'+walletAddress.slice(-4)+'. Choose Pro, Elite, or Suite checkout.');
     return walletAddress;
   }
+  async function disconnectIfrWallet(){
+    var provider=ifrProvider;
+    ifrProvider=null;
+    ifrAddress='';
+    var input=document.getElementById('ifrWalletAddress');
+    if(input)input.value='';
+    try{if(provider&&provider.disconnect)await provider.disconnect()}catch(e){}
+    setIfrStatus('Wallet disconnected. Connect a wallet to verify IFR discount eligibility.');
+  }
   async function signIfrDiscount(tier){
     var walletAddress=await connectIfrWallet();
     var challengeResponse=await fetch(API+'/stripe/ifr-discount-challenge',{
@@ -1145,7 +1155,7 @@
     button.addEventListener('click',function(){startCheckout(button);});
   });
   var connectButton=document.getElementById('connectIfrWallet');
-  if(connectButton){
+	  if(connectButton){
     connectButton.addEventListener('click',async function(){
       var label=connectButton.textContent;
       connectButton.disabled=true;
@@ -1161,7 +1171,11 @@
         var status=document.getElementById('ifrDiscountStatus');
         if(status)status.textContent=e.message;
       }
-    });
+	    });
+	  }
+  var disconnectButton=document.getElementById('disconnectIfrWallet');
+  if(disconnectButton){
+    disconnectButton.addEventListener('click',function(){disconnectIfrWallet();});
   }
 })();
 
