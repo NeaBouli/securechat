@@ -880,14 +880,14 @@
   <br>
   <div style="max-width:760px;margin:1.5rem auto 0;background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.22);border-radius:12px;padding:1.5rem;">
     <p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:1rem;">IFR token contract: <code style="color:var(--cyan);font-size:12px;">0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code> (Ethereum Mainnet)</p>
-    <button id="connectIfrWallet" type="button" style="width:100%;padding:12px;border:1px solid var(--cyan);border-radius:8px;background:transparent;color:var(--cyan);font-weight:700;cursor:pointer;margin-bottom:10px;">Connect MetaMask</button>
+    <button id="connectIfrWallet" type="button" style="width:100%;padding:12px;border:1px solid var(--cyan);border-radius:8px;background:transparent;color:var(--cyan);font-weight:700;cursor:pointer;margin-bottom:10px;">Connect Wallet</button>
     <input id="ifrWalletAddress" type="text" readonly placeholder="Connected wallet address" style="width:100%;padding:12px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);margin-bottom:10px;">
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;">
       <button type="button" data-checkout-tier="securechat_pro_lifetime" data-ifr-discount="true" style="padding:10px;border:1px solid var(--green);border-radius:8px;background:var(--green);color:#000;font-weight:700;cursor:pointer;">Pro 50% Checkout</button>
       <button type="button" data-checkout-tier="securechat_elite_lifetime" data-ifr-discount="true" style="padding:10px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;cursor:pointer;">Elite 50% Checkout</button>
       <button type="button" data-checkout-tier="stealthx_suite_lifetime" data-ifr-discount="true" style="padding:10px;border:1px solid var(--gold);border-radius:8px;background:transparent;color:var(--gold);font-weight:700;cursor:pointer;">Suite 50% Checkout</button>
     </div>
-    <p id="ifrDiscountStatus" style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;">Connect MetaMask and sign the discount request. The backend applies the discount only after verifying wallet ownership and IFR balance.</p>
+    <p id="ifrDiscountStatus" style="font-size:12px;color:var(--muted);text-align:center;margin-top:10px;">Connect MetaMask, Phantom, or any WalletConnect-compatible Ethereum wallet. The backend applies the discount only after verifying wallet ownership and IFR balance.</p>
     <p style="text-align:center;margin-top:1rem;"><a href="https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B" style="color:var(--green)" target="_blank" rel="noopener">Buy $IFR on Uniswap →</a></p>
   </div>
 </section>
@@ -1004,23 +1004,79 @@
 
 <script>
 (function(){
-  var API='https://api.stealthx.tech';
-  function openMetaMaskBrowser(){
-    location.href='https://link.metamask.io/dapp/'+location.host+'/ifr.html';
+	  var API='https://api.stealthx.tech';
+  var WC_PROJECT_ID='32f56abaa4b1d7f59fb1571c0c0a551f';
+  var WC_ESM_URL='https://esm.sh/@walletconnect/ethereum-provider@2.17.3';
+  var RPC_URL='https://eth.llamarpc.com';
+  var ifrProvider=null;
+  var ifrAddress='';
+  function setIfrStatus(message){
+    var status=document.getElementById('ifrDiscountStatus');
+    if(status)status.textContent=message;
+  }
+  function injectedProviders(){
+    var list=[];
+    if(window.ethereum&&Array.isArray(window.ethereum.providers))list=list.concat(window.ethereum.providers);
+    if(window.ethereum)list.push(window.ethereum);
+    if(window.phantom&&window.phantom.ethereum)list.push(window.phantom.ethereum);
+    return list.filter(function(provider,index,all){return provider&&provider.request&&all.indexOf(provider)===index});
+  }
+  function preferredProvider(){
+    var providers=injectedProviders();
+    if(!providers.length)return null;
+    return providers.find(function(provider){return provider.isMetaMask})||
+      providers.find(function(provider){return provider.isPhantom})||
+      providers.find(function(provider){return provider.isCoinbaseWallet})||
+      providers[0];
+  }
+  async function switchMainnet(provider){
+    try{await provider.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x1'}]})}catch(e){}
+  }
+  async function connectInjectedWallet(){
+    var provider=preferredProvider();
+    if(!provider)return null;
+    setIfrStatus('Connecting browser wallet...');
+    var accounts=await provider.request({method:'eth_requestAccounts'});
+    if(!accounts||!accounts[0])throw new Error('No wallet account returned.');
+    await switchMainnet(provider);
+    ifrProvider=provider;
+    ifrAddress=accounts[0];
+    return ifrAddress;
+  }
+  async function connectWalletConnect(){
+    setIfrStatus('Opening WalletConnect...');
+    var mod=await import(WC_ESM_URL);
+    var EthereumProvider=mod.EthereumProvider||mod.default;
+    if(!EthereumProvider)throw new Error('WalletConnect provider unavailable.');
+    var provider=await EthereumProvider.init({
+      projectId:WC_PROJECT_ID,
+      optionalChains:[1],
+      showQrModal:true,
+      rpcMap:{1:RPC_URL},
+      methods:['eth_requestAccounts','personal_sign','wallet_switchEthereumChain'],
+      events:['accountsChanged','chainChanged','disconnect'],
+      metadata:{name:'SecureChat IFR Discount',description:'Read-only IFR holder discount verification for SecureChat checkout.',url:location.origin,icons:[location.origin+'/favicon.ico']},
+      qrModalOptions:{themeMode:'dark'}
+    });
+    var accounts=await provider.enable();
+    if(!accounts||!accounts[0])throw new Error('No wallet account returned.');
+    await switchMainnet(provider);
+    ifrProvider=provider;
+    ifrAddress=accounts[0];
+    return ifrAddress;
   }
   async function connectIfrWallet(){
+    if(ifrProvider&&ifrAddress)return ifrAddress;
     var input=document.getElementById('ifrWalletAddress');
-    var status=document.getElementById('ifrDiscountStatus');
-    if(!window.ethereum||!window.ethereum.request){
-      if(status)status.textContent='Opening this checkout in MetaMask Browser...';
-      openMetaMaskBrowser();
-      throw new Error('Open this page in MetaMask Browser, then tap Connect MetaMask again.');
+    var walletAddress;
+    try{walletAddress=await connectInjectedWallet()}catch(e){
+      if(e&&e.code===4001)throw e;
+      console.warn('Injected wallet connect failed, falling back to WalletConnect',e);
     }
-    if(status)status.textContent='Connecting browser wallet...';
-    var accounts=await window.ethereum.request({method:'eth_requestAccounts'});
-    if(!accounts||!accounts[0])throw new Error('No wallet account returned by MetaMask');
-    if(input)input.value=accounts[0];
-    return accounts[0];
+    if(!walletAddress)walletAddress=await connectWalletConnect();
+    if(input)input.value=walletAddress;
+    setIfrStatus('Wallet connected: '+walletAddress.slice(0,6)+'...'+walletAddress.slice(-4)+'. Choose Pro, Elite, or Suite checkout.');
+    return walletAddress;
   }
   async function signIfrDiscount(tier){
     var walletAddress=await connectIfrWallet();
@@ -1032,8 +1088,11 @@
     var challenge=await challengeResponse.json().catch(function(){return{}});
     if(!challengeResponse.ok||!challenge.message||!challenge.nonce)throw new Error(challenge.error||'Wallet challenge unavailable');
     var status=document.getElementById('ifrDiscountStatus');
-    if(status)status.textContent='Sign the MetaMask message to prove wallet ownership...';
-    var signature=await window.ethereum.request({method:'personal_sign',params:[challenge.message,walletAddress]});
+    if(status)status.textContent='Sign the wallet message to prove ownership...';
+    if(!ifrProvider)throw new Error('Wallet is not connected.');
+    var signature;
+    try{signature=await ifrProvider.request({method:'personal_sign',params:[challenge.message,walletAddress]})}
+    catch(e){signature=await ifrProvider.request({method:'personal_sign',params:[walletAddress,challenge.message]})}
     return {walletAddress:walletAddress,walletNonce:challenge.nonce,walletSignature:signature};
   }
   async function startCheckout(button){
