@@ -5,10 +5,10 @@ import android.util.Base64
 import com.stealthx.data.ChameleonDatabase
 import com.stealthx.data.dao.ChatSessionDao
 import com.stealthx.data.dao.ContactKeyDao
-import com.stealthx.data.dao.IfrTierCacheDao
+import com.stealthx.data.dao.AccessTierCacheDao
 import com.stealthx.data.dao.MessageDao
-import com.stealthx.data.repository.IfrTierRepositoryImpl
-import com.stealthx.domain.repository.IfrTierRepository
+import com.stealthx.data.repository.AccessTierRepositoryImpl
+import com.stealthx.domain.repository.AccessTierRepository
 import com.stealthx.domain.tier.TierGate
 import com.stealthx.domain.tier.TierGateImpl
 import com.stealthx.data.transport.SignalingRelayTransport
@@ -74,14 +74,14 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun provideIfrTierCacheDao(db: ChameleonDatabase): IfrTierCacheDao = db.ifrTierCacheDao()
+    fun provideAccessTierCacheDao(db: ChameleonDatabase): AccessTierCacheDao = db.accessTierCacheDao()
 
     @Provides
     @Singleton
-    fun provideIfrTierRepository(impl: IfrTierRepositoryImpl): IfrTierRepository = impl
+    fun provideAccessTierRepository(impl: AccessTierRepositoryImpl): AccessTierRepository = impl
 
     @Provides
     @Singleton
-    fun provideTierGate(tierRepository: IfrTierRepository): TierGate =
+    fun provideTierGate(tierRepository: AccessTierRepository): TierGate =
         TierGateImpl(tierRepository)
 }

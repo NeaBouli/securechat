@@ -10,7 +10,7 @@
  * Each recipient gets an individually encrypted copy — no group key
  * that could be leaked to compromise all members.
  *
- * Tier: Elite (>=6.000 IFR)
+ * Tier: Elite
  */
 package com.stealthx.features.broadcast
 

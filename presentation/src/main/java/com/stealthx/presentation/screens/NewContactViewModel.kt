@@ -11,7 +11,7 @@ import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.identity.PublicKeyBundleQr
 import com.stealthx.data.repository.ContactRepository
 import com.stealthx.domain.tier.TierGate
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -49,7 +49,7 @@ class NewContactViewModel @Inject constructor(
         tierGate.currentTier,
         contactRepository.observeAll()
     ) { tier, contacts ->
-        val enforced = tier < IfrTier.PRO
+        val enforced = tier < AccessTier.PRO
         ContactLimitState(
             count = contacts.size,
             limit = ContactRepository.FREE_CONTACT_LIMIT,

@@ -19,7 +19,7 @@ import com.stealthx.data.NfcUriRelay
 import com.stealthx.features.broadcast.BroadcastLockedScreen
 import com.stealthx.features.broadcast.BroadcastScreen
 import com.stealthx.presentation.screens.*
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 
 @Composable
 fun StealthXNavGraph() {
@@ -90,7 +90,7 @@ fun StealthXNavGraph() {
             NewContactScreen(
                 onBack = { navController.popBackStack() },
                 onContactAdded = { navController.popBackStack() },
-                onUpgrade = { navController.navigate(Screen.IFRUnlock.route) }
+                onUpgrade = { navController.navigate(Screen.Upgrade.route) }
             )
         }
         composable(
@@ -105,11 +105,11 @@ fun StealthXNavGraph() {
                 initialContent = decoded,
                 onBack = { navController.popBackStack() },
                 onContactAdded = { navController.popBackStack() },
-                onUpgrade = { navController.navigate(Screen.IFRUnlock.route) }
+                onUpgrade = { navController.navigate(Screen.Upgrade.route) }
             )
         }
-        composable(Screen.IFRUnlock.route) {
-            IFRUnlockScreen(onBack = { navController.popBackStack() })
+        composable(Screen.Upgrade.route) {
+            UpgradeScreen(onBack = { navController.popBackStack() })
         }
         composable(Screen.Setup.route) {
             SetupScreen(onContinue = { navController.popBackStack() })
@@ -117,7 +117,7 @@ fun StealthXNavGraph() {
         composable(Screen.Settings.route) {
             SettingsScreen(
                 onBack = { navController.popBackStack() },
-                onIfrClick = { navController.navigate(Screen.IFRUnlock.route) },
+                onUpgradeClick = { navController.navigate(Screen.Upgrade.route) },
                 onBroadcastClick = { navController.navigate(Screen.Broadcast.route) },
                 onSetupClick = { navController.navigate(Screen.Setup.route) }
             )
@@ -125,7 +125,7 @@ fun StealthXNavGraph() {
         composable(Screen.Broadcast.route) {
             val vm: SettingsViewModel = hiltViewModel()
             val tier by vm.currentTier.collectAsState()
-            if (tier >= IfrTier.ELITE) {
+            if (tier >= AccessTier.ELITE) {
                 val broadcastVm: BroadcastViewModel = hiltViewModel()
                 val state by broadcastVm.uiState.collectAsState()
                 BroadcastScreen(
@@ -137,7 +137,7 @@ fun StealthXNavGraph() {
                 )
             } else {
                 BroadcastLockedScreen(
-                    onUnlock = { navController.navigate(Screen.IFRUnlock.route) },
+                    onUnlock = { navController.navigate(Screen.Upgrade.route) },
                     onBack = { navController.popBackStack() }
                 )
             }

@@ -6,7 +6,7 @@ package com.stealthx.data
 
 import com.stealthx.domain.rules.ActionType
 import com.stealthx.domain.rules.TriggerType
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 import com.stealthx.shared.model.SecurityLevel
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
@@ -45,11 +45,11 @@ class TypeConvertersTest {
     }
 
     @Test
-    @DisplayName("IfrTier roundtrip")
-    fun `ifr tier roundtrip`() {
-        IfrTier.entries.forEach { tier ->
-            val name = converters.fromIfrTier(tier)
-            val restored = converters.toIfrTier(name)
+    @DisplayName("AccessTier roundtrip")
+    fun `access tier roundtrip`() {
+        AccessTier.entries.forEach { tier ->
+            val name = converters.fromAccessTier(tier)
+            val restored = converters.toAccessTier(name)
             assertEquals(tier, restored)
         }
     }
@@ -75,11 +75,11 @@ class TypeConvertersTest {
     }
 
     @Test
-    @DisplayName("IfrTier thresholds are correct")
-    fun `ifr tier thresholds`() {
-        assertEquals(0L, IfrTier.FREE.minLockAmount)
-        assertEquals(2_000_000_000_000L, IfrTier.PRO.minLockAmount)
-        assertEquals(6_000_000_000_000L, IfrTier.ELITE.minLockAmount)
+    @DisplayName("AccessTier ranks are correct")
+    fun `access tier ranks`() {
+        assertEquals(0L, AccessTier.FREE.rank)
+        assertEquals(1L, AccessTier.PRO.rank)
+        assertEquals(2L, AccessTier.ELITE.rank)
     }
 
     @Test

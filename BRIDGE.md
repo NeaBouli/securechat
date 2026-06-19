@@ -2542,3 +2542,21 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Address field is read-only display only; it is not accepted as proof.
 - Checkout requests a backend challenge at `/stripe/ifr-discount-challenge`, signs it with `personal_sign`, and sends `walletAddress`, `walletNonce`, and `walletSignature` to dynamic Stripe checkout.
 - Backend verifies the signature before checking IFR balance and applying the 50% discount.
+
+## 2026-06-19 14:58 PDT — CODEX TERMINAL FIX/STATUS
+
+- Android app cleaned to match the current product model: IFR/wallet verification stays on the sales website; the app uses normal purchase plus activation code only.
+- Removed app-facing wallet/on-chain flow remnants and renamed the old internal tier plumbing:
+  - `IfrTier` -> `AccessTier`.
+  - `IfrTierRepository`/DAO/entity -> `AccessTierRepository`/DAO/entity.
+  - Gradle module `:stealthx-ifr` -> `:stealthx-access`.
+  - Old WalletConnect/on-chain verifier/activator classes remain deleted.
+- Settings now presents Free/Pro/Elite access with website purchase and activation-code paths; Pro `Unlimited Contacts` now shows a locked/Unlock state when the current tier is Free.
+- Room cache schema bumped from v6 to v7 with neutral `access_tier_cache`.
+- Website contrast fix: `#ifrDiscountStatus` now uses `color:#f8fafc` plus `font-weight:700`.
+- Verification:
+  - Android source scan over `app data domain presentation shared features stealthx-access` has no `IFR/Ifr/WalletConnect/MetaMask/Uniswap` or old wallet/lock identifier hits.
+  - `./gradlew --no-daemon --max-workers=1 testDebugUnitTest assembleRelease` succeeded.
+  - Desktop artifact refreshed: `/Users/gio/Desktop/SecureChat-LATEST.apk` (21 MB, 2026-06-19 14:58 PDT).
+- Device note: no ADB install or logcat actions were run to avoid interfering with the separate `woizz` device work.
+- Next: install and smoke-test on S10/S7/S4 once device ownership is clear.

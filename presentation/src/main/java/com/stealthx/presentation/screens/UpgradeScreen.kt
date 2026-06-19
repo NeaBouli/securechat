@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CreditCard
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +21,7 @@ import com.stealthx.presentation.theme.ScGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IFRUnlockScreen(onBack: () -> Unit) {
+fun UpgradeScreen(onBack: () -> Unit) {
     val context = LocalContext.current
 
     fun openUrl(url: String) {
@@ -65,7 +64,7 @@ fun IFRUnlockScreen(onBack: () -> Unit) {
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "WalletConnect was removed from the Android app. Buy normally or verify IFR in the browser for a 50% Stripe discount.",
+                        "Buy Pro or Elite on the website. Stripe sends an activation code by email; enter it in Settings to unlock this app.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -105,24 +104,6 @@ fun IFRUnlockScreen(onBack: () -> Unit) {
                         }
                     }
                     Spacer(Modifier.height(12.dp))
-                    Button(
-                        onClick = { openUrl("https://securechat.stealthx.tech/#ifr") },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E676))
-                    ) {
-                        Icon(Icons.Default.ShoppingCart, null, tint = Color.Black)
-                        Spacer(Modifier.width(8.dp))
-                        Text("Verify IFR for 50% Stripe Discount", color = Color.Black, fontWeight = FontWeight.Bold)
-                    }
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedButton(
-                        onClick = { openUrl("https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B") },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = ScGold)
-                    ) {
-                        Text("Buy IFR on Uniswap")
-                    }
-                    Spacer(Modifier.height(8.dp))
                     OutlinedButton(
                         onClick = { openUrl("https://securechat.stealthx.tech/#lifetime") },
                         modifier = Modifier.fillMaxWidth(),

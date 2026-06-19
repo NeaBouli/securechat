@@ -3,8 +3,8 @@ package com.stealthx.securechat
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.stealthx.domain.repository.IfrTierRepository
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.domain.repository.AccessTierRepository
+import com.stealthx.shared.model.AccessTier
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
@@ -28,29 +28,25 @@ class SetTierReceiver : BroadcastReceiver() {
     @EntryPoint
     @dagger.hilt.InstallIn(SingletonComponent::class)
     interface TierRepositoryEntryPoint {
-        fun ifrTierRepository(): IfrTierRepository
+        fun accessTierRepository(): AccessTierRepository
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != "com.stealthx.securechat.SET_TIER") return
         val tierName = intent.getStringExtra("tier") ?: return
-        val tier = runCatching { IfrTier.valueOf(tierName) }.getOrNull() ?: return
+        val tier = runCatching { AccessTier.valueOf(tierName) }.getOrNull() ?: return
 
         val repo = EntryPointAccessors.fromApplication(
             context.applicationContext,
             TierRepositoryEntryPoint::class.java
-        ).ifrTierRepository()
+        ).accessTierRepository()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val lockedAmount = when (tier) {
-                IfrTier.ELITE -> 8000L
-                IfrTier.PRO -> 2000L
-                IfrTier.FREE -> 0L
-            }
-            if (tier == IfrTier.FREE) {
+            val accessWeight = tier.rank
+            if (tier == AccessTier.FREE) {
                 repo.invalidateCache()
             } else {
-                repo.saveTierResult("0xDebugWallet", lockedAmount, tier)
+                repo.saveTierResult("debug_override", accessWeight, tier)
             }
         }
     }

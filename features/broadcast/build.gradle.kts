@@ -23,7 +23,7 @@ android {
 }
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":stealthx-ifr"))
+    implementation(project(":stealthx-access"))
     implementation(project(":shared"))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)

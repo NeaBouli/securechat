@@ -11,7 +11,7 @@ sealed class Screen(val route: String) {
         const val ARG_LINK = "link"
         fun withLink(uri: String) = "new_contact?link=${java.net.URLEncoder.encode(uri, "UTF-8")}"
     }
-    data object IFRUnlock : Screen("ifr_unlock")
+    data object Upgrade : Screen("upgrade")
     data object Settings : Screen("settings")
     data object Broadcast : Screen("broadcast")
     data object Setup : Screen("setup")

@@ -69,7 +69,7 @@ class MainActivity : FragmentActivity() {
         if (prefs.biometricEnabled) {
             authenticate()
         } else {
-            authState.value = AuthState.Unlocked
+            authState.value = AuthState.Unaccess
         }
         handleNfcIntent(intent)
     }
@@ -167,7 +167,7 @@ class MainActivity : FragmentActivity() {
                             }
                         }
                     }
-                    AuthState.Unlocked -> StealthXNavGraph()
+                    AuthState.Unaccess -> StealthXNavGraph()
                     AuthState.Unavailable -> {
                         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text(
@@ -197,7 +197,7 @@ class MainActivity : FragmentActivity() {
         val manager = BiometricManager.from(this)
         if (manager.canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) {
             // No biometric/device credential enrolled — unlock directly instead of closing
-            authState.value = AuthState.Unlocked
+            authState.value = AuthState.Unaccess
             return
         }
 
@@ -206,11 +206,11 @@ class MainActivity : FragmentActivity() {
             ContextCompat.getMainExecutor(this),
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                    authState.value = AuthState.Unlocked
+                    authState.value = AuthState.Unaccess
                 }
 
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    if (authState.value != AuthState.Unlocked) {
+                    if (authState.value != AuthState.Unaccess) {
                         finish()
                     }
                 }
@@ -310,7 +310,7 @@ class MainActivity : FragmentActivity() {
 
     private enum class AuthState {
         Locked,
-        Unlocked,
+        Unaccess,
         Unavailable
     }
 }

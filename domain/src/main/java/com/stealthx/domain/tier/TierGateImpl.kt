@@ -5,8 +5,8 @@
  */
 package com.stealthx.domain.tier
 
-import com.stealthx.domain.repository.IfrTierRepository
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.domain.repository.AccessTierRepository
+import com.stealthx.shared.model.AccessTier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -22,13 +22,13 @@ import kotlinx.coroutines.launch
  * currentTier never stays stuck at FREE when a valid cache exists.
  */
 class TierGateImpl(
-    private val tierRepository: IfrTierRepository,
+    private val tierRepository: AccessTierRepository,
     private val initScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 ) : TierGate {
 
-    private val _currentTier = MutableStateFlow(IfrTier.FREE)
+    private val _currentTier = MutableStateFlow(AccessTier.FREE)
 
-    override val currentTier: Flow<IfrTier> = _currentTier.asStateFlow()
+    override val currentTier: Flow<AccessTier> = _currentTier.asStateFlow()
 
     init {
         initScope.launch {
@@ -36,9 +36,9 @@ class TierGateImpl(
         }
     }
 
-    override fun getTierSync(): IfrTier = _currentTier.value
+    override fun getTierSync(): AccessTier = _currentTier.value
 
-    override suspend fun getTier(): IfrTier {
+    override suspend fun getTier(): AccessTier {
         val tier = tierRepository.getCachedTier()
         _currentTier.value = tier
         return tier
@@ -50,6 +50,6 @@ class TierGateImpl(
 
     override suspend fun invalidateCache() {
         tierRepository.invalidateCache()
-        _currentTier.value = IfrTier.FREE
+        _currentTier.value = AccessTier.FREE
     }
 }

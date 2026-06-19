@@ -4,9 +4,9 @@
  */
 package com.stealthx.domain
 
-import com.stealthx.domain.repository.IfrTierRepository
+import com.stealthx.domain.repository.AccessTierRepository
 import com.stealthx.domain.tier.TierGateImpl
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -21,78 +21,78 @@ class TierGateTest {
     @Test
     @DisplayName("Returns FREE when no cache exists")
     fun `no cache returns free`() = runTest {
-        val repo = mockk<IfrTierRepository>()
-        coEvery { repo.getCachedTier() } returns IfrTier.FREE
+        val repo = mockk<AccessTierRepository>()
+        coEvery { repo.getCachedTier() } returns AccessTier.FREE
         val gate = TierGateImpl(repo)
-        assertEquals(IfrTier.FREE, gate.getTier())
+        assertEquals(AccessTier.FREE, gate.getTier())
     }
 
     @Test
     @DisplayName("Returns PRO when valid PRO cache exists")
     fun `valid pro cache returns pro`() = runTest {
-        val repo = mockk<IfrTierRepository>()
-        coEvery { repo.getCachedTier() } returns IfrTier.PRO
+        val repo = mockk<AccessTierRepository>()
+        coEvery { repo.getCachedTier() } returns AccessTier.PRO
         val gate = TierGateImpl(repo)
-        assertEquals(IfrTier.PRO, gate.getTier())
+        assertEquals(AccessTier.PRO, gate.getTier())
     }
 
     @Test
     @DisplayName("Returns ELITE when valid ELITE cache exists")
     fun `valid elite cache returns elite`() = runTest {
-        val repo = mockk<IfrTierRepository>()
-        coEvery { repo.getCachedTier() } returns IfrTier.ELITE
+        val repo = mockk<AccessTierRepository>()
+        coEvery { repo.getCachedTier() } returns AccessTier.ELITE
         val gate = TierGateImpl(repo)
-        assertEquals(IfrTier.ELITE, gate.getTier())
+        assertEquals(AccessTier.ELITE, gate.getTier())
     }
 
     @Test
     @DisplayName("HMAC mismatch returns FREE (via repo)")
     fun `hmac mismatch returns free`() = runTest {
-        val repo = mockk<IfrTierRepository>()
+        val repo = mockk<AccessTierRepository>()
         // Repo returns FREE when HMAC fails
-        coEvery { repo.getCachedTier() } returns IfrTier.FREE
+        coEvery { repo.getCachedTier() } returns AccessTier.FREE
         val gate = TierGateImpl(repo)
-        assertEquals(IfrTier.FREE, gate.getTier())
+        assertEquals(AccessTier.FREE, gate.getTier())
     }
 
     @Test
     @DisplayName("Expired cache returns FREE (via repo)")
     fun `expired cache returns free`() = runTest {
-        val repo = mockk<IfrTierRepository>()
-        coEvery { repo.getCachedTier() } returns IfrTier.FREE
+        val repo = mockk<AccessTierRepository>()
+        coEvery { repo.getCachedTier() } returns AccessTier.FREE
         val gate = TierGateImpl(repo)
-        assertEquals(IfrTier.FREE, gate.getTier())
+        assertEquals(AccessTier.FREE, gate.getTier())
     }
 
     @Test
     @DisplayName("getTierSync returns last known value after explicit getTier call")
     fun `sync returns last known`() = runTest {
-        val repo = mockk<IfrTierRepository>()
-        coEvery { repo.getCachedTier() } returns IfrTier.PRO
+        val repo = mockk<AccessTierRepository>()
+        coEvery { repo.getCachedTier() } returns AccessTier.PRO
         val gate = TierGateImpl(repo)
         gate.getTier() // explicit suspend load — makes result deterministic
-        assertEquals(IfrTier.PRO, gate.getTierSync())
+        assertEquals(AccessTier.PRO, gate.getTierSync())
     }
 
     @Test
     @DisplayName("invalidateCache resets to FREE")
     fun `invalidate resets to free`() = runTest {
-        val repo = mockk<IfrTierRepository>()
-        coEvery { repo.getCachedTier() } returns IfrTier.ELITE
+        val repo = mockk<AccessTierRepository>()
+        coEvery { repo.getCachedTier() } returns AccessTier.ELITE
         coEvery { repo.invalidateCache() } returns Unit
         val gate = TierGateImpl(repo)
         gate.getTier()
-        assertEquals(IfrTier.ELITE, gate.getTierSync())
+        assertEquals(AccessTier.ELITE, gate.getTierSync())
         gate.invalidateCache()
-        assertEquals(IfrTier.FREE, gate.getTierSync())
+        assertEquals(AccessTier.FREE, gate.getTierSync())
         coVerify { repo.invalidateCache() }
     }
 
     @Test
     @DisplayName("requiresPro is true for PRO and ELITE")
     fun `requiresPro checks`() = runTest {
-        val repo = mockk<IfrTierRepository>()
-        coEvery { repo.getCachedTier() } returns IfrTier.PRO
+        val repo = mockk<AccessTierRepository>()
+        coEvery { repo.getCachedTier() } returns AccessTier.PRO
         val gate = TierGateImpl(repo)
         assertTrue(gate.requiresPro())
     }
@@ -100,8 +100,8 @@ class TierGateTest {
     @Test
     @DisplayName("requiresElite is false for PRO")
     fun `requiresElite false for pro`() = runTest {
-        val repo = mockk<IfrTierRepository>()
-        coEvery { repo.getCachedTier() } returns IfrTier.PRO
+        val repo = mockk<AccessTierRepository>()
+        coEvery { repo.getCachedTier() } returns AccessTier.PRO
         val gate = TierGateImpl(repo)
         assertFalse(gate.requiresElite())
     }
@@ -109,8 +109,8 @@ class TierGateTest {
     @Test
     @DisplayName("isCacheValid delegates to repo")
     fun `cache validity check`() = runTest {
-        val repo = mockk<IfrTierRepository>()
-        coEvery { repo.getCachedTier() } returns IfrTier.FREE
+        val repo = mockk<AccessTierRepository>()
+        coEvery { repo.getCachedTier() } returns AccessTier.FREE
         coEvery { repo.isCacheValid() } returns true
         val gate = TierGateImpl(repo)
         assertTrue(gate.isCacheValid())

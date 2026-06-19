@@ -17,14 +17,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.stealthx.ifr.compose.TierStatusCard
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
-    onIfrClick: () -> Unit,
+    onUpgradeClick: () -> Unit,
     onBroadcastClick: () -> Unit,
     onSetupClick: () -> Unit = {},
     vm: SettingsViewModel = hiltViewModel()
@@ -112,29 +111,22 @@ fun SettingsScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Tier card
-            TierStatusCard(
-                tier = tier,
-                ifrBalance = 0,
-                walletAddress = null,
-                expiresIn = null,
-                modifier = Modifier.fillMaxWidth()
-            )
+            AccessStatusCard(tier)
 
-            if (tier != IfrTier.ELITE) {
+            if (tier != AccessTier.ELITE) {
                 Button(
-                    onClick = onIfrClick,
+                    onClick = onUpgradeClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (tier == IfrTier.FREE) Color(0xFF00E5FF) else Color(0xFFFFD700)
+                        containerColor = if (tier == AccessTier.FREE) Color(0xFF00E5FF) else Color(0xFFFFD700)
                     )
                 ) {
                     Icon(Icons.Default.Lock, null, tint = Color.Black)
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        if (tier == IfrTier.FREE) "Buy Pro / IFR 50% Discount" else "Buy Elite / IFR 50% Discount",
+                        if (tier == AccessTier.FREE) "Buy Pro" else "Buy Elite",
                         color = Color.Black
                     )
                 }
@@ -158,11 +150,17 @@ fun SettingsScreen(
             ContactLimitRow(tier)
 
             // Current paid features
-            SectionHeader("Pro  >= 2,000 IFR")
-            FeatureRow(Icons.Default.Contacts, "Unlimited Contacts", "Remove the Free tier 10-contact limit", tier < IfrTier.PRO)
+            SectionHeader("Pro")
+            FeatureRow(
+                Icons.Default.Contacts,
+                "Unlimited Contacts",
+                "Remove the Free tier 10-contact limit",
+                tier < AccessTier.PRO,
+                onUpgradeClick
+            )
 
-            SectionHeader("Elite  >= 6,000 IFR")
-            GatedFeatureRow(Icons.Default.Send, "Emergency Broadcast", "Encrypted alert to all contacts", tier, IfrTier.ELITE, onIfrClick, onBroadcastClick)
+            SectionHeader("Elite")
+            GatedFeatureRow(Icons.Default.Send, "Emergency Broadcast", "Encrypted alert to all contacts", tier, AccessTier.ELITE, onUpgradeClick, onBroadcastClick)
 
             SectionHeader("Roadmap")
             RoadmapRow(Icons.Default.Group, "Group Messaging", "Encrypted group chats")
@@ -174,10 +172,9 @@ fun SettingsScreen(
             RoadmapRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis")
 
             SectionHeader("Access")
-            ClickRow(Icons.Default.CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · IFR holders get 50% off") {
+            ClickRow(Icons.Default.CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · Stripe checkout") {
                 context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://securechat.stealthx.tech/#lifetime")))
             }
-            ClickRow(Icons.Default.Lock, "IFR Holder Discount", "Verify wallet on the website for 50% Stripe checkout", onIfrClick)
             ClickRow(Icons.Default.Key, "Activation Code", "Enter code received after purchase") { showActivationDialog = true }
 
             SectionHeader("Help")
@@ -193,7 +190,36 @@ fun SettingsScreen(
 }
 
 @Composable
-private fun ContactLimitRow(tier: IfrTier) {
+private fun AccessStatusCard(tier: AccessTier) {
+    val tierColor = when (tier) {
+        AccessTier.FREE -> Color.Gray
+        AccessTier.PRO -> Color(0xFF00E5FF)
+        AccessTier.ELITE -> Color(0xFFFFD700)
+    }
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text("Current Access", style = MaterialTheme.typography.titleMedium)
+                Text("Unlock paid features with an activation code.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+            }
+            Text(tier.name, style = MaterialTheme.typography.titleMedium, color = tierColor)
+        }
+    }
+}
+
+@Composable
+private fun ContactLimitRow(tier: AccessTier) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -203,7 +229,7 @@ private fun ContactLimitRow(tier: IfrTier) {
         Column(Modifier.weight(1f)) {
             Text("Contacts", style = MaterialTheme.typography.bodyMedium)
             Text(
-                if (tier >= IfrTier.PRO) "Unlimited" else "10 max (Free tier)",
+                if (tier >= AccessTier.PRO) "Unlimited" else "10 max (Free tier)",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
@@ -216,8 +242,8 @@ private fun GatedFeatureRow(
     icon: ImageVector,
     title: String,
     subtitle: String,
-    currentTier: IfrTier,
-    requiredTier: IfrTier,
+    currentTier: AccessTier,
+    requiredTier: AccessTier,
     onUnlock: () -> Unit,
     onOpen: (() -> Unit)? = null,
     comingSoon: Boolean = false
@@ -234,7 +260,7 @@ private fun GatedFeatureRow(
         Icon(
             icon, null,
             tint = if (locked || comingSoon) Color.Gray.copy(alpha = 0.4f)
-                   else if (requiredTier == IfrTier.ELITE) eliteColor
+                   else if (requiredTier == AccessTier.ELITE) eliteColor
                    else MaterialTheme.colorScheme.primary
         )
         Spacer(Modifier.width(16.dp))
@@ -260,15 +286,29 @@ private fun GatedFeatureRow(
 }
 
 @Composable
-private fun FeatureRow(icon: ImageVector, title: String, subtitle: String, locked: Boolean) {
+private fun FeatureRow(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    locked: Boolean,
+    onUnlock: (() -> Unit)? = null
+) {
     Row(modifier = Modifier.fillMaxWidth().padding(16.dp, 10.dp), verticalAlignment = Alignment.CenterVertically) {
-        Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
+        Icon(icon, null, tint = if (locked) Color.Gray.copy(alpha = 0.4f) else MaterialTheme.colorScheme.primary)
         Spacer(Modifier.width(16.dp))
         Column(Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.bodyMedium)
+            Text(title, style = MaterialTheme.typography.bodyMedium, color = if (locked) Color.Gray else MaterialTheme.colorScheme.onSurface)
             Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
         }
-        Icon(Icons.Default.CheckCircle, null, tint = Color(0xFF00FF88), modifier = Modifier.size(20.dp))
+        if (locked && onUnlock != null) {
+            TextButton(onClick = onUnlock) {
+                Icon(Icons.Default.Lock, null, tint = Color.Gray, modifier = Modifier.size(14.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("Unlock", style = MaterialTheme.typography.labelSmall, color = Color(0xFF00E5FF))
+            }
+        } else {
+            Icon(Icons.Default.CheckCircle, null, tint = Color(0xFF00FF88), modifier = Modifier.size(20.dp))
+        }
     }
 }
 
@@ -361,7 +401,7 @@ private fun ActivationCodeDialog(
                         style = MaterialTheme.typography.bodySmall
                     )
                     is ActivationState.Success -> Text(
-                        "Unlocked: ${state.tier.name}",
+                        "Unaccess: ${state.tier.name}",
                         color = Color(0xFF00E676),
                         style = MaterialTheme.typography.bodySmall
                     )

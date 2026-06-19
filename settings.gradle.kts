@@ -19,7 +19,7 @@ rootProject.name = "SecureChat"
 
 include(":app")
 include(":stealthx-crypto")
-include(":stealthx-ifr")
+include(":stealthx-access")
 include(":security")
 include(":shared")
 include(":data")

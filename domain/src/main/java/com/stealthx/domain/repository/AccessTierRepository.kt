@@ -6,10 +6,10 @@
 package com.stealthx.domain.repository
 
 import com.stealthx.shared.model.CachedTierResult
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 
 /**
- * Repository for IFR tier cache.
+ * Repository for app tier cache.
  * Interface in :domain, implementation in :data.
  *
  * SECURITY RULES:
@@ -17,10 +17,10 @@ import com.stealthx.shared.model.IfrTier
  * - On HMAC mismatch → returns FREE, NEVER higher
  * - expiresAt = verifiedAt + 30 days
  */
-interface IfrTierRepository {
-    suspend fun getCachedTier(): IfrTier
+interface AccessTierRepository {
+    suspend fun getCachedTier(): AccessTier
     suspend fun getCachedResult(): CachedTierResult?
-    suspend fun saveTierResult(walletAddress: String, lockedAmount: Long, tier: IfrTier)
+    suspend fun saveTierResult(sourceId: String, accessWeight: Long, tier: AccessTier)
     suspend fun invalidateCache()
     suspend fun isCacheValid(): Boolean
 }

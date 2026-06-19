@@ -10,23 +10,23 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * IFR Tier Cache — stores verified IFR lock results with HMAC protection.
+ * App tier cache — stores verified access results with HMAC protection.
  *
  * SECURITY:
- * - walletAddress: EIP-55 checksum format (0x + mixed-case hex)
- * - hmac: HMAC-SHA256 over (walletAddress, lockedAmount, tier, verifiedAt, expiresAt)
+ * - sourceId: activation-code or internal source identifier
+ * - hmac: HMAC-SHA256 over (sourceId, accessWeight, tier, verifiedAt, expiresAt)
  * - HMAC key from KeystoreManager.getOrCreateHmacKey()
  * - On HMAC mismatch → return FREE, NEVER higher
  * - expiresAt = verifiedAt + 30 days (not from app start)
  */
-@Entity(tableName = "ifr_tier_cache")
-data class IfrTierCacheEntity(
+@Entity(tableName = "access_tier_cache")
+data class AccessTierCacheEntity(
     @PrimaryKey
-    @ColumnInfo(name = "wallet_address")
-    val walletAddress: String,
+    @ColumnInfo(name = "source_id")
+    val sourceId: String,
 
-    @ColumnInfo(name = "locked_amount")
-    val lockedAmount: Long,
+    @ColumnInfo(name = "access_weight")
+    val accessWeight: Long,
 
     val tier: String,
 
@@ -41,8 +41,8 @@ data class IfrTierCacheEntity(
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is IfrTierCacheEntity) return false
-        return walletAddress == other.walletAddress
+        if (other !is AccessTierCacheEntity) return false
+        return sourceId == other.sourceId
     }
-    override fun hashCode(): Int = walletAddress.hashCode()
+    override fun hashCode(): Int = sourceId.hashCode()
 }

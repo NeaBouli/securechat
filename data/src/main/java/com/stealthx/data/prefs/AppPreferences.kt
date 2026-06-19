@@ -48,8 +48,6 @@ class AppPreferences @Inject constructor(
         private const val PREFS_NAME = "chameleon_prefs"
         private const val KEY_ONBOARDING_DONE = "onboarding_done"
         private const val KEY_SECURITY_LEVEL_DEFAULT = "security_level_default"
-        private const val KEY_IFR_WALLET = "ifr_wallet_address"
-        private const val KEY_IFR_VERIFICATION_METHOD = "ifr_verification_method"
         private const val KEY_BIOMETRIC_ENABLED = "biometric_enabled"
         private const val KEY_STEALTH_DELETE_ENABLED = "stealth_delete_enabled"
         private const val KEY_PINNED_CONTACTS = "pinned_contacts"
@@ -64,14 +62,6 @@ class AppPreferences @Inject constructor(
     var defaultSecurityLevel: String
         get() = prefs.getString(KEY_SECURITY_LEVEL_DEFAULT, "PROTECTED") ?: "PROTECTED"
         set(value) = prefs.edit().putString(KEY_SECURITY_LEVEL_DEFAULT, value).apply()
-
-    var ifrWalletAddress: String?
-        get() = prefs.getString(KEY_IFR_WALLET, null)
-        set(value) = prefs.edit().putString(KEY_IFR_WALLET, value).apply()
-
-    var ifrVerificationMethod: String?
-        get() = prefs.getString(KEY_IFR_VERIFICATION_METHOD, null)
-        set(value) = prefs.edit().putString(KEY_IFR_VERIFICATION_METHOD, value).apply()
 
     var biometricEnabled: Boolean
         get() = prefs.getBoolean(KEY_BIOMETRIC_ENABLED, true)

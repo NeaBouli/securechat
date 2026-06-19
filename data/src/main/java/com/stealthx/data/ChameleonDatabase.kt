@@ -14,14 +14,14 @@ import com.stealthx.data.dao.AuditLogDao
 import com.stealthx.data.dao.ChatSessionDao
 import com.stealthx.data.dao.ContactKeyDao
 import com.stealthx.data.dao.CryptoKeyDao
-import com.stealthx.data.dao.IfrTierCacheDao
+import com.stealthx.data.dao.AccessTierCacheDao
 import com.stealthx.data.dao.MessageDao
 import com.stealthx.data.dao.SecureRuleDao
 import com.stealthx.data.entity.AuditLogEntity
 import com.stealthx.data.entity.ChatSessionEntity
 import com.stealthx.data.entity.ContactKeyEntity
 import com.stealthx.data.entity.CryptoKeyEntity
-import com.stealthx.data.entity.IfrTierCacheEntity
+import com.stealthx.data.entity.AccessTierCacheEntity
 import com.stealthx.data.entity.MessageEntity
 import com.stealthx.data.entity.SecureRuleEntity
 import androidx.room.migration.Migration
@@ -45,9 +45,9 @@ import net.sqlcipher.database.SupportFactory
         ChatSessionEntity::class,
         MessageEntity::class,
         AuditLogEntity::class,
-        IfrTierCacheEntity::class
+        AccessTierCacheEntity::class
     ],
-    version = 6,
+    version = 7,
     exportSchema = true
 )
 @TypeConverters(ChameleonTypeConverters::class)
@@ -59,7 +59,7 @@ abstract class ChameleonDatabase : RoomDatabase() {
     abstract fun chatSessionDao(): ChatSessionDao
     abstract fun messageDao(): MessageDao
     abstract fun auditLogDao(): AuditLogDao
-    abstract fun ifrTierCacheDao(): IfrTierCacheDao
+    abstract fun accessTierCacheDao(): AccessTierCacheDao
 
     companion object {
         private const val DB_NAME = "chameleon_secure.db"
@@ -67,6 +67,23 @@ abstract class ChameleonDatabase : RoomDatabase() {
         private val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE messages ADD COLUMN expires_at INTEGER DEFAULT NULL")
+            }
+        }
+
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS access_tier_cache (
+                        source_id TEXT NOT NULL PRIMARY KEY,
+                        access_weight INTEGER NOT NULL,
+                        tier TEXT NOT NULL,
+                        verified_at INTEGER NOT NULL,
+                        expires_at INTEGER NOT NULL,
+                        hmac BLOB NOT NULL
+                    )
+                    """.trimIndent()
+                )
             }
         }
 
@@ -78,7 +95,7 @@ abstract class ChameleonDatabase : RoomDatabase() {
                 DB_NAME
             )
                 .openHelperFactory(factory)
-                .addMigrations(MIGRATION_5_6)
+                .addMigrations(MIGRATION_5_6, MIGRATION_6_7)
                 .fallbackToDestructiveMigration()
                 .build()
         }

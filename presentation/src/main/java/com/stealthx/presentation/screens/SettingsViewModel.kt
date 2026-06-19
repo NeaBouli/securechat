@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stealthx.data.activation.ActivationCodeClient
 import com.stealthx.data.prefs.AppPreferences
-import com.stealthx.domain.repository.IfrTierRepository
+import com.stealthx.domain.repository.AccessTierRepository
 import com.stealthx.domain.tier.TierGate
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +22,7 @@ import javax.inject.Inject
 sealed class ActivationState {
     data object Idle : ActivationState()
     data object Loading : ActivationState()
-    data class Success(val tier: IfrTier) : ActivationState()
+    data class Success(val tier: AccessTier) : ActivationState()
     data class Error(val message: String) : ActivationState()
 }
 
@@ -30,12 +30,12 @@ sealed class ActivationState {
 class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val tierGate: TierGate,
-    private val tierRepository: IfrTierRepository,
+    private val tierRepository: AccessTierRepository,
     private val prefs: AppPreferences
 ) : ViewModel() {
 
-    val currentTier: StateFlow<IfrTier> = tierGate.currentTier
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), IfrTier.FREE)
+    val currentTier: StateFlow<AccessTier> = tierGate.currentTier
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), AccessTier.FREE)
 
     private val _biometricEnabled = MutableStateFlow(prefs.biometricEnabled)
     val biometricEnabled: StateFlow<Boolean> = _biometricEnabled.asStateFlow()
@@ -68,11 +68,11 @@ class SettingsViewModel @Inject constructor(
         ActivationCodeClient.activate(context, code) { tierName, error ->
             viewModelScope.launch(Dispatchers.IO) {
                 if (tierName != null) {
-                    val ifrTier = try { IfrTier.valueOf(tierName.uppercase()) } catch (_: Exception) { null }
-                    if (ifrTier != null && ifrTier > IfrTier.FREE) {
-                        tierRepository.saveTierResult("activation_code", 0L, ifrTier)
+                    val accessTier = try { AccessTier.valueOf(tierName.uppercase()) } catch (_: Exception) { null }
+                    if (accessTier != null && accessTier > AccessTier.FREE) {
+                        tierRepository.saveTierResult("activation_code", 0L, accessTier)
                         tierGate.getTier()
-                        _activationState.value = ActivationState.Success(ifrTier)
+                        _activationState.value = ActivationState.Success(accessTier)
                     } else {
                         _activationState.value = ActivationState.Error("Unknown tier received")
                     }

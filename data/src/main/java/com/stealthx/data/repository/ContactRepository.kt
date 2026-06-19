@@ -11,7 +11,7 @@ import com.stealthx.data.dao.ContactKeyDao
 import com.stealthx.data.entity.ContactKeyEntity
 import com.stealthx.domain.tier.TierGate
 import com.stealthx.domain.tier.TierLimitException
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 import com.stealthx.shared.model.PublicKeyBundle
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -31,7 +31,7 @@ class ContactRepository @Inject constructor(
      * Count + insert are atomic — no TOCTOU race condition.
      */
     suspend fun addContact(contact: ContactKeyEntity) {
-        if (tierGate.getTier() < IfrTier.PRO) {
+        if (tierGate.getTier() < AccessTier.PRO) {
             val inserted = contactKeyDao.insertIfUnderLimit(contact, FREE_CONTACT_LIMIT)
             if (!inserted) {
                 val count = contactKeyDao.count()

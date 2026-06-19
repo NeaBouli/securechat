@@ -3,7 +3,7 @@
  * Copyright (C) 2026 Vendetta Labs / StealthX Platform
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-package com.stealthx.ifr.compose
+package com.stealthx.access.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,20 +23,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 
 /**
  * TierGatedContent — THE ONLY composable wrapper for feature gating.
  *
  * Shows [content] if [currentTier] >= [requiredTier].
- * Otherwise shows a LockedFeatureCard with "Unlock with IFR" CTA.
+ * Otherwise shows a LockedFeatureCard with an upgrade CTA.
  *
  * NO other Guard/Gate/Check composable may exist in the codebase.
  */
 @Composable
 fun TierGatedContent(
-    currentTier: IfrTier,
-    requiredTier: IfrTier,
+    currentTier: AccessTier,
+    requiredTier: AccessTier,
     featureName: String,
     onUnlockClicked: () -> Unit,
     modifier: Modifier = Modifier,
@@ -57,7 +57,7 @@ fun TierGatedContent(
 @Composable
 fun LockedFeatureCard(
     featureName: String,
-    requiredTier: IfrTier,
+    requiredTier: AccessTier,
     onUnlockClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -89,7 +89,7 @@ fun LockedFeatureCard(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Hold ${requiredTier.minLockAmount / 1_000_000_000L} IFR to unlock",
+                text = "Purchase lifetime access on the website, then enter your activation code.",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 textAlign = TextAlign.Center
@@ -101,7 +101,7 @@ fun LockedFeatureCard(
                     containerColor = Color(0xFF00E5FF)
                 )
             ) {
-                Text("Unlock with IFR", color = Color.Black)
+                Text("Upgrade", color = Color.Black)
             }
         }
     }

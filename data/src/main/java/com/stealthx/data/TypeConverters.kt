@@ -8,7 +8,7 @@ package com.stealthx.data
 import androidx.room.TypeConverter
 import com.stealthx.domain.rules.ActionType
 import com.stealthx.domain.rules.TriggerType
-import com.stealthx.shared.model.IfrTier
+import com.stealthx.shared.model.AccessTier
 import com.stealthx.shared.model.SecurityLevel
 import java.time.Instant
 
@@ -28,12 +28,12 @@ class ChameleonTypeConverters {
     @TypeConverter
     fun toSecurityLevel(name: String): SecurityLevel = SecurityLevel.valueOf(name)
 
-    // IfrTier ↔ String
+    // AccessTier ↔ String
     @TypeConverter
-    fun fromIfrTier(tier: IfrTier): String = tier.name
+    fun fromAccessTier(tier: AccessTier): String = tier.name
 
     @TypeConverter
-    fun toIfrTier(name: String): IfrTier = IfrTier.valueOf(name)
+    fun toAccessTier(name: String): AccessTier = AccessTier.valueOf(name)
 
     // TriggerType ↔ String
     @TypeConverter

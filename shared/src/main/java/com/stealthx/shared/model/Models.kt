@@ -57,13 +57,13 @@ enum class SecurityLevel(val displayName: String, val colorHex: String) {
 }
 
 /**
- * IFR Token access tiers.
+ * App access tiers.
  * Gated via TierGate.kt in :domain — nowhere else.
  */
-enum class IfrTier(val minLockAmount: Long) {
+enum class AccessTier(val rank: Long) {
     FREE  (0L),
-    PRO   (2_000_000_000_000L),    // 2,000 IFR × 10^9
-    ELITE (6_000_000_000_000L)     // 6,000 IFR × 10^9
+    PRO   (1L),
+    ELITE (2L)
 }
 
 /**
@@ -94,17 +94,17 @@ data class TriggerContext(
     val dayOfWeek:    Int           = 0
 )
 
-// ── IFR Cache Model ───────────────────────────────────────────
+// ── Access Cache Model ────────────────────────────────────────
 
 /**
- * Cached IFR verification result.
+ * Cached access verification result.
  * Stored in Room DB with HMAC protection against tampering.
- * Expires after 30 days — triggers re-verification.
+ * Expires after 30 days.
  */
 data class CachedTierResult(
-    val walletAddress: String,        // EIP-55 checksum address
-    val lockedAmount:  Long,          // raw amount × 10^9
-    val tier:          IfrTier,
+    val sourceId: String,
+    val accessWeight:  Long,
+    val tier:          AccessTier,
     val verifiedAt:    Instant,
     val expiresAt:     Instant,       // verifiedAt + 30 days
     val hmac:          ByteArray      // HMAC-SHA256 over all above fields

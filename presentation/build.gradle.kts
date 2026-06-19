@@ -28,7 +28,7 @@ dependencies {
     implementation(project(":features:contacts"))
     implementation(project(":features:settings"))
     implementation(project(":features:broadcast"))
-    implementation(project(":stealthx-ifr"))
+    implementation(project(":stealthx-access"))
     implementation(project(":shared"))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
