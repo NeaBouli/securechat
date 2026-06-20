@@ -2601,3 +2601,25 @@ Build: ✅ | S7 ✅ | S4 ✅
 - File-name scan found only `NewContact...` paths, a false positive from the letters `wc`; no IFR/wallet connector files remain.
 - No SecureChat code changes were required in this pass; this entry records the code-level verification.
 - Web sales pages remain separate and still contain the browser-based IFR Stripe discount by product decision.
+
+## 2026-06-20 02:17 PDT — CODEX TERMINAL RELEASE/STATUS
+
+- User resumed release QA after waiting for separate device work.
+- Added an explicitly disabled Google Play button to the SecureChat download section:
+  - `Google Play — coming soon`
+  - `aria-disabled="true"`, no active href, grey disabled styling.
+- Build verification:
+  - `./gradlew --no-daemon --no-watch-fs --max-workers=1 testDebugUnitTest :app:assembleRelease :app:bundleRelease` succeeded.
+- Desktop artifacts refreshed:
+  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.1-alpha-vC2.apk`
+  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.1-alpha-vC2.aab`
+  - `/Users/gio/Desktop/SecureChat-LATEST.apk`
+  - `/Users/gio/Desktop/SecureChat-LATEST.aab`
+- GitHub release `v0.1.1-alpha-securechat` assets were updated with `SecureChat-LATEST.apk` and `SecureChat-LATEST.aab`.
+- Verified SecureChat GitHub APK URL returned HTTP 200.
+- Device QA:
+  - Installed on S7 `ce10160adc00152604` and Tab S4 `ce12182c68644439037e`.
+  - Launch smoke clean on both devices.
+  - Final package-restricted 100-event Monkey smoke passed on both devices.
+- S10 was not connected; no local Android emulator/AVD was available.
+- `com.neabouli.woizz` was not touched.
