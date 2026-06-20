@@ -168,8 +168,7 @@ fun ChatScreen(
             ) {
             Row(modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 8.dp)
-                .navigationBarsPadding(),
+                .padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.Bottom) {
                 OutlinedTextField(
                     value = input,

@@ -2633,3 +2633,34 @@ Build: ✅ | S7 ✅ | S4 ✅
   - Paid plans unlock with an activation code after checkout.
 - Google Play upload target remains `/Users/gio/Desktop/SecureChat-LATEST.aab`.
 - Verified SecureChat GitHub APK link returned HTTP 200.
+
+## 2026-06-20 15:11 PDT — CODEX TERMINAL FIX/RELEASE
+
+- Exported SecureChat launcher icons to the Desktop:
+  - `/Users/gio/Desktop/SecureChat-App-Icon.png`
+  - `/Users/gio/Desktop/SecureChat-App-Icon-Round.png`
+  - Both are 192x192 PNG from `mipmap-xxxhdpi`.
+- Android 15 edge-to-edge compatibility pass:
+  - `MainActivity` now calls `enableEdgeToEdge()`.
+  - Root Compose content is wrapped with `Modifier.safeDrawingPadding()`.
+  - Removed the old per-chat `navigationBarsPadding()` to avoid double bottom insets after adding root safe drawing padding.
+- Bumped release metadata:
+  - versionCode `2` -> `3`
+  - versionName `0.1.1-alpha` -> `0.1.2-alpha`
+- Website download section now points to GitHub release tag `v0.1.2-alpha-securechat`.
+- Build verification succeeded:
+  - `./gradlew --no-daemon --no-watch-fs --max-workers=1 testDebugUnitTest :app:assembleRelease :app:bundleRelease`
+- Desktop artifacts refreshed:
+  - `/Users/gio/Desktop/SecureChat-LATEST.apk`
+  - `/Users/gio/Desktop/SecureChat-LATEST.aab`
+  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.2-alpha-vC3.apk`
+  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.2-alpha-vC3.aab`
+- Verified APK metadata:
+  - package `com.stealthx.securechat`
+  - versionCode `3`
+  - versionName `0.1.2-alpha`
+  - targetSdk `35`
+- SHA256:
+  - APK `1439c3bf9676afa58c28a25c0094dee73e12362ed6692f5789111f23e8983320`
+  - AAB `9313901dc3e104df1495c4ef057dca05472ac7071e38e3d690a5618f2c574bb8`
+- Device install/smoke not run in this pass to avoid device interference; artifacts are build-verified.

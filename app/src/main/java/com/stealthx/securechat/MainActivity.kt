@@ -3,6 +3,7 @@ package com.stealthx.securechat
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -56,6 +58,7 @@ class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
@@ -90,90 +93,92 @@ class MainActivity : FragmentActivity() {
     private fun setLockedContent() {
         setContent {
             StealthXTheme {
-                when (authState.value) {
-                    AuthState.Locked -> {
-                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Icon(
-                                    Icons.Default.Lock,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier
-                                )
-                                Spacer(Modifier.height(16.dp))
-                                Text(
-                                    "SecureChat",
-                                    style = MaterialTheme.typography.headlineMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    "Biometric required",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                                )
-                                Spacer(Modifier.height(24.dp))
-                                TextButton(onClick = { showPinEntry = true }) {
-                                    Text("Enter PIN")
+                Box(Modifier.fillMaxSize().safeDrawingPadding()) {
+                    when (authState.value) {
+                        AuthState.Locked -> {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Icon(
+                                        Icons.Default.Lock,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier
+                                    )
+                                    Spacer(Modifier.height(16.dp))
+                                    Text(
+                                        "SecureChat",
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        "Biometric required",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                    )
+                                    Spacer(Modifier.height(24.dp))
+                                    TextButton(onClick = { showPinEntry = true }) {
+                                        Text("Enter PIN")
+                                    }
                                 }
-                            }
 
-                            if (showPinEntry) {
-                                AlertDialog(
-                                    onDismissRequest = {
-                                        showPinEntry = false
-                                        pinInput = ""
-                                        pinError = null
-                                    },
-                                    title = { Text("Enter PIN") },
-                                    text = {
-                                        Column {
-                                            OutlinedTextField(
-                                                value = pinInput,
-                                                onValueChange = { pinInput = it; pinError = null },
-                                                label = { Text("PIN") },
-                                                visualTransformation = PasswordVisualTransformation(),
-                                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                                                singleLine = true
-                                            )
-                                            pinError?.let {
-                                                Spacer(Modifier.height(8.dp))
-                                                Text(it, color = MaterialTheme.colorScheme.error,
-                                                    style = MaterialTheme.typography.bodySmall)
-                                            }
-                                        }
-                                    },
-                                    confirmButton = {
-                                        TextButton(onClick = {
-                                            if (checkDuressPin(pinInput)) {
-                                                showPinEntry = false
-                                                wipeAndShowDecoy()
-                                            } else {
-                                                pinError = "Incorrect PIN"
-                                                pinInput = ""
-                                            }
-                                        }) { Text("Confirm") }
-                                    },
-                                    dismissButton = {
-                                        TextButton(onClick = {
+                                if (showPinEntry) {
+                                    AlertDialog(
+                                        onDismissRequest = {
                                             showPinEntry = false
                                             pinInput = ""
                                             pinError = null
-                                        }) { Text("Cancel") }
-                                    }
-                                )
+                                        },
+                                        title = { Text("Enter PIN") },
+                                        text = {
+                                            Column {
+                                                OutlinedTextField(
+                                                    value = pinInput,
+                                                    onValueChange = { pinInput = it; pinError = null },
+                                                    label = { Text("PIN") },
+                                                    visualTransformation = PasswordVisualTransformation(),
+                                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                                                    singleLine = true
+                                                )
+                                                pinError?.let {
+                                                    Spacer(Modifier.height(8.dp))
+                                                    Text(it, color = MaterialTheme.colorScheme.error,
+                                                        style = MaterialTheme.typography.bodySmall)
+                                                }
+                                            }
+                                        },
+                                        confirmButton = {
+                                            TextButton(onClick = {
+                                                if (checkDuressPin(pinInput)) {
+                                                    showPinEntry = false
+                                                    wipeAndShowDecoy()
+                                                } else {
+                                                    pinError = "Incorrect PIN"
+                                                    pinInput = ""
+                                                }
+                                            }) { Text("Confirm") }
+                                        },
+                                        dismissButton = {
+                                            TextButton(onClick = {
+                                                showPinEntry = false
+                                                pinInput = ""
+                                                pinError = null
+                                            }) { Text("Cancel") }
+                                        }
+                                    )
+                                }
                             }
                         }
-                    }
-                    AuthState.Unaccess -> StealthXNavGraph()
-                    AuthState.Unavailable -> {
-                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text(
-                                "Biometric unlock unavailable",
-                                color = MaterialTheme.colorScheme.error
-                            )
+                        AuthState.Unaccess -> StealthXNavGraph()
+                        AuthState.Unavailable -> {
+                            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                                Text(
+                                    "Biometric unlock unavailable",
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
                         }
                     }
                 }
