@@ -2664,3 +2664,12 @@ Build: ✅ | S7 ✅ | S4 ✅
   - APK `1439c3bf9676afa58c28a25c0094dee73e12362ed6692f5789111f23e8983320`
   - AAB `9313901dc3e104df1495c4ef057dca05472ac7071e38e3d690a5618f2c574bb8`
 - Device install/smoke not run in this pass to avoid device interference; artifacts are build-verified.
+
+External release:
+- Created GitHub Release `v0.1.2-alpha-securechat`:
+  - `https://github.com/NeaBouli/securechat/releases/tag/v0.1.2-alpha-securechat`
+- Uploaded assets:
+  - `SecureChat-LATEST.apk` (21,774,002 bytes)
+  - `SecureChat-LATEST.aab` (22,134,007 bytes)
+- Verified APK asset URL returns HTTP 200 after redirect:
+  - `https://github.com/NeaBouli/securechat/releases/download/v0.1.2-alpha-securechat/SecureChat-LATEST.apk`
