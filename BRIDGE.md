@@ -2673,3 +2673,29 @@ External release:
   - `SecureChat-LATEST.aab` (22,134,007 bytes)
 - Verified APK asset URL returns HTTP 200 after redirect:
   - `https://github.com/NeaBouli/securechat/releases/download/v0.1.2-alpha-securechat/SecureChat-LATEST.apk`
+
+## 2026-06-20 15:26 PDT — CODEX TERMINAL FIX/RELEASE
+
+- User reported Google Play requires SecureChat upload package name `securechat.app`.
+- Updated Android release identity:
+  - applicationId `com.stealthx.securechat` -> `securechat.app`
+  - versionCode `3` -> `4`
+  - versionName `0.1.2-alpha` -> `0.1.3-alpha`
+- Website download section now points to GitHub release tag `v0.1.3-alpha-securechat`.
+- Build verification succeeded:
+  - `./gradlew --no-daemon --no-watch-fs --max-workers=1 testDebugUnitTest :app:assembleRelease :app:bundleRelease`
+- Desktop artifacts refreshed:
+  - `/Users/gio/Desktop/SecureChat-LATEST.apk`
+  - `/Users/gio/Desktop/SecureChat-LATEST.aab`
+  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.3-alpha-vC4.apk`
+  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.3-alpha-vC4.aab`
+- Verified APK/AAB metadata:
+  - package `securechat.app`
+  - versionCode `4`
+  - versionName `0.1.3-alpha`
+  - targetSdk `35`
+- SHA256:
+  - APK `414b77e862b6a4c77b63d0120f2465c378bb4c78881368b4286af9a28d465f6b`
+  - AAB `f80d5dcb58980f435b8911f1334e53e66f55ad865040320dc08252d2ac1647a3`
+- Device install/smoke not run in this pass; artifacts are build-verified for Play upload.
+- Next: create GitHub Release `v0.1.3-alpha-securechat` after pushing this commit.

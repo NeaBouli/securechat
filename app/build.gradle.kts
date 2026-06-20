@@ -32,11 +32,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.stealthx.securechat"
+        applicationId = "securechat.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
-        versionName = "0.1.2-alpha"
+        versionCode = 4
+        versionName = "0.1.3-alpha"
     }
 
     buildTypes {
