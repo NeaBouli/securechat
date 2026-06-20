@@ -2699,3 +2699,14 @@ External release:
   - AAB `f80d5dcb58980f435b8911f1334e53e66f55ad865040320dc08252d2ac1647a3`
 - Device install/smoke not run in this pass; artifacts are build-verified for Play upload.
 - Next: create GitHub Release `v0.1.3-alpha-securechat` after pushing this commit.
+
+External release:
+- Created GitHub Release `v0.1.3-alpha-securechat` from commit `1344c1a`.
+- Release URL:
+  - `https://github.com/NeaBouli/securechat/releases/tag/v0.1.3-alpha-securechat`
+- Uploaded assets:
+  - `SecureChat-LATEST.apk` (21,774,034 bytes)
+  - `SecureChat-LATEST.aab` (22,134,040 bytes)
+- Verified download URLs return HTTP 200:
+  - `https://github.com/NeaBouli/securechat/releases/download/v0.1.3-alpha-securechat/SecureChat-LATEST.apk`
+  - `https://github.com/NeaBouli/securechat/releases/download/v0.1.3-alpha-securechat/SecureChat-LATEST.aab`
