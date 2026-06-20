@@ -2623,3 +2623,13 @@ Build: ✅ | S7 ✅ | S4 ✅
   - Final package-restricted 100-event Monkey smoke passed on both devices.
 - S10 was not connected; no local Android emulator/AVD was available.
 - `com.neabouli.woizz` was not touched.
+
+## 2026-06-20 14:07 PDT — CODEX TERMINAL DECISION/FIX
+
+- User clarified the distribution model: one public app/APK/AAB per product; paid tiers unlock inside the app with activation code/subscription state.
+- SecureChat already follows this model with one release APK/AAB.
+- Updated the download section copy to state:
+  - One APK covers Free, Pro, and Elite.
+  - Paid plans unlock with an activation code after checkout.
+- Google Play upload target remains `/Users/gio/Desktop/SecureChat-LATEST.aab`.
+- Verified SecureChat GitHub APK link returned HTTP 200.
