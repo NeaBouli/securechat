@@ -2592,3 +2592,12 @@ Build: ✅ | S7 ✅ | S4 ✅
   - Targeted APK string scan found no visible old IFR/Wallet/Connect/Uniswap phrases; raw short `IIFr`/`ifre` byte hits are non-UI false positives.
 - Device note: no ADB/device action was run to avoid interfering with separate `woizz` work.
 - Later milestone: build SecureChat AAB only after SecureChat is functionally complete and fully verified; do not produce AAB before that pass.
+
+## 2026-06-20 00:09 PDT — CODEX TERMINAL STATUS
+
+- User clarified that removing IFR/wallet means removing app-side code mechanisms and wiring, not only hiding UI.
+- Re-ran a hard Android-code scan over `app data domain presentation shared features stealthx-access gradle settings.gradle.kts build.gradle.kts`, excluding build/.gradle output.
+- No app-code hits remain for IFR, old `IfrTier`/`ifr_tier`, `stealthx-ifr`, WalletConnect, walletconnect, MetaMask, Uniswap, Web3, Ethereum, SIWE, wallet callback schemes, wallet address/signature identifiers, IFR discount identifiers, old hold amounts, `Buy IFR`, or `Connect Wallet`.
+- File-name scan found only `NewContact...` paths, a false positive from the letters `wc`; no IFR/wallet connector files remain.
+- No SecureChat code changes were required in this pass; this entry records the code-level verification.
+- Web sales pages remain separate and still contain the browser-based IFR Stripe discount by product decision.
