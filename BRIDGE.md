@@ -2784,3 +2784,27 @@ Verification:
 Desktop artifact refreshed:
 - `/Users/gio/Desktop/SecureChat-LATEST.aab`
   - SHA256 `de3992d84ffd12b7e08f8c9697d7fcba5e610140a1697e8aeb831efdee284c43`
+
+## 2026-06-21 15:30 PDT - CODEX TERMINAL TEST-TIER BUILDS/S10 INSTALL
+
+User requested all three tiers of all three apps on S10.
+
+Change:
+- Added test-only release build types `freeTierRelease`, `proTierRelease`, `eliteTierRelease`.
+- Public `release` package remains `securechat.app`; test tier packages use:
+  - `securechat.app.free`
+  - `securechat.app.pro`
+  - `securechat.app.elite`
+- Added `BuildConfig.FORCED_TIER` and `DevTierOverride.forcedTier` so test-tier builds force FREE/PRO/ELITE through the existing `AccessTierRepository` path.
+
+Build:
+- `./gradlew --no-daemon --max-workers=1 app:assembleFreeTierRelease app:assembleProTierRelease app:assembleEliteTierRelease` succeeded.
+
+S10 install verification:
+- `securechat.app.free` vC5 / `0.1.4-alpha-free` / targetSdk 35
+- `securechat.app.pro` vC5 / `0.1.4-alpha-pro` / targetSdk 35
+- `securechat.app.elite` vC5 / `0.1.4-alpha-elite` / targetSdk 35
+- Public `securechat.app` also updated to vC5 / `0.1.4-alpha` / targetSdk 35.
+
+Note:
+- This is test-only parallel packaging; public app distribution remains one package with paid plans unlocked by activation/subscription state.

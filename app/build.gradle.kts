@@ -37,16 +37,46 @@ android {
         targetSdk = 35
         versionCode = 5
         versionName = "0.1.4-alpha"
+        buildConfigField("String", "FORCED_TIER", "\"\"")
     }
 
     buildTypes {
         debug {
             buildConfigField("Boolean", "FORCE_ELITE", "true")
+            buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
         }
         create("internalRelease") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("release")
             buildConfigField("Boolean", "FORCE_ELITE", "true")
+            buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
+            matchingFallbacks += listOf("release")
+        }
+        create("freeTierRelease") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("release")
+            applicationIdSuffix = ".free"
+            versionNameSuffix = "-free"
+            buildConfigField("Boolean", "FORCE_ELITE", "false")
+            buildConfigField("String", "FORCED_TIER", "\"FREE\"")
+            matchingFallbacks += listOf("release")
+        }
+        create("proTierRelease") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("release")
+            applicationIdSuffix = ".pro"
+            versionNameSuffix = "-pro"
+            buildConfigField("Boolean", "FORCE_ELITE", "false")
+            buildConfigField("String", "FORCED_TIER", "\"PRO\"")
+            matchingFallbacks += listOf("release")
+        }
+        create("eliteTierRelease") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("release")
+            applicationIdSuffix = ".elite"
+            versionNameSuffix = "-elite"
+            buildConfigField("Boolean", "FORCE_ELITE", "true")
+            buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
             matchingFallbacks += listOf("release")
         }
         release {
@@ -55,6 +85,7 @@ android {
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("Boolean", "FORCE_ELITE", "false")
+            buildConfigField("String", "FORCED_TIER", "\"\"")
         }
     }
 

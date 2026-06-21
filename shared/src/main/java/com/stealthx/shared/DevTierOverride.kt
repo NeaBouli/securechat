@@ -6,6 +6,8 @@
  */
 package com.stealthx.shared
 
+import com.stealthx.shared.model.AccessTier
+
 /**
  * Debug-only flag that bypasses HMAC cache and on-chain checks.
  * Set to true in Application.onCreate() when DEBUG && FORCE_ELITE.
@@ -13,4 +15,5 @@ package com.stealthx.shared
  */
 object DevTierOverride {
     var forceElite: Boolean = false
+    var forcedTier: AccessTier? = null
 }

@@ -41,6 +41,7 @@ class AccessTierRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCachedTier(): AccessTier {
+        DevTierOverride.forcedTier?.let { return it }
         if (DevTierOverride.forceElite) return AccessTier.ELITE
         val entity = dao.getCurrent() ?: return AccessTier.FREE
 
