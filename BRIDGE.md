@@ -2710,3 +2710,25 @@ External release:
 - Verified download URLs return HTTP 200:
   - `https://github.com/NeaBouli/securechat/releases/download/v0.1.3-alpha-securechat/SecureChat-LATEST.apk`
   - `https://github.com/NeaBouli/securechat/releases/download/v0.1.3-alpha-securechat/SecureChat-LATEST.aab`
+
+## 2026-06-21 00:00 PDT — CODEX TERMINAL STATUS
+
+- Restart handoff requested by user before machine reboot.
+- Terminal command execution was unavailable during this save pass: even minimal shell commands returned exit code `-1` with no stdout/stderr.
+- Latest known saved SecureChat state remains:
+  - Code commit `1344c1a fix: align SecureChat package name for Play upload`
+  - Bridge verification commit `6e6db9f docs: record SecureChat v0.1.3 release verification`
+  - Desktop upload artifact `/Users/gio/Desktop/SecureChat-LATEST.aab`
+  - package `securechat.app`
+  - versionCode `4`
+  - versionName `0.1.3-alpha`
+  - AAB SHA256 `f80d5dcb58980f435b8911f1334e53e66f55ad865040320dc08252d2ac1647a3`
+  - GitHub release `https://github.com/NeaBouli/securechat/releases/tag/v0.1.3-alpha-securechat`
+- Product direction to preserve:
+  - No in-app IFR/wallet/WalletConnect logic in public Android app.
+  - IFR/wallet verification stays website-side for Stripe discount.
+  - One public APK/AAB; paid plans unlock after checkout with activation code/subscription state.
+- Additional Desktop handoff written:
+  - `/Users/gio/Desktop/STEALTHX_RESTART_STATUS_2026-06-21.md`
+- Next startup check:
+  - Run `git status --short` and `git log -3 --oneline` in this repo after reboot.
