@@ -50,6 +50,7 @@ class AppPreferences @Inject constructor(
         private const val KEY_SECURITY_LEVEL_DEFAULT = "security_level_default"
         private const val KEY_BIOMETRIC_ENABLED = "biometric_enabled"
         private const val KEY_STEALTH_DELETE_ENABLED = "stealth_delete_enabled"
+        private const val KEY_BACKGROUND_LISTENER_ENABLED = "background_listener_enabled"
         private const val KEY_PINNED_CONTACTS = "pinned_contacts"
         private const val KEY_DISAPPEAR_TIMER_PREFIX = "disappear_timer_"
         private const val KEY_DURESS_PIN = "duress_pin"
@@ -70,6 +71,10 @@ class AppPreferences @Inject constructor(
     var stealthDeleteEnabled: Boolean
         get() = prefs.getBoolean(KEY_STEALTH_DELETE_ENABLED, true)
         set(value) = prefs.edit().putBoolean(KEY_STEALTH_DELETE_ENABLED, value).apply()
+
+    var backgroundListenerEnabled: Boolean
+        get() = prefs.getBoolean(KEY_BACKGROUND_LISTENER_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(KEY_BACKGROUND_LISTENER_ENABLED, value).apply()
 
     var pinnedContactIds: Set<String>
         get() = prefs.getStringSet(KEY_PINNED_CONTACTS, emptySet()) ?: emptySet()

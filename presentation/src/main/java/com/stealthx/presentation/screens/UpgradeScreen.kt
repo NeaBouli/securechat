@@ -2,6 +2,7 @@ package com.stealthx.presentation.screens
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -25,9 +26,11 @@ fun UpgradeScreen(onBack: () -> Unit) {
     val context = LocalContext.current
 
     fun openUrl(url: String) {
-        context.startActivity(
-            Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        )
+        runCatching {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }.onFailure {
+            Toast.makeText(context, "No browser available for this link", Toast.LENGTH_SHORT).show()
+        }
     }
 
     Scaffold(

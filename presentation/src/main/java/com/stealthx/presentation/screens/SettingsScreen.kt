@@ -2,6 +2,7 @@ package com.stealthx.presentation.screens
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -31,6 +32,7 @@ fun SettingsScreen(
     val tier by vm.currentTier.collectAsState()
     val biometricsEnabled by vm.biometricEnabled.collectAsState()
     val stealthDeleteEnabled by vm.stealthDeleteEnabled.collectAsState()
+    val backgroundListenerEnabled by vm.backgroundListenerEnabled.collectAsState()
     val activationState by vm.activationState.collectAsState()
     val duressPin by vm.duressPin.collectAsState()
     val context = LocalContext.current
@@ -41,7 +43,13 @@ fun SettingsScreen(
     }
     var showActivationDialog by remember { mutableStateOf(false) }
     var showDuressPinDialog by remember { mutableStateOf(false) }
-    fun openUrl(url: String) = context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    fun openUrl(url: String) {
+        runCatching {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }.onFailure {
+            Toast.makeText(context, "No browser available for this link", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     if (showActivationDialog) {
         ActivationCodeDialog(
@@ -137,6 +145,12 @@ fun SettingsScreen(
             SectionHeader("Security")
             ToggleRow(Icons.Default.Fingerprint, "Biometric Unlock", biometricsEnabled) { vm.setBiometricEnabled(it) }
             ToggleRow(Icons.Default.Shield, "STEALTH-DELETE (5-tap)", stealthDeleteEnabled, "Tap the lock icon in the chat list 5× to wipe") { vm.setStealthDeleteEnabled(it) }
+            ToggleRow(
+                Icons.Default.NotificationsActive,
+                "Background Message Listener",
+                backgroundListenerEnabled,
+                "Keep encrypted delivery active after leaving the app"
+            ) { vm.setBackgroundListenerEnabled(it) }
             ClickRow(
                 Icons.Default.Warning,
                 "Duress PIN",
@@ -173,7 +187,7 @@ fun SettingsScreen(
 
             SectionHeader("Access")
             ClickRow(Icons.Default.CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · Stripe checkout") {
-                context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://securechat.stealthx.tech/#lifetime")))
+                openUrl("https://securechat.stealthx.tech/#lifetime")
             }
             ClickRow(Icons.Default.Key, "Activation Code", "Enter code received after purchase") { showActivationDialog = true }
 
@@ -401,7 +415,7 @@ private fun ActivationCodeDialog(
                         style = MaterialTheme.typography.bodySmall
                     )
                     is ActivationState.Success -> Text(
-                        "Unaccess: ${state.tier.name}",
+                        "Unlocked: ${state.tier.name}",
                         color = Color(0xFF00E676),
                         style = MaterialTheme.typography.bodySmall
                     )

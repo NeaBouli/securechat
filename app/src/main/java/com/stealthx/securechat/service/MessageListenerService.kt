@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.stealthx.data.exchange.ContactExchangeManager
+import com.stealthx.data.prefs.AppPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,12 +23,17 @@ import javax.inject.Inject
 class MessageListenerService : Service() {
 
     @Inject lateinit var contactExchangeManager: ContactExchangeManager
+    @Inject lateinit var appPreferences: AppPreferences
 
     private val serviceScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     override fun onCreate() {
         super.onCreate()
         startForeground(NOTIFICATION_ID, buildForegroundNotification())
+        if (!appPreferences.backgroundListenerEnabled) {
+            stopListeningService()
+            return
+        }
         contactExchangeManager.startListening()
         scheduleReconnect()
     }
@@ -36,6 +42,10 @@ class MessageListenerService : Service() {
         serviceScope.launch {
             while (true) {
                 delay(30_000)
+                if (!appPreferences.backgroundListenerEnabled) {
+                    stopListeningService()
+                    return@launch
+                }
                 if (!contactExchangeManager.isConnected) {
                     contactExchangeManager.startListening()
                 }
@@ -43,10 +53,18 @@ class MessageListenerService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return if (appPreferences.backgroundListenerEnabled) {
+            START_STICKY
+        } else {
+            stopListeningService()
+            START_NOT_STICKY
+        }
+    }
 
     override fun onDestroy() {
         serviceScope.cancel()
+        contactExchangeManager.stopListening()
         super.onDestroy()
     }
 
@@ -74,6 +92,17 @@ class MessageListenerService : Service() {
             .setOngoing(true)
             .setSilent(true)
             .build()
+    }
+
+    private fun stopListeningService() {
+        contactExchangeManager.stopListening()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+        } else {
+            @Suppress("DEPRECATION")
+            stopForeground(true)
+        }
+        stopSelf()
     }
 
     companion object {

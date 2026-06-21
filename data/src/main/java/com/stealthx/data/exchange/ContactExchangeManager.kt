@@ -165,6 +165,13 @@ class ContactExchangeManager @Inject constructor(
         })
     }
 
+    fun stopListening() {
+        listenerWs?.close(1000, "listener disabled")
+        listenerWs = null
+        identified = false
+        pendingFrames.clear()
+    }
+
     private fun handleContactExchange(json: JSONObject) {
         val bundle = json.optString("bundle").ifEmpty { return }
         scope.launch {

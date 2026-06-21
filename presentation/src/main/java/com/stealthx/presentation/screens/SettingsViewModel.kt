@@ -1,6 +1,7 @@
 package com.stealthx.presentation.screens
 
 import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stealthx.data.activation.ActivationCodeClient
@@ -43,6 +44,9 @@ class SettingsViewModel @Inject constructor(
     private val _stealthDeleteEnabled = MutableStateFlow(prefs.stealthDeleteEnabled)
     val stealthDeleteEnabled: StateFlow<Boolean> = _stealthDeleteEnabled.asStateFlow()
 
+    private val _backgroundListenerEnabled = MutableStateFlow(prefs.backgroundListenerEnabled)
+    val backgroundListenerEnabled: StateFlow<Boolean> = _backgroundListenerEnabled.asStateFlow()
+
     private val _activationState = MutableStateFlow<ActivationState>(ActivationState.Idle)
     val activationState: StateFlow<ActivationState> = _activationState.asStateFlow()
 
@@ -57,6 +61,15 @@ class SettingsViewModel @Inject constructor(
     fun setStealthDeleteEnabled(enabled: Boolean) {
         _stealthDeleteEnabled.value = enabled
         viewModelScope.launch(Dispatchers.IO) { prefs.stealthDeleteEnabled = enabled }
+    }
+
+    fun setBackgroundListenerEnabled(enabled: Boolean) {
+        _backgroundListenerEnabled.value = enabled
+        prefs.backgroundListenerEnabled = enabled
+        val intent = Intent().setClassName(context.packageName, LISTENER_SERVICE_CLASS)
+        runCatching {
+            if (enabled) context.startForegroundService(intent) else context.stopService(intent)
+        }
     }
 
     fun activateCode(code: String) {
@@ -96,5 +109,9 @@ class SettingsViewModel @Inject constructor(
     fun setDuressPin(pin: String?) {
         prefs.duressPin = pin
         _duressPin.value = pin
+    }
+
+    private companion object {
+        const val LISTENER_SERVICE_CLASS = "com.stealthx.securechat.service.MessageListenerService"
     }
 }
