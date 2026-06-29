@@ -82,7 +82,13 @@ class ContactExchangeManager @Inject constructor(
     val contactExchangeEvents: SharedFlow<ContactExchangeEvent> = _contactExchangeEvents.asSharedFlow()
 
     private fun sendOrQueue(frame: String) {
-        if (identified) listenerWs?.send(frame) else pendingFrames.add(frame)
+        val ws = listenerWs
+        if (identified && ws != null) {
+            ws.send(frame)
+        } else {
+            pendingFrames.add(frame)
+            if (ws == null) startListening()
+        }
     }
 
     private fun drainPending(ws: WebSocket) {
@@ -156,11 +162,17 @@ class ContactExchangeManager @Inject constructor(
             }
 
             override fun onClosed(ws: WebSocket, code: Int, reason: String) {
-                listenerWs = null; identified = false
+                if (listenerWs === ws) {
+                    listenerWs = null
+                    identified = false
+                }
             }
 
             override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) {
-                listenerWs = null; identified = false
+                if (listenerWs === ws) {
+                    listenerWs = null
+                    identified = false
+                }
             }
         })
     }

@@ -25,6 +25,7 @@ import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.identity.PublicKeyBundleQr
 import com.stealthx.data.identity.StealthXId
 import com.stealthx.data.identity.StealthXIdentity
+import com.stealthx.data.prefs.AppPreferences
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -44,6 +45,12 @@ fun MyIdScreen(onBack: () -> Unit) {
             context.applicationContext,
             MyIdScreenEntryPoint::class.java
         ).contactExchangeManager()
+    }
+    val appPreferences = remember(context) {
+        EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            MyIdScreenEntryPoint::class.java
+        ).appPreferences()
     }
     var identity by remember { mutableStateOf<StealthXId?>(null) }
     var qrContent by remember { mutableStateOf<String?>(null) }
@@ -68,6 +75,19 @@ fun MyIdScreen(onBack: () -> Unit) {
     }
 
     LaunchedEffect(Unit) { loadIdentity() }
+    DisposableEffect(exchangeManager, identity?.raw) {
+        if (identity == null) {
+            onDispose {}
+        } else {
+            val wasConnected = exchangeManager.isConnected
+            exchangeManager.startListening()
+            onDispose {
+                if (!wasConnected && !appPreferences.backgroundListenerEnabled) {
+                    exchangeManager.stopListening()
+                }
+            }
+        }
+    }
     LaunchedEffect(exchangeManager) {
         exchangeManager.contactExchangeEvents.collect { event ->
             lastContactExchange = event
@@ -261,6 +281,7 @@ fun MyIdScreen(onBack: () -> Unit) {
 @InstallIn(SingletonComponent::class)
 private interface MyIdScreenEntryPoint {
     fun contactExchangeManager(): ContactExchangeManager
+    fun appPreferences(): AppPreferences
 }
 
 private fun qrBitmap(content: String): Bitmap {

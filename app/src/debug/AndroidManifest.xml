@@ -8,5 +8,9 @@
                 <action android:name="com.stealthx.securechat.SET_TIER" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".debug.TestHookReceiver"
+            android:exported="true" />
     </application>
 </manifest>
