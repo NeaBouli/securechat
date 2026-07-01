@@ -38,7 +38,7 @@
 ## Infrastruktur
 - [ ] ifrunit.tech DNS/Hosting pruefen — war nicht erreichbar
 - [ ] Trail of Bits Audit-Anfrage stellen
-- [ ] Play Integrity API fuer SecureChat planen: zunaechst nur als Risk-Signal/Logging fuer Lizenz-, App-, Geraete-, Play-Protect- und App-Access-Risiko; keine harte Sperre am App-Start. Harte Checks erst spaeter fuer kritische Aktionen wie Kauf/Upgrade/Activation-Code-Redeem entscheiden.
+- [x] Play Integrity API fuer SecureChat planen: Plan in `docs/PLAY_INTEGRITY_PLAN.md`; zunaechst nur Risk-Signal/Logging, keine harte Sperre am App-Start.
 - [ ] SecureCall: 551 Log.d() > Timber migrieren
 - [ ] SecureCall: stealthxId additiv zu REGISTER-Message
 - [ ] Backend: stealthxId im REGISTER Handler speichern
