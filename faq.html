@@ -24,6 +24,9 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is SecureChat?","acceptedAnswer":{"@type":"Answer","text":"SecureChat is a decentralized, end-to-end encrypted messaging app. No phone number, no server, no metadata. Built on Kaspa identity with XChaCha20-Poly1305 encryption."}},{"@type":"Question","name":"Can you read my messages?","acceptedAnswer":{"@type":"Answer","text":"No. Messages are encrypted on your device before they leave. We never have the keys. It is technically impossible for us to read your messages."}},{"@type":"Question","name":"Can I use the GitHub source for free?","acceptedAnswer":{"@type":"Answer","text":"No. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}}]}</script>
 <style>
   :root {
@@ -128,6 +131,124 @@
     nav { padding:0 1rem; }
     .nav-links { display:none; }
     .faq-content { padding:3rem 1rem; }
+  }
+  /* Current landing-page FAQ refresh */
+  body {
+    background:
+      linear-gradient(180deg, rgba(10,166,109,.11), transparent 560px),
+      #f7fbf9;
+    color:#14211c;
+    font-family:"Hanken Grotesk","Segoe UI",system-ui,-apple-system,sans-serif;
+  }
+  body::before {
+    opacity:.045;
+    background-image:
+      linear-gradient(30deg, rgba(10,166,109,.24) 12%, transparent 12.5%, transparent 87%, rgba(10,166,109,.24) 87.5%, rgba(10,166,109,.24)),
+      linear-gradient(150deg, rgba(23,135,214,.18) 12%, transparent 12.5%, transparent 87%, rgba(23,135,214,.18) 87.5%, rgba(23,135,214,.18));
+    background-size:96px 120px;
+  }
+  nav {
+    background:rgba(247,251,249,.92);
+    border-bottom:1px solid rgba(15,23,42,.10);
+    box-shadow:0 10px 32px rgba(15,23,42,.05);
+  }
+  .nav-logo-bg,
+  .footer-logo-bg {
+    background:transparent;
+    box-shadow:none;
+    padding:0;
+  }
+  .nav-logo-bg img { height:42px; border-radius:10px; }
+  .footer-logo-bg img { height:30px; border-radius:8px; }
+  .nav-logo-app,
+  .footer-logo-name,
+  .faq-content h1,
+  .faq-content h2,
+  .faq-question,
+  .footer-col h4 {
+    color:#14211c;
+  }
+  .nav-logo-brand,
+  .section-label,
+  .footer-col a:hover,
+  .faq-question:hover,
+  .faq-item.open .faq-question {
+    color:#0aa66d;
+  }
+  .nav-links a,
+  .footer-col a,
+  .footer-bottom p,
+  .footer-bottom a,
+  .back-link,
+  .faq-content .page-meta,
+  .faq-answer-inner {
+    color:#4f635b;
+  }
+  .nav-links a:hover,
+  .nav-links a.active {
+    color:#0aa66d;
+    background:rgba(10,166,109,.08);
+  }
+  .nav-links a.cta {
+    background:#0aa66d;
+    color:#fff;
+  }
+  .faq-content {
+    max-width:1040px;
+    padding:5.25rem 2rem 5.75rem;
+  }
+  .faq-content h1 {
+    font-family:"Schibsted Grotesk",system-ui,sans-serif;
+    font-size:clamp(44px,6vw,76px);
+    line-height:.98;
+    letter-spacing:-.04em;
+    max-width:780px;
+  }
+  .faq-content .page-meta {
+    font-size:19px;
+    max-width:720px;
+    margin:18px 0 48px;
+  }
+  .faq-content h2 {
+    font-family:"Schibsted Grotesk",system-ui,sans-serif;
+    font-size:clamp(24px,3vw,34px);
+    margin:54px 0 18px;
+  }
+  .section-label {
+    background:transparent;
+    letter-spacing:.13em;
+  }
+  .faq-list {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+  }
+  .faq-item {
+    background:#fff;
+    border-color:rgba(15,23,42,.10);
+    border-radius:8px;
+    box-shadow:0 18px 48px rgba(15,23,42,.06);
+  }
+  .faq-item:hover,
+  .faq-item.open {
+    border-color:rgba(10,166,109,.30);
+    background:#fff;
+  }
+  .faq-question {
+    padding:20px 22px;
+  }
+  .faq-question svg { color:#0aa66d; }
+  .faq-answer-inner {
+    padding:0 22px 22px;
+    border-top-color:rgba(15,23,42,.08);
+  }
+  footer {
+    background:rgba(255,255,255,.88);
+    border-top-color:rgba(15,23,42,.10);
+    box-shadow:0 -18px 48px rgba(15,23,42,.04);
+  }
+  @media(max-width:820px) {
+    .faq-list { grid-template-columns:1fr; }
+    .faq-content { padding:4.5rem 1.1rem 4.5rem; }
   }
 </style>
 </head>
