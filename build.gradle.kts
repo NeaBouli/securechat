@@ -48,7 +48,14 @@ val verifyNoAppIfrWalletCode = tasks.register("verifyNoAppIfrWalletCode") {
         "transport",
     ).map { file(it) }.filter { it.exists() }
 
-    inputs.files(sourceRoots)
+    val sourceFiles = sourceRoots.map { root ->
+        fileTree(root) {
+            include("**/*.java", "**/*.json", "**/*.kt", "**/*.kts", "**/*.pro", "**/*.xml")
+            exclude("**/build/**")
+        }
+    }
+
+    inputs.files(sourceFiles)
 
     doLast {
         val sourceExtensions = setOf("java", "json", "kt", "kts", "pro", "xml")
@@ -72,11 +79,9 @@ val verifyNoAppIfrWalletCode = tasks.register("verifyNoAppIfrWalletCode") {
             "stealthx-ifr",
         )
 
-        val hits = sourceRoots.flatMap { root ->
-            root.walkTopDown()
-                .filter { it.isFile }
+        val hits = sourceFiles.flatMap { tree ->
+            tree.files
                 .filter { it.extension.lowercase() in sourceExtensions }
-                .filterNot { it.invariantSeparatorsPath.contains("/build/") }
                 .flatMap { sourceFile ->
                     val text = sourceFile.readText()
                     forbiddenTerms

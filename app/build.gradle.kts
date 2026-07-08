@@ -48,6 +48,8 @@ android {
         create("internalRelease") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("release")
+            applicationIdSuffix = ".internal"
+            versionNameSuffix = "-internal"
             buildConfigField("Boolean", "FORCE_ELITE", "true")
             buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
             matchingFallbacks += listOf("release")
