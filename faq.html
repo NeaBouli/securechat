@@ -45,6 +45,23 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   html { scroll-behavior:smooth; }
   body { background:var(--bg); color:var(--text); font-family:'Segoe UI',system-ui,-apple-system,sans-serif; font-size:16px; line-height:1.6; }
+  body::before {
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    opacity:.035;
+    background-image:
+      linear-gradient(30deg,#8a8a9a 12%,transparent 12.5%,transparent 87%,#8a8a9a 87.5%,#8a8a9a),
+      linear-gradient(150deg,#8a8a9a 12%,transparent 12.5%,transparent 87%,#8a8a9a 87.5%,#8a8a9a),
+      linear-gradient(30deg,#8a8a9a 12%,transparent 12.5%,transparent 87%,#8a8a9a 87.5%,#8a8a9a),
+      linear-gradient(150deg,#8a8a9a 12%,transparent 12.5%,transparent 87%,#8a8a9a 87.5%,#8a8a9a),
+      linear-gradient(60deg,rgba(138,138,154,.5) 25%,transparent 25.5%,transparent 75%,rgba(138,138,154,.5) 75%,rgba(138,138,154,.5)),
+      linear-gradient(60deg,rgba(138,138,154,.5) 25%,transparent 25.5%,transparent 75%,rgba(138,138,154,.5) 75%,rgba(138,138,154,.5));
+    background-size:80px 140px;
+    background-position:0 0,0 0,40px 70px,40px 70px,0 0,40px 70px;
+    pointer-events:none;
+  }
 
   /* ── NAV ── */
   nav { position:sticky; top:0; z-index:100; background:rgba(10,10,15,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:60px; }
@@ -69,18 +86,19 @@
   hr.divider { border:none; border-top:1px solid var(--border); margin:0; }
 
   /* ── FAQ ── */
-  .faq-content { max-width:800px; margin:0 auto; padding:4rem 2rem; }
-  .faq-content h1 { font-size:clamp(2rem,4vw,3rem); font-weight:800; margin-bottom:0.5rem; }
-  .faq-content .page-meta { color:var(--text-dim); font-size:1.1rem; margin-bottom:3rem; }
+  .faq-content { max-width:920px; margin:0 auto; padding:4.5rem 2rem; }
+  .faq-content h1 { font-size:clamp(2.2rem,4vw,3.4rem); font-weight:800; margin-bottom:0.65rem; letter-spacing:-.03em; }
+  .faq-content .page-meta { color:var(--text-dim); font-size:1.08rem; margin-bottom:3rem; max-width:680px; }
   .faq-content h2 { font-size:1.3rem; font-weight:800; color:var(--green); margin:3rem 0 1.2rem; letter-spacing:0.5px; }
   .faq-content h2:first-of-type { margin-top:0; }
-  .faq-list { display:flex; flex-direction:column; gap:0; }
-  .faq-item { border-bottom:1px solid var(--border); }
-  .faq-question { width:100%; background:none; border:none; color:var(--text); font-size:15px; font-weight:600; padding:1.2rem 0; text-align:left; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:1rem; font-family:inherit; line-height:1.4; }
-  .faq-question svg { width:20px; height:20px; flex-shrink:0; transition:transform .2s; color:var(--muted); }
-  .faq-question:hover { color:var(--cyan); }
+  .faq-list { display:grid; gap:12px; }
+  .faq-item { border:1px solid var(--border); border-radius:10px; background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015)); box-shadow:0 14px 30px rgba(0,0,0,.18); overflow:hidden; transition:border-color .2s,background .2s,transform .2s; }
+  .faq-item:hover { border-color:rgba(0,255,136,.35); background:var(--surface); transform:translateY(-1px); }
+  .faq-question { width:100%; background:none; border:none; color:var(--text); font-size:15px; font-weight:700; padding:1.1rem 1.25rem; text-align:left; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:1rem; font-family:inherit; line-height:1.45; }
+  .faq-question svg { width:20px; height:20px; flex-shrink:0; transition:transform .2s; color:var(--green); }
+  .faq-question:hover { color:var(--green); }
   .faq-answer { max-height:0; overflow:hidden; transition:max-height .3s ease; }
-  .faq-answer-inner { padding:0 0 1.2rem; font-size:14px; color:var(--text-dim); line-height:1.8; }
+  .faq-answer-inner { padding:0 1.25rem 1.2rem; font-size:14px; color:var(--text-dim); line-height:1.8; border-top:1px solid rgba(255,255,255,.05); }
   .faq-answer-inner a { color:var(--green); text-decoration:none; }
   .faq-answer-inner a:hover { text-decoration:underline; }
   .faq-answer-inner strong { color:var(--text); }
@@ -144,10 +162,10 @@
 <div class="faq-content">
   <a href="/" class="back-link">&larr; Back to SecureChat</a>
 
-  <div class="section-label" style="margin-bottom:24px">CLASSIFIED</div>
+  <div class="section-label" style="margin-bottom:24px">Product FAQ</div>
 
   <h1>Frequently Asked Questions</h1>
-  <p class="page-meta">Everything you need to know about SecureChat, Chameleon, and the StealthX Platform.</p>
+  <p class="page-meta">Everything you need to know about encrypted messaging, privacy, pricing, Chameleon, and the StealthX Platform.</p>
 
   <!-- ── General ──────────────────────────────────────── -->
   <h2>General</h2>
