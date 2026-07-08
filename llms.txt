@@ -2,7 +2,7 @@
 > Decentralized end-to-end encrypted messaging for Android.
 > No phone number, no server, no metadata.
 > XChaCha20-Poly1305 + Double Ratchet + Kaspa identity layer.
-> Source available for transparency and security review. IFR Token lifetime access.
+> Source available for transparency and security review. IFR holder discounts are handled on the website.
 
 ## Key Facts
 - Encryption: XChaCha20-Poly1305 (192-bit nonce, AEAD)
@@ -16,16 +16,16 @@
 - License: StealthX Source-Available License
 - Crypto Library: lazysodium-android 5.1.0 (wraps libsodium)
 - Database: Room + SQLCipher (encrypted at rest)
-- IFR Pro: Lock >= 2,000 IFR tokens on Ethereum
-- IFR Elite: Lock >= 6,000 IFR tokens on Ethereum
-- IFR Lock Contract: 0x769928aBDfc949D0718d8766a1C2d7dBb63954Eb
+- IFR Pro discount: signed browser-wallet verification with >= 2,000 IFR
+- IFR Elite discount: signed browser-wallet verification with >= 6,000 IFR
+- IFR token contract: 0x77e99917Eca8539c62F509ED1193ac36580A6e7B
 
 ## What Makes SecureChat Different
 - No phone number required (unlike Signal, WhatsApp)
 - No central server (unlike Telegram, iMessage)
 - Decentralized identity via Kaspa blockchain
 - STEALTH-DELETE: instant wipe of all data
-- IFR Token: lock once, access forever — no subscriptions
+- IFR Holder Discount: verify a browser wallet on the website for 50% Stripe checkout
 - Part of the StealthX ecosystem (SecureCall, Chameleon)
 
 ## Links
