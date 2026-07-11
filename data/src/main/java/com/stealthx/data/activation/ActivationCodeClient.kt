@@ -23,7 +23,8 @@ object ActivationCodeClient {
     data class VerifiedActivation(
         val tier: com.stealthx.shared.model.AccessTier,
         val productId: String,
-        val expiresAtEpochSeconds: Long
+        val expiresAtEpochSeconds: Long,
+        val entitlementToken: String
     )
 
     // Leaf pin: api.stealthx.tech (Let's Encrypt, expires 2026-08-14 — rotate before then)
@@ -94,13 +95,80 @@ object ActivationCodeClient {
                                     }.getOrNull()
                                     if (verified == null) onResult(null, "entitlement_invalid")
                                     else onResult(
-                                        VerifiedActivation(verified.tier, verified.productId, verified.expiresAtEpochSeconds),
+                                        VerifiedActivation(verified.tier, verified.productId, verified.expiresAtEpochSeconds, token),
                                         null
                                     )
                                 }
                             } else {
                                 onResult(null, json.optString("error", "invalid_code"))
                             }
+                        }
+                    }
+                } catch (_: Exception) {}
+            }
+
+            override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) {
+                onResult(null, "network_error")
+            }
+        })
+    }
+
+    fun refresh(context: Context, token: String, onResult: (activation: VerifiedActivation?, error: String?) -> Unit) {
+        if (token.isBlank()) {
+            onResult(null, "entitlement_missing")
+            return
+        }
+        val request = Request.Builder().url(SIGNAL_URL).build()
+        client.newWebSocket(request, object : WebSocketListener() {
+            private var refreshSent = false
+            private var registeredClientId: String? = null
+
+            override fun onOpen(ws: WebSocket, response: Response) {
+                val clientId = runCatching { StealthXIdentity.getOrCreateWithSeed(context).raw }.getOrNull()
+                if (clientId.isNullOrBlank()) {
+                    ws.close(1008, "identity_missing")
+                    onResult(null, "identity_missing")
+                    return
+                }
+                registeredClientId = clientId
+                ws.send(JSONObject().apply {
+                    put("type", "REGISTER")
+                    put("clientId", clientId)
+                }.toString())
+            }
+
+            override fun onMessage(ws: WebSocket, text: String) {
+                try {
+                    val json = JSONObject(text)
+                    when (json.optString("type")) {
+                        "REGISTERED" -> if (!refreshSent) {
+                            refreshSent = true
+                            ws.send(JSONObject().apply {
+                                put("type", "REFRESH_ENTITLEMENT")
+                                put("entitlementToken", token)
+                            }.toString())
+                        }
+                        "ENTITLEMENT_REFRESH_RESULT" -> {
+                            ws.close(1000, null)
+                            if (!json.optBoolean("success", false)) {
+                                onResult(null, json.optString("error", "invalid_entitlement"))
+                                return
+                            }
+                            val refreshedToken = json.optString("entitlementToken")
+                            val publicKey = BuildConfig.ENTITLEMENT_PUBLIC_KEY_BASE64
+                            val verified = if (refreshedToken.isBlank() || publicKey.isBlank()) null else runCatching {
+                                EntitlementTokenVerifier.verify(
+                                    token = refreshedToken,
+                                    publicKeyBase64 = publicKey,
+                                    expectedAudience = "securechat",
+                                    expectedSubject = requireNotNull(registeredClientId)
+                                )
+                            }.getOrNull()
+                            if (verified == null) onResult(null, "entitlement_invalid")
+                            else onResult(
+                                VerifiedActivation(verified.tier, verified.productId, verified.expiresAtEpochSeconds, refreshedToken),
+                                null
+                            )
                         }
                     }
                 } catch (_: Exception) {}

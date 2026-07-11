@@ -83,6 +83,7 @@ class SettingsViewModel @Inject constructor(
                 if (activation != null) {
                     val accessTier = activation.tier
                     if (accessTier > AccessTier.FREE) {
+                        prefs.entitlementToken = activation.entitlementToken
                         tierRepository.saveTierResult(
                             sourceId = "fiat_entitlement:${activation.productId}",
                             accessWeight = 0L,
