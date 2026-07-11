@@ -6,7 +6,9 @@
 package com.stealthx.data.activation
 
 import android.content.Context
+import com.stealthx.data.BuildConfig
 import com.stealthx.data.identity.StealthXIdentity
+import com.stealthx.crypto.EntitlementTokenVerifier
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -17,6 +19,12 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 object ActivationCodeClient {
+
+    data class VerifiedActivation(
+        val tier: com.stealthx.shared.model.AccessTier,
+        val productId: String,
+        val expiresAtEpochSeconds: Long
+    )
 
     // Leaf pin: api.stealthx.tech (Let's Encrypt, expires 2026-08-14 — rotate before then)
     // Backup pin: Let's Encrypt R12 intermediate CA (stable across leaf rotations)
@@ -35,10 +43,11 @@ object ActivationCodeClient {
 
     private const val SIGNAL_URL = "wss://api.stealthx.tech/signal"
 
-    fun activate(context: Context, code: String, onResult: (tier: String?, error: String?) -> Unit) {
+    fun activate(context: Context, code: String, onResult: (activation: VerifiedActivation?, error: String?) -> Unit) {
         val request = Request.Builder().url(SIGNAL_URL).build()
         client.newWebSocket(request, object : WebSocketListener() {
             private var activationSent = false
+            private var registeredClientId: String? = null
 
             override fun onOpen(ws: WebSocket, response: Response) {
                 val clientId = runCatching { StealthXIdentity.getOrCreateWithSeed(context).raw }.getOrNull()
@@ -47,6 +56,7 @@ object ActivationCodeClient {
                     onResult(null, "identity_missing")
                     return
                 }
+                registeredClientId = clientId
                 ws.send(JSONObject().apply {
                     put("type", "REGISTER")
                     put("clientId", clientId)
@@ -67,7 +77,27 @@ object ActivationCodeClient {
                         "ACTIVATE_CODE_RESULT" -> {
                             ws.close(1000, null)
                             if (json.optBoolean("success", false)) {
-                                onResult(json.optString("tier").takeIf { it.isNotEmpty() }, null)
+                                val token = json.optString("entitlementToken")
+                                val publicKey = BuildConfig.ENTITLEMENT_PUBLIC_KEY_BASE64
+                                if (token.isBlank()) {
+                                    onResult(null, "entitlement_missing")
+                                } else if (publicKey.isBlank()) {
+                                    onResult(null, "entitlement_not_configured")
+                                } else {
+                                    val verified = runCatching {
+                                        EntitlementTokenVerifier.verify(
+                                            token = token,
+                                            publicKeyBase64 = publicKey,
+                                            expectedAudience = "securechat",
+                                            expectedSubject = requireNotNull(registeredClientId)
+                                        )
+                                    }.getOrNull()
+                                    if (verified == null) onResult(null, "entitlement_invalid")
+                                    else onResult(
+                                        VerifiedActivation(verified.tier, verified.productId, verified.expiresAtEpochSeconds),
+                                        null
+                                    )
+                                }
                             } else {
                                 onResult(null, json.optString("error", "invalid_code"))
                             }

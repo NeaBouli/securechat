@@ -9,6 +9,11 @@ android {
     compileSdk = 35
     defaultConfig {
         minSdk = 26
+        val entitlementKey = System.getenv("STEALTHX_ENTITLEMENT_PUBLIC_KEY_BASE64") ?: ""
+        require(entitlementKey.isEmpty() || entitlementKey.matches(Regex("^[A-Za-z0-9_-]{43}$"))) {
+            "STEALTHX_ENTITLEMENT_PUBLIC_KEY_BASE64 must be an unpadded 32-byte base64url key"
+        }
+        buildConfigField("String", "ENTITLEMENT_PUBLIC_KEY_BASE64", "\"$entitlementKey\"")
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments["room.schemaLocation"] = "$projectDir/schemas"
@@ -17,6 +22,8 @@ android {
             }
         }
     }
+
+    buildFeatures { buildConfig = true }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
