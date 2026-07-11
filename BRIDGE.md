@@ -1,4 +1,10 @@
 # BRIDGE — securechat
+
+## Public Payment Data Boundary
+
+- This repository is public. Operational payment/Etimologio information is stored only in private `NeaBouli/vlabs` at `docs/finance-integrations/projects/securechat.md`.
+- Never publish tax/personal identifiers, secrets, provider/account IDs, customer/invoice data, MARK/UID values or runtime values here.
+- Public Bridge entries are limited to the private reference, ownership, generic status and production-disabled state.
 # CC ↔ Codex ↔ Gio Kommunikationskanal
 
 ---
