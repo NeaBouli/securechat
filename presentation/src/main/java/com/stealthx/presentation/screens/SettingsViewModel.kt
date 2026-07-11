@@ -78,12 +78,18 @@ class SettingsViewModel @Inject constructor(
             return
         }
         _activationState.value = ActivationState.Loading
-        ActivationCodeClient.activate(context, code) { tierName, error ->
+        ActivationCodeClient.activate(context, code) { activation, error ->
             viewModelScope.launch(Dispatchers.IO) {
-                if (tierName != null) {
-                    val accessTier = try { AccessTier.valueOf(tierName.uppercase()) } catch (_: Exception) { null }
-                    if (accessTier != null && accessTier > AccessTier.FREE) {
-                        tierRepository.saveTierResult("activation_code", 0L, accessTier)
+                if (activation != null) {
+                    val accessTier = activation.tier
+                    if (accessTier > AccessTier.FREE) {
+                        prefs.entitlementToken = activation.entitlementToken
+                        tierRepository.saveTierResult(
+                            sourceId = "fiat_entitlement:${activation.productId}",
+                            accessWeight = 0L,
+                            tier = accessTier,
+                            expiresAtEpochSeconds = activation.expiresAtEpochSeconds
+                        )
                         tierGate.getTier()
                         _activationState.value = ActivationState.Success(accessTier)
                     } else {
@@ -93,6 +99,9 @@ class SettingsViewModel @Inject constructor(
                     val msg = when (error) {
                         "invalid_code" -> "Invalid or expired code"
                         "already_used" -> "Code already used"
+                        "entitlement_missing" -> "Server entitlement is missing"
+                        "entitlement_not_configured" -> "Secure purchase activation is not configured"
+                        "entitlement_invalid" -> "Entitlement verification failed"
                         "network_error" -> "Connection failed — try again"
                         else -> error ?: "Unknown error"
                     }

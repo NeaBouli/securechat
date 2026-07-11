@@ -1,5 +1,12 @@
 # Project State
 
+## 2026-07-11 — Signierter Fiat-Entitlement-Consumer implementiert
+
+- SecureChat akzeptiert bezahlte PRO/ELITE-Aktivierung nur nach Ed25519-Verifikation eines geraete-, produkt- und zeitgebundenen Server-Tokens.
+- Verifizierte Fiat-Tiers laufen weiterhin ausschliesslich durch `AccessTierRepository` und `TierGate`; der signierte Ablauf begrenzt Offline-Zugriff nach Refund/Dispute.
+- Server-Revoke verhindert Neuausstellung nach Vollrefund/Dispute. Teilrefund bleibt bewusst Review statt automatischer Rechteaenderung.
+- Noch nicht sell ready: sichere automatische Lease-Erneuerung, Runtime-Keypair/Public-Key-Build, Stripe-Testmode E2E, Accountant/Provider und Gio-Launchfreigabe fehlen.
+
 ## 2026-07-11 — SecureChat Payment-/Etimologio-Integration
 
 - Repository Owner: Codex uebernimmt das gesamte oeffentliche SecureChat-Repository, nicht nur Payment.

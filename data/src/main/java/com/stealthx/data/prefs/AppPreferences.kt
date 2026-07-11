@@ -54,6 +54,7 @@ class AppPreferences @Inject constructor(
         private const val KEY_PINNED_CONTACTS = "pinned_contacts"
         private const val KEY_DISAPPEAR_TIMER_PREFIX = "disappear_timer_"
         private const val KEY_DURESS_PIN = "duress_pin"
+        private const val KEY_ENTITLEMENT_TOKEN = "fiat_entitlement_token"
     }
 
     var isOnboardingDone: Boolean
@@ -95,6 +96,11 @@ class AppPreferences @Inject constructor(
         get() = prefs.getString(KEY_DURESS_PIN, null)
         set(value) = if (value == null) prefs.edit().remove(KEY_DURESS_PIN).apply()
                      else prefs.edit().putString(KEY_DURESS_PIN, value).apply()
+
+    var entitlementToken: String?
+        get() = prefs.getString(KEY_ENTITLEMENT_TOKEN, null)
+        set(value) = if (value == null) prefs.edit().remove(KEY_ENTITLEMENT_TOKEN).apply()
+                     else prefs.edit().putString(KEY_ENTITLEMENT_TOKEN, value).apply()
 
     fun clear() {
         prefs.edit().clear().apply()

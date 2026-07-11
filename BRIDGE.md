@@ -2808,3 +2808,16 @@ S10 install verification:
 
 Note:
 - This is test-only parallel packaging; public app distribution remains one package with paid plans unlocked by activation/subscription state.
+# 2026-07-11 — Automatic fiat entitlement renewal (Codex)
+
+- SecureChat speichert das signierte Entitlement ausschliesslich in
+  `EncryptedSharedPreferences`, nicht den Aktivierungscode.
+- Ein WorkManager-Job erneuert beim App-Start und danach alle sieben Tage ueber
+  `REFRESH_ENTITLEMENT`; jede Serverantwort wird erneut lokal Ed25519-, Audience-
+  und Device-validiert.
+- `entitlement_revoked`/ungueltige Tokens loeschen Token und HMAC-Tier-Cache;
+  Netzwerkfehler werden retrybar behandelt.
+- Verifikation: Crypto/Data Tests sowie Presentation/App Debug-Kompilierung
+  `BUILD SUCCESSFUL`.
+- Runtime Public Key, Server Private Key und Cross-Repo Test-E2E bleiben externe
+  Gates. Keine Zahlung, Aktivierung oder Deployment.

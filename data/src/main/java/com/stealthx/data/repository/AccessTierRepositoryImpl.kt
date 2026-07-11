@@ -82,9 +82,16 @@ class AccessTierRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun saveTierResult(sourceId: String, accessWeight: Long, tier: AccessTier) {
+    override suspend fun saveTierResult(
+        sourceId: String,
+        accessWeight: Long,
+        tier: AccessTier,
+        expiresAtEpochSeconds: Long?
+    ) {
         val verifiedAt = Instant.now().epochSecond
-        val expiresAt = verifiedAt + (EXPIRY_DAYS * SECONDS_PER_DAY)
+        val maximumExpiry = verifiedAt + (EXPIRY_DAYS * SECONDS_PER_DAY)
+        val expiresAt = expiresAtEpochSeconds?.coerceAtMost(maximumExpiry) ?: maximumExpiry
+        require(expiresAt > verifiedAt) { "Tier result is already expired" }
 
         val hmac = computeHmac(sourceId, accessWeight, tier.name, verifiedAt, expiresAt)
 

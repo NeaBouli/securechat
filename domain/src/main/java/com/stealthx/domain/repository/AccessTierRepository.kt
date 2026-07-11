@@ -20,7 +20,12 @@ import com.stealthx.shared.model.AccessTier
 interface AccessTierRepository {
     suspend fun getCachedTier(): AccessTier
     suspend fun getCachedResult(): CachedTierResult?
-    suspend fun saveTierResult(sourceId: String, accessWeight: Long, tier: AccessTier)
+    suspend fun saveTierResult(
+        sourceId: String,
+        accessWeight: Long,
+        tier: AccessTier,
+        expiresAtEpochSeconds: Long? = null
+    )
     suspend fun invalidateCache()
     suspend fun isCacheValid(): Boolean
 }
