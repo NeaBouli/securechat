@@ -34,7 +34,8 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
-import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.ArrayDeque
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.TimeUnit
 
 import javax.inject.Inject
@@ -45,6 +46,39 @@ data class ContactExchangeEvent(
     val displayName: String
 )
 
+internal class PendingFrameBuffer(
+    private val maxSize: Int
+) {
+    private val frames = ArrayDeque<String>()
+
+    @Synchronized
+    fun offer(frame: String): Boolean {
+        if (frames.size >= maxSize) return false
+        frames.addLast(frame)
+        return true
+    }
+
+    @Synchronized
+    fun drain(send: (String) -> Boolean): Int {
+        var sent = 0
+        while (frames.isNotEmpty()) {
+            val frame = frames.removeFirst()
+            if (!send(frame)) {
+                frames.addFirst(frame)
+                return sent
+            }
+            sent++
+        }
+        return sent
+    }
+
+    @Synchronized
+    fun clear() = frames.clear()
+
+    @Synchronized
+    internal fun snapshot(): List<String> = frames.toList()
+}
+
 @Singleton
 class ContactExchangeManager @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -53,6 +87,7 @@ class ContactExchangeManager @Inject constructor(
 ) {
     private companion object {
         const val SIGNAL_URL = "wss://api.stealthx.tech/signal"
+        const val MAX_PENDING_FRAMES = 256
     }
 
     private val certPinner = CertificatePinner.Builder()
@@ -71,7 +106,8 @@ class ContactExchangeManager @Inject constructor(
 
     @Volatile private var listenerWs: WebSocket? = null
     @Volatile private var identified = false
-    private val pendingFrames = ConcurrentLinkedQueue<String>()
+    private val pendingFrames = PendingFrameBuffer(MAX_PENDING_FRAMES)
+    private val fireAndForgetDrops = AtomicInteger(0)
     private val _contactExchangeEvents = MutableSharedFlow<ContactExchangeEvent>(
         replay = 0,
         extraBufferCapacity = 8
@@ -81,34 +117,36 @@ class ContactExchangeManager @Inject constructor(
     val isIdentified: Boolean get() = identified
     val contactExchangeEvents: SharedFlow<ContactExchangeEvent> = _contactExchangeEvents.asSharedFlow()
 
-    private fun sendOrQueue(frame: String) {
+    @Synchronized
+    private fun sendOrQueue(frame: String): Boolean {
         val ws = listenerWs
-        if (identified && ws != null) {
-            ws.send(frame)
-        } else {
-            pendingFrames.add(frame)
-            if (ws == null) startListening()
+        if (identified && ws != null && ws.send(frame)) {
+            return true
         }
+
+        if (!pendingFrames.offer(frame)) return false
+        if (ws == null) startListening()
+        return true
     }
 
+    @Synchronized
     private fun drainPending(ws: WebSocket) {
-        var frame = pendingFrames.poll()
-        while (frame != null) { ws.send(frame); frame = pendingFrames.poll() }
+        pendingFrames.drain(ws::send)
     }
 
     /** Send a raw JSON string — queued until IDENTIFY_ACK if not yet identified. */
     fun sendRaw(json: String): Boolean {
-        sendOrQueue(json)
-        return true
+        return sendOrQueue(json)
     }
 
     fun sendReadReceipt(toSxId: String) {
         scope.launch {
             runCatching {
-                sendOrQueue(JSONObject().apply {
+                val accepted = sendOrQueue(JSONObject().apply {
                     put("type", "READ_RECEIPT")
                     put("to", toSxId)
                 }.toString())
+                if (!accepted) fireAndForgetDrops.incrementAndGet()
             }
         }
     }
@@ -123,11 +161,12 @@ class ContactExchangeManager @Inject constructor(
                 val myBundle = PublicKeyBundleQr.toQrContent(
                     StealthXIdentity.createPublicKeyBundle(context)
                 )
-                sendOrQueue(JSONObject().apply {
+                val accepted = sendOrQueue(JSONObject().apply {
                     put("type", "CONTACT_EXCHANGE")
                     put("to", toSxId)
                     put("bundle", myBundle)
                 }.toString())
+                if (!accepted) fireAndForgetDrops.incrementAndGet()
             }
         }
     }
@@ -177,12 +216,19 @@ class ContactExchangeManager @Inject constructor(
         })
     }
 
+    @Synchronized
     fun stopListening() {
         listenerWs?.close(1000, "listener disabled")
         listenerWs = null
         identified = false
-        pendingFrames.clear()
+        clearPending()
     }
+
+    @Synchronized
+    private fun clearPending() = pendingFrames.clear()
+
+    internal val fireAndForgetDropCount: Int
+        get() = fireAndForgetDrops.get()
 
     private fun handleContactExchange(json: JSONObject) {
         val bundle = json.optString("bundle").ifEmpty { return }

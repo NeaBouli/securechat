@@ -134,7 +134,7 @@ fun SettingsScreen(
                     Icon(Icons.Default.Lock, null, tint = Color.Black)
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        if (tier == AccessTier.FREE) "Buy Pro" else "Buy Elite",
+                        if (tier == AccessTier.FREE) "Check Pro" else "Check Elite",
                         color = Color.Black
                     )
                 }
@@ -186,8 +186,8 @@ fun SettingsScreen(
             RoadmapRow(Icons.Default.Radar, "Advanced Threat Detection", "Real-time behavioral analysis")
 
             SectionHeader("Access")
-            ClickRow(Icons.Default.CreditCard, "Buy Lifetime Access", "Pro €9 · Elite €19 · Stripe checkout") {
-                openUrl("https://securechat.stealthx.tech/#lifetime")
+            ClickRow(Icons.Default.CreditCard, "Check purchase availability", "VLABS controls launch status and current price") {
+                openUrl("https://vlabs.gr/en/shop?focus=security")
             }
             ClickRow(Icons.Default.Key, "Activation Code", "Enter code received after purchase") { showActivationDialog = true }
 

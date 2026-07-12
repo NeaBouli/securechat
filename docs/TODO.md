@@ -19,12 +19,14 @@
 - [ ] FCM-Fix #16
 - [ ] Interner Test Track: v1.0.12 > v1.0.22 syncen oder deaktivieren
 
-## F-Droid
+## Historische SecureCall-F-Droid-Referenz (nicht SecureChat)
 - [x] MR !36495 Pipeline GREEN
       https://gitlab.com/fdroid/fdroiddata/-/merge_requests/36495
       Package: com.securecall.app.fdroid
       Builds: v1.0.21 (vC42) + v1.0.22 (vC43)
       Status: Wartet auf @linsui Review
+
+SecureChat selbst darf unter der aktuellen source-available Root-Lizenz nicht ueber F-Droid verteilt werden.
 
 ## SecureChat + Chameleon
 - [x] SecureChat v0.1.0-alpha (SC-00 bis SC-10 DONE)

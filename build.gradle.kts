@@ -96,8 +96,31 @@ val verifyNoAppIfrWalletCode = tasks.register("verifyNoAppIfrWalletCode") {
     }
 }
 
+val verifyNoClientSideGooglePlayUnlock = tasks.register("verifyNoClientSideGooglePlayUnlock") {
+    group = "verification"
+    description = "Prevent Google Play callbacks from granting a local tier without server verification"
+
+    val billingViewModel = file(
+        "presentation/src/main/java/com/stealthx/presentation/screens/UpgradeViewModel.kt"
+    )
+    inputs.file(billingViewModel)
+
+    doLast {
+        val source = billingViewModel.readText()
+        val forbidden = listOf("saveTierResult(", "saveCachedTier(", "google_play:")
+        val hits = forbidden.filter(source::contains)
+        if (hits.isNotEmpty()) {
+            error(
+                "Google Play must be verified server-side before tier issuance; " +
+                    "forbidden client unlock markers: ${hits.joinToString()}"
+            )
+        }
+    }
+}
+
 subprojects {
     tasks.matching { it.name == "check" }.configureEach {
         dependsOn(verifyNoAppIfrWalletCode)
+        dependsOn(verifyNoClientSideGooglePlayUnlock)
     }
 }

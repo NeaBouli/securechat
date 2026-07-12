@@ -17,7 +17,7 @@
   mindestens 7 Tage stabil
 
 ### Stufe 3 — Production Release (Live)
-- Öffentlich auf Google Play / F-Droid
+- Oeffentliche Store-Verteilung nur nach konsistenter Lizenzentscheidung; unter der aktuellen source-available Lizenz ist keine F-Droid-Verteilung autorisiert
 - Voraussetzung: Externer Security Audit abgeschlossen,
   Release Checklist vollständig
 

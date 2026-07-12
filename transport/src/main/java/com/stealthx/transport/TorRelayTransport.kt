@@ -18,15 +18,12 @@ class TorRelayTransport : RelayTransport {
     override suspend fun send(
         recipientSxId: String,
         message: RatchetMessage
-    ): TransportResult {
-        TODO("Phase 2 — Q3 2026: Tor Hidden Services + Kaspa relay nodes")
-    }
+    ): TransportResult = TransportResult.Failed(
+        messageId = "tor-unavailable",
+        reason = "Tor relay transport is not available in this release"
+    )
 
-    override suspend fun connect(): Boolean {
-        TODO("Phase 2 — Q3 2026: tor-android library integration")
-    }
+    override suspend fun connect(): Boolean = false
 
-    override suspend fun disconnect() {
-        TODO("Phase 2 — Q3 2026")
-    }
+    override suspend fun disconnect() = Unit
 }

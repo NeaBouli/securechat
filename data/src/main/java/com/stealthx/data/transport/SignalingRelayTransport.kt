@@ -25,14 +25,14 @@ class SignalingRelayTransport @Inject constructor(
     private val exchangeManager: ContactExchangeManager
 ) : RelayTransport {
 
-    override val type: TransportType = TransportType.TOR_RELAY
+    override val type: TransportType = TransportType.SIGNALING_RELAY
 
     override val isAvailable: Boolean get() = exchangeManager.isIdentified
 
     override suspend fun send(recipientSxId: String, message: RatchetMessage): TransportResult {
         val messageId = UUID.randomUUID().toString()
-        if (!exchangeManager.isConnected) {
-            return TransportResult.Failed(messageId, "Signaling WS not connected")
+        if (!exchangeManager.isIdentified) {
+            return TransportResult.Failed(messageId, "Signaling relay is not identified")
         }
         val payload = RatchetMessageQr.toQrContent(message)
         val json = JSONObject().apply {

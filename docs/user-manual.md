@@ -1,6 +1,6 @@
 # SecureChat — User Manual
 
-**Version 0.1.0-alpha · StealthX Platform**
+**Version 0.1.5-alpha · StealthX Platform**
 
 ---
 
@@ -16,26 +16,26 @@ Every SecureChat user has a **StealthX ID** — a short, unique identifier deriv
 
 Once keys are exchanged, SecureChat uses a **Double Ratchet** protocol with XChaCha20-Poly1305 encryption for every message. Each message is encrypted with a different key. If one key is ever compromised, past and future messages remain secure. Messages are stored locally on your device in an encrypted database (SQLCipher, AES-256).
 
-Because there is no relay server for messages, both users must be online at the same time to deliver a message — or use the QR export/import method for fully offline, air-gapped communication.
+For current online delivery, both users must be online at the same time. A central StealthX signaling relay forwards the opaque encrypted payload and processes sender/recipient identifiers plus connection metadata; Tor, decentralized relays and multi-hop onion routing are roadmap features. QR export/import remains available for offline exchange.
 
 ---
 
 ## Tier Overview
 
-SecureChat does not verify wallets inside the Android app. IFR holders verify on the website for a 50% Stripe checkout discount, then unlock with an activation code.
+SecureChat does not verify wallets inside the Android app. Browser-based IFR discounts are planned and currently disabled; paid activation remains launch-gated in VLABS.
 
 | Feature | Free | Pro (≥ 2,000 IFR) | Elite (≥ 6,000 IFR) |
 |---|---|---|---|
 | E2E encrypted messaging | Yes | Yes | Yes |
 | QR key exchange | Yes | Yes | Yes |
 | Max contacts | 10 | Unlimited | Unlimited |
-| Group messaging | No | Yes | Yes |
-| Encrypted file transfer | No | Yes | Yes |
-| Kaspa identity anchor | No | Yes | Yes |
-| Chameleon integration | No | Yes | Yes |
-| 3-hop onion routing | No | No | Yes |
-| Decoy chat profiles | No | No | Yes |
-| Advanced threat detection | No | No | Yes |
+| Group messaging | Roadmap | Roadmap | Roadmap |
+| Encrypted file transfer | Roadmap | Roadmap | Roadmap |
+| Kaspa identity anchor | Roadmap | Roadmap | Roadmap |
+| Chameleon integration | Roadmap | Roadmap | Roadmap |
+| 3-hop onion routing | Roadmap | Roadmap | Roadmap |
+| Decoy chat profiles | Roadmap | Roadmap | Roadmap |
+| Advanced threat detection | Roadmap | Roadmap | Roadmap |
 | Emergency broadcast | No | No | Yes |
 
 ---
@@ -138,9 +138,8 @@ Open Settings from the toolbar (gear icon on the right).
 
 At the top of Settings, a card shows:
 - Your current tier (FREE / PRO / ELITE) with color coding
-- Your held IFR balance, if verified
-- Website-verified wallet discount status
-- Cache status: "30 days" (fresh) or "From cache" (re-verified within the window)
+- Signed activation tier and entitlement expiry, when configured
+- Local cache validity
 
 ---
 
@@ -175,36 +174,36 @@ Shows your current contact usage. Free tier: 10 contacts maximum. Pro and Elite:
 
 ---
 
-### Pro Features *(≥ 2,000 IFR)*
+### Pro Roadmap Features
 
 Each of the following shows a lock icon and **Unlock** button if your tier is below Pro.
 
 **Group Messaging**
-Encrypted group chats. Available from Pro tier.
+Planned encrypted group chats. Not implemented in the current release.
 
 **Encrypted File Transfer**
-End-to-end encrypted file sharing via Kaspa XFTP. Available from Pro tier.
+Planned end-to-end encrypted file sharing. Not implemented in the current release.
 
 **Kaspa Identity Anchor**
-Publish your public key to the Kaspa BlockDAG for verifiable, permanent identity anchoring. Available from Pro tier.
+Planned public-key anchoring. The current release does not write an identity to Kaspa.
 
 **Chameleon Integration**
-Connects SecureChat to the Chameleon Privacy OS. When active, Chameleon can use SecureChat as its encrypted messaging backend. Available from Pro tier.
+Planned cross-product integration. It is not active in the current release.
 
 ---
 
-### Elite Features *(≥ 6,000 IFR)*
+### Elite Features And Roadmap
 
 Each of the following shows a lock icon and **Unlock** button if your tier is below Elite.
 
 **Onion Routing (3-hop)**
-Routes all SecureChat traffic through a three-hop anonymization network, hiding your IP address from every node in the path. Available from Elite tier.
+Roadmap only. Current network delivery uses the central signaling relay and must not be treated as Tor or multi-hop traffic.
 
 **Decoy Chat Profiles**
-Create fake conversation histories that appear when a decoy PIN is entered. Available from Elite tier.
+Roadmap only. The current duress flow wipes local data before showing a decoy screen; it does not create fake conversation histories.
 
 **Advanced Threat Detection**
-Real-time behavioral analysis that detects surveillance patterns and alerts you. Available from Elite tier.
+Roadmap only. The current release does not provide behavioral surveillance detection.
 
 **Emergency Broadcast**
 Send an encrypted alert message to all your contacts simultaneously with one tap. Available from Elite tier. Tap to open the Broadcast screen.
@@ -213,7 +212,7 @@ Send an encrypted alert message to all your contacts simultaneously with one tap
 
 ### IFR Holder Discount
 
-Tap **IFR Holder Discount** to open the SecureChat website. Connect MetaMask in the browser or paste a wallet address, then the backend checks IFR balance read-only on Ethereum Mainnet. Eligible holders receive a 50% Stripe checkout discount and unlock the app with an activation code.
+IFR holder discounts are launch-gated and not active in the current sales flow. Any future browser verification will remain outside the Android app and will be documented before activation.
 
 - >= 2,000 IFR -> Pro discount
 - >= 6,000 IFR -> Elite discount
@@ -277,8 +276,8 @@ Ensure you are scanning the contact's QR from their My ID screen, not a screensh
 **Biometric fails and the app closes**
 The app closes when biometric authentication fails to protect your data. Check your device's biometric enrollment in Android Settings.
 
-**My tier shows Free after verifying IFR**
-Verify the wallet on securechat.stealthx.tech/#ifr. If you need IFR, use the Uniswap link there, then start the discounted Stripe checkout.
+**My tier still shows Free**
+Paid activation and IFR holder discounts are launch-gated. Check VLABS for availability; no wallet verification or discounted Stripe checkout is active in the current release.
 
 **I wiped by accident**
 The wipe is irreversible by design. There is no backup and no recovery. Your contacts will need to re-add you using your new identity after you reinstall.
