@@ -276,8 +276,8 @@ Ensure you are scanning the contact's QR from their My ID screen, not a screensh
 **Biometric fails and the app closes**
 The app closes when biometric authentication fails to protect your data. Check your device's biometric enrollment in Android Settings.
 
-**My tier shows Free after verifying IFR**
-Verify the wallet on securechat.stealthx.tech/#ifr. If you need IFR, use the Uniswap link there, then start the discounted Stripe checkout.
+**My tier still shows Free**
+Paid activation and IFR holder discounts are launch-gated. Check VLABS for availability; no wallet verification or discounted Stripe checkout is active in the current release.
 
 **I wiped by accident**
 The wipe is irreversible by design. There is no backup and no recovery. Your contacts will need to re-add you using your new identity after you reinstall.

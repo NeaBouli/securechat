@@ -10,6 +10,7 @@
 - Release `v0.1.5-alpha-securechat` APK was independently checked: valid v2 signature, package `securechat.app`, versionCode 6, versionName `0.1.5-alpha`; live TLS leaf and backup pins match the client configuration.
 - Remaining external gates are runtime entitlement key configuration, signed cross-repo activation/revoke E2E, optional server-side Play/RTDN implementation, physical two-device tests, and controlled launch approval.
 - Legal distribution gate: the source-available root license conflicts with many `GPL-3.0-or-later` source headers. F-Droid/store distribution must remain blocked until Gio/legal selects and applies one consistent licensing policy.
+- The stale SecureChat F-Droid metadata was removed. Queue shutdown now shares the send monitor, and focused tests cover capacity, failed-drain ordering, clear, concurrency and stop synchronization.
 
 ## 2026-07-11 — Signierter Fiat-Entitlement-Consumer implementiert
 

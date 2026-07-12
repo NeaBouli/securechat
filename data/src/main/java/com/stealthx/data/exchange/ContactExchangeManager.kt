@@ -34,7 +34,8 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
-import java.util.concurrent.ConcurrentLinkedDeque
+import java.util.ArrayDeque
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.TimeUnit
 
 import javax.inject.Inject
@@ -44,6 +45,39 @@ data class ContactExchangeEvent(
     val sxId: String,
     val displayName: String
 )
+
+internal class PendingFrameBuffer(
+    private val maxSize: Int
+) {
+    private val frames = ArrayDeque<String>()
+
+    @Synchronized
+    fun offer(frame: String): Boolean {
+        if (frames.size >= maxSize) return false
+        frames.addLast(frame)
+        return true
+    }
+
+    @Synchronized
+    fun drain(send: (String) -> Boolean): Int {
+        var sent = 0
+        while (frames.isNotEmpty()) {
+            val frame = frames.removeFirst()
+            if (!send(frame)) {
+                frames.addFirst(frame)
+                return sent
+            }
+            sent++
+        }
+        return sent
+    }
+
+    @Synchronized
+    fun clear() = frames.clear()
+
+    @Synchronized
+    internal fun snapshot(): List<String> = frames.toList()
+}
 
 @Singleton
 class ContactExchangeManager @Inject constructor(
@@ -72,7 +106,8 @@ class ContactExchangeManager @Inject constructor(
 
     @Volatile private var listenerWs: WebSocket? = null
     @Volatile private var identified = false
-    private val pendingFrames = ConcurrentLinkedDeque<String>()
+    private val pendingFrames = PendingFrameBuffer(MAX_PENDING_FRAMES)
+    private val fireAndForgetDrops = AtomicInteger(0)
     private val _contactExchangeEvents = MutableSharedFlow<ContactExchangeEvent>(
         replay = 0,
         extraBufferCapacity = 8
@@ -89,21 +124,14 @@ class ContactExchangeManager @Inject constructor(
             return true
         }
 
-        if (pendingFrames.size >= MAX_PENDING_FRAMES) return false
-        pendingFrames.addLast(frame)
+        if (!pendingFrames.offer(frame)) return false
         if (ws == null) startListening()
         return true
     }
 
     @Synchronized
     private fun drainPending(ws: WebSocket) {
-        while (true) {
-            val frame = pendingFrames.pollFirst() ?: return
-            if (!ws.send(frame)) {
-                pendingFrames.addFirst(frame)
-                return
-            }
-        }
+        pendingFrames.drain(ws::send)
     }
 
     /** Send a raw JSON string — queued until IDENTIFY_ACK if not yet identified. */
@@ -114,10 +142,11 @@ class ContactExchangeManager @Inject constructor(
     fun sendReadReceipt(toSxId: String) {
         scope.launch {
             runCatching {
-                sendOrQueue(JSONObject().apply {
+                val accepted = sendOrQueue(JSONObject().apply {
                     put("type", "READ_RECEIPT")
                     put("to", toSxId)
                 }.toString())
+                if (!accepted) fireAndForgetDrops.incrementAndGet()
             }
         }
     }
@@ -132,11 +161,12 @@ class ContactExchangeManager @Inject constructor(
                 val myBundle = PublicKeyBundleQr.toQrContent(
                     StealthXIdentity.createPublicKeyBundle(context)
                 )
-                sendOrQueue(JSONObject().apply {
+                val accepted = sendOrQueue(JSONObject().apply {
                     put("type", "CONTACT_EXCHANGE")
                     put("to", toSxId)
                     put("bundle", myBundle)
                 }.toString())
+                if (!accepted) fireAndForgetDrops.incrementAndGet()
             }
         }
     }
@@ -186,6 +216,7 @@ class ContactExchangeManager @Inject constructor(
         })
     }
 
+    @Synchronized
     fun stopListening() {
         listenerWs?.close(1000, "listener disabled")
         listenerWs = null
@@ -195,6 +226,9 @@ class ContactExchangeManager @Inject constructor(
 
     @Synchronized
     private fun clearPending() = pendingFrames.clear()
+
+    internal val fireAndForgetDropCount: Int
+        get() = fireAndForgetDrops.get()
 
     private fun handleContactExchange(json: JSONObject) {
         val bundle = json.optString("bundle").ifEmpty { return }

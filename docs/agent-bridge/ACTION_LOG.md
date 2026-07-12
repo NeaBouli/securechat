@@ -8,7 +8,8 @@
 - Produkt-, Privacy-, F-Droid- und LLM-Texte an den realen Alpha-Stand angepasst; keine Zero-Metadata-/No-Server-/fertige-Dezentralisierung-Claims mehr.
 - GitHub-Release-APK, Signatur, Paket/Version und konfigurierte TLS-Pins read-only verifiziert.
 - Lizenzkonflikt als Release-Gate erfasst: source-available Root-Lizenz versus zahlreiche GPL-Dateiheader; keine rechtliche Lizenzentscheidung automatisiert.
-- Finaler Lauf nach Entfernung der Play-Billing-Abhaengigkeit: `testAll verifyNoClientSideGooglePlayUnlock detekt app:lintDebug app:assembleDebug` PASS, 972 Tasks und 212 Testausfuehrungen ohne Fehler.
+- Finaler Lauf nach Review-Fixes: `testAll verifyNoClientSideGooglePlayUnlock detekt app:lintDebug app:assembleDebug` PASS, 972 Tasks und 222 Testausfuehrungen ohne Fehler.
+- Review-Fixes: Stop/Queue-Race geschlossen; Overflow/Requeue/Clear/Parallelzugriff getestet; Fire-and-forget-Drops gezaehlt; aktive Browser-Wallet-Restlogik, inkonsistente IFR-/Roadmap-Texte und das unter der source-available Lizenz unzulaessige F-Droid-Listing entfernt.
 - Keine Zahlung, Rechnung, Aktivierung, Provideranfrage, Laufzeitkonfiguration oder Bereitstellung ausgeloest.
 
 ## 2026-07-11 — Codex SecureChat Fiat-Entitlement-Verifier

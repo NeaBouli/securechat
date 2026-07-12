@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="SecureChat user manual — complete setup guide, contacts, messaging, air-gap mode, IFR holder discount, and settings. Available in English and German.">
+<meta name="description" content="SecureChat alpha user manual — setup, contacts, encrypted messaging, central online relay, air-gap mode, and settings. Available in English and German.">
 <meta name="keywords" content="SecureChat, encrypted messaging, user manual, setup guide, XChaCha20, Double Ratchet, IFR Token, StealthX, Betriebsanleitung">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="author" content="NeaBouli / StealthX Platform">
@@ -247,20 +247,13 @@
 
 <div class="guide-section">
   <div class="section-num">Section 8</div>
-  <h2 class="section-heading section-anchor" id="en-ifr">🔑 IFR Holder Discount</h2>
+  <h2 class="section-heading section-anchor" id="en-ifr">🔑 IFR Token and Planned Holder Discount</h2>
   <table>
-    <tr><th>Element</th><th>Function</th></tr>
-    <tr><td>Upgrade screen</td><td>Opens SecureChat web checkout, IFR discount, or Uniswap</td></tr>
-    <tr><td>IFR discount</td><td>Verifies a browser wallet on the website for 50% Stripe checkout</td></tr>
+    <tr><th>Element</th><th>Current status</th></tr>
+    <tr><td>Paid activation</td><td>Launch-gated; check VLABS for availability</td></tr>
+    <tr><td>IFR holder discount</td><td>Planned, but disabled pending payment, accounting and launch approval</td></tr>
   </table>
-  <ol class="step-list">
-    <li>Buy IFR tokens (Ethereum Mainnet token <code>0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code>)</li>
-    <li>Hold: ≥ <strong>2,000 IFR → 50% off Pro</strong>, ≥ <strong>6,000 IFR → 50% off Elite</strong></li>
-    <li>App: Settings → IFR Holder Discount</li>
-    <li>Website verifies ERC-20 <code>balanceOf</code> read-only and opens discounted Stripe checkout</li>
-    <li>After checkout, unlock the app with the normal activation code</li>
-    <li>The app unlocks through the normal activation-code path after checkout. No wallet state is stored in the Android app.</li>
-  </ol>
+  <p>The referenced Ethereum Mainnet token contract is <code>0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code>. The Android app does not connect a wallet, and no discounted Stripe checkout is available in this release.</p>
 </div>
 
 <div class="guide-section">
@@ -273,15 +266,15 @@
     <tr><td>Biometric Unlock</td><td>✅</td><td>✅</td><td>✅</td></tr>
     <tr><td>STEALTH-DELETE</td><td>✅</td><td>✅</td><td>✅</td></tr>
     <tr><td>Max Contacts</td><td>10</td><td>∞</td><td>∞</td></tr>
-    <tr><td>Group Messaging</td><td>—</td><td>✅</td><td>✅</td></tr>
-    <tr><td>File Transfer (XFTP)</td><td>—</td><td>✅</td><td>✅</td></tr>
-    <tr><td>Kaspa Identity Anchor</td><td>—</td><td>✅</td><td>✅</td></tr>
-    <tr><td>Chameleon Integration</td><td>—</td><td>✅</td><td>✅</td></tr>
+    <tr><td>Group Messaging</td><td colspan="3">Roadmap — not available in this release</td></tr>
+    <tr><td>File Transfer (XFTP)</td><td colspan="3">Roadmap — not available in this release</td></tr>
+    <tr><td>Kaspa Identity Anchor</td><td colspan="3">Roadmap — not available in this release</td></tr>
+    <tr><td>Chameleon Integration</td><td colspan="3">Roadmap — not available in this release</td></tr>
     <tr><td>Onion Routing (3-hop)</td><td colspan="3">Roadmap — not available in this release</td></tr>
-    <tr><td>Decoy Chat Profiles</td><td>—</td><td>—</td><td>✅</td></tr>
-    <tr><td>Threat Detection</td><td>—</td><td>—</td><td>✅</td></tr>
+    <tr><td>Decoy Chat Profiles</td><td colspan="3">Roadmap — not available in this release</td></tr>
+    <tr><td>Threat Detection</td><td colspan="3">Roadmap — not available in this release</td></tr>
     <tr><td>Emergency Broadcast</td><td>—</td><td>—</td><td>✅</td></tr>
-    <tr><td>Web IFR discount</td><td>—</td><td>2,000 IFR for 50% checkout</td><td>6,000 IFR for 50% checkout</td></tr>
+    <tr><td>Web IFR discount</td><td colspan="3">Planned — currently disabled</td></tr>
   </table>
 </div>
 
@@ -374,7 +367,7 @@
 <div class="guide-section">
   <div class="section-num">Abschnitt 6</div>
   <h2 class="section-heading section-anchor" id="de-chat">✉ Chat</h2>
-  <p>Header zeigt <code>sx_</code> ID des Kontakts und <strong>"Encrypted local queue"</strong> — Nachrichten lokal gespeichert bis Kontakt online.</p>
+  <p>Der Header zeigt die <code>sx_</code>-ID des Kontakts. Die Online-Zustellung erfordert, dass beide Clients gleichzeitig verbunden sind; der Signaling-Handler stellt keine Offline-Serverwarteschlange bereit.</p>
   <table>
     <tr><th>Icon</th><th>Funktion</th></tr>
     <tr><td>📷 QR-Scanner</td><td>Scannt verschlüsselte Nachricht die Kontakt als QR zeigt (Air-Gap)</td></tr>
@@ -422,20 +415,13 @@
 
 <div class="guide-section">
   <div class="section-num">Abschnitt 8</div>
-  <h2 class="section-heading section-anchor" id="de-ifr">🔑 IFR Holder Discount</h2>
+  <h2 class="section-heading section-anchor" id="de-ifr">🔑 IFR-Token und geplanter Holder-Rabatt</h2>
   <table>
-    <tr><th>Element</th><th>Funktion</th></tr>
-    <tr><td>Upgrade-Screen</td><td>Öffnet SecureChat-Webcheckout, IFR-Rabatt oder Uniswap</td></tr>
-    <tr><td>IFR-Rabatt</td><td>Verifiziert eine Browser-Wallet auf der Website für 50% Stripe-Checkout</td></tr>
-    <tr><td>Wallet-Signatur</td><td>Pflichtnachweis im Browser; keine manuelle Adress-Freischaltung</td></tr>
+    <tr><th>Element</th><th>Aktueller Status</th></tr>
+    <tr><td>Bezahlte Aktivierung</td><td>Launch-gesperrt; Verfügbarkeit bei VLABS prüfen</td></tr>
+    <tr><td>IFR-Holder-Rabatt</td><td>Geplant, aber bis Payment-, Accounting- und Launch-Freigabe deaktiviert</td></tr>
   </table>
-  <ol class="step-list">
-    <li>IFR-Token kaufen (Ethereum Mainnet, Contract <code>0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code>)</li>
-    <li>Halten: ≥ <strong>2.000 IFR → 50% Pro-Rabatt</strong>, ≥ <strong>6.000 IFR → 50% Elite-Rabatt</strong></li>
-    <li>App: Settings → IFR Holder Discount</li>
-    <li>Website prüft die signierte Wallet und <code>balanceOf</code> read-only, danach öffnet rabattierter Stripe-Checkout</li>
-    <li>Nach Checkout wird die App per normalem Aktivierungscode freigeschaltet.</li>
-  </ol>
+  <p>Der referenzierte Ethereum-Mainnet-Tokenvertrag ist <code>0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code>. Die Android-App verbindet keine Wallet, und in dieser Version ist kein rabattierter Stripe-Checkout verfügbar.</p>
 </div>
 
 <div class="guide-section">
@@ -448,15 +434,15 @@
     <tr><td>Biometrische Entsperrung</td><td>✅</td><td>✅</td><td>✅</td></tr>
     <tr><td>STEALTH-DELETE</td><td>✅</td><td>✅</td><td>✅</td></tr>
     <tr><td>Max. Kontakte</td><td>10</td><td>∞</td><td>∞</td></tr>
-    <tr><td>Gruppen-Messaging</td><td>—</td><td>✅</td><td>✅</td></tr>
-    <tr><td>Dateiübertragung (XFTP)</td><td>—</td><td>✅</td><td>✅</td></tr>
-    <tr><td>Kaspa-Identitätsanker</td><td>—</td><td>✅</td><td>✅</td></tr>
-    <tr><td>Chameleon-Integration</td><td>—</td><td>✅</td><td>✅</td></tr>
+    <tr><td>Gruppen-Messaging</td><td colspan="3">Roadmap — in dieser Version nicht verfügbar</td></tr>
+    <tr><td>Dateiübertragung (XFTP)</td><td colspan="3">Roadmap — in dieser Version nicht verfügbar</td></tr>
+    <tr><td>Kaspa-Identitätsanker</td><td colspan="3">Roadmap — in dieser Version nicht verfügbar</td></tr>
+    <tr><td>Chameleon-Integration</td><td colspan="3">Roadmap — in dieser Version nicht verfügbar</td></tr>
     <tr><td>Onion Routing (3-Hop)</td><td colspan="3">Roadmap — in dieser Version nicht verfügbar</td></tr>
-    <tr><td>Decoy-Chat-Profile</td><td>—</td><td>—</td><td>✅</td></tr>
-    <tr><td>Bedrohungserkennung</td><td>—</td><td>—</td><td>✅</td></tr>
+    <tr><td>Decoy-Chat-Profile</td><td colspan="3">Roadmap — in dieser Version nicht verfügbar</td></tr>
+    <tr><td>Bedrohungserkennung</td><td colspan="3">Roadmap — in dieser Version nicht verfügbar</td></tr>
     <tr><td>Notfall-Broadcast</td><td>—</td><td>—</td><td>✅</td></tr>
-    <tr><td>Web-IFR-Rabatt</td><td>—</td><td>2.000 IFR für 50% Checkout</td><td>6.000 IFR für 50% Checkout</td></tr>
+    <tr><td>Web-IFR-Rabatt</td><td colspan="3">Geplant — derzeit deaktiviert</td></tr>
   </table>
 </div>
 

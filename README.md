@@ -71,12 +71,12 @@ Requirements: JDK 17, Android SDK 35, Android 8.0+ (API 26+) target devices.
 
 ## IFR Holder Discount
 
-The public SecureChat app does not run WalletConnect or wallet verification inside Android. IFR holder benefits are handled on the website: buy or hold $IFR, verify a browser wallet, then open Stripe checkout with a 50% discount. The app unlocks through the normal activation-code path.
+The public SecureChat app does not run WalletConnect or wallet verification inside Android. A browser-based IFR holder benefit is planned but currently disabled pending VLABS payment, accounting and launch approval.
 
 | Tier | Web IFR eligibility | Checkout benefit | Features |
 |---|---:|---:|---|
 | Free | 0 IFR | EUR 0 | Core messaging, 10 contacts |
-| Pro | >= 2,000 IFR | 50% off Pro checkout | Unlimited contacts, groups, Kaspa identity |
+| Pro | Planned | Browser discount is launch-gated | Unlimited contacts; groups and Kaspa identity remain roadmap |
 | Elite | Planned | Browser discount is launch-gated | Emergency Broadcast; onion/decoy features remain roadmap |
 | Suite | Planned | Browser discount is launch-gated | Bundle availability is controlled by VLABS |
 See [PRICING.md](docs/PRICING.md).
@@ -133,4 +133,4 @@ Mirrors stealthx.tech design — dark tactical aesthetic, green logo accent, sam
 
 - [SecureCall](https://stealthx.tech) — encrypted voice calls
 - [Chameleon](https://github.com/NeaBouli/chameleon) — privacy OS
-- [IFR Token](https://ifrunit.tech) — browser wallet verification for 50% Stripe checkout discount
+- [IFR Token](https://ifrunit.tech) — referenced ecosystem token; SecureChat holder discounts are currently disabled

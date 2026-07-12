@@ -55,12 +55,12 @@ StealthX Platform
 |---------|------|--------|-------------|
 | E2E Messaging | Free | v0.1.0-alpha | XChaCha20-Poly1305 + Double Ratchet |
 | QR/NFC Key Exchange | Free | v0.1.0-alpha | Safety Number (6x4) |
-| Unlimited Contacts | Pro | Phase 2 | >=2,000 IFR or EUR 9 Lifetime |
+| Unlimited Contacts | Pro | Implemented, activation gated | Current price and availability controlled by VLABS; IFR discount disabled |
 | Kaspa Identity | Pro | Phase 2 | On-chain Public Key |
 | 2-Hop Onion Routing | Pro | Phase 2 | Tor Hidden Services |
 | 3-Hop Onion Routing | Elite | Phase 3 | Maximum Anonymity |
 | Decoy Profile | Elite | Phase 3 | Wrong PIN → Empty Profile |
-| Emergency Broadcast | Elite | SC-10 Stub — Phase 2 | Encrypted alert to all contacts |
+| Emergency Broadcast | Elite | Implemented, activation gated | Encrypted alert to all contacts |
 
 ## Websites
 - stealthx.tech — SecureCall + Platform Hub

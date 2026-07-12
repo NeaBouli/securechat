@@ -3,66 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="SecureChat IFR holder discount: verify a browser wallet for 50% Stripe checkout. No WalletConnect runs inside the Android app.">
-<meta name="keywords" content="SecureChat, IFR, Stripe discount, encrypted messaging, privacy">
+<meta name="description" content="SecureChat IFR integration status. Browser holder discounts are planned but currently disabled.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://securechat.stealthx.tech/wiki/ifr-unlock.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="SecureChat">
-<meta property="og:title" content="IFR Holder Discount - SecureChat">
-<meta property="og:description" content="Verify IFR in the browser for 50% SecureChat Stripe checkout. The Android app stays wallet-free.">
+<meta property="og:title" content="IFR Integration Status - SecureChat">
+<meta property="og:description" content="The Android app is wallet-free. Browser holder discounts are planned but currently disabled.">
 <meta property="og:url" content="https://securechat.stealthx.tech/wiki/ifr-unlock.html">
-<title>IFR Holder Discount - SecureChat</title>
+<title>IFR Integration Status - SecureChat</title>
 <style>
-:root{--bg:#0a0a0f;--surface:#0d1b2a;--border:#1e3a52;--cyan:#00d4ff;--green:#00ff88;--gold:#ffb800;--muted:#8899aa;--text:#e8edf2;--text-dim:#b0bec5}
+:root{color-scheme:dark;--bg:#0a0a0f;--surface:#0d1b2a;--border:#1e3a52;--cyan:#00d4ff;--green:#00ff88;--muted:#8899aa;--text:#e8edf2;--text-dim:#b0bec5}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
 nav{height:56px;background:rgba(10,10,15,.97);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem}
 nav a{color:var(--muted);text-decoration:none;font-size:13px}
-nav a:hover{color:var(--green)}
 main{max-width:860px;margin:0 auto;padding:48px 24px}
 h1{font-size:2rem;margin-bottom:.5rem}
 h2{font-size:1.2rem;color:var(--cyan);margin:2rem 0 1rem}
 p,li{font-size:15px;color:var(--text-dim);line-height:1.7}
 ul{margin:0 0 1rem 1.2rem}
 .meta{color:var(--muted);margin-bottom:2rem}
-.card{border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:18px;margin:16px 0}
-.cta{display:inline-block;margin-top:14px;padding:12px 16px;border-radius:8px;background:var(--green);color:#04110a;text-decoration:none;font-weight:800}
-code{color:var(--gold)}
+.card{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:18px;margin:16px 0}
+code{color:var(--green);overflow-wrap:anywhere}
 </style>
 </head>
 <body>
-<nav>
-  <a href="../">SecureChat</a>
-  <a href="./">Wiki</a>
-  <a href="../#ifr">IFR Discount</a>
-  <a href="https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B" target="_blank" rel="noopener">Buy $IFR</a>
-</nav>
+<nav><a href="../">SecureChat</a><a href="./">Wiki</a><a href="https://vlabs.gr/en/shop?focus=security">VLABS availability</a></nav>
 <main>
-  <h1>IFR Holder Discount</h1>
-  <p class="meta">Browser verification for discounted Stripe checkout. No WalletConnect inside the Android app.</p>
-
+  <h1>IFR Integration Status</h1>
+  <p class="meta">No wallet code runs inside the Android app. Browser verification and discounted checkout are currently disabled.</p>
   <div class="card">
-    <h2>How it works</h2>
+    <h2>Current state</h2>
     <ul>
-      <li>Buy or hold $IFR on Ethereum Mainnet.</li>
-      <li>Open the SecureChat website and verify a browser wallet by signing the discount request.</li>
-      <li>The backend checks IFR balance read-only with <code>balanceOf</code>.</li>
-      <li>Eligible holders receive 50% off Stripe checkout.</li>
-      <li>The Android app unlocks through the normal activation-code path after checkout.</li>
+      <li>Paid SecureChat activation remains launch-gated.</li>
+      <li>No wallet connection, signature request, eligibility check or discounted Stripe checkout is available.</li>
+      <li>A future browser holder benefit requires separate payment, accounting and launch approval.</li>
     </ul>
-    <a class="cta" href="../#ifr">Open SecureChat IFR Checkout</a>
   </div>
-
-  <h2>Eligibility</h2>
-  <ul>
-    <li><strong>Pro discount:</strong> hold at least 2,000 IFR.</li>
-    <li><strong>Elite discount:</strong> hold at least 6,000 IFR.</li>
-    <li><strong>Suite discount:</strong> hold at least 6,000 IFR.</li>
-  </ul>
-
-  <h2>Token</h2>
-  <p>Contract: <code>0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code> on Ethereum Mainnet.</p>
+  <h2>Token reference</h2>
+  <p>Ethereum Mainnet contract: <code>0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code>.</p>
 </main>
 </body>
 </html>

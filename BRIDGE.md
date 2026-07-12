@@ -15,7 +15,8 @@
 - Outbound contact-exchange buffering is bounded and preserves ratchet-frame order across a failed drain.
 - Google Play callbacks can no longer unlock a local paid tier. Play purchase/restore controls and legacy website checkout controls remain disabled until server verification and refund/dispute revocation are available end to end.
 - Public descriptions now disclose the central relay and its minimized routing/connection metadata. Kaspa identity, Tor and decentralized relays are explicitly roadmap work.
-- Final verification after removing the Play Billing dependency: `testAll`, `verifyNoClientSideGooglePlayUnlock`, `detekt`, `app:lintDebug`, `app:assembleDebug` PASS; 972 Gradle tasks, 212 test executions, zero test failures/errors.
+- Final verification after review fixes: `testAll`, `verifyNoClientSideGooglePlayUnlock`, `detekt`, `app:lintDebug`, `app:assembleDebug` PASS; 972 Gradle tasks, 222 test executions, zero test failures/errors.
+- Review follow-up synchronizes stop/queue state, adds bounded-buffer concurrency/order tests, records fire-and-forget overflow, removes dormant browser-wallet code and removes the unauthorized F-Droid listing under the current source-available license.
 - External gates: runtime entitlement public key, cross-repository signed activation E2E, server-side Play verification/RTDN if Play is enabled, physical two-device messaging/background/reconnect tests, resolution of the source-available versus GPL-header license conflict, accountant/provider decision and launch approval.
 - No payment, entitlement issuance, provider call, deployment or production change was performed.
 # CC ↔ Codex ↔ Gio Kommunikationskanal

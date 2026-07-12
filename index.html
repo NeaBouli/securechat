@@ -32,7 +32,7 @@
 <link rel="alternate" hreflang="en" href="https://securechat.stealthx.tech/">
 <link rel="alternate" hreflang="x-default" href="https://securechat.stealthx.tech/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SecureChat","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"End-to-end encrypted messaging with StealthX ID, QR contact exchange, and relay delivery.","url":"https://securechat.stealthx.tech","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://github.com/NeaBouli/securechat/blob/main/LICENSE"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses cryptographic key pairs and a StealthX ID for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat source-available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. SecureChat keeps wallet code out of the Android app; eligible holders can verify in the browser for a 50% Stripe checkout discount."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"SecureChat uses StealthX relay delivery for encrypted payloads. Message content remains end-to-end encrypted."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses cryptographic key pairs and a StealthX ID for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat source-available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. SecureChat keeps wallet code out of the Android app; a browser holder discount is planned but currently disabled."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"Current online delivery uses a central StealthX signaling relay that processes routing and connection metadata. Message content remains end-to-end encrypted."}}]}</script>
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -643,7 +643,7 @@
     <div class="feature-card">
       <div class="feature-icon">🔑</div>
       <h3>IFR Holder Discount</h3>
-      <p>Verify IFR in the browser for 50% off Pro or Elite checkout. The Android app stays wallet-free and unlocks with activation codes.</p>
+      <p>A browser-based holder discount is planned but currently disabled. The Android app remains wallet-free.</p>
     </div>
     <div class="feature-card" style="border-color:var(--red);">
       <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--gold);margin-bottom:0.4rem;">ELITE</div>
@@ -828,7 +828,7 @@
       <div class="phase-badge">PHASE 4 — 2027</div>
       <div class="roadmap-content">
         <h3>StealthX Layer 1 Migration + iOS</h3>
-        <p>Full migration to StealthX Layer 1 protocol. iOS client (shared Rust crypto core). External security audit. F-Droid + Play Store release.</p>
+        <p>Full migration to StealthX Layer 1 protocol. iOS client (shared Rust crypto core). External security audit. Store distribution only after license and product-readiness approval.</p>
       </div>
     </div>
   </div>
@@ -856,7 +856,7 @@
     </div>
     <div class="tier-card featured">
       <div class="tier-name" style="color:var(--green)">Pro</div>
-      <div class="tier-lock">Hold <span>≥ 2,000 IFR</span> — 50% Pro checkout</div>
+      <div class="tier-lock"><span>IFR discount planned</span> — currently disabled</div>
       <ul class="tier-features">
         <li>Everything in Free</li>
         <li>Unlimited contacts</li>
@@ -869,7 +869,7 @@
     </div>
     <div class="tier-card">
       <div class="tier-name" style="color:var(--gold)">Elite</div>
-      <div class="tier-lock">Hold <span>≥ 6,000 IFR</span> — 50% Elite checkout</div>
+      <div class="tier-lock"><span>IFR discount planned</span> — currently disabled</div>
       <ul class="tier-features">
         <li>Everything in Pro</li>
         <li>Emergency Broadcast</li>
@@ -909,14 +909,14 @@
         <h3>Buy IFR</h3>
         <ul class="tier-features">
           <li>Open $IFR on Uniswap</li>
-          <li>Hold at least 2,000 IFR for Pro discount</li>
-          <li>Hold at least 6,000 IFR for Elite or Suite discount</li>
+          <li>Holder discounts are planned but currently disabled</li>
+          <li>No wallet verification or discounted checkout is active</li>
         </ul>
         <a href="https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B" class="btn btn-secondary" style="width:100%;text-align:center;" target="_blank" rel="noopener">Buy $IFR on Uniswap</a>
         <div class="ifr-token-logo"><img src="https://ifrunit.tech/assets/ifr_icon_256.png" alt="IFR token logo" width="96" height="96" loading="lazy"></div>
       </div>
       <div class="ifr-card">
-        <h3>Verify for Stripe discount</h3>
+        <h3>Planned browser verification</h3>
         <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">IFR token contract: <code style="color:var(--cyan);font-size:12px;">0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code> (Ethereum Mainnet)</p>
         <div class="ifr-wallet-actions">
           <button id="connectIfrWallet" class="btn btn-disabled" type="button" disabled>Wallet verification planned</button>
@@ -1046,153 +1046,6 @@
 </footer>
 
 <script>
-(function(){
-	  var API='https://api.stealthx.tech';
-  var WC_PROJECT_ID='32f56abaa4b1d7f59fb1571c0c0a551f';
-  var WC_ESM_URL='https://esm.sh/@walletconnect/ethereum-provider@2.17.3';
-  var RPC_URL='https://eth.llamarpc.com';
-  var ifrProvider=null;
-  var ifrAddress='';
-  function setIfrStatus(message){
-    var status=document.getElementById('ifrDiscountStatus');
-    if(status)status.textContent=message;
-  }
-  function balanceText(value){return value?(' Balance: '+value+' IFR.'):""}
-  function checkoutError(data){
-    var error=(data&&data.error)||'Checkout unavailable';
-    if(error==='ifr_not_eligible')return 'No eligible IFR balance found for this wallet.'+balanceText(data.balanceAmount);
-    if(error==='ifr_tier_too_low')return 'IFR balance found, but tier is too low. Required: '+(data.requiredTier||'higher tier')+'. Current: '+(data.walletTier||'none')+'.'+balanceText(data.balanceAmount);
-    if(error==='wallet_signature_required')return 'Wallet signature is required before IFR discount checkout can open.';
-    if(error==='wallet_signature_invalid')return 'Wallet signature could not be verified. Please reconnect and sign again.';
-    if(error==='wallet_challenge_expired')return 'Wallet verification expired. Please tap checkout again and sign the new request.';
-    if(error==='invalid_wallet_challenge'||error==='wallet_challenge_mismatch')return 'Wallet verification mismatch. Please reconnect the wallet and try again.';
-    if(error==='rate_limited')return 'Too many checkout attempts. Please wait a few minutes and try again.';
-    return error;
-  }
-  function injectedProviders(){
-    var list=[];
-    if(window.ethereum&&Array.isArray(window.ethereum.providers))list=list.concat(window.ethereum.providers);
-    if(window.ethereum)list.push(window.ethereum);
-    if(window.phantom&&window.phantom.ethereum)list.push(window.phantom.ethereum);
-    return list.filter(function(provider,index,all){return provider&&provider.request&&all.indexOf(provider)===index});
-  }
-  function preferredProvider(){
-    var providers=injectedProviders();
-    if(!providers.length)return null;
-    return providers.find(function(provider){return provider.isMetaMask})||
-      providers.find(function(provider){return provider.isPhantom})||
-      providers.find(function(provider){return provider.isCoinbaseWallet})||
-      providers[0];
-  }
-  async function switchMainnet(provider){
-    try{await provider.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x1'}]})}catch(e){}
-  }
-  async function connectInjectedWallet(){
-    var provider=preferredProvider();
-    if(!provider)return null;
-    setIfrStatus('Connecting browser wallet...');
-    var accounts=await provider.request({method:'eth_requestAccounts'});
-    if(!accounts||!accounts[0])throw new Error('No wallet account returned.');
-    await switchMainnet(provider);
-    ifrProvider=provider;
-    ifrAddress=accounts[0];
-    return ifrAddress;
-  }
-  async function connectWalletConnect(){
-    setIfrStatus('Opening WalletConnect...');
-    var mod=await import(WC_ESM_URL);
-    var EthereumProvider=mod.EthereumProvider||mod.default;
-    if(!EthereumProvider)throw new Error('WalletConnect provider unavailable.');
-    var provider=await EthereumProvider.init({
-      projectId:WC_PROJECT_ID,
-      optionalChains:[1],
-      showQrModal:true,
-      rpcMap:{1:RPC_URL},
-      methods:['eth_requestAccounts','personal_sign','wallet_switchEthereumChain'],
-      events:['accountsChanged','chainChanged','disconnect'],
-      metadata:{name:'SecureChat IFR Discount',description:'Read-only IFR holder discount verification for SecureChat checkout.',url:location.origin,icons:[location.origin+'/favicon.ico']},
-      qrModalOptions:{themeMode:'dark'}
-    });
-    var accounts=await provider.enable();
-    if(!accounts||!accounts[0])throw new Error('No wallet account returned.');
-    await switchMainnet(provider);
-    ifrProvider=provider;
-    ifrAddress=accounts[0];
-    return ifrAddress;
-  }
-  async function connectIfrWallet(){
-    if(ifrProvider&&ifrAddress)return ifrAddress;
-    var input=document.getElementById('ifrWalletAddress');
-    var walletAddress;
-    try{walletAddress=await connectInjectedWallet()}catch(e){
-      if(e&&e.code===4001)throw e;
-      console.warn('Injected wallet connect failed, falling back to WalletConnect',e);
-    }
-    if(!walletAddress)walletAddress=await connectWalletConnect();
-    if(input)input.value=walletAddress;
-    setIfrStatus('Wallet connected: '+walletAddress.slice(0,6)+'...'+walletAddress.slice(-4)+'. Choose Pro, Elite, or Suite checkout.');
-    return walletAddress;
-  }
-  async function disconnectIfrWallet(){
-    var provider=ifrProvider;
-    ifrProvider=null;
-    ifrAddress='';
-    var input=document.getElementById('ifrWalletAddress');
-    if(input)input.value='';
-    try{if(provider&&provider.disconnect)await provider.disconnect()}catch(e){}
-    setIfrStatus('Wallet disconnected. Connect a wallet to verify IFR discount eligibility.');
-  }
-  async function signIfrDiscount(tier){
-    var walletAddress=await connectIfrWallet();
-    var challengeResponse=await fetch(API+'/stripe/ifr-discount-challenge',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({tier:tier,walletAddress:walletAddress})
-    });
-    var challenge=await challengeResponse.json().catch(function(){return{}});
-    if(!challengeResponse.ok||!challenge.message||!challenge.nonce)throw new Error(challenge.error||'Wallet challenge unavailable');
-    var status=document.getElementById('ifrDiscountStatus');
-    if(status)status.textContent='Sign the wallet message to prove ownership...';
-    if(!ifrProvider)throw new Error('Wallet is not connected.');
-    var signature;
-    try{signature=await ifrProvider.request({method:'personal_sign',params:[challenge.message,walletAddress]})}
-    catch(e){signature=await ifrProvider.request({method:'personal_sign',params:[walletAddress,challenge.message]})}
-    return {walletAddress:walletAddress,walletNonce:challenge.nonce,walletSignature:signature};
-  }
-  async function startCheckout(button){
-    if(!button)return;
-    button.disabled=true;
-    button.title='Paid activation is launch-gated. Check VLABS for availability.';
-    setIfrStatus('Paid activation is launch-gated. Check VLABS for availability.');
-  }
-  document.querySelectorAll('[data-checkout-tier]').forEach(function(button){
-    button.addEventListener('click',function(){startCheckout(button);});
-  });
-  var connectButton=document.getElementById('connectIfrWallet');
-	  if(connectButton){
-    connectButton.addEventListener('click',async function(){
-      var label=connectButton.textContent;
-      connectButton.disabled=true;
-      connectButton.textContent='Connecting...';
-      try{
-        var address=await connectIfrWallet();
-        var status=document.getElementById('ifrDiscountStatus');
-        if(status)status.textContent='Wallet connected: '+address.slice(0,6)+'...'+address.slice(-4)+'. Choose Pro, Elite, or Suite checkout.';
-        connectButton.textContent='Wallet connected';
-      }catch(e){
-        connectButton.disabled=false;
-        connectButton.textContent=label;
-        var status=document.getElementById('ifrDiscountStatus');
-        if(status)status.textContent=e.message;
-      }
-	    });
-	  }
-  var disconnectButton=document.getElementById('disconnectIfrWallet');
-  if(disconnectButton){
-    disconnectButton.addEventListener('click',function(){disconnectIfrWallet();});
-  }
-})();
-
 // Chat animation
 (function() {
   const msgs = document.getElementById('chatMessages');
