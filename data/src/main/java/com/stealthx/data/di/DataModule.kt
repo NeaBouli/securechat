@@ -68,7 +68,7 @@ object DataModule {
         localTransport: LocalTransport
     ): MessageRouter =
         MessageRouter(mapOf<TransportType, RelayTransport>(
-            TransportType.TOR_RELAY to signalingTransport,
+            TransportType.SIGNALING_RELAY to signalingTransport,
             TransportType.LOCAL to localTransport
         ))
 

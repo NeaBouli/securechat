@@ -13,7 +13,7 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="SecureChat — StealthX Platform">
 <meta property="og:title" content="SecureChat User Manual — EN/DE">
-<meta property="og:description" content="Complete setup guide for SecureChat. Zero-metadata encrypted messaging, QR key exchange, air-gap mode, and IFR holder discount. English and German.">
+<meta property="og:description" content="SecureChat alpha setup guide: encrypted message content, QR key exchange, central online relay and air-gap mode. English and German.">
 <meta property="og:url" content="https://securechat.stealthx.tech/wiki/user-manual.html">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SecureChat User Manual — EN/DE">
@@ -118,7 +118,7 @@
 <div class="guide-header">
   <div class="guide-label">Wiki · User Manual</div>
   <h1 class="guide-title">SecureChat <span>User Guide</span></h1>
-  <p class="guide-sub">End-to-end encrypted messaging with zero-metadata. No server stores your messages. This guide covers first setup, adding contacts, sending messages, air-gap mode, and the website IFR holder discount.</p>
+  <p class="guide-sub">End-to-end encrypted message content with minimized service metadata. This guide covers first setup, contacts, online signaling delivery and offline exchange.</p>
 </div>
 <div class="guide-body">
 
@@ -140,7 +140,7 @@
 <div class="guide-section">
   <div class="section-num">Section 1</div>
   <h2 class="section-heading section-anchor" id="en-what">🔐 What is SecureChat?</h2>
-  <p>SecureChat is an end-to-end encrypted messenger with a <strong>zero-metadata principle</strong>. No server stores your messages — everything stays encrypted on your device using <strong>XChaCha20-Poly1305 + Double Ratchet</strong> (the same protocol as Signal). No phone number, no email, no registration.</p>
+  <p>SecureChat is an end-to-end encrypted messenger. Message content is protected with <strong>XChaCha20-Poly1305 + Double Ratchet</strong>; the current central signaling relay still processes connection timing and sender/recipient <code>sx_</code> identifiers. No phone number or email registration is required.</p>
   <div class="info-box"><strong>Shared identity:</strong> SecureChat uses the same <code>sx_</code> ID as SecureCall. One identity — both apps. Share your QR once; your contact reaches you on both.</div>
 </div>
 
@@ -199,7 +199,7 @@
 <div class="guide-section">
   <div class="section-num">Section 6</div>
   <h2 class="section-heading section-anchor" id="en-chat">✉ Chat</h2>
-  <p>Header shows contact's <code>sx_</code> ID and <strong>"Encrypted local queue"</strong> — messages stored locally until contact comes online.</p>
+  <p>The header shows the contact's <code>sx_</code> ID. Current online delivery requires both clients to be connected; the signaling handler does not provide an offline server queue.</p>
   <table>
     <tr><th>Icon</th><th>Function</th></tr>
     <tr><td>📷 QR Scanner</td><td>Scan an encrypted message shown as QR by your contact (air-gap mode)</td></tr>
@@ -209,7 +209,7 @@
   </table>
   <h3 style="margin:1.2rem 0 0.5rem;font-size:0.95rem;color:var(--text)">Message delivery modes</h3>
   <ol style="padding-left:1.5rem;color:var(--text-dim);font-size:14px">
-    <li style="margin-bottom:0.5rem"><strong>Online:</strong> Both online → signaling server routes encrypted blob. Zero-metadata — no sender/recipient identifiers visible.</li>
+    <li style="margin-bottom:0.5rem"><strong>Online:</strong> Both online → the signaling server routes the encrypted blob and processes sender/recipient <code>sx_</code> identifiers plus connection metadata.</li>
     <li><strong>Air-gap:</strong> Export as QR → contact scans. No internet required. Ideal for sensitive environments.</li>
   </ol>
 </div>
@@ -277,7 +277,7 @@
     <tr><td>File Transfer (XFTP)</td><td>—</td><td>✅</td><td>✅</td></tr>
     <tr><td>Kaspa Identity Anchor</td><td>—</td><td>✅</td><td>✅</td></tr>
     <tr><td>Chameleon Integration</td><td>—</td><td>✅</td><td>✅</td></tr>
-    <tr><td>Onion Routing (3-hop)</td><td>—</td><td>—</td><td>✅</td></tr>
+    <tr><td>Onion Routing (3-hop)</td><td colspan="3">Roadmap — not available in this release</td></tr>
     <tr><td>Decoy Chat Profiles</td><td>—</td><td>—</td><td>✅</td></tr>
     <tr><td>Threat Detection</td><td>—</td><td>—</td><td>✅</td></tr>
     <tr><td>Emergency Broadcast</td><td>—</td><td>—</td><td>✅</td></tr>
@@ -293,7 +293,7 @@
 <div class="guide-header">
   <div class="guide-label">Wiki · Betriebsanleitung</div>
   <h1 class="guide-title">SecureChat <span>Betriebsanleitung</span></h1>
-  <p class="guide-sub">Ende-zu-Ende verschlüsselter Messenger mit Zero-Metadata-Prinzip. Kein Server speichert Nachrichten. Diese Anleitung erklärt Erster Start, Kontakte hinzufügen, Nachrichten senden, Air-Gap-Modus und den Website-IFR-Holder-Rabatt.</p>
+  <p class="guide-sub">Ende-zu-Ende verschlüsselter Nachrichteninhalt mit minimierten Servicedaten. Diese Anleitung erklärt Erster Start, Kontakte, zentral vermittelte Online-Zustellung und Air-Gap-Modus.</p>
 </div>
 <div class="guide-body">
 
@@ -315,7 +315,7 @@
 <div class="guide-section">
   <div class="section-num">Abschnitt 1</div>
   <h2 class="section-heading section-anchor" id="de-what">🔐 Was ist SecureChat?</h2>
-  <p>SecureChat ist ein Ende-zu-Ende verschlüsselter Messenger nach dem <strong>Zero-Metadata-Prinzip</strong>. Kein Server speichert Nachrichten — alles liegt verschlüsselt auf dem Gerät, gesichert mit <strong>XChaCha20-Poly1305 + Double Ratchet</strong>. Keine Telefonnummer, keine E-Mail, keine Registrierung.</p>
+  <p>SecureChat ist ein Ende-zu-Ende verschlüsselter Messenger. Der Nachrichteninhalt ist mit <strong>XChaCha20-Poly1305 + Double Ratchet</strong> geschützt; der zentrale Signaling-Dienst verarbeitet weiterhin Verbindungszeit und Absender-/Empfänger-<code>sx_</code>-IDs. Keine Telefonnummer oder E-Mail-Registrierung.</p>
   <div class="info-box"><strong>Gemeinsame Identität:</strong> SecureChat verwendet dieselbe <code>sx_</code> ID wie SecureCall. Eine Identität — beide Apps. QR einmal teilen, Kontakt erreicht dich auf beiden.</div>
 </div>
 
@@ -384,7 +384,7 @@
   </table>
   <h3 style="margin:1.2rem 0 0.5rem;font-size:0.95rem;color:var(--text)">Zustellungsmodi</h3>
   <ol style="padding-left:1.5rem;color:var(--text-dim);font-size:14px">
-    <li style="margin-bottom:0.5rem"><strong>Online:</strong> Beide verbunden → Signaling-Server routet verschlüsselten Blob. Zero-Metadata — keine Absender-/Empfänger-Identifikatoren sichtbar.</li>
+    <li style="margin-bottom:0.5rem"><strong>Online:</strong> Beide verbunden → der Signaling-Server routet den verschlüsselten Blob und verarbeitet dabei Absender-/Empfänger-<code>sx_</code>-IDs sowie Verbindungsmetadaten.</li>
     <li><strong>Air-Gap:</strong> Als QR exportieren → Kontakt scannt. Kein Internet nötig. Ideal für hochsensible Umgebungen.</li>
   </ol>
 </div>
@@ -452,7 +452,7 @@
     <tr><td>Dateiübertragung (XFTP)</td><td>—</td><td>✅</td><td>✅</td></tr>
     <tr><td>Kaspa-Identitätsanker</td><td>—</td><td>✅</td><td>✅</td></tr>
     <tr><td>Chameleon-Integration</td><td>—</td><td>✅</td><td>✅</td></tr>
-    <tr><td>Onion Routing (3-Hop)</td><td>—</td><td>—</td><td>✅</td></tr>
+    <tr><td>Onion Routing (3-Hop)</td><td colspan="3">Roadmap — in dieser Version nicht verfügbar</td></tr>
     <tr><td>Decoy-Chat-Profile</td><td>—</td><td>—</td><td>✅</td></tr>
     <tr><td>Bedrohungserkennung</td><td>—</td><td>—</td><td>✅</td></tr>
     <tr><td>Notfall-Broadcast</td><td>—</td><td>—</td><td>✅</td></tr>

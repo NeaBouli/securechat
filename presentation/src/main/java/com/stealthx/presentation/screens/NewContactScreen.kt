@@ -91,7 +91,7 @@ fun NewContactScreen(
                                 color = MaterialTheme.colorScheme.onErrorContainer
                             )
                             Text(
-                                "Buy Pro Lifetime for unlimited contacts.",
+                                "Pro access enables unlimited contacts. Check VLABS availability.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = 0.8f)
                             )
@@ -101,7 +101,7 @@ fun NewContactScreen(
                                 tint = Color(0xFF00E5FF),
                                 modifier = Modifier.size(14.dp))
                             Spacer(Modifier.width(4.dp))
-                            Text("Buy Pro", color = Color(0xFF00E5FF),
+                            Text("Check Pro", color = Color(0xFF00E5FF),
                                 style = MaterialTheme.typography.labelSmall)
                         }
                     }

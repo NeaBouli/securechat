@@ -34,7 +34,7 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
-import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.TimeUnit
 
 import javax.inject.Inject
@@ -53,6 +53,7 @@ class ContactExchangeManager @Inject constructor(
 ) {
     private companion object {
         const val SIGNAL_URL = "wss://api.stealthx.tech/signal"
+        const val MAX_PENDING_FRAMES = 256
     }
 
     private val certPinner = CertificatePinner.Builder()
@@ -71,7 +72,7 @@ class ContactExchangeManager @Inject constructor(
 
     @Volatile private var listenerWs: WebSocket? = null
     @Volatile private var identified = false
-    private val pendingFrames = ConcurrentLinkedQueue<String>()
+    private val pendingFrames = ConcurrentLinkedDeque<String>()
     private val _contactExchangeEvents = MutableSharedFlow<ContactExchangeEvent>(
         replay = 0,
         extraBufferCapacity = 8
@@ -81,25 +82,33 @@ class ContactExchangeManager @Inject constructor(
     val isIdentified: Boolean get() = identified
     val contactExchangeEvents: SharedFlow<ContactExchangeEvent> = _contactExchangeEvents.asSharedFlow()
 
-    private fun sendOrQueue(frame: String) {
+    @Synchronized
+    private fun sendOrQueue(frame: String): Boolean {
         val ws = listenerWs
-        if (identified && ws != null) {
-            ws.send(frame)
-        } else {
-            pendingFrames.add(frame)
-            if (ws == null) startListening()
+        if (identified && ws != null && ws.send(frame)) {
+            return true
         }
+
+        if (pendingFrames.size >= MAX_PENDING_FRAMES) return false
+        pendingFrames.addLast(frame)
+        if (ws == null) startListening()
+        return true
     }
 
+    @Synchronized
     private fun drainPending(ws: WebSocket) {
-        var frame = pendingFrames.poll()
-        while (frame != null) { ws.send(frame); frame = pendingFrames.poll() }
+        while (true) {
+            val frame = pendingFrames.pollFirst() ?: return
+            if (!ws.send(frame)) {
+                pendingFrames.addFirst(frame)
+                return
+            }
+        }
     }
 
     /** Send a raw JSON string — queued until IDENTIFY_ACK if not yet identified. */
     fun sendRaw(json: String): Boolean {
-        sendOrQueue(json)
-        return true
+        return sendOrQueue(json)
     }
 
     fun sendReadReceipt(toSxId: String) {
@@ -181,8 +190,11 @@ class ContactExchangeManager @Inject constructor(
         listenerWs?.close(1000, "listener disabled")
         listenerWs = null
         identified = false
-        pendingFrames.clear()
+        clearPending()
     }
+
+    @Synchronized
+    private fun clearPending() = pendingFrames.clear()
 
     private fun handleContactExchange(json: JSONObject) {
         val bundle = json.optString("bundle").ifEmpty { return }

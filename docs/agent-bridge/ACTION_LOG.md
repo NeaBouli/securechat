@@ -1,5 +1,16 @@
 # Action Log
 
+## 2026-07-12 — Codex Full Client / Sell-Readiness Pass
+
+- Android-, Transport-, Website-, Privacy- und Paid-Access-Pfade gemeinsam auditiert.
+- Aktiven zentralen Relay-Typ korrigiert; Tor/Onion-Platzhalter fail-closed; ausgehende Kontakt-Queue begrenzt und geordnet.
+- Kritischen Client-Bypass geschlossen: Google-Play-Callback schreibt keinen lokalen Paid-Tier mehr. Kauf/Restore und Legacy-Webcheckout sind bis zur Serververifikation deaktiviert.
+- Produkt-, Privacy-, F-Droid- und LLM-Texte an den realen Alpha-Stand angepasst; keine Zero-Metadata-/No-Server-/fertige-Dezentralisierung-Claims mehr.
+- GitHub-Release-APK, Signatur, Paket/Version und konfigurierte TLS-Pins read-only verifiziert.
+- Lizenzkonflikt als Release-Gate erfasst: source-available Root-Lizenz versus zahlreiche GPL-Dateiheader; keine rechtliche Lizenzentscheidung automatisiert.
+- Finaler Lauf nach Entfernung der Play-Billing-Abhaengigkeit: `testAll verifyNoClientSideGooglePlayUnlock detekt app:lintDebug app:assembleDebug` PASS, 972 Tasks und 212 Testausfuehrungen ohne Fehler.
+- Keine Zahlung, Rechnung, Aktivierung, Provideranfrage, Laufzeitkonfiguration oder Bereitstellung ausgeloest.
+
 ## 2026-07-11 — Codex SecureChat Fiat-Entitlement-Verifier
 
 - Bestehender Activation-Code-Flow akzeptiert fuer Fiat-Tiers nicht mehr das unbewiesene Serverfeld `tier`, sondern verlangt ein Ed25519-signiertes Entitlement.

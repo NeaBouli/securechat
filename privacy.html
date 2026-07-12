@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="SecureChat collects nothing. All messages encrypted on-device. No accounts, no servers, no metadata. Full privacy policy.">
+<meta name="description" content="SecureChat encrypts message content on-device and minimizes signaling metadata. Read the current service data policy.">
 <meta name="keywords" content="SecureChat, encrypted messaging, XChaCha20, privacy, security, Kaspa, IFR Token">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="author" content="NeaBouli / StealthX Platform">
@@ -9,35 +9,30 @@
 <link rel="canonical" href="https://securechat.stealthx.tech/privacy.html">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="SecureChat">
-<meta property="og:title" content="SecureChat Privacy Policy — Zero Data Collection">
-<meta property="og:description" content="SecureChat collects nothing. All messages encrypted on-device. No accounts, no servers, no metadata. Full privacy policy.">
+<meta property="og:title" content="SecureChat Privacy Policy">
+<meta property="og:description" content="SecureChat encrypts message content on-device and minimizes signaling metadata. Read the current service data policy.">
 <meta property="og:url" content="https://securechat.stealthx.tech/privacy.html">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="SecureChat Privacy Policy — Zero Data Collection"><title>SecureChat Privacy Policy — Zero Data Collection</title><link rel="icon" type="image/png" href="logo.png"><style>:root{--bg:#0a0a0f;--surface:#0d1b2a;--border:#1e3a52;--green:#00ff88;--muted:#8899aa;--text:#e8edf2;--text-dim:#b0bec5}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;max-width:720px;margin:0 auto;padding:4rem 2rem}a{color:var(--green);text-decoration:none}h1{font-size:2rem;font-weight:800;margin-bottom:.5rem}h2{font-size:1.1rem;color:var(--green);margin:2rem 0 .6rem}p{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:.8rem}.meta{font-size:13px;color:var(--muted);margin-bottom:2rem}</style></head><body>
+<meta name="twitter:title" content="SecureChat Privacy Policy"><title>SecureChat Privacy Policy</title><link rel="icon" type="image/png" href="logo.png"><style>:root{--bg:#0a0a0f;--surface:#0d1b2a;--border:#1e3a52;--green:#00ff88;--muted:#8899aa;--text:#e8edf2;--text-dim:#b0bec5}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;max-width:720px;margin:0 auto;padding:4rem 2rem}a{color:var(--green);text-decoration:none}h1{font-size:2rem;font-weight:800;margin-bottom:.5rem}h2{font-size:1.1rem;color:var(--green);margin:2rem 0 .6rem}p{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:.8rem}.meta{font-size:13px;color:var(--muted);margin-bottom:2rem}</style></head><body>
 <a href="/" style="font-size:13px;color:var(--muted)">← Back to SecureChat</a>
 <br><br>
 <h1>Privacy Policy</h1>
-<p class="meta">SecureChat — StealthX Platform · Last updated: April 2026</p>
+<p class="meta">SecureChat — StealthX Platform · Last updated: July 2026</p>
 <h2>The Short Version</h2>
-<p>SecureChat collects nothing. Your messages are encrypted on your device before leaving it. We have no servers that store your messages. We have no accounts. We have no way to read your communications, even if ordered by a court.</p>
+<p>SecureChat encrypts message content on your device before transmission. The current delivery service cannot decrypt message content, but it necessarily processes limited connection and routing metadata to deliver messages.</p>
 <h2>Data We Collect</h2>
-<p><strong style="color:var(--text)">Free tier:</strong> Anonymous crash reports only (opt-out available in Settings). No message content, no contact lists, no metadata.</p>
-<p><strong style="color:var(--text)">Pro / Elite tier:</strong> Nothing. Zero telemetry. The app makes no network calls except for message relay (encrypted) and optional one-time Kaspa identity anchoring.</p>
+<p><strong style="color:var(--text)">Message content:</strong> End-to-end encrypted. The service receives only the encrypted payload.</p>
+<p><strong style="color:var(--text)">Service metadata:</strong> The central signaling relay processes network address, connection timing, sender and recipient <code>sx_</code> identifiers, delivery state and activation/entitlement requests. Operational logs may contain these routing identifiers and timestamps.</p>
+<p><strong style="color:var(--text)">Local data:</strong> Contacts, keys and message history are stored on the device in encrypted storage. Optional diagnostics must be described in the app before collection.</p>
 <h2>Messages</h2>
-<p>All messages are encrypted end-to-end on your device using XChaCha20-Poly1305. Relay nodes see only encrypted blobs. Messages are deleted from relay nodes immediately after delivery. We have no access to message content.</p>
+<p>All messages are encrypted end-to-end on your device using XChaCha20-Poly1305. The current central relay forwards an opaque encrypted payload only when the recipient is online; this handler does not provide an offline message queue. Routing metadata is separate from encrypted content.</p>
 <h2>IFR Token Verification</h2>
-<p>IFR holder discounts are verified on the website, not inside the Android app. The backend checks a browser-provided wallet address read-only against Ethereum before creating a discounted Stripe checkout.</p>
+<p>IFR holder discounts are not active in the current sales flow. Any future browser verification will be disclosed separately and will not run inside the Android app.</p>
 <h2>Kaspa Identity</h2>
-<p>If you choose to anchor your identity to the Kaspa blockchain, your public key is written as a Kaspa transaction. Public keys are, by definition, public. Your private key never leaves your device.</p>
+<p>Kaspa identity anchoring is a roadmap feature and is not performed by the current release.</p>
 <h2>Contact Us</h2>
 <p><a href="https://github.com/NeaBouli/securechat/issues">github.com/NeaBouli/securechat/issues</a></p>
-<h2>Chameleon Privacy OS</h2>
-<p>Chameleon is part of the SecureChat ecosystem. Its privacy commitments:</p>
-<ul>
-<li><strong>No internet permission</strong> &mdash; Chameleon has no internet access by default. All encryption happens locally.</li>
-<li><strong>No data collection</strong> &mdash; No analytics, no crash reports, no telemetry.</li>
-<li><strong>Local storage only</strong> &mdash; All data stored with SQLCipher encryption. Keys in Android Keystore (StrongBox/TEE).</li>
-<li><strong>AccessibilityService</strong> &mdash; Used exclusively for text encryption overlay. No data is transmitted. No screen content is stored. Source code is Source-Available and fully auditable on <a href="https://github.com/NeaBouli/chameleon" style="color:var(--green)">GitHub</a>.</li>
-</ul>
+<h2>Related Products</h2>
+<p>Chameleon and other StealthX products have separate data flows and policies. This policy describes SecureChat only.</p>
 <p style="margin-top:2rem;font-size:12px;color:var(--muted)">© 2026 Vendetta Labs — Greece · Source-Available</p>
 </body></html>

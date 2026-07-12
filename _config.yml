@@ -1,4 +1,4 @@
 title: SecureChat
-description: Decentralized end-to-end encrypted messaging. No phone number. No server. No metadata.
+description: End-to-end encrypted Android messaging with no phone number or account. The current alpha uses a central signaling relay with minimized metadata.
 url: "https://neabouli.github.io"
 baseurl: "/securechat"

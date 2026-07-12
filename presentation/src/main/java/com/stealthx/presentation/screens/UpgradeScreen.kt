@@ -9,7 +9,6 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.stealthx.presentation.theme.ScGold
 import com.stealthx.presentation.theme.ScGreen
-import android.app.Activity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,12 +30,7 @@ fun UpgradeScreen(
     vm: UpgradeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val activity = context as? Activity
     val state by vm.state.collectAsState()
-
-    LaunchedEffect(Unit) {
-        vm.connect()
-    }
 
     fun openUrl(url: String) {
         runCatching {
@@ -81,7 +74,7 @@ fun UpgradeScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Buy Pro or Elite with Google Play. Activation codes still work from Settings.",
+                        "Paid activation is launch-gated. VLABS controls current availability; signed activation codes remain in Settings.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
@@ -93,7 +86,8 @@ fun UpgradeScreen(
                     ) {
                         // Pro
                         OutlinedButton(
-                            onClick = { vm.buy(activity, "securechat_pro_lifetime") },
+                            onClick = vm::buy,
+                            enabled = false,
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.outlinedButtonColors(
                                 contentColor = ScGreen
@@ -101,13 +95,14 @@ fun UpgradeScreen(
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text("PRO", fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                                Text(state.products["securechat_pro_lifetime"]?.price ?: "€9", fontWeight = FontWeight.Black, fontSize = 22.sp, color = ScGreen)
-                                Text("lifetime", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("Gated", fontWeight = FontWeight.Black, fontSize = 22.sp, color = ScGreen)
+                                Text("VLABS", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                         // Elite
                         OutlinedButton(
-                            onClick = { vm.buy(activity, "securechat_elite_lifetime") },
+                            onClick = vm::buy,
+                            enabled = false,
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.outlinedButtonColors(
                                 contentColor = ScGold
@@ -115,8 +110,8 @@ fun UpgradeScreen(
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Text("ELITE", fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                                Text(state.products["securechat_elite_lifetime"]?.price ?: "€19", fontWeight = FontWeight.Black, fontSize = 22.sp, color = ScGold)
-                                Text("lifetime", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("Gated", fontWeight = FontWeight.Black, fontSize = 22.sp, color = ScGold)
+                                Text("VLABS", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                     }
@@ -126,14 +121,16 @@ fun UpgradeScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         OutlinedButton(
-                            onClick = { vm.buy(activity, "securechat_pro_monthly") },
+                            onClick = vm::buy,
+                            enabled = false,
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = ScGreen)
                         ) {
                             Text("Pro Monthly")
                         }
                         OutlinedButton(
-                            onClick = { vm.buy(activity, "securechat_elite_monthly") },
+                            onClick = vm::buy,
+                            enabled = false,
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = ScGold)
                         ) {
@@ -142,7 +139,8 @@ fun UpgradeScreen(
                     }
                     Spacer(Modifier.height(8.dp))
                     OutlinedButton(
-                        onClick = { vm.buy(activity, "securechat_elite_activation_code") },
+                        onClick = vm::buy,
+                        enabled = false,
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF635BFF))
                     ) {
@@ -150,14 +148,11 @@ fun UpgradeScreen(
                         Spacer(Modifier.width(8.dp))
                         Text("Buy Elite Activation Code")
                     }
-                    TextButton(onClick = vm::restorePurchases, enabled = !state.isConnecting) {
-                        Text("Restore Google Play purchases")
+                    TextButton(onClick = vm::restorePurchases, enabled = false) {
+                        Text("Google Play activation not available")
                     }
-                    TextButton(onClick = { openUrl("https://securechat.stealthx.tech/#lifetime") }) {
-                        Text("Website checkout")
-                    }
-                    if (state.isConnecting) {
-                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                    TextButton(onClick = { openUrl("https://vlabs.gr/en/shop?focus=security") }) {
+                        Text("Check VLABS availability")
                     }
                     Text(
                         state.status,

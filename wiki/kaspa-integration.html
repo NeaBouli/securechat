@@ -90,7 +90,7 @@
   <h1>Kaspa Identity Layer</h1>
   <p class="meta">Classification: Technical · Status: Roadmap after core APK release · Last updated: June 2026</p>
 
-  <p>SecureChat uses the Kaspa BlockDAG as a decentralized identity layer. Instead of phone numbers or email addresses, your cryptographic public key is anchored on-chain — giving you a permanent, self-sovereign identity that no company can revoke.</p>
+  <p>This page describes a roadmap design for using the Kaspa BlockDAG as a decentralized identity layer. The current SecureChat release does not anchor keys, discover contacts or register relays on Kaspa.</p>
 
   <h2>Why Kaspa</h2>
   <div class="layer">
@@ -111,7 +111,7 @@
   <div class="layer">
     <div class="layer-num">On-Chain Identity</div>
     <h3>X25519 Public Key in OP_RETURN</h3>
-    <p>When a user creates a SecureChat identity, their X25519 public key is embedded in a Kaspa transaction's OP_RETURN field. This creates a permanent, timestamped, tamper-proof record of the public key bound to a Kaspa address.</p>
+    <p>The proposed design would embed an X25519 public key in a Kaspa transaction's OP_RETURN field. This is not performed by the current app.</p>
     <ul>
       <li><strong>One-time anchor:</strong> Public key is written to the chain once during setup</li>
       <li><strong>OP_RETURN payload:</strong> X25519 public key (32 bytes) + Ed25519 signature</li>
@@ -125,7 +125,7 @@
   <div class="layer">
     <div class="layer-num">Discovery Protocol</div>
     <h3>Find Contacts by Kaspa Address</h3>
-    <p>To add a contact, you only need their Kaspa address. SecureChat queries the BlockDAG for the associated public key anchor transaction, verifies the Ed25519 signature, and establishes an encrypted channel — no server-side directory required.</p>
+    <p>In the proposed design, a future client would query the BlockDAG for a public-key anchor and verify its Ed25519 signature. Current contact exchange uses signed QR/text bundles instead.</p>
     <ul>
       <li><strong>Lookup:</strong> Query Kaspa BlockDAG for OP_RETURN transactions from the target address</li>
       <li><strong>Verification:</strong> Ed25519 signature proves the key was published by the address owner</li>
@@ -139,7 +139,7 @@
   <div class="layer">
     <div class="layer-num">On-Chain Registry</div>
     <h3>Decentralized Relay Discovery</h3>
-    <p>Relay node operators register their endpoints on-chain using Kaspa transactions. Clients discover available relays by scanning the BlockDAG — no hardcoded server list, no central relay directory.</p>
+    <p>The roadmap proposes on-chain relay registration and discovery. Current online messages use the configured central signaling service.</p>
     <ul>
       <li><strong>Registration:</strong> Relay operators publish endpoint + public key via OP_RETURN</li>
       <li><strong>Permissionless:</strong> Anyone can register a relay node — no approval needed</li>
@@ -153,7 +153,7 @@
   <div class="layer">
     <div class="layer-num">Incentive Layer</div>
     <h3>Sustainable Relay Network</h3>
-    <p>Relay operators earn KAS micropayments for forwarding encrypted message blobs. This creates a sustainable, market-driven network where relay capacity scales with demand — no donations, no corporate sponsorship required.</p>
+    <p>KAS micropayments are a research proposal for future relay incentives. No such payment or relay-market flow exists in the current client.</p>
     <ul>
       <li><strong>Per-message payments:</strong> Tiny KAS amounts per forwarded message (fractions of a cent)</li>
       <li><strong>Direct payment:</strong> Sender pays relay directly via Kaspa transaction</li>

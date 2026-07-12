@@ -18,15 +18,12 @@ class OnionRelayTransport : RelayTransport {
     override suspend fun send(
         recipientSxId: String,
         message: RatchetMessage
-    ): TransportResult {
-        TODO("Phase 3 — Q4 2026: 3-hop onion routing + cover traffic")
-    }
+    ): TransportResult = TransportResult.Failed(
+        messageId = "onion-unavailable",
+        reason = "Onion relay transport is not available in this release"
+    )
 
-    override suspend fun connect(): Boolean {
-        TODO("Phase 3 — Q4 2026")
-    }
+    override suspend fun connect(): Boolean = false
 
-    override suspend fun disconnect() {
-        TODO("Phase 3 — Q4 2026")
-    }
+    override suspend fun disconnect() = Unit
 }

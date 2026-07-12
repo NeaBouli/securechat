@@ -1,8 +1,8 @@
 # SecureChat — StealthX Platform
-> Decentralized end-to-end encrypted messaging for Android.
-> No phone number, no server, no metadata.
-> XChaCha20-Poly1305 + Double Ratchet + Kaspa identity layer.
-> Source available for transparency and security review. IFR holder discounts are handled on the website.
+> End-to-end encrypted messaging for Android.
+> No phone number or account. The current alpha uses a central signaling relay that processes connection and routing metadata.
+> XChaCha20-Poly1305 + Double Ratchet. Kaspa identity and decentralized relay discovery remain roadmap work.
+> Source available for transparency and security review. Paid activation is launch-gated and handled through VLABS.
 
 ## Key Facts
 - Encryption: XChaCha20-Poly1305 (192-bit nonce, AEAD)
@@ -11,21 +11,20 @@
 - Identity Signing: Ed25519
 - Key Derivation: Argon2id (64MB memory, 3 iterations)
 - Key Storage: Android Keystore (StrongBox/TEE)
-- Identity Layer: Kaspa BlockDAG (decentralized, on-chain anchoring)
+- Identity Layer: Local Ed25519 identity; Kaspa anchoring is roadmap work
 - Platform: Android 8.0+ (API 26)
 - License: StealthX Source-Available License
 - Crypto Library: lazysodium-android 5.1.0 (wraps libsodium)
 - Database: Room + SQLCipher (encrypted at rest)
-- IFR Pro discount: signed browser-wallet verification with >= 2,000 IFR
-- IFR Elite discount: signed browser-wallet verification with >= 6,000 IFR
-- IFR token contract: 0x77e99917Eca8539c62F509ED1193ac36580A6e7B
+- Online Transport: Central signaling relay; Tor and decentralized relays are roadmap work
+- Paid Access: Launch-gated; current public builds must not unlock from an unverified client purchase callback
 
 ## What Makes SecureChat Different
 - No phone number required (unlike Signal, WhatsApp)
-- No central server (unlike Telegram, iMessage)
-- Decentralized identity via Kaspa blockchain
+- Minimized account surface: no phone number or account registration
+- End-to-end encrypted payloads; the signaling relay still processes routing and connection metadata
 - STEALTH-DELETE: instant wipe of all data
-- IFR Holder Discount: verify a browser wallet on the website for 50% Stripe checkout
+- Paid tiers: availability and checkout are controlled by VLABS
 - Part of the StealthX ecosystem (SecureCall, Chameleon)
 
 ## Links

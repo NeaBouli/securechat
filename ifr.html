@@ -24,18 +24,18 @@ input::placeholder{color:#64748b;font-weight:500}
 <body>
 <main class="card">
 <h1>SecureChat IFR Discount</h1>
-<p class="muted">Connect a wallet, sign the discount request, then Stripe opens with the eligible 50% discount.</p>
-<button id="connect" class="btn" type="button">Connect Wallet</button>
-<button id="disconnect" class="btn line" type="button">Disconnect Wallet</button>
+<p class="muted">Browser wallet verification and discounted checkout are planned but currently disabled pending VLABS payment, accounting and launch approval.</p>
+<button id="connect" class="btn" type="button" disabled>Wallet verification planned</button>
+<button id="disconnect" class="btn line" type="button" disabled>Unavailable</button>
 <div class="wallets">
-  <button id="metamask" class="btn line" type="button">Open in MetaMask</button>
-  <button id="phantom" class="btn line" type="button">Open in Phantom</button>
+  <button id="metamask" class="btn line" type="button" disabled>MetaMask unavailable</button>
+  <button id="phantom" class="btn line" type="button" disabled>Phantom unavailable</button>
 </div>
 <input id="wallet" readonly placeholder="Connected wallet address">
-<button class="btn" type="button" data-tier="securechat_pro_lifetime">Pro 50% Checkout</button>
-<button class="btn" type="button" data-tier="securechat_elite_lifetime">Elite 50% Checkout</button>
-<button class="btn line" type="button" data-tier="stealthx_suite_lifetime">Suite 50% Checkout</button>
-<p id="status">Connect MetaMask, Phantom, or any WalletConnect-compatible Ethereum wallet.</p>
+<button class="btn" type="button" disabled>Pro discount planned</button>
+<button class="btn" type="button" disabled>Elite discount planned</button>
+<button class="btn line" type="button" disabled>Suite discount planned</button>
+<p id="status">Current price and availability are controlled by VLABS.</p>
 </main>
 <script>
 (function(){
@@ -141,25 +141,8 @@ async function disconnect(){
   status('Wallet disconnected. Connect a wallet to verify IFR discount eligibility.');
 }
 async function checkout(tier,btn){
-  var label=btn.textContent;btn.disabled=true;btn.textContent='Connecting wallet...';
-  try{
-    var walletAddress=await connect();
-    status('Preparing wallet proof for '+short(walletAddress)+'...');
-    btn.textContent='Preparing signature...';
-    var cr=await fetch(API+'/stripe/ifr-discount-challenge',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tier:tier,walletAddress:walletAddress})});
-    var c=await cr.json().catch(function(){return{}});
-    if(!cr.ok||!c.message||!c.nonce)throw new Error(c.error||'Wallet challenge unavailable');
-    status('Sign the wallet message to prove ownership.');
-    btn.textContent='Signing wallet...';
-    var walletSignature=await signMessage(c.message,walletAddress);
-    btn.textContent='Checking IFR...';
-    status('Checking IFR balance on Ethereum Mainnet...');
-    var r=await fetch(API+'/stripe/create-dynamic-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tier:tier,ifrDiscount:true,walletAddress:walletAddress,walletNonce:c.nonce,walletSignature:walletSignature})});
-    var d=await r.json().catch(function(){return{}});
-    if(!r.ok||!d.url)throw new Error(checkoutError(d));
-    status('IFR eligible: '+(d.ifrTier||'verified')+balanceText(d.ifrBalanceAmount)+' Opening Stripe with 50% discount...');
-    setTimeout(function(){location.href=d.url},900);
-  }catch(e){status(e&&e.message?e.message:'Wallet connection failed.');btn.disabled=false;btn.textContent=label}
+  btn.disabled=true;
+  status('Paid activation and IFR discounts are launch-gated. Check VLABS for availability.');
 }
 document.getElementById('connect').onclick=function(){connect().catch(function(e){status(e&&e.message?e.message:'Wallet connection failed.')})};
 document.getElementById('disconnect').onclick=function(){disconnect()};

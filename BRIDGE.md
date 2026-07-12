@@ -5,6 +5,19 @@
 - This repository is public. Operational payment/Etimologio information is stored only in private `NeaBouli/vlabs` at `docs/finance-integrations/projects/securechat.md`.
 - Never publish tax/personal identifiers, secrets, provider/account IDs, customer/invoice data, MARK/UID values or runtime values here.
 - Public Bridge entries are limited to the private reference, ownership, generic status and production-disabled state.
+
+## 2026-07-12 [Codex]
+### TYPE: SOFTWARE READINESS / PAYMENT SAFETY
+### STATUS: IMPLEMENTED — LOCALLY VERIFIED / PR NEXT
+
+- Full client audit now covers Android behavior, clean-build reproducibility, transport semantics, public claims, privacy copy, website checkout controls and paid-tier activation.
+- The active central WebSocket transport is now identified as `SIGNALING_RELAY`; planned Tor/Onion transports fail closed instead of throwing placeholder exceptions.
+- Outbound contact-exchange buffering is bounded and preserves ratchet-frame order across a failed drain.
+- Google Play callbacks can no longer unlock a local paid tier. Play purchase/restore controls and legacy website checkout controls remain disabled until server verification and refund/dispute revocation are available end to end.
+- Public descriptions now disclose the central relay and its minimized routing/connection metadata. Kaspa identity, Tor and decentralized relays are explicitly roadmap work.
+- Final verification after removing the Play Billing dependency: `testAll`, `verifyNoClientSideGooglePlayUnlock`, `detekt`, `app:lintDebug`, `app:assembleDebug` PASS; 972 Gradle tasks, 212 test executions, zero test failures/errors.
+- External gates: runtime entitlement public key, cross-repository signed activation E2E, server-side Play verification/RTDN if Play is enabled, physical two-device messaging/background/reconnect tests, resolution of the source-available versus GPL-header license conflict, accountant/provider decision and launch approval.
+- No payment, entitlement issuance, provider call, deployment or production change was performed.
 # CC ↔ Codex ↔ Gio Kommunikationskanal
 
 ---

@@ -23,7 +23,7 @@ class MessageRouter @Inject constructor(
 
     /**
      * Sends a message through the best available transport.
-     * Selection order: ONION_RELAY > TOR_RELAY > LOCAL
+     * Selection order: ONION_RELAY > TOR_RELAY > SIGNALING_RELAY > LOCAL
      * (higher anonymity preferred when available)
      */
     suspend fun send(
@@ -45,6 +45,7 @@ class MessageRouter @Inject constructor(
     ): TransportResult {
         val transport = transports[TransportType.ONION_RELAY]?.takeIf { it.isAvailable }
             ?: transports[TransportType.TOR_RELAY]?.takeIf { it.isAvailable }
+            ?: transports[TransportType.SIGNALING_RELAY]?.takeIf { it.isAvailable }
             ?: return TransportResult.Failed("no-relay", "No relay transport available")
         return transport.send(recipientSxId, message)
     }
@@ -52,9 +53,10 @@ class MessageRouter @Inject constructor(
     fun getActiveTransportType(): TransportType? = selectTransport()?.type
 
     private fun selectTransport(): RelayTransport? {
-        // Preference: Onion > Tor > Local (most → least anonymous)
+        // Prefer privacy-preserving relays before the central signaling relay and local fallback.
         return transports[TransportType.ONION_RELAY]?.takeIf { it.isAvailable }
             ?: transports[TransportType.TOR_RELAY]?.takeIf { it.isAvailable }
+            ?: transports[TransportType.SIGNALING_RELAY]?.takeIf { it.isAvailable }
             ?: transports[TransportType.LOCAL]?.takeIf { it.isAvailable }
     }
 }

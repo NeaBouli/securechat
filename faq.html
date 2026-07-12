@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is SecureChat?","acceptedAnswer":{"@type":"Answer","text":"SecureChat is a decentralized, end-to-end encrypted messaging app. No phone number, no server, no metadata. Built on Kaspa identity with XChaCha20-Poly1305 encryption."}},{"@type":"Question","name":"Can you read my messages?","acceptedAnswer":{"@type":"Answer","text":"No. Messages are encrypted on your device before they leave. We never have the keys. It is technically impossible for us to read your messages."}},{"@type":"Question","name":"Can I use the GitHub source for free?","acceptedAnswer":{"@type":"Answer","text":"No. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is SecureChat?","acceptedAnswer":{"@type":"Answer","text":"SecureChat is an end-to-end encrypted Android messaging app. It uses a central signaling relay for current network delivery and does not require a phone number or email account."}},{"@type":"Question","name":"Can you read my messages?","acceptedAnswer":{"@type":"Answer","text":"Message content is encrypted on the device and the delivery service does not receive the decryption keys. The service still processes connection and routing metadata."}},{"@type":"Question","name":"Can I use the GitHub source for free?","acceptedAnswer":{"@type":"Answer","text":"No. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}}]}</script>
 <style>
   :root {
     --bg:        #0a0a0f;
@@ -327,7 +327,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          No. This is not a promise &mdash; it is a technical fact. Messages are encrypted end-to-end. The encryption keys are created on your device and never leave it. We do not have them. We cannot hand them over to anyone, even if asked by a court. It is physically impossible for us to read your messages.
+          The service is designed not to receive message decryption keys. Message content is encrypted on the device and the relay handles an opaque payload. This limits server access to content, but it is not an absolute security guarantee; client, dependency and device vulnerabilities remain part of the threat model.
         </div>
       </div>
     </div>
@@ -349,7 +349,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          SecureChat is available as an Android APK release. The current build is v0.1.4-alpha with core encrypted messaging, QR contact exchange and StealthX activation tiers. Broader store distribution and relay-network expansion remain on the roadmap. You can download the APK from <a href="https://github.com/NeaBouli/securechat/releases/tag/v0.1.4-alpha-securechat">GitHub Releases</a>.
+          SecureChat is available as an Android alpha APK for testing. The current build is v0.1.5-alpha with core encrypted messaging, QR contact exchange and StealthX activation tiers. Paid availability remains launch-gated, and broader store distribution plus privacy-relay expansion remain on the roadmap. You can download the APK from <a href="https://github.com/NeaBouli/securechat/releases/tag/v0.1.5-alpha-securechat">GitHub Releases</a>.
         </div>
       </div>
     </div>
@@ -377,7 +377,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          Nothing. There is no server that stores your messages. Messages travel through decentralized relay nodes on the Kaspa network. Relay operators see only encrypted blobs &mdash; meaningless data. Once a message is delivered, it is deleted from the relay. We do not collect analytics, contacts, IP addresses, or any personal information. Ever.
+          Message content is encrypted end-to-end and is not stored by the current online-delivery handler. The central signaling service nevertheless processes network address, connection timing, sender and recipient <code>sx_</code> identifiers, delivery state and activation requests. Operational logs may include routing identifiers and timestamps. See the <a href="/privacy.html">privacy policy</a> for the current data flow.
         </div>
       </div>
     </div>
@@ -388,7 +388,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          Yes. SecureChat is built by Vendetta Labs, based in Greece (EU). We comply fully with the EU General Data Protection Regulation. Since we collect virtually no personal data, most GDPR rights are satisfied by default. There is nothing to delete because we never stored anything in the first place.
+          SecureChat is built by Vendetta Labs in Greece. The privacy policy describes the current data flow and contact channel. Regulatory compliance and data-subject requests are handled according to the data actually processed; encrypted content and signaling metadata are not the same thing.
         </div>
       </div>
     </div>
@@ -416,7 +416,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          Four layers working together. <strong>XChaCha20-Poly1305</strong> encrypts every message (256-bit, with a 192-bit nonce &mdash; virtually impossible to break). <strong>X25519</strong> handles the key exchange between you and your contact. The <strong>Double Ratchet</strong> protocol gives you forward secrecy &mdash; even if one key leaks, past messages stay safe. And <strong>Argon2id</strong> protects your local data with memory-hard key derivation. This is the same crypto stack used by SecureCall.
+          Four layers work together. <strong>XChaCha20-Poly1305</strong> provides authenticated message encryption, <strong>X25519</strong> handles key agreement, the <strong>Double Ratchet</strong> advances message keys, and <strong>Argon2id</strong> provides memory-hard password derivation. Correct implementation, device integrity and key handling still matter; algorithm names alone are not a security guarantee.
         </div>
       </div>
     </div>
@@ -427,7 +427,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          Think of it like passing a sealed letter through strangers. Your message travels through 2 or 3 relay nodes before reaching its destination. Each node only knows who gave it the message and who to pass it to &mdash; never both the sender and the receiver. Pro users get 2-hop routing. Elite users get 3-hop routing. Nobody can trace the full path from you to your contact.
+          Onion routing is a planned transport in which a message would pass through multiple relays. It is not implemented in the current release. Current network messages use the central StealthX signaling relay and must not be treated as Tor or multi-hop onion traffic.
         </div>
       </div>
     </div>
@@ -466,7 +466,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          IFR is an Ethereum ERC-20 token. The Android app no longer connects wallets. IFR holders verify a browser wallet on the website and receive a 50% Stripe checkout discount. Hold &ge;2,000 IFR for Pro discount and &ge;6,000 IFR for Elite or Suite discount. Details: <a href="/#ifr">IFR Token</a>
+          IFR is an Ethereum ERC-20 token. The Android app does not connect wallets. A possible browser-based holder discount is planned but currently disabled pending VLABS payment, accounting and launch approval. Details: <a href="/#ifr">IFR Token</a>
         </div>
       </div>
     </div>
@@ -477,7 +477,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          <strong>&euro;54 one-time</strong> or verify an eligible IFR wallet for 50% off &mdash; and you get everything. SecureCall Premium, SecureChat Elite, and Chameleon Elite. All products. All features. All tiers. Forever. No subscriptions, no renewals, no hidden costs. One payment, lifetime access to the entire StealthX Platform.
+          The StealthX Suite is a planned bundle of SecureCall, SecureChat and Chameleon access. Current price, included versions, support scope and availability are controlled by VLABS. It is not sell-ready until every component and bundle gate passes.
         </div>
       </div>
     </div>

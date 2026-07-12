@@ -1,12 +1,12 @@
 # SecureChat
 
-**End-to-end encrypted messaging for Android. Zero metadata.**
+**End-to-end encrypted messaging for Android with minimized service metadata.**
 
 Part of the [StealthX Platform](https://stealthx.tech).
 
 ## Status
 
-**v0.1.0-alpha — Internal Alpha — not for public use**
+**v0.1.5-alpha — Public test release; paid access remains launch-gated**
 
 BUILD SUCCESSFUL — Debug 42 MB / Release 21 MB (minified + shrunk)
 
@@ -18,7 +18,7 @@ BUILD SUCCESSFUL — Debug 42 MB / Release 21 MB (minified + shrunk)
 - QR code + NFC contact exchange (zxing-embedded)
 - Safety numbers for manual verification (6x4 digit groups)
 - **Emergency Broadcast** (Elite tier, Phase 2)
-- No phone number, no account, no metadata
+- No phone number or email account; the signaling service processes routing metadata
 - Source-available: publicly auditable, use requires permission
 
 ## Crypto Stack
@@ -50,7 +50,7 @@ shared/               Pure JVM data models (PublicKeyBundle, StealthXContactId)
 data/                 Room + SQLCipher, StealthXIdentity, Entities
 domain/               EncryptionEngine, TierGate, KeyExchangeManager, MessageRouter
 presentation/         Jetpack Compose UI, Navigation, Theme
-transport/            RelayTransport interface + Local/Tor/Onion implementations
+transport/            Local + central signaling relay; Tor/Onion are roadmap transports
 features/messenger/   Chat UI
 features/contacts/    QR + NFC contact exchange
 features/settings/    Settings
@@ -77,8 +77,8 @@ The public SecureChat app does not run WalletConnect or wallet verification insi
 |---|---:|---:|---|
 | Free | 0 IFR | EUR 0 | Core messaging, 10 contacts |
 | Pro | >= 2,000 IFR | 50% off Pro checkout | Unlimited contacts, groups, Kaspa identity |
-| Elite | >= 6,000 IFR | 50% off Elite checkout | 3-hop onion, decoy profile, Emergency Broadcast |
-| Suite | >= 6,000 IFR | 50% off Suite checkout | All StealthX products, lifetime |
+| Elite | Planned | Browser discount is launch-gated | Emergency Broadcast; onion/decoy features remain roadmap |
+| Suite | Planned | Browser discount is launch-gated | Bundle availability is controlled by VLABS |
 See [PRICING.md](docs/PRICING.md).
 
 ## Documentation

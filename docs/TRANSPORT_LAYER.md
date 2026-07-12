@@ -31,11 +31,13 @@ backward compatibility.
 Preference order (highest anonymity first):
 1. ONION_RELAY (Phase 3) — if available
 2. TOR_RELAY (Phase 2) — if available
-3. LOCAL (Phase 1) — fallback always available
+3. SIGNALING_RELAY — authenticated central WebSocket relay, available now and not Tor
+4. LOCAL (Phase 1) — fallback always available
 
 ## User Experience
 - Phase 1 users see: "Share via QR" workflow
-- Phase 2 users see: automatic background delivery via Tor
+- Current network users see: automatic background delivery via the central signaling relay
+- Phase 2 users will see: automatic background delivery via Tor after the transport is implemented
 - Phase 3 users see: identical to Phase 2, higher anonymity guarantee
 
 ## Backward Compatibility

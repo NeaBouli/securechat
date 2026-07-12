@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SecureChat — Encrypted Messaging, Zero Metadata</title>
-<meta name="description" content="SecureChat: decentralized E2E encrypted messaging for Android. No phone number, no server, no metadata. XChaCha20 + Double Ratchet. Source-available.">
+<title>SecureChat — Encrypted Messaging for Android</title>
+<meta name="description" content="SecureChat is an alpha end-to-end encrypted Android messenger using a central signaling relay with minimized service metadata.">
 <meta name="keywords" content="encrypted messaging, secure chat, XChaCha20, end-to-end encryption, privacy, decentralized, Kaspa, IFR Token, Android, source-available, Double Ratchet">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="author" content="NeaBouli / StealthX Platform">
@@ -21,12 +21,12 @@
 <link rel="preconnect" href="https://stealthx.tech">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SecureChat">
-<meta property="og:title" content="SecureChat — Encrypted Messaging, Zero Metadata">
+<meta property="og:title" content="SecureChat — Encrypted Messaging for Android">
 <meta property="og:description" content="E2E encrypted messaging with StealthX ID, QR contact exchange, relay delivery, XChaCha20, and Double Ratchet.">
 <meta property="og:url" content="https://securechat.stealthx.tech/">
 <meta property="og:image" content="https://securechat.stealthx.tech/logo.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SecureChat — Encrypted Messaging, Zero Metadata">
+<meta name="twitter:title" content="SecureChat — Encrypted Messaging for Android">
 <meta name="twitter:description" content="E2E encrypted messaging with StealthX ID, QR contact exchange, XChaCha20, and Double Ratchet.">
 <meta name="twitter:image" content="https://securechat.stealthx.tech/logo.png">
 <link rel="alternate" hreflang="en" href="https://securechat.stealthx.tech/">
@@ -483,17 +483,17 @@
     <div>
       <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);border-radius:20px;font-size:12px;font-weight:600;color:var(--green);margin-bottom:1.5rem;">
         <span style="width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;"></span>
-        ENCRYPTED MESSAGING · ZERO METADATA
+        ENCRYPTED MESSAGE CONTENT · MINIMIZED SERVICE DATA
       </div>
       <h1 style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.05;letter-spacing:-1px;margin-bottom:1.2rem;">Classified<br>Messaging<span style="color:var(--green);">.</span></h1>
-      <p style="font-size:1.1rem;color:var(--text-dim);max-width:480px;line-height:1.7;margin-bottom:2rem;">Decentralized end-to-end encrypted messaging. No phone number. No server. No metadata. Built for people who refuse to be watched.</p>
+      <p style="font-size:1.1rem;color:var(--text-dim);max-width:480px;line-height:1.7;margin-bottom:2rem;">End-to-end encrypted Android messaging without phone-number or email registration. Current online delivery uses the central StealthX signaling relay and processes limited routing metadata.</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;">
         <a href="#download" class="btn btn-primary">Download APK</a>
         <a href="https://github.com/NeaBouli/securechat" class="btn btn-secondary" target="_blank" rel="noopener">View Source</a>
       </div>
       <div style="display:flex;gap:3rem;flex-wrap:wrap;">
         <div><span style="font-size:1.2rem;font-weight:800;color:var(--green);display:block;">XChaCha20</span><span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Encryption</span></div>
-        <div><span style="font-size:1.2rem;font-weight:800;color:var(--green);display:block;">0</span><span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Metadata Stored</span></div>
+        <div><span style="font-size:1.2rem;font-weight:800;color:var(--green);display:block;">E2E</span><span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Message Content</span></div>
         <div><span style="font-size:1.2rem;font-weight:800;color:var(--green);display:block;">Kaspa</span><span style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Identity Layer</span></div>
       </div>
     </div>
@@ -765,30 +765,24 @@
 <section id="compare">
   <div class="section-label">Benchmark</div>
   <h2 class="section-title">Why SecureChat?</h2>
-  <p class="section-sub">The only encrypted messenger with decentralized identity, no server, and blockchain-native architecture.</p>
+  <p class="section-sub">An alpha Android messenger with end-to-end encrypted content, local cryptographic identity and a central online-delivery relay.</p>
 
   <table class="compare-table">
     <thead>
       <tr>
         <th>Feature</th>
-        <th class="ours">SecureChat</th>
-        <th>Signal</th>
-        <th>SimpleX</th>
-        <th>Telegram</th>
+        <th class="ours">Current status</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td>No phone number required</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✓</td><td class="no">✗</td></tr>
-      <tr><td>No phone number required</td><td class="ours">✓</td><td class="no">✗</td><td class="ours">✓</td><td class="no">✗</td></tr>
-      <tr><td>Decentralized identity</td><td class="warn">Roadmap</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Double Ratchet E2E</td><td class="ours">✓</td><td class="ours">✓</td><td class="ours">✓</td><td class="warn">⚠️ opt-in</td></tr>
-      <tr><td>XChaCha20-Poly1305</td><td class="ours">✓</td><td class="no">✗ AES</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>STEALTH-DELETE</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Blockchain identity anchor</td><td class="warn">Roadmap</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>IFR holder checkout discount</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Chameleon overlay compatible</td><td class="ours">✓</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td></tr>
-      <tr><td>Source-Available</td><td class="ours">✓</td><td class="ours">✓</td><td class="ours">✓</td><td class="no">✗</td></tr>
-      <tr><td>Reduced metadata</td><td class="ours">✓</td><td class="warn">⚠️</td><td class="ours">✓</td><td class="no">✗</td></tr>
+      <tr><td>No phone number or email registration</td><td class="ours">Available</td></tr>
+      <tr><td>Double Ratchet + XChaCha20-Poly1305 message protection</td><td class="ours">Available</td></tr>
+      <tr><td>QR contact exchange and safety numbers</td><td class="ours">Available</td></tr>
+      <tr><td>Central online signaling relay</td><td class="ours">Available</td></tr>
+      <tr><td>Emergency Broadcast</td><td class="ours">Elite alpha</td></tr>
+      <tr><td>Tor, multi-hop onion, group/file, Kaspa anchor and Chameleon overlay</td><td class="warn">Roadmap</td></tr>
+      <tr><td>IFR discount and paid activation</td><td class="warn">Launch-gated</td></tr>
+      <tr><td>Source visibility</td><td class="ours">Source-available license</td></tr>
     </tbody>
   </table>
 </section>
@@ -844,9 +838,9 @@
 
 <!-- IFR -->
 <section id="ifr">
-  <div class="section-label">Inferno Integration</div>
-  <h2 class="section-title">IFR Holder Discount.</h2>
-  <p class="section-sub">Buy IFR on Uniswap, verify your wallet in the browser, then open Stripe with a 50% discount. No WalletConnect runs inside the Android app.</p>
+  <div class="section-label">Planned Integration</div>
+  <h2 class="section-title">IFR holder discount is launch-gated.</h2>
+  <p class="section-sub">No wallet code runs inside the Android app. Browser verification and discounted checkout remain disabled until the VLABS payment, accounting and launch gates are approved.</p>
 
   <div class="tier-grid">
     <div class="tier-card">
@@ -882,8 +876,8 @@
         <li>Roadmap: onion routing</li>
         <li>Roadmap: decoy chat profiles</li>
         <li>Roadmap: advanced threat detection</li>
-        <li>Zero telemetry</li>
-        <li>Run your own relay node</li>
+        <li>No message-content telemetry</li>
+        <li>Roadmap: self-hosted relay options</li>
         <li>Early access to features</li>
       </ul>
     </div>
@@ -898,8 +892,8 @@
           <li>SecureCall Premium (lifetime)</li>
           <li>SecureChat Elite (lifetime)</li>
           <li>Chameleon Elite (lifetime)</li>
-          <li>All future StealthX products</li>
-          <li>Everything. One browser verification.</li>
+          <li>Bundle scope controlled by VLABS</li>
+          <li>One launch-gated availability page</li>
         </ul>
         <div>
           <a href="https://app.uniswap.org/explore/tokens/ethereum/0x77e99917Eca8539c62F509ED1193ac36580A6e7B" class="btn btn-secondary" style="width:100%;text-align:center;color:var(--gold);border-color:var(--gold);" target="_blank" rel="noopener">Buy $IFR</a>
@@ -925,16 +919,16 @@
         <h3>Verify for Stripe discount</h3>
         <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">IFR token contract: <code style="color:var(--cyan);font-size:12px;">0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code> (Ethereum Mainnet)</p>
         <div class="ifr-wallet-actions">
-          <button id="connectIfrWallet" class="btn btn-primary" type="button">Connect Wallet</button>
-          <button id="disconnectIfrWallet" class="btn btn-secondary" type="button">Disconnect Wallet</button>
+          <button id="connectIfrWallet" class="btn btn-disabled" type="button" disabled>Wallet verification planned</button>
+          <button id="disconnectIfrWallet" class="btn btn-disabled" type="button" disabled>Unavailable</button>
         </div>
         <input id="ifrWalletAddress" type="text" readonly placeholder="Connected wallet address" style="width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,.28);background:#f8fafc;color:#07111f;margin-bottom:10px;font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;">
         <div class="ifr-actions">
-          <button class="btn btn-primary" type="button" data-checkout-tier="securechat_pro_lifetime" data-ifr-discount="true">Pro 50% Checkout</button>
-          <button class="btn btn-primary" type="button" data-checkout-tier="securechat_elite_lifetime" data-ifr-discount="true" style="background:var(--gold);border-color:var(--gold);color:#000;">Elite 50% Checkout</button>
-          <button class="btn btn-secondary" type="button" data-checkout-tier="stealthx_suite_lifetime" data-ifr-discount="true" style="color:var(--gold);border-color:var(--gold);">Suite 50% Checkout</button>
+          <button class="btn btn-disabled" type="button" disabled>Pro discount planned</button>
+          <button class="btn btn-disabled" type="button" disabled>Elite discount planned</button>
+          <button class="btn btn-disabled" type="button" disabled>Suite discount planned</button>
         </div>
-        <p id="ifrDiscountStatus" style="font-size:13px;color:var(--text);font-weight:700;text-align:center;margin-top:10px;line-height:1.45;">Connect MetaMask, Phantom, or any WalletConnect-compatible Ethereum wallet. The backend applies the discount only after verifying wallet ownership and IFR balance.</p>
+        <p id="ifrDiscountStatus" style="font-size:13px;color:var(--text);font-weight:700;text-align:center;margin-top:10px;line-height:1.45;">This flow is not active. Current availability and price are controlled by VLABS.</p>
       </div>
     </div>
   </div>
@@ -946,7 +940,7 @@
 <section id="lifetime">
   <div class="section-label">Lifetime</div>
   <h2 class="section-title">Prefer a one-time payment?</h2>
-  <p class="section-sub">No IFR tokens needed. Pay once. Yours forever.</p>
+  <p class="section-sub">Perpetual use of the purchased supported version. Availability, support scope and current price are controlled by VLABS.</p>
 
   <div class="tier-grid">
     <div class="tier-card featured">
@@ -957,11 +951,11 @@
       <ul class="tier-features">
         <li>Everything in Pro</li>
         <li>No subscription &mdash; pay once</li>
-        <li>Lifetime updates included</li>
+        <li>Updates during the supported product lifecycle</li>
         <li>Early adopter pricing</li>
       </ul>
       <br>
-      <button type="button" data-checkout-tier="securechat_pro_lifetime" style="display:block;width:100%;text-align:center;padding:10px;border:1px solid var(--green);border-radius:8px;background:var(--green);color:#000;font-weight:700;font-size:14px;cursor:pointer;">Buy Pro Lifetime</button>
+      <a href="https://vlabs.gr/en/shop?focus=security" style="display:block;width:100%;text-align:center;padding:10px;border:1px solid var(--green);border-radius:8px;background:var(--green);color:#000;font-weight:700;font-size:14px;">Check VLABS availability</a>
     </div>
     <div class="tier-card featured">
       <div style="font-size:11px;font-weight:700;letter-spacing:1px;background:var(--gold);color:#000;display:inline-block;padding:3px 10px;border-radius:4px;margin-bottom:0.8rem;">LIMITED — 100 Licenses at &euro;19</div>
@@ -971,23 +965,23 @@
       <ul class="tier-features">
         <li>Everything in Elite</li>
         <li>No subscription &mdash; pay once</li>
-        <li>Lifetime updates included</li>
+        <li>Updates during the supported product lifecycle</li>
         <li>Early adopter pricing</li>
       </ul>
       <br>
-      <button type="button" data-checkout-tier="securechat_elite_lifetime" style="display:block;width:100%;text-align:center;padding:10px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;font-size:14px;cursor:pointer;">Buy Elite Lifetime</button>
+      <a href="https://vlabs.gr/en/shop?focus=security" style="display:block;width:100%;text-align:center;padding:10px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;font-size:14px;">Check VLABS availability</a>
     </div>
   </div>
 
   <!-- Suite Banner -->
   <div style="margin-top:2rem;background:rgba(255,184,0,0.05);border:1px solid rgba(255,184,0,0.2);border-radius:12px;padding:2rem;text-align:center;">
-    <h3 style="font-size:1.3rem;color:var(--gold);margin-bottom:0.5rem;">StealthX Suite &mdash; &euro;54 one-time</h3>
-    <p style="color:var(--text-dim);font-size:14px;margin-bottom:1rem;">SecureCall Premium + SecureChat Elite + Chameleon Elite. Everything. Forever.</p>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:1.5rem;">OR: Hold &ge; 8,000 IFR for the same access.</p>
-    <button type="button" data-checkout-tier="stealthx_suite_lifetime" style="display:inline-block;padding:10px 24px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;font-size:14px;cursor:pointer;">Buy Suite Lifetime</button>
+    <h3 style="font-size:1.3rem;color:var(--gold);margin-bottom:0.5rem;">StealthX Suite &mdash; planned bundle</h3>
+    <p style="color:var(--text-dim);font-size:14px;margin-bottom:1rem;">SecureCall, SecureChat and Chameleon component access. The bundle is not sell-ready until every component passes its release gates.</p>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:1.5rem;">Current scope, price and availability are controlled by VLABS.</p>
+    <a href="https://vlabs.gr/en/shop?focus=security" style="display:inline-block;padding:10px 24px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;font-size:14px;">Check VLABS availability</a>
   </div>
 
-  <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:1.5rem;">All lifetime prices limited to 100 licenses at launch price. Price rises with every sale. Holding IFR is always the most cost-effective option.</p>
+  <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:1.5rem;">No product is available for paid activation until the VLABS checkout card shows it as available.</p>
 </section>
 
 <hr class="divider">
@@ -1166,38 +1160,10 @@
     return {walletAddress:walletAddress,walletNonce:challenge.nonce,walletSignature:signature};
   }
   async function startCheckout(button){
-    if(!button||button.disabled)return;
-    var label=button.textContent;
+    if(!button)return;
     button.disabled=true;
-    button.textContent='Opening Stripe...';
-    try{
-      var payload={tier:button.dataset.checkoutTier};
-      if(button.dataset.ifrDiscount==='true'){
-        button.textContent='Signing wallet...';
-        setIfrStatus('Preparing wallet proof...');
-        payload.ifrDiscount=true;
-        Object.assign(payload,await signIfrDiscount(payload.tier));
-        button.textContent='Checking IFR...';
-        setIfrStatus('Checking IFR balance on Ethereum Mainnet...');
-      }
-      var r=await fetch(API+'/stripe/create-dynamic-checkout',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(payload)
-      });
-      var d=await r.json().catch(function(){return{}});
-      if(!r.ok||!d.url)throw new Error(checkoutError(d));
-      var status=document.getElementById('ifrDiscountStatus');
-      if(status&&d.ifrDiscountApplied)status.textContent='IFR eligible: '+(d.ifrTier||'verified')+balanceText(d.ifrBalanceAmount)+' Opening Stripe with 50% discount...';
-      setTimeout(function(){window.location.href=d.url},900);
-    }catch(e){
-      button.textContent='Try again';
-      button.disabled=false;
-      button.title=e.message;
-      var status=document.getElementById('ifrDiscountStatus');
-      if(status)status.textContent=e.message;
-      setTimeout(function(){ if(!button.disabled) button.textContent=label; },2500);
-    }
+    button.title='Paid activation is launch-gated. Check VLABS for availability.';
+    setIfrStatus('Paid activation is launch-gated. Check VLABS for availability.');
   }
   document.querySelectorAll('[data-checkout-tier]').forEach(function(button){
     button.addEventListener('click',function(){startCheckout(button);});
@@ -1236,8 +1202,8 @@
     { type:'recv', text:'Hey, are you on SecureChat?' },
     { type:'sent', text:'Yes! Everything is encrypted.' },
     { type:'encrypted', text:'\u16A0\u2593\u0416\u25CA\u03A8\u2021\u2592\u04D8\u2660\u03BE\u2591\u25A0\u2234\u0E17\u2593\u16B1' },
-    { type:'recv', text:'No one can read this. Not even the server.' },
-    { type:'sent', text:'Zero metadata. Zero trace.' },
+    { type:'recv', text:'The relay sees ciphertext, not message content.' },
+    { type:'sent', text:'Encrypted content. Minimal service data.' },
   ];
   let i = 0;
   function showNext() {

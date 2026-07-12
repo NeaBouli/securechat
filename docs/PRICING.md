@@ -13,14 +13,13 @@
 | StealthX Suite | All | €54 | €99 | >= 8.000 IFR |
 
 ## Rules
-- Price rises with every sold license
-- Maximum 100 licenses per tier at launch price
-- Holding IFR is always the most cost-effective option
-- Lifetime = no subscription, no renewal, forever
-- Suite includes all products at all tiers
+- VLABS is the canonical source for current price and availability.
+- A lifetime license is a perpetual right to use the purchased supported version; it is not a promise of unlimited future products, hosting or updates.
+- IFR discounts and dynamic pricing are planned and remain disabled until separately approved.
+- Product, bundle, refund and support scope follows the VLABS software terms shown before checkout.
 
 ## Status
-- SecureCall: AVAILABLE on Google Play
-- SecureChat: Internal Alpha; Stripe lifetime checkout wired on product site
-- Chameleon: Internal Alpha; Stripe lifetime checkout wired on product site
-- Suite: Stripe lifetime checkout wired on SecureChat and Chameleon sites
+- SecureCall: separate Google Play and VLABS readiness gates apply.
+- SecureChat: public alpha test build; paid checkout remains launch-gated in VLABS.
+- Chameleon: separate product-readiness gates apply.
+- Suite: not sell-ready until all component and bundle gates pass.

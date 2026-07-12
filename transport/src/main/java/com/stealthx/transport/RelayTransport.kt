@@ -22,6 +22,7 @@ sealed class TransportResult {
 
 enum class TransportType {
     LOCAL,        // Phase 1: direct QR/NFC
+    SIGNALING_RELAY, // Authenticated central WebSocket relay; not Tor/onion routing
     TOR_RELAY,    // Phase 2: Tor Hidden Services
     ONION_RELAY,  // Phase 3: multi-hop onion routing
     NYM_MIXNET    // Research: Nym timing-resistant
