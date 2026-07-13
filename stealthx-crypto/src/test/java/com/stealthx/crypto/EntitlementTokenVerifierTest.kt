@@ -21,6 +21,21 @@ class EntitlementTokenVerifierTest {
     }
 
     @Test
+    fun `accepts canonical Node server SecureChat token`() {
+        val publicKey = "740mZDWfdYLeK5peW746i9QiLApdp6IoH2KcGrNDtMY"
+        val serverToken = "dj0xCmlzcz1zdGVhbHRoeAphdWQ9c2VjdXJlY2hhdApzdWI9c3hfdGVzdF9kZXZpY2VfMQp0aWVyPVBSTwpwcm9kdWN0PXNlY3VyZWNoYXRfcHJvX2xpZmV0aW1lCmlhdD0xNzIwMDAwMDAwCmV4cD0xNzIyNTkyMDAwCm9yZGVyPTEyZmM2NWFkYzYyYWFhNTQ2ZjA4NzY5ZWM0ODFiNWY5.lI80OZB4RJbS4oHPWWHLGTfCQ0ImiHrofV7ItN4cY21bwslKjy_g97FRPu3tHO1CWz_dlDNu9Z5GojGg7vPmDQ"
+        val result = EntitlementTokenVerifier.verify(
+            serverToken,
+            publicKey,
+            "securechat",
+            "sx_test_device_1",
+            1_720_000_010L
+        )
+        assertEquals(AccessTier.PRO, result.tier)
+        assertEquals("securechat_pro_lifetime", result.productId)
+    }
+
+    @Test
     fun `tampered expired and copied tokens fail closed`() {
         val valid = token(subject = "sx_device_1", tier = "ELITE")
         assertThrows(SecurityException::class.java) {
