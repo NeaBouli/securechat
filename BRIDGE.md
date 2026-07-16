@@ -2849,3 +2849,31 @@ Note:
   `BUILD SUCCESSFUL`.
 - Runtime Public Key, Server Private Key und Cross-Repo Test-E2E bleiben externe
   Gates. Keine Zahlung, Aktivierung oder Deployment.
+
+## 2026-07-16 21:38 EEST - CODEX TERMINAL SEO FOLLOW-UP AFTER RELEASE HARDENING
+
+Type: STATUS/FIX
+
+Scope:
+- Public SecureChat sitemap and bridge sync after remote release-hardening commit `93bf63b`.
+- No Android app code, Play Console, Stripe, AADE/myDATA/e-timologio, secret, server, or device mutation.
+
+Changed:
+- `sitemap.xml`: refreshed lastmod and added FAQ, IFR, user manual, crypto protocol, Kaspa, relay, and build pages.
+
+Integration note:
+- Remote `93bf63b fix: harden SecureChat release readiness (#8)` already launch-gated the public IFR/payment copy more broadly.
+- During rebase, CODEX kept the newer remote release-hardening versions for conflicting public pages and retained only the non-overlapping sitemap follow-up.
+
+Verification:
+- `git diff --check` passed before the first commit attempt.
+- Edited public HTML pages parsed with Python `HTMLParser` before rebase.
+- Python XML parser loaded the SecureChat sitemap with 14 URLs.
+- Live public smoke: `https://securechat.stealthx.tech/faq.html` -> HTTP 200.
+
+Commit:
+- `dd52fdd docs: gate public IFR checkout copy`
+
+Open next steps:
+- Full SecureChat device/function QA before fresh APK/AAB release artifacts.
+- Keep Android app wallet/IFR-free; discounts stay website-side and launch-gated until VLABS finance gates are approved.
