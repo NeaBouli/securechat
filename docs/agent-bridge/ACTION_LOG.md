@@ -1,5 +1,10 @@
 # Action Log
 
+## 2026-07-16 — Codex entitlement mapping hardening
+
+- Canonical SecureChat product/tier pairs are enforced with mismatch regression tests.
+- Private provider operations remain in VLABS; no secret, purchase, external request or deployment.
+
 ## 2026-07-12 — Codex Full Client / Sell-Readiness Pass
 
 - Android-, Transport-, Website-, Privacy- und Paid-Access-Pfade gemeinsam auditiert.

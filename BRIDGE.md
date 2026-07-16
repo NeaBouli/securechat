@@ -1,5 +1,10 @@
 # BRIDGE — securechat
 
+## 2026-07-16 — Entitlement product/tier binding (Codex)
+
+- SecureChat accepts only canonical Pro/PRO and Elite/ELITE signed entitlement pairs; mismatches and unknown products fail closed.
+- Operational payment/provider details remain in private VLABS. No secret, customer data, purchase, provider request or deployment.
+
 ## Public Payment Data Boundary
 
 - This repository is public. Operational payment/Etimologio information is stored only in private `NeaBouli/vlabs` at `docs/finance-integrations/projects/securechat.md`.

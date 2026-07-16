@@ -49,10 +49,37 @@ class EntitlementTokenVerifierTest {
         }
     }
 
-    private fun token(subject: String = "sx_device_1", tier: String = "PRO", expiresAt: Long = now + 2_592_000): String {
+    @Test
+    fun `product and tier mismatch fails closed`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            EntitlementTokenVerifier.verify(
+                token(product = "securechat_pro_lifetime", tier = "ELITE"),
+                b64(keyPair.first),
+                "securechat",
+                "sx_device_1",
+                now
+            )
+        }
+        assertThrows(IllegalArgumentException::class.java) {
+            EntitlementTokenVerifier.verify(
+                token(product = "securechat_unknown_lifetime", tier = "PRO"),
+                b64(keyPair.first),
+                "securechat",
+                "sx_device_1",
+                now
+            )
+        }
+    }
+
+    private fun token(
+        subject: String = "sx_device_1",
+        product: String = "securechat_pro_lifetime",
+        tier: String = "PRO",
+        expiresAt: Long = now + 2_592_000
+    ): String {
         val payload = listOf(
             "v=1", "iss=stealthx", "aud=securechat", "sub=$subject", "tier=$tier",
-            "product=securechat_pro_lifetime", "iat=${now - 10}", "exp=$expiresAt",
+            "product=$product", "iat=${now - 10}", "exp=$expiresAt",
             "order=${MessageDigest.getInstance("SHA-256").digest("order".toByteArray()).joinToString("") { "%02x".format(it) }.take(32)}"
         ).joinToString("\n")
         val encoded = b64(payload.toByteArray(StandardCharsets.UTF_8))

@@ -17,6 +17,7 @@
 - [ ] Runtime-Ed25519-Public-Key in Release-Build setzen; Private Key bleibt ausschliesslich auf dem Signaling-Server.
 - [ ] Signierte Aktivierung, automatische Erneuerung und Vollrefund-/Dispute-Revoke cross-repository im Testmodus pruefen.
 - [x] Kanonischen Node-Signer-Token als echte Cross-Repo-Kompatibilitaetsregression im Kotlin-Verifier pruefen.
+- [x] Produkt und Tier im Kotlin-Verifier auf die kanonischen SecureChat-Paare fest binden.
 - [ ] Android-Client auf zwei physischen Geraeten pruefen: Erstkontakt, Versand, Reconnect, Hintergrundzustellung, Prozessneustart und Offline-/Relay-Ausfall.
 - [ ] Google Play nur aktivieren, wenn serverseitige Purchase-Token-Verifikation und RTDN-Revoke E2E bereitstehen; andernfalls dauerhaft deaktiviert lassen.
 - [ ] Lizenzentscheidung durch Gio/Legal: Root-`LICENSE` ist source-available und verbietet Build/Distribution, zahlreiche Quelldateien deklarieren dagegen `GPL-3.0-or-later`; vor Store-/F-Droid-Vertrieb konsistent aufloesen.
