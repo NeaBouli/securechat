@@ -1,5 +1,11 @@
 # BRIDGE — securechat
 
+## 2026-07-17 — Entitlement verifier test isolation (Codex)
+
+- The canonical SecureChat server-token test now initializes its JVM crypto dependency explicitly instead of relying on test execution order or a warm Gradle cache.
+- The current shared server contract still accepts the signed fixture with exact audience, product and tier binding. Targeted verifier tests and the complete project check pass.
+- Production remains disabled. No secret, payment, activation, provider request or deployment was performed.
+
 ## 2026-07-16 — Entitlement product/tier binding (Codex)
 
 - SecureChat accepts only canonical Pro/PRO and Elite/ELITE signed entitlement pairs; mismatches and unknown products fail closed.

@@ -6,11 +6,20 @@ import java.security.MessageDigest
 import java.util.Base64
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
 class EntitlementTokenVerifierTest {
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun setup() {
+            SodiumInitializer.ensureInit()
+        }
+    }
+
     private val now = 1_800_000_000L
-    private val keyPair = ChameleonCrypto.generateSigningKeyPair()
+    private val keyPair by lazy { ChameleonCrypto.generateSigningKeyPair() }
 
     @Test
     fun `valid token is bound to SecureChat device and product`() {
