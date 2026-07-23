@@ -2888,3 +2888,30 @@ Open next steps:
   Smartphone-/Tablet-Screenshots; Telefon-, 7-Zoll- und 10-Zoll-Felder sind in der Console noch
   leer.
 - Kein AAB-Upload, Track-Wechsel oder Rollout in diesem Block.
+
+## 2026-07-23 10:20 EEST — CODEX TERMINAL — PLAY SCREENSHOT CAPTURE IN PROGRESS
+
+- S7 `ce10160adc00152604` ist verbunden; installiert ist `securechat.app` 0.1.5-alpha / vC6.
+- Normaler Android-Screenshot der laufenden App wird erwartungsgemaess durch `FLAG_SECURE`
+  blockiert. Der Lockscreen-Test wurde verworfen und wird nicht hochgeladen.
+- In Arbeit: separater, nicht verteilbarer Store-Screenshot-Build mit eigener Package-Suffix,
+  der ausschliesslich fuer die Aufnahme `FLAG_SECURE` deaktiviert. Release- und Test-Builds
+  behalten den Screenshot-Schutz unveraendert.
+- WoizZ und andere installierte Pakete werden nicht gestartet, installiert oder veraendert.
+
+## 2026-07-23 10:25 EEST — CODEX TERMINAL — PLAY SCREENSHOTS COMPLETE
+
+- Nicht verteilbarer Build-Typ `storeScreenshot` mit Package `securechat.app.screenshots`
+  hinzugefuegt. Nur dieser Build setzt `ALLOW_SCREENSHOTS=true`; alle regulaeren Debug-, Test-
+  und Release-Builds behalten `FLAG_SECURE`.
+- `testDebugUnitTest` und `assembleStoreScreenshot`: PASS. Der erste kombinierte Lauf wurde nach
+  einem haengenden Dex-Schritt beendet; der fokussierte Wiederholungslauf mit zwei Workern war
+  erfolgreich.
+- Auf S7 installiert, drei echte 1440x2560-/9:16-Screenshots aufgenommen und unter
+  `/Users/gio/Desktop/SecureChat-PlayStore-Screenshots/` abgelegt:
+  `01-securechat-home.png`, `02-securechat-settings.png`, `03-securechat-new-contact.png`.
+- Die Identitaets-/QR-Ansicht wurde in `private-review/` verschoben und ist ausdruecklich nicht
+  fuer den Store-Upload vorgesehen.
+- Temporaeres Package `securechat.app.screenshots` wurde danach erfolgreich vom S7 entfernt;
+  regulaeres `securechat.app` bleibt installiert. WoizZ blieb unangetastet.
+- Play Console bleibt als Entwurf offen; die drei Bilder wurden noch nicht hochgeladen.

@@ -38,12 +38,22 @@ android {
         versionCode = 6
         versionName = "0.1.5-alpha"
         buildConfigField("String", "FORCED_TIER", "\"\"")
+        buildConfigField("Boolean", "ALLOW_SCREENSHOTS", "false")
     }
 
     buildTypes {
         debug {
             buildConfigField("Boolean", "FORCE_ELITE", "true")
             buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
+        }
+        create("storeScreenshot") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".screenshots"
+            versionNameSuffix = "-screenshots"
+            buildConfigField("Boolean", "FORCE_ELITE", "false")
+            buildConfigField("String", "FORCED_TIER", "\"FREE\"")
+            buildConfigField("Boolean", "ALLOW_SCREENSHOTS", "true")
+            matchingFallbacks += listOf("debug")
         }
         create("internalRelease") {
             initWith(getByName("release"))
