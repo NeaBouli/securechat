@@ -2877,3 +2877,14 @@ Commit:
 Open next steps:
 - Full SecureChat device/function QA before fresh APK/AAB release artifacts.
 - Keep Android app wallet/IFR-free; discounts stay website-side and launch-gated until VLABS finance gates are approved.
+
+## 2026-07-23 10:10 EEST — CODEX TERMINAL — PLAY CONSOLE / STORE LISTING
+
+- SecureChat Play-Store-Icon `SecureChat-playstore-512.png` ist im englischen Standard-
+  Store-Eintrag hinterlegt.
+- Englische Kurzbeschreibung und vollstaendige Beschreibung wurden ausgefuellt und als Entwurf
+  gespeichert.
+- Noch blockierende Pflichtmedien: 1024x500-Vorstellungsgrafik sowie mindestens zwei geeignete
+  Smartphone-/Tablet-Screenshots; Telefon-, 7-Zoll- und 10-Zoll-Felder sind in der Console noch
+  leer.
+- Kein AAB-Upload, Track-Wechsel oder Rollout in diesem Block.
