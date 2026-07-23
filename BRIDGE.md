@@ -2915,3 +2915,18 @@ Open next steps:
 - Temporaeres Package `securechat.app.screenshots` wurde danach erfolgreich vom S7 entfernt;
   regulaeres `securechat.app` bleibt installiert. WoizZ blieb unangetastet.
 - Play Console bleibt als Entwurf offen; die drei Bilder wurden noch nicht hochgeladen.
+
+## 2026-07-23 10:39 EEST — CODEX TERMINAL — PLAY DATA SAFETY SAVED
+
+- Der vom Nutzer gespeicherte Play-Console-Stand wurde verifiziert: Store-Eintrag, Zielgruppe,
+  Datenschutz, Werbung, Gesundheit und Kategorie sind als unveroeffentlichte Aenderungen erfasst.
+- Datensicherheit anhand des aktuellen Android-Codes und der Privacy Policy fertig ausgefuellt und
+  gespeichert: verschluesselte Uebertragung, keine Konten, keine Drittanbieterweitergabe;
+  deklarierte Erhebung von pseudonymen Nutzer-/App-IDs sowie sitzungsspezifischer Verarbeitung von
+  verschluesselten In-App-Mitteilungen und freiwilligem Kontaktaustausch. Keine Werbung, Analyse,
+  Standort- oder Adressbucherhebung angegeben.
+- Dashboard-Fortschritt: `10 von 11`. Einziger verbleibender Pflichtpunkt ist die IARC-
+  Inhaltseinstufung. Kategorie `Sozial oder kommunikativ` ist vorausgewaehlt; die sichtbare IARC-
+  Zustimmung muss Gio selbst bestaetigen, danach kann CODEX den Fragebogen abschliessen.
+- Geschlossener Test bleibt bis zur IARC-Fertigstellung gesperrt. Kein AAB-Upload, keine
+  Einreichung zur Ueberpruefung und kein Rollout in diesem Block.
