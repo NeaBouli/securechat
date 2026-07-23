@@ -2930,3 +2930,26 @@ Open next steps:
   Zustimmung muss Gio selbst bestaetigen, danach kann CODEX den Fragebogen abschliessen.
 - Geschlossener Test bleibt bis zur IARC-Fertigstellung gesperrt. Kein AAB-Upload, keine
   Einreichung zur Ueberpruefung und kein Rollout in diesem Block.
+
+## 2026-07-23 11:24 EEST — CODEX TERMINAL — CLOSED ALPHA SUBMITTED
+
+- IARC-Fragebogen nach Gios sichtbarer Zustimmung abgeschlossen und gespeichert. Einstufungen:
+  USK 0, ESRB Everyone, PEGI Parental Guidance und generisch IARC 12 fuer Chat-Inhalte.
+- Geschlossener Alpha-Test auf Griechenland eingerichtet; bestehende E-Mail-Liste
+  `SecureCall beta-test` mit 23 Eintraegen und Feedbackkanal
+  `https://github.com/NeaBouli/securechat/issues` hinterlegt.
+- `/Users/gio/Desktop/SecureChat-LATEST.aab` von Google Play akzeptiert: Package
+  `securechat.app`, VersionCode 6, VersionName `0.1.5-alpha`, minSdk 26, targetSdk 35.
+- Release `0.1.5-alpha (6) - Closed alpha` mit englischen Versionshinweisen erstellt.
+- Fehlende Foreground-Service-Erklaerung fuer `dataSync` sachlich ergaenzt. Nachweisvideo aus
+  einem temporaeren, nicht verteilbaren Screenshot-Build erstellt und als oeffentliches
+  Release-Asset verlinkt; das temporaere Package wurde danach vom S7 entfernt.
+- Werbe-ID-Erklaerung anhand Manifest und Abhaengigkeiten auf `Nein` gesetzt; kein AD_ID- oder
+  Anzeigen-SDK gefunden.
+- Alle 14 Aenderungen an Google zur Pruefung gesendet. Play Console zeigt laufende schnelle
+  Vorabpruefungen; kein Produktions-Rollout gestartet.
+
+Open next steps:
+- Google-Pruefergebnis abwarten und eventuelle Findings bearbeiten.
+- Tester muessen den Closed-Test-Link aktiv annehmen; Listenmitgliedschaft allein zaehlt nicht
+  als eingeschriebener Tester.
