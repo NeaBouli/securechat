@@ -18,9 +18,12 @@
 -dontwarn com.sun.jna.**
 
 # ── SQLCipher — JNI fields looked up by name, must not be renamed ─
--keep class net.sqlcipher.** { *; }
--keep class net.sqlcipher.database.** { *; }
--dontwarn net.sqlcipher.**
+-keep,includedescriptorclasses class net.zetetic.database.** { *; }
+-keep,includedescriptorclasses interface net.zetetic.database.** { *; }
+-keepclasseswithmembernames class net.zetetic.database.** {
+    native <methods>;
+}
+-dontwarn net.zetetic.database.**
 
 # ── Room ──────────────────────────────────────────────────────
 -keep class * extends androidx.room.RoomDatabase

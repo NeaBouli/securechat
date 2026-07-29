@@ -14,7 +14,7 @@
 - Identity Layer: Local Ed25519 identity; Kaspa anchoring is roadmap work
 - Platform: Android 8.0+ (API 26)
 - License: StealthX Source-Available License
-- Crypto Library: lazysodium-android 5.1.0 (wraps libsodium)
+- Crypto Library: lazysodium-android 5.2.0 (wraps libsodium)
 - Database: Room + SQLCipher (encrypted at rest)
 - Online Transport: Central signaling relay; Tor and decentralized relays are roadmap work
 - Paid Access: Launch-gated; current public builds must not unlock from an unverified client purchase callback

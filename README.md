@@ -32,7 +32,7 @@ BUILD SUCCESSFUL — Debug 42 MB / Release 21 MB (minified + shrunk)
 | Identity Signing | Ed25519 | Curve25519 signatures |
 | Key Storage | Android Keystore | StrongBox / TEE |
 
-Single library: `lazysodium-android 5.1.0`. No AES-GCM. No BouncyCastle. No custom crypto.
+Single library: `lazysodium-android 5.2.0`. No AES-GCM. No BouncyCastle. No custom crypto.
 
 ## Unified StealthX ID
 Format: `sx_[9 Base58 chars]` — e.g. `sx_a7Kx9mPq2`

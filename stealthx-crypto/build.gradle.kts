@@ -40,6 +40,8 @@ dependencies {
     // Exclude JNA JAR from transitive deps; force AAR so libjnidispatch.so is a proper native lib
     implementation(libs.lazysodium.android) {
         exclude(group = "net.java.dev.jna", module = "jna")
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib")
+        exclude(group = "androidx.core", module = "core-ktx")
     }
     implementation("net.java.dev.jna:jna:${libs.versions.jna.get()}@aar")
     // JVM fallback for unit tests: SodiumInitializer auto-detects JVM and uses desktop libsodium

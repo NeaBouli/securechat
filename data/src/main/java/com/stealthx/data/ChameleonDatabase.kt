@@ -26,7 +26,7 @@ import com.stealthx.data.entity.MessageEntity
 import com.stealthx.data.entity.SecureRuleEntity
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import net.sqlcipher.database.SupportFactory
+import net.zetetic.database.sqlcipher.SupportOpenHelperFactory
 
 /**
  * Chameleon Room Database — encrypted with SQLCipher.
@@ -93,7 +93,8 @@ abstract class ChameleonDatabase : RoomDatabase() {
                 .concatToString()
 
         fun build(context: Context, passphrase: ByteArray): ChameleonDatabase {
-            val factory = SupportFactory(passphrase)
+            System.loadLibrary("sqlcipher")
+            val factory = SupportOpenHelperFactory(passphrase)
             return Room.databaseBuilder(
                 context.applicationContext,
                 ChameleonDatabase::class.java,

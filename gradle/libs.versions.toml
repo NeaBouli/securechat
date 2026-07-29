@@ -3,11 +3,12 @@ kotlin                  = "2.0.21"
 agp                     = "8.11.1"
 compose-bom             = "2024.11.00"
 hilt                    = "2.52"
-room                    = "2.6.1"
-sqlcipher               = "4.5.4"
+room                    = "2.8.4"
+sqlcipher               = "4.17.0"
 coroutines              = "1.9.0"
-lazysodium              = "5.1.0"
-jna                     = "5.14.0"
+lazysodium-android      = "5.2.0"
+lazysodium-java         = "5.1.0"
+jna                     = "5.19.1"
 lifecycle               = "2.8.7"
 navigation              = "2.8.4"
 datastore               = "1.1.1"
@@ -57,12 +58,12 @@ hilt-compiler                   = { group = "com.google.dagger", name = "hilt-an
 room-runtime                    = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx                        = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler                   = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-sqlcipher                       = { group = "net.zetetic", name = "android-database-sqlcipher", version.ref = "sqlcipher" }
-sqlite-ktx                      = { group = "androidx.sqlite", name = "sqlite-ktx", version = "2.4.0" }
+sqlcipher                       = { group = "net.zetetic", name = "sqlcipher-android", version.ref = "sqlcipher" }
+sqlite-ktx                      = { group = "androidx.sqlite", name = "sqlite-ktx", version = "2.6.2" }
 
 # Crypto — lazysodium (THE ONLY CRYPTO LIBRARY)
-lazysodium-android              = { group = "com.goterl", name = "lazysodium-android", version.ref = "lazysodium" }
-lazysodium-java                 = { group = "com.goterl", name = "lazysodium-java", version.ref = "lazysodium" }
+lazysodium-android              = { group = "com.goterl", name = "lazysodium-android", version.ref = "lazysodium-android" }
+lazysodium-java                 = { group = "com.goterl", name = "lazysodium-java", version.ref = "lazysodium-java" }
 jna                             = { group = "net.java.dev.jna", name = "jna", version.ref = "jna" }
 
 # Location / Geofencing
