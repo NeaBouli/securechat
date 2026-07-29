@@ -6,7 +6,7 @@ plugins {
 }
 android {
     namespace = "com.stealthx.data"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         minSdk = 26
         val entitlementKey = System.getenv("STEALTHX_ENTITLEMENT_PUBLIC_KEY_BASE64") ?: ""

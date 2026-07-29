@@ -14,7 +14,7 @@ plugins {
 
 android {
     namespace = "com.stealthx.crypto"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 26

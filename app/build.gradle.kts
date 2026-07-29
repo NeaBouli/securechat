@@ -15,7 +15,7 @@ val localProps = Properties().also { props ->
 
 android {
     namespace = "com.stealthx.securechat"
-    compileSdk = 35
+    compileSdk = 36
 
     signingConfigs {
         create("release") {
@@ -34,9 +34,9 @@ android {
     defaultConfig {
         applicationId = "securechat.app"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 6
-        versionName = "0.1.5-alpha"
+        targetSdk = 36
+        versionCode = 7
+        versionName = "0.1.6-alpha"
         buildConfigField("String", "FORCED_TIER", "\"\"")
         buildConfigField("Boolean", "ALLOW_SCREENSHOTS", "false")
     }

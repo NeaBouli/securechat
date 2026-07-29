@@ -7,7 +7,7 @@ plugins {
 }
 android {
     namespace = "com.stealthx.features.broadcast"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig { minSdk = 26 }
 
     compileOptions {
