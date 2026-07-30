@@ -101,6 +101,11 @@ android {
         }
     }
 
+    sourceSets.getByName("storeScreenshot") {
+        java.srcDir("src/debug/java")
+        manifest.srcFile("src/debug/AndroidManifest.xml")
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
