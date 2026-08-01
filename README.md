@@ -6,7 +6,7 @@ Part of the [StealthX Platform](https://stealthx.tech).
 
 ## Status
 
-**v0.1.5-alpha — Public test release; paid access remains launch-gated**
+**v0.1.7-alpha — Closed test release; paid access remains launch-gated**
 
 BUILD SUCCESSFUL — Debug 42 MB / Release 21 MB (minified + shrunk)
 
@@ -67,7 +67,7 @@ cd securechat
 ./gradlew assembleRelease    # Release APK (minified + shrunk)
 ```
 
-Requirements: JDK 17, Android SDK 35, Android 8.0+ (API 26+) target devices.
+Requirements: JDK 17, Android SDK 36, Android 8.0+ (API 26+) target devices.
 
 ## IFR Holder Discount
 
