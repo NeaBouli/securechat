@@ -9,7 +9,10 @@ android {
     compileSdk = 36
     defaultConfig {
         minSdk = 26
-        val entitlementKey = System.getenv("STEALTHX_ENTITLEMENT_PUBLIC_KEY_BASE64") ?: ""
+        val entitlementKey = System.getenv("STEALTHX_ENTITLEMENT_PUBLIC_KEY_BASE64")
+            ?.takeIf { it.isNotBlank() }
+            ?: providers.gradleProperty("stealthx.entitlementPublicKey").orNull
+            ?: ""
         require(entitlementKey.isEmpty() || entitlementKey.matches(Regex("^[A-Za-z0-9_-]{43}$"))) {
             "STEALTHX_ENTITLEMENT_PUBLIC_KEY_BASE64 must be an unpadded 32-byte base64url key"
         }

@@ -45,7 +45,7 @@ class EntitlementRefreshWorker(
             return Result.success()
         }
         return when (outcome.second) {
-            "network_error" -> Result.retry()
+            "network_error", "entitlement_temporarily_unavailable", "entitlement_not_configured" -> Result.retry()
             "entitlement_revoked", "invalid_entitlement", "entitlement_invalid" -> {
                 dependencies.preferences().entitlementToken = null
                 dependencies.tierRepository().invalidateCache()

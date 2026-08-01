@@ -27,11 +27,11 @@ object ActivationCodeClient {
         val entitlementToken: String
     )
 
-    // Leaf pin: api.stealthx.tech (Let's Encrypt, expires 2026-08-14 — rotate before then)
-    // Backup pin: Let's Encrypt R12 intermediate CA (stable across leaf rotations)
+    // Pin the current leaf and the active Let's Encrypt YR2 intermediate for rotation.
     private val certPinner = CertificatePinner.Builder()
         .add("api.stealthx.tech", "sha256/1e85xNSEj+dcImOJS0iNkfMZOrZdvJJzzPCqT1/CZDc=")
-        .add("api.stealthx.tech", "sha256/kZwN96eHtZftBWrOZUsd6cA4es80n3NzSk/XtYz2EqQ=")
+        .add("api.stealthx.tech", "sha256/nWN7PSep5XDQdge5zK24CnCRXHr3KvzhKEGxsdqCX9E=")
+        .add("api.stealthx.tech", "sha256/fk6IOKit1ild5647BH06ujSIq5XbCgqlbYl6ANhhi88=")
         .build()
 
     private val client by lazy {
@@ -156,7 +156,11 @@ object ActivationCodeClient {
                             }
                             val refreshedToken = json.optString("entitlementToken")
                             val publicKey = BuildConfig.ENTITLEMENT_PUBLIC_KEY_BASE64
-                            val verified = if (refreshedToken.isBlank() || publicKey.isBlank()) null else runCatching {
+                            if (publicKey.isBlank()) {
+                                onResult(null, "entitlement_not_configured")
+                                return
+                            }
+                            val verified = if (refreshedToken.isBlank()) null else runCatching {
                                 EntitlementTokenVerifier.verify(
                                     token = refreshedToken,
                                     publicKeyBase64 = publicKey,
