@@ -38,6 +38,7 @@ import com.stealthx.data.prefs.AppPreferences
 import com.stealthx.data.security.WipeManager
 import com.stealthx.presentation.nav.StealthXNavGraph
 import com.stealthx.presentation.theme.StealthXTheme
+import com.stealthx.securechat.service.ListenerStartup
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,10 +67,11 @@ class MainActivity : FragmentActivity() {
             )
         }
         setLockedContent()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 1001)
-            }
+        // Foreground Activity launch is always an allowed FGS-start context; Application.onCreate
+        // is not (background process creation on targetSdk 31+ throws
+        // ForegroundServiceStartNotAllowedException), so the listener is started here instead.
+        if (prefs.backgroundListenerEnabled) {
+            ListenerStartup.startSafely(this)
         }
         if (prefs.biometricEnabled) {
             authenticate()

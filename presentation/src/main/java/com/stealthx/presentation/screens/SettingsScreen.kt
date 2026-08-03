@@ -1,8 +1,13 @@
 package com.stealthx.presentation.screens
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -43,6 +48,30 @@ fun SettingsScreen(
     }
     var showActivationDialog by remember { mutableStateOf(false) }
     var showDuressPinDialog by remember { mutableStateOf(false) }
+
+    // POST_NOTIFICATIONS is requested only when the user enables the Background
+    // Message Listener. The listener is enabled regardless of the grant result —
+    // the persistent foreground notification is simply not visible when denied.
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        vm.setBackgroundListenerEnabled(true)
+    }
+    fun onBackgroundListenerToggle(enabled: Boolean) {
+        if (!enabled) {
+            vm.setBackgroundListenerEnabled(false)
+            return
+        }
+        val needsNotificationPermission =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED
+        if (needsNotificationPermission) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            vm.setBackgroundListenerEnabled(true)
+        }
+    }
     fun openUrl(url: String) {
         runCatching {
             context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
@@ -150,7 +179,7 @@ fun SettingsScreen(
                 "Background Message Listener",
                 backgroundListenerEnabled,
                 "Keep encrypted delivery active after leaving the app"
-            ) { vm.setBackgroundListenerEnabled(it) }
+            ) { onBackgroundListenerToggle(it) }
             ClickRow(
                 Icons.Default.Warning,
                 "Duress PIN",

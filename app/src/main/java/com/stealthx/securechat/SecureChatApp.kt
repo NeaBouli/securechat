@@ -1,7 +1,6 @@
 package com.stealthx.securechat
 
 import android.app.Application
-import android.content.Intent
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.ExistingWorkPolicy
@@ -11,17 +10,13 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.stealthx.crypto.SodiumInitializer
 import com.stealthx.data.identity.StealthXIdentity
-import com.stealthx.data.prefs.AppPreferences
-import com.stealthx.securechat.service.MessageListenerService
 import com.stealthx.shared.model.AccessTier
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
-import javax.inject.Inject
 import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
 class SecureChatApp : Application() {
-    @Inject lateinit var appPreferences: AppPreferences
 
     override fun onCreate() {
         super.onCreate()
@@ -49,9 +44,11 @@ class SecureChatApp : Application() {
             Timber.plant(Timber.DebugTree())
         }
 
-        if (appPreferences.backgroundListenerEnabled) {
-            startForegroundService(Intent(this, MessageListenerService::class.java))
-        }
+        // The message listener FGS is intentionally NOT started here: Application.onCreate
+        // also runs when the process is created in the background (e.g. broadcast receivers,
+        // WorkManager), where startForegroundService throws
+        // ForegroundServiceStartNotAllowedException on targetSdk 31+. MainActivity starts the
+        // listener from the foreground instead when backgroundListenerEnabled is set.
         scheduleEntitlementRefresh()
     }
 
