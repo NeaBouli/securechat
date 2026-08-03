@@ -2953,3 +2953,898 @@ Open next steps:
 - Google-Pruefergebnis abwarten und eventuelle Findings bearbeiten.
 - Tester muessen den Closed-Test-Link aktiv annehmen; Listenmitgliedschaft allein zaehlt nicht
   als eingeschriebener Tester.
+
+## 2026-07-28 — [C5] AGENTS.md fuer dieses Repo anlegen (CC, queued)
+
+- **Owner:** Codex; **Status:** queued — bei naechster aktiver Arbeit an diesem Repo ZUERST ausfuehren; **Risiko:** niedrig (Doku).
+- Auftrag: schlanke `AGENTS.md` im Repo-Root anlegen, die auf `~/AGENTS.md` und `~/WORKFLOW_INDEX.md` verweist und repo-spezifisch nennt: Tech-Stack, Build-/Test-/Lint-/Deploy-Befehle, projektspezifische Sicherheits-/Fachregeln, primaerer Agent + Review-Agent.
+- Prinzip: globale Regeln NICHT kopieren, nur praezisieren + verweisen. Bestehende `CLAUDE.md`/`BRIDGE.md` bleiben unveraendert.
+- Kontext: Master-Agent-Workflow Etappe 4 (projektspezifische Anpassung), Konflikt C5. Zentral gespiegelt in `~/BRIDGE.md` (2026-07-28). Autor: CC.
+- Repository/Doc only; kein Deployment, keine externe Mutation.
+
+## ▶ AUTOSTART — Codex (Trigger: "lese bridge")
+
+Bei der Anweisung **"lese bridge"** in diesem Repo startest du autonom nach `~/.codex/START_PROMPT.md`:
+1. Kontext laden: `~/AGENTS.md`, `~/WORKFLOW_INDEX.md`, `~/BRIDGE.md`, diese Bridge.
+2. `git status`; uncommittete Arbeit vollstaendig bewahren, nicht mit deinen Aenderungen mischen.
+3. [C5] Falls dieses Repo KEINE eigene `AGENTS.md` hat: zuerst schlanke `AGENTS.md` anlegen
+   (Verweis auf `~/AGENTS.md` + `~/WORKFLOW_INDEX.md` plus Stack/Build/Test/Deploy/Fachregeln/Agenten).
+4. Ermittle aus dieser Bridge / den GitHub-Issues den naechsten kleinen, NICHT blockierten Task
+   und erstelle die Definition-of-Ready (`~/.claude/templates/task.md`).
+5. Bearbeite GENAU DIESEN EINEN Task. Die stehende Freigabe gilt pro "lese bridge" fuer genau EINEN Task.
+   - Hochrisiko (Auth/Krypto/Wallet/Contract/Prod/Migration/Secrets/irreversibel): NICHT autonom —
+     Definition-of-Ready vorlegen und auf ausdrueckliche Freigabe warten.
+6. Definition of Done + volle relevante Tests. Diese Bridge append-only mit datiertem Block aktualisieren.
+7. Dann exakt ausgeben: `TASK COMPLETE — TARGET STOP ACTIVE`. Keinen Folgetask automatisch starten.
+
+Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
+(Autor: CC, 2026-07-28 — additive Autostart-Verdrahtung des Master-Agent-Workflows.)
+
+## 2026-07-28 21:10 EEST — CODEX SOL — PLAY CLOSED-ALPHA STATUS VERIFIED
+
+- **Owner:** Codex Sol; **Tickets:** `SECURECHAT-20260728-C5`,
+  `GIO-20260723-SECURECHAT-CLOSED-ALPHA`; **Typ:** STATUS;
+  **Status:** Active / device acceptance pending.
+- Verpflichtende repo-eigene `AGENTS.md` mit Stack, Pruefketten,
+  Architektur-/Security-Regeln, IFR-/Wallet-Code-Guard, Release-Grenzen und
+  Agentenrollen angelegt.
+- Google Play read-only verifiziert: Track `Geschlossener Test - Alpha` ist
+  **Aktiv**. Neuester Release:
+  `0.1.5-alpha (6) - Closed alpha`; letzter Track-Update 23. Juli 2026;
+  ein Land/eine Region.
+- Release-Metadaten bleiben `securechat.app`, VersionCode `6`,
+  VersionName `0.1.5-alpha`, minSdk 26 und targetSdk 35.
+- Tester-Konfiguration read-only verifiziert: E-Mail-Liste
+  `SecureCall beta-test` mit 23 Eintraegen ist ausgewaehlt; Feedback geht an
+  `https://github.com/NeaBouli/securechat/issues`. Web-Opt-in:
+  `https://play.google.com/apps/testing/securechat.app`; Android-Link:
+  `https://play.google.com/store/apps/details?id=securechat.app`.
+- In der Veroeffentlichungsuebersicht stehen keine neuen, nicht
+  eingereichten Aenderungen. Kein Play-Wert wurde veraendert.
+- Verbleibende Gates: Tester muss Opt-in aktiv annehmen; danach Installation
+  aus Google Play und vollstaendige S10/S7/Tab-S4-Funktionsmatrix,
+  insbesondere Identity, QR/NFC-Kontakt, Messaging, Notifications,
+  Background/Reconnect, Settings und server-signiertes Entitlement.
+- Repository bleibt fachlich auf `e560893`; bestehende fremde
+  `BRIDGE.md`-Aenderung bewahrt. Kein Commit oder Push.
+
+## 2026-07-28 21:48 EEST — CODEX SOL — PLAY API 36 DEADLINE CHECK
+
+- **Ticket:** `GIO-20260728-PLAY-API36`; **Typ:** STATUS / COMPLIANCE;
+  **Status:** Open.
+- Google Play read-only verifiziert: SecureChat muss bis 31. August 2026 auf
+  Android 16 / API-Level 36 oder hoeher ausgerichtet werden.
+- Aktiver Closed-Alpha-Release `0.1.5-alpha (6)` und aktueller Quellcode
+  verwenden weiterhin `compileSdk = 35` / `targetSdk = 35`.
+- Damit ist die Anforderung noch nicht erledigt. Erforderlich sind ein
+  repo-weites SDK-36-Upgrade, neuer eindeutiger VersionCode, vollstaendige
+  Build-/Test-/Lint-/Edge-to-Edge-/Geraetepruefung und ein neues signiertes
+  AAB. Fuer eine endgueltige Entfernung der Play-Warnung verlangt Google
+  anschliessend eine Produktionsversion; der bestehende Closed Test allein
+  reicht dafuer nicht.
+- Keine Datei ausser Bridge-Dokumentation und kein Play-Wert wurden in diesem
+  Statuscheck veraendert.
+
+## 2026-07-29 05:18 EEST — CODEX SOL — SECURECHAT API 36 UPGRADE START
+
+- **Ticket:** `GIO-20260729-SECURECHAT-API36`; **Typ:** COMPLIANCE / BUILD;
+  **Status:** In Progress / Local only.
+- Scope: SecureChat auf `compileSdk`/`targetSdk` 36 und einen eindeutigen
+  Folge-VersionCode anheben, Android-16-/Edge-to-Edge-/Build-Kompatibilitaet
+  pruefen und die vollstaendige lokale Release-Gate-Kette ausfuehren.
+- Kimi K3 wird fuer einen begrenzten repo-weiten Review eingesetzt; Codex Sol
+  verantwortet Scope, Diff, Integration, Security und Abschlusspruefung.
+- Kein Play-Upload, Publishing, Push, Deployment, Signing-Secret-Zugriff oder
+  physischer Geraeteeingriff. Bestehende fremde `BRIDGE.md`-Aenderungen und
+  die untracked `AGENTS.md` bleiben erhalten.
+
+## 2026-07-29 11:28 EEST — CODEX SOL — SECURECHAT API 36 LOCAL UPGRADE VALIDATED
+
+- **Ticket:** `GIO-20260729-SECURECHAT-API36`; **Typ:** FIX / TEST /
+  COMPLIANCE; **Status:** Done for local SDK upgrade / Play blocked.
+- Lokaler Commit `17c7af3` hebt AGP auf `8.11.1`, alle zwoelf
+  Android-Module auf `compileSdk 36` und die App auf `targetSdk 36`,
+  VersionCode `7`, VersionName `0.1.6-alpha`. Paketname bleibt
+  `securechat.app`.
+- Der dauerhafte Message-Listener verwendet jetzt den fachlich korrekten
+  Foreground-Service-Typ `remoteMessaging` mit
+  `FOREGROUND_SERVICE_REMOTE_MESSAGING` statt des auf sechs Stunden pro
+  24 Stunden begrenzten `dataSync`-Typs. Die veralteten Systemleistenfarben
+  wurden entfernt; `MainActivity.enableEdgeToEdge()` und die vorhandene
+  Insets-Behandlung bleiben aktiv.
+- Google Play read-only verifiziert: bislang existieren nur VersionCodes `4`
+  und `6`; `7` ist frei. Kein Play-Wert wurde veraendert.
+- Erster kompletter Release-Gate-Lauf PASS:
+  `verifyNoAppIfrWalletCode test lintRelease assembleRelease bundleRelease`,
+  1084 Tasks in 36m40s. Finaler Integrationslauf PASS:
+  `verifyNoAppIfrWalletCode check assembleDebug lintRelease assembleRelease
+  bundleRelease`, 1410 Tasks in 12m57s.
+- Tests: je 107 Tests fuer Debug und Release, 0 Failures, 0 Errors,
+  je 8 Skips. Zwölf Release-Lintberichte: 0 Errors, 99 Warnings.
+- Signierte lokale Artefakte verifiziert:
+  APK SHA-256
+  `223c5081faa79a7fcbafc132fffa9f9f4c86a7c21c0e3e8713153a8c2274e84f`;
+  AAB SHA-256
+  `9bfef29520f45b8ad835d9f938e50cec82062bcee59467a8a72d65a1e9eaed3e`.
+  APK-Metadaten: `securechat.app`, Code `7`, Name `0.1.6-alpha`,
+  compile/target SDK 36. APK-Signatur und AAB-JAR-Signatur sind gueltig.
+- API-36-Google-AVD bootete, aber der Android-Systemprozess starb waehrend
+  der APK-Installation mit System-Zygote-Fatal,
+  `DeadSystemException` und Package-Service `Broken pipe`. SecureChat wurde
+  nicht installiert oder gestartet; dies ist kein App-Crash-Beleg. Der
+  Emulator wurde beendet, das sichtbare S7 nicht beruehrt.
+- Kimi K3 bestaetigte den finalen Diff ohne Blocking Finding. Einziger
+  kosmetischer Restpunkt: transparente Edge-to-Edge-Systemleisten auf
+  API 26-34 sollten spaeter physisch geprueft werden.
+- **Play-Blocker:** ELF-Pruefung des neuen AAB zeigt weiterhin 4-KB-LOAD-
+  Alignment fuer arm64 `libsodium.so`/`libsqlcipher.so` sowie x86_64
+  `libjnidispatch.so`/`libsodium.so`/`libsqlcipher.so`. Damit ist das AAB
+  trotz gueltiger Signatur noch nicht fuer den Play-Upload freigegeben.
+- Naechster separat zu genehmigender Security-/Dependency-Block:
+  SQLCipher, JNA und die von Lazysodium gelieferten libsodium-Binaries auf
+  nachweislich 16-KB-kompatible Versionen migrieren, Crypto-/DB-Kompatibilitaet
+  vollstaendig testen und das fertige AAB erneut pro ABI pruefen.
+- Kein Push, Play-Upload, Publishing, Deployment oder physischer
+  Geraeteeingriff. Fremde Bridge-Aenderungen und `AGENTS.md` blieben
+  uncommittet erhalten.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+---
+
+## 2026-08-04 12:02 EEST — CODEX SOL — LISTENER RECOVERY PROMOTION AUTHORIZED
+
+- **Ticket:** `GIO-20260804-SECURECHAT-LISTENER-RECOVERY`; **Status:** In Progress;
+  Gio explicitly authorized commit, push, integration, a fresh Play-safe versionCode,
+  closed-test promotion, and the required Google Play foreground-service declaration.
+- Because the conversation contains later Play attempts beyond the bridge-documented v9,
+  the release candidate will use versionCode 13 and versionName `0.1.9-alpha` to avoid
+  known/likely reused codes 9-12. Scope remains SecureChat closed Alpha only.
+- Execution path: commit the already reviewed listener-recovery diff, run the complete
+  signed gate for v13, push a review branch, integrate through the repository's protected
+  workflow after green checks, then upload/submit only to the existing closed Alpha and
+  complete the truthful `remoteMessaging` FGS declaration if the console permits it.
+- Excluded: production/open/public rollout, payments, server/credential changes,
+  physical-device interference, and unrelated repositories. Rollback is to leave the
+  existing closed-Alpha release active and stop before submission if validation fails.
+
+`TASK IN PROGRESS`
+
+---
+
+## 2026-08-04 12:29 EEST — CODEX SOL — LISTENER RECOVERY MERGED
+
+- **Ticket:** `GIO-20260804-SECURECHAT-LISTENER-RECOVERY`; PR #10 merged through the
+  authorized protected admin path as exact `main` commit
+  `f572efb21396e4c552960bc282ccc8e31acddde2`.
+- Pre-merge evidence: SecureChat Android CI run `30861841956` PASS and CodeRabbit PASS;
+  no actionable review finding. Version remains `0.1.9-alpha` / versionCode 13.
+- Exact-main CI run `30862321419` attempt 1 was infrastructure-stuck for about ten hours
+  in `Run checks` without a test failure. Sol cancelled it and started attempt 2 for the
+  same merge commit; final status is pending.
+- Play closed-Alpha upload and truthful `remoteMessaging` declaration remain pending on
+  Gio's personal Google authentication in the restored internal-browser tab. No public,
+  open or production rollout occurred.
+
+`TASK IN PROGRESS`
+
+## 2026-07-31 12:25 EEST — CODEX SOL — REVIEWER ENTITLEMENT READY FOR APPROVAL
+
+- **Ticket:** `GIO-20260731-SECURECHAT-REVIEW-ENTITLEMENT`;
+  **Status:** Ready for explicit production authorization.
+- Kimi K3 und Sol bestaetigen den bestehenden signierten Flow als geeignete
+  Architektur. Erforderlich sind ein `ELITE`-Eintrag mit
+  `productKey=securechat_elite_lifetime`, ein passendes serverseitiges
+  Ed25519-Schluesselpaar und ein neuer Release-Build mit dessen
+  oeffentlichem Pruefschluessel. Gift-Codes bleiben ungeeignet.
+- Release v7 enthaelt keinen Entitlement-Public-Key; Railway hat keinen
+  benannten Entitlement-Signing-Key. Aktivierung ist deshalb im
+  eingereichten v7 technisch nicht moeglich.
+- Vor Umsetzung zu beheben und zu testen: Seed-Pfad muss `productKey`
+  erhalten; Signing-Ausfall darf nicht als Widerruf behandelt werden;
+  fokussierter Kotlin-Verifier-Test muss Sodium initialisieren; aktueller
+  Backup-TLS-Pin muss zur live YR2-Zwischenzertifizierungsstelle passen.
+- Baseline: Server-Token-Test PASS; Subscription-/Activation-Test 77/77
+  PASS. Kotlin-Verifier-Test 2/2 FAIL ausschließlich vor der Assertion wegen
+  fehlender Testinitialisierung von Sodium.
+- Keine Schluessel-, Credential-, Server-, Deployment-, Play-, Git- oder
+  Geraetemutation. Produktive Umsetzung wartet auf exakt begrenzte Freigabe.
+
+## 2026-07-31 12:11 EEST — CODEX SOL — REVIEWER ENTITLEMENT ANALYSIS
+
+- **Ticket:** `GIO-20260731-SECURECHAT-REVIEW-ENTITLEMENT`;
+  **Typ:** AUTH / SECURITY / PLAY REVIEW; **Status:** Analysis / approval gate.
+- Ziel: dauerhaft nutzbarer, widerrufbarer Google-Reviewer-Zugang fuer
+  Pro/Elite ueber den bestehenden server-signierten Aktivierungsweg, ohne
+  lokalen Tier-Bypass und ohne Secret oder Credential in App, Git, Logs oder
+  Bridge.
+- Read-only Befund: Der v7-Release wurde mit leerem
+  `STEALTHX_ENTITLEMENT_PUBLIC_KEY_BASE64` erzeugt und kann daher keine
+  signierten Tokens akzeptieren. Im produktiven Railway-Service ist nur der
+  bestehende Admin-Zugang benannt; ein Entitlement-Signierschluessel ist
+  nicht konfiguriert. Der vorhandene Gift-Code-Pfad liefert lediglich eine
+  Stufe und kein `entitlementToken`.
+- Kimi K3 prueft den kleinsten sicheren Fix read-only. Noch keine
+  Codeaenderung, Schluesselgenerierung, Credential-Ausgabe, Servermutation,
+  Deployment, Play-Aenderung oder Geraeteaktion.
+- Naechster Gate: Security-Review abschliessen und eine konkrete,
+  aktionsgenaue Freigabe fuer Auth-Code, Railway-Secret/Deploy und
+  Reviewer-Code einholen. Rollback muss Code-Widerruf, Secret-Rotation und
+  Ruecknahme des Testzugangs abdecken.
+
+## 2026-07-30 11:40 EEST — CODEX SOL — TERMINAL BRIDGE SYNC
+
+- Der vollstaendige Abschluss steht im Eintrag
+  `SECURECHAT V7 CLOSED ALPHA + E2E COMPLETE`.
+- Dieser Endmarker wurde append-only nach den bereits vorhandenen,
+  gleichzeitig fortgeschriebenen Bridge-Bloecken ergaenzt. Aktueller
+  Source-HEAD und `origin/main`: `020b949`.
+- Status bleibt: lokale Release- und Geraetegates gruen; Closed-Alpha-v7 bei
+  Google in Pruefung; nur die dort genannten externen Gates bleiben offen.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+## 2026-07-30 11:38 EEST — CODEX SOL — SECURECHAT V7 CLOSED ALPHA + E2E COMPLETE
+
+- **Ticket:** `GIO-20260730-SECURECHAT-RELEASE`; **Typ:** RELEASE / PLAY /
+  DEVICE TEST; **Status:** Done / Google review pending.
+- Die freigegebenen Commits `17c7af3` und `7e0763f` wurden auf
+  `origin/main` gepusht. Die wiederholbare Geraetetest-Infrastruktur wurde
+  mit Commit `020b949 test: enable repeatable device messaging checks`
+  separat committed und gepusht.
+- Desktop-Artefakt:
+  `/Users/gio/Desktop/SecureChat-LATEST.aab`, VersionCode 7,
+  VersionName `0.1.6-alpha`, Paket `securechat.app`, targetSdk 36,
+  SHA-256
+  `521a84cc3b16c4727309c8bc12519b0bd096902b68ba4113934a63a57b2906d0`.
+  Das vorherige v6-Bundle bleibt als
+  `/Users/gio/Desktop/SecureChat-v0.1.5-alpha-vC6.aab` erhalten.
+- Google Play akzeptierte v7 im bestehenden Closed-Alpha-Track ohne Verlust
+  unterstuetzter Geraete. Release-Name und englische Hinweise wurden
+  gespeichert; `FOREGROUND_SERVICE_REMOTE_MESSAGING` ist als
+  geraeteuebergreifende Nachrichtenuebertragung mit dem vorhandenen
+  oeffentlichen Demonstrationsvideo erklaert. Release und Erklaerung wurden
+  zur Google-Pruefung eingereicht; Status: `Änderungen, die überprüft werden`.
+- Die verbleibende Play-Warnung betrifft eine fehlende R8/ProGuard-
+  Offenlegungsdatei. Der Release hat `isMinifyEnabled=false`; die Warnung ist
+  deshalb nicht blockierend und es existiert keine Mapping-Datei zum
+  Hochladen.
+- Reale SQLCipher-Aktualisierung auf S7 PASS: signiertes v4
+  (`0.1.3-alpha`) installiert, Testidentitaet/Daten erzeugt und per
+  `install -r` auf v7 aktualisiert. Signatur war identisch, Identitaet blieb
+  exakt erhalten, Prozess startete, kritische Logtreffer: 0.
+- Isolierter E2E-Test auf S7 `SM-G930F` und Tab S4 `SM-T835` PASS:
+  frische Testidentitaeten, gegenseitiger signierter Kontaktimport,
+  WebSocket-Verbindung und `IDENTIFY_ACK`, verschluesselte Zustellung und
+  Entschluesselung in beide Richtungen, Read-/Delivery-Status,
+  Hintergrundzustellung bei ausgeschaltetem Display, Kaltstart,
+  erneute Identifizierung, verschluesselter Datenbestand nach Neustart und
+  Zustellung nach Reconnect.
+- Ein vermeintlicher S4-zu-S7-Fehler war kein Produktfehler: Die
+  Tablet-Tastatur verschob den Senden-Button, waehrend der erste Test noch
+  alte Koordinaten verwendete. Dynamische UI-Bounds und der neue
+  Debug-only-Sendehook reproduzierten den korrekten bidirektionalen Flow.
+- Testinfrastruktur-Fix: `storeScreenshot` bindet die Debug-Quellen und das
+  Debug-Manifest explizit ein. Der Debug-only-Receiver kann jetzt
+  datensparsam Nachrichtenzaehler/Status liefern und eine synthetische
+  Testnachricht senden. Release-/AAB-Code enthaelt diese Receiver nicht.
+- Vollstaendige lokale Kette PASS:
+  `./gradlew --no-daemon --max-workers=1 test lint assembleRelease
+  bundleRelease assembleStoreScreenshot`; 1.325 Tasks, `BUILD SUCCESSFUL`.
+- Kimi K3 wurde fuer eine unabhaengige Ratchet-Analyse gestartet. Nach dem
+  Nachweis des UI-Automationsfehlers wurde der Auftrag ohne Kimi-Diff
+  beendet; Sol pruefte Diff, Build und Geraetematrix selbst.
+- Endzustand: `securechat.app` v7/targetSdk 36 bleibt auf S7 und S4
+  installiert. Die isolierte Test-App `securechat.app.screenshots` wurde auf
+  beiden Geraeten entfernt. Keine andere App oder Geraetenverbindung wurde
+  veraendert.
+- **Offen/extern:** Google-Review abwarten; fuer Produktionszugang weiterhin
+  mindestens 12 Tester ueber 14 Tage. Ein echter 16-KB-Runtime-Test bleibt
+  mangels installiertem 16-KB-Systemabbild und ausreichendem Host-Speicher
+  offen. Server-signierte Pro/Elite-Aktivierung benoetigt ein gesondertes
+  Test-Credential und wurde nicht umgangen.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+## 2026-07-30 10:43 EEST — CODEX SOL — SECURECHAT RELEASE COMPLETION START
+
+- **Ticket:** `GIO-20260730-SECURECHAT-RELEASE-COMPLETE`; **Typ:** RELEASE /
+  DEVICE E2E / PLAY CLOSED TEST; **Status:** In Progress.
+- Gio hat die unmittelbar zuvor aufgelisteten offenen SecureChat-Punkte zur
+  autonomen Bearbeitung freigegeben.
+- Autorisierter Scope: verifiziertes v7-AAB auf Desktop bereitstellen;
+  Produktcommits `17c7af3` und `7e0763f` nach `origin/main` pushen; v7 in
+  den bestehenden SecureChat-Closed-Alpha-Track hochladen, notwendige
+  `remoteMessaging`-Foreground-Service-Deklaration aktualisieren und den
+  Testrelease zur Google-Pruefung einreichen; S7/S4-Funktionsmatrix und
+  isolierten alten-SQLCipher-Upgrade-Smoke soweit autonom ausfuehren.
+- Erlaubte Geraete bleiben S7 `ce10160adc00152604` und Tab S4
+  `ce12182c68644439037e`. Andere Apps werden nicht gestartet, geloescht
+  oder veraendert. Testidentitaeten/-nachrichten werden nicht in Logs oder
+  Bridges geschrieben.
+- Ausgeschlossen: Produktionszugang/-rollout, offener Test, Zahlungen,
+  Server-/Backend-Mutation, Secrets, IAM und Umgehung des
+  12-Tester-/14-Tage-Gates.
+- Rollback: Play-Entwurf vor Einreichung verwerfen; bei Device-Fehlern
+  Evidenz sichern und keine fremden Daten loeschen. Ein bereits akzeptiertes
+  Closed-Test-Bundle wird nicht produktiv ausgerollt.
+
+## 2026-07-30 10:24 EEST — CODEX SOL — SECURECHAT OPEN RELEASE GATES VERIFIED
+
+- **Ticket:** `GIO-20260730-SECURECHAT-OPEN-GATES`; **Typ:** STATUS /
+  PLAY READ-ONLY; **Status:** Verified / No external write.
+- Repository `main` ist zwei Produktcommits vor `origin/main`:
+  API-36-Commit `17c7af3` und 16-KB-Commit `7e0763f`. `BRIDGE.md` und die
+  untracked `AGENTS.md` bleiben separate Koordinationsdateien.
+- Play Console read-only verifiziert: Standard-Store-Eintrag ist live;
+  App-Symbol, 1024x500-Vorstellungsgrafik und drei Telefon-Screenshots sind
+  vorhanden. Tablet-Screenshots sind leer, blockieren den aktiven Testrelease
+  aber derzeit nicht.
+- Aktive Releases bleiben v4 im internen Test und
+  `0.1.5-alpha (6) - Closed alpha` im geschlossenen Alpha-Test. Google Play
+  kennt noch kein Bundle mit VersionCode 7.
+- Produktionszugang ist gesperrt: 0 Tester sind angemeldet; Google verlangt
+  mindestens 12 angemeldete Tester und mindestens 14 Tage geschlossenen Test.
+- Das neue verifizierte v7-AAB liegt unter
+  `app/build/outputs/bundle/release/app-release.aab`. Die Desktop-Datei
+  `/Users/gio/Desktop/SecureChat-LATEST.aab` ist noch das alte Bundle und
+  darf nicht als v7-Uploadquelle verwendet werden.
+- Offene Releaseaktionen: Produktcommits pushen; neues v7-AAB auf Desktop
+  bereitstellen; Foreground-Service-Erklaerung auf `remoteMessaging`
+  gegenpruefen; v7 in Closed Alpha hochladen/einreichen; mindestens 12 Tester
+  opt-in und 14-Tage-Gate erfuellen; danach Produktionszugang beantragen und
+  API-36-Produktionsrelease ausrollen.
+- Keine Play-, Git-, Datei- oder sonstige externe Schreibaktion in diesem
+  Statuscheck.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+## 2026-07-29 20:22 EEST — CODEX SOL — SECURECHAT S7/S4 DEVICE VALIDATION START
+
+- **Ticket:** `GIO-20260729-SECURECHAT-DEVICE16K`; **Typ:** DEVICE TEST /
+  MIGRATION / RELEASE; **Status:** In Progress.
+- Gio hat S7 `ce10160adc00152604` und Tab S4 `ce12182c68644439037e`
+  ausdruecklich als angeschlossene Testgeraete freigegeben.
+- Scope: vorhandene SecureChat-Installation und Version read-only erfassen,
+  Release aus Commit `7e0763f` per `install -r` ohne Datenloeschung
+  aktualisieren, App-Start, SQLCipher-/JNA-/Sodium-Laden, Prozessstabilitaet,
+  kritische Logs und sichtbare Edge-to-Edge-/Onboarding-Darstellung pruefen.
+- Keine Deinstallation vor der Inventur, kein `pm clear`, kein Factory Reset,
+  keine Eingriffe in andere Apps, kein Push, Play-Upload, Publishing,
+  Deployment oder Secret-Zugriff.
+- Rollback bei Installations-/Startfehler: Test stoppen, Evidenz sichern und
+  keine App-Daten loeschen; ein Downgrade mit erhaltenen Daten wird nicht
+  erzwungen.
+
+## 2026-07-29 17:32 EEST — CODEX SOL — SECURECHAT 16-KB NATIVE MIGRATION START
+
+- **Ticket:** `GIO-20260729-SECURECHAT-16K`; **Typ:** SECURITY /
+  DEPENDENCY / COMPLIANCE; **Status:** In Progress / Local only.
+- Gio hat mit „Ok weiter bitte“ den unmittelbar zuvor benannten, eng
+  begrenzten Folgetask freigegeben: SQLCipher, Lazysodium/libsodium und JNA
+  auf nachweislich Android-16-KB-kompatible Artefakte migrieren.
+- **Akzeptanzkriterien:** keine Änderung der kryptografischen Protokolle oder
+  Datenbanksemantik; vollständige Crypto-/DB-/App-Testketten grün; signiertes
+  APK/AAB; alle enthaltenen arm64-/x86_64-ELFs mit mindestens 16-KB-LOAD-
+  Alignment; Paket `securechat.app`, API 36 und VersionCode 7 bleiben
+  unverändert, sofern keine technisch notwendige neue Buildnummer entsteht.
+- **Rollback:** ausschließlich die Dependency-/Build-Diffs dieses Tasks
+  zurücknehmen; der bereits validierte API-36-Commit `17c7af3` bleibt
+  unverändert erhalten.
+- Kimi K3 erhält zuerst einen secret-freien read-only Tiefenreview zu
+  kompatiblen Upgradepfaden und Migrationsrisiken. Codex Sol verantwortet
+  Auswahl, Diff, Security-Review und vollständige Verifikation.
+- Kein Push, Play-Upload, Publishing, Deployment, Signing-Secret-Zugriff,
+  Protokollumbau oder physischer Geräteeingriff ist freigegeben.
+
+## 2026-07-29 19:10 EEST — CODEX SOL — SECURECHAT 16-KB NATIVE MIGRATION VALIDATED
+
+- **Ticket:** `GIO-20260729-SECURECHAT-16K`; **Typ:** FIX / SECURITY /
+  DEPENDENCY / COMPLIANCE; **Status:** Done locally / External release blocked.
+- Lokaler Produktcommit `7e0763f` migriert auf
+  `net.zetetic:sqlcipher-android:4.17.0`, Room `2.8.4`,
+  AndroidX SQLite `2.6.2`, Lazysodium Android `5.2.0` und JNA `5.19.1`.
+  Der JVM-Test-Fallback bleibt wegen Java-17-Kompatibilitaet bei
+  `lazysodium-java:5.1.0`. SQLCipher-Room-Factory, JNI-ProGuard-Regeln und
+  die Versionsdokumentation wurden angepasst; Protokolle, DB-Schema,
+  Paketname `securechat.app`, API 36 und VersionCode 7 blieben unveraendert.
+- Geaenderte Produktdateien: `README.md`, `llms.txt`,
+  `gradle/libs.versions.toml`, `stealthx-crypto/build.gradle.kts`,
+  `data/src/main/java/com/stealthx/data/ChameleonDatabase.kt` und
+  `app/proguard-rules.pro`.
+- Vollstaendiger Clean-Gate PASS:
+  `clean verifyNoAppIfrWalletCode check assembleDebug lintRelease
+  assembleRelease bundleRelease`, 1423 Tasks in 45m09s.
+  222 Tests, 0 Failures, 0 Errors, 16 Skips; 12 Release-Lintberichte,
+  0 Errors und 87 Warnings. Beide IFR-/Wallet-Code-Gates PASS.
+- Signierte Release-Artefakte verifiziert. APK:
+  `16c622ec8b919bcb44df56ea9ed41102f5bb0706c36e4375d4939b4b881525cb`;
+  AAB:
+  `521a84cc3b16c4727309c8bc12519b0bd096902b68ba4113934a63a57b2906d0`.
+  APK-Metadaten: `securechat.app`, Code 7, Name `0.1.6-alpha`,
+  compile/target SDK 36; APK-v2- und AAB-JAR-Signaturen gueltig;
+  `zipalign -c -P 16 -v 4` PASS.
+- Alle 46 in APK und AAB ausgelieferten ELF-Dateien wurden je ABI mit
+  `objdump` geprueft; jedes LOAD-Segment hat mindestens `2**14`
+  Alignment. Ergebnis: `ALL_PACKAGED_ELFS_16K_OR_GREATER=PASS`.
+- API-35-/4-KB-Emulator-Smoke PASS fuer die Migration: Release installiert,
+  Prozess blieb aktiv, `libjnidispatch.so` und `libsqlcipher.so` wurden
+  erfolgreich geladen; kein App-Fatal, `UnsatisfiedLinkError` oder
+  SQLite-Fehler. Die langsame headless AVD-System-UI meldete selbst einen
+  ANR; SecureChat wurde danach deinstalliert und der Emulator beendet.
+- Kimi K3 fuehrte zwei secret-freie read-only Tiefenreviews durch. Der
+  Finalreview fand keinen Blocker und bestaetigte Factory-API,
+  ProGuard-Regeln, ABI-Abdeckung, 16-KB-Alignment sowie die identische
+  `sqlite3_key()`-Semantik von alter und neuer SQLCipher-Bibliothek.
+- **Restliche Risiken:** Noch kein Runtime-Test auf einem echten
+  16-KB-Systemabbild, da nur 9,1 GiB Host-Speicher frei sind; noch kein
+  Upgrade-Smoke mit einer bereits unter SQLCipher 4.5.4 befuellten DB.
+  Room-KAPT und die no-arg destructive-migration API sind nur deprecated,
+  nicht fehlerhaft.
+- Kein Push, Play-Upload, Publishing, Deployment, Signing-Secret-Zugriff
+  oder physischer Geraeteeingriff. Fuer Upload/Publishing ist eine neue,
+  exakt begrenzte Freigabe erforderlich.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+## 2026-07-29 20:38 EEST — CODEX SOL — SECURECHAT S7/S4 DEVICE VALIDATION COMPLETE
+
+- **Ticket:** `GIO-20260729-SECURECHAT-DEVICE16K`; **Typ:** DEVICE TEST /
+  MIGRATION / RELEASE; **Status:** Done / Physical 4-KB devices green.
+- Geraete: S7 `SM-G930F`, Android 8/API 26; Tab S4 `SM-T835`,
+  Android 10/API 29 und 4096-Byte-Page-Size. Auf beiden war
+  `securechat.app` vor diesem Test nicht installiert; deshalb konnte keine
+  bestehende SQLCipher-4.5.4-Datenbank real aktualisiert werden.
+- Signierte Release-APK aus Commit `7e0763f`, SHA-256
+  `16c622ec8b919bcb44df56ea9ed41102f5bb0706c36e4375d4939b4b881525cb`,
+  wurde auf beiden Geraeten erfolgreich installiert. Verifiziert:
+  `securechat.app`, VersionCode 7, VersionName `0.1.6-alpha`,
+  minSdk 26, targetSdk 36.
+- Kaltstart PASS: S7 1,514 s, S4 4,032 s. Chatliste/verschluesselte
+  Datenabfrage, lokale StealthX-ID samt QR-Darstellung, Settings,
+  Kontakt-Erfassung sowie geraeteabhaengige NFC-Darstellung wurden ueber
+  UI-Hierarchie geprueft. S7 bietet NFC an; S4 meldet korrekt, dass NFC
+  nicht verfuegbar ist.
+- Settings und Kontakt-Flow enthalten auf beiden Geraeten keine Treffer fuer
+  IFR, Wallet, MetaMask, Ethereum, Uniswap oder WalletConnect. Die
+  Screenshot-Ausgabe ist wegen der SecureChat-Screenshot-Sperre schwarz;
+  UI-Hierarchie, Fokus und Window-Bounds bestaetigen eine randlose,
+  nicht ueberlappende Darstellung.
+- Background Message Listener auf beiden Geraeten aus- und wieder
+  eingeschaltet: Switch-Zustand und Service stoppten bzw. starteten korrekt.
+  Endzustand wieder `checked=true`; `MessageListenerService` ist foreground
+  und `startRequested=true`.
+- Background- und 12-Sekunden-Display-Sleep-Smoke PASS: beide PIDs und
+  Foreground-Services blieben unveraendert aktiv. S7 wurde sichtbar in
+  402 ms wieder aufgenommen. Beim S4 blieb nach Wake der Samsung-Bouncer vor
+  der laufenden App; Startaufruf 410 ms und Service/PID waren gruen, die
+  sichtbare Post-Wake-UI blieb durch den Lockscreen begrenzt.
+- Finale Logcat-Pruefung je Geraet: 0 Treffer fuer App-Fatal, App-ANR,
+  Prozessabsturz, `UnsatisfiedLinkError`, `SQLiteException`,
+  `file is not a database`, `SodiumException`, Foreground-Service- oder
+  SecureChat-`SecurityException`.
+- Endzustand: SecureChat bleibt auf S7 und S4 installiert, Background
+  Listener eingeschaltet. Keine App-Daten geloescht, keine andere App
+  veraendert, keine Source-Datei geaendert, kein Push, Play-Upload,
+  Publishing, Deployment oder Secret-Zugriff.
+- Verbleibende Release-Risiken bleiben unveraendert: echter
+  16-KB-Runtime-Test und Upgrade-Smoke einer unter SQLCipher 4.5.4
+  befuellten Datenbank.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+## 2026-07-30 10:25 EEST — CODEX SOL — OPEN RELEASE GATES SYNC
+
+- Vollstaendiger read-only Play-/Git-Status steht im Eintrag
+  `SECURECHAT OPEN RELEASE GATES VERIFIED`.
+- Aktueller naechster Gate: Push der Commits `17c7af3`/`7e0763f` und
+  v7-Closed-Alpha-Upload erst nach ausdruecklicher Freigabe.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+## 2026-07-30 11:41 EEST — CODEX SOL — FINAL APPEND-ONLY STATUS
+
+- Die vorherigen 11:38-/11:40-Bloecke dokumentieren den vollstaendigen
+  Abschluss und wurden wegen gleichzeitig vorhandener Handoffs vor aelteren
+  Bridge-Bloecken einsortiert. Dieser kanonische Endmarker steht am echten
+  Dateiende.
+- Aktuell: `main == origin/main == 020b949`; SecureChat v7 ist im
+  Closed-Alpha-Review; lokale Build-, Upgrade- und S7/S4-E2E-Gates sind
+  gruen. Nur die dokumentierten externen Gates bleiben offen.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+## 2026-07-31 12:25 EEST — CODEX SOL — AUTHORITATIVE REVIEWER-ENTITLEMENT EOF
+
+- Ticket `GIO-20260731-SECURECHAT-REVIEW-ENTITLEMENT` ist nach Sol-/Kimi-
+  Analyse ready for explicit production authorization.
+- v7 ist wegen leerem Entitlement-Public-Key nicht aktivierbar. Die
+  Umsetzung benoetigt Auth-/Test-Patches, dediziertes Railway-Signing-
+  Secret, widerrufbaren Elite-Reviewer-Code, neues AAB und E2E.
+- Baseline: Server-Token PASS, Subscription/Activation 77/77 PASS;
+  Kotlin-Verifier-Test 2/2 vor Assertion wegen fehlender
+  Sodium-Testinitialisierung fehlgeschlagen.
+- Keine produktive oder externe Mutation.
+
+## 2026-08-01 10:32 EEST — CODEX SOL — REVIEWER ENTITLEMENT IMPLEMENTATION START
+
+- **Ticket:** `GIO-20260731-SECURECHAT-REVIEW-ENTITLEMENT`;
+  **Status:** In Progress; **Risiko:** High.
+- Freigegeben sind Client-/Testfixes, dediziertes Ed25519-Keypair,
+  Railway-Secret/Signaling-Deploy, widerrufbarer Elite-Reviewer-Code,
+  signiertes v8-AAB, S7/S4-E2E und Closed-Alpha-Aktualisierung.
+- Kein Produktionsrollout und keine Zahlung. Keine Secret- oder
+  Credential-Werte in Git, Logs oder Bridge.
+- Sol bearbeitet Client, Build, E2E und Play; Kimi prueft/implementiert den
+  begrenzten Serverblock. Fremde Dirty-Dateien bleiben unangetastet.
+
+## 2026-08-01 11:05 EEST — CODEX SOL — REVIEWER ENTITLEMENT SECURITY GATE
+
+- **Ticket:** `GIO-20260731-SECURECHAT-REVIEW-ENTITLEMENT`; **Status:** In Progress.
+- Client v8 enthaelt den dedizierten oeffentlichen Ed25519-Pruefschluessel, korrigierte TLS-Rotationspins und retrybare Infrastrukturfehler. Der private Schluessel und Reviewer-Code bleiben ausschliesslich im geschuetzten lokalen Secret-Pfad.
+- Server-Fix lokal validiert: Signer-/Persistenzausfall verbraucht keinen Slot; Refresh loescht bei Signer-Ausfall keinen gueltigen Tier; Reviewer-Widerruf schreibt eine dauerhafte Sperrmarke, die Seed/Kauf-Merge nicht wieder aktiviert; Suite und neue Nicht-SecureCall-Produkte sind fail-closed.
+- Pruefungen: kritischer WS-/Activation-Block 84/84 PASS, Store-/Admin-Routentests PASS, kompletter Server-Testlauf PASS, Dependency-Audit 0 Findings. Claude Code fand zwei berechtigte High-Funde, die vor Deploy geschlossen wurden; Kimi K3 war wegen Provider-Limit nicht verfuegbar.
+- Android-Finalgate laeuft. Noch kein Railway-Secret, Deploy, Git-Push, Geraete-Eingriff oder Play-Upload.
+
+## 2026-08-01 11:37 EEST — CODEX SOL — V8 CLIENT VALIDATED / PRIMARY SERVER GATE
+
+- **Ticket:** `GIO-20260731-SECURECHAT-REVIEW-ENTITLEMENT`; **Status:** In Progress.
+- Clientcommit `e999c79` ist auf `main`. Release v8: Paket `securechat.app`, Version `0.1.7-alpha`, Code 8, compile/target 36; normaler Release hat keinen erzwungenen Tier und enthaelt exakt den zugehoerigen oeffentlichen Ed25519-Schluessel.
+- Vollstaendiger lokaler Gate PASS: 1084 Gradle-Tasks in 31:53, 222 Tests, 0 Failures/Errors, 16 Skips, Release-Lint 0 Issues, APK-v2-Signatur und AAB-JAR-Signatur gueltig. Desktop `SecureChat-LATEST.apk/.aab` aktualisiert.
+- S7 und S4 wurden per `install -r` ohne Datenloeschung auf v8 aktualisiert. Beide Prozesse laufen; app-spezifische Logs zeigen keinen Crash, TLS-/Pinning-, JNI-/Sodium- oder SQLite-Fehler.
+- Servercommit `8a0c386`, Stealth Basic CI und Security Audit sind gruen. Railway-Fallback wurde mit Secret/Seed gesund redeployed.
+- Blocker: Die App verbindet zu `api.stealthx.tech`, dem Hetzner/PM2-Primary, nicht zu Railway. Keine Hetzner-Mutation ohne erweiterte Freigabe. Elite-E2E, Closed-Alpha-Upload und Play-Credential bleiben bis dahin offen.
+## 2026-08-01 20:31 EEST — CODEX SOL — HETZNER EXECUTION APPROVED
+
+- **Ticket:** `GIO-20260731-SECURECHAT-REVIEW-ENTITLEMENT`; **Status:** In Progress.
+- Freigegeben: Hetzner-Primary auf den validierten Signaling-Commit `8a0c386`
+  aktualisieren, vorhandenen dedizierten Signer/Reviewer-Seed sicher nutzen, danach
+  Elite-E2E auf S7/S4 und v8-Upload ausschliesslich in Closed Alpha.
+- Kein Produktionsrollout und keine Zahlungen. Der laufende PM2-Prozess ist online;
+  vor Mutation werden produktive Dateien verglichen, ein Root-only-Backup angelegt
+  und die Staging-Testkette ausgefuehrt. Keine Credential-Werte in Logs oder Bridge.
+## 2026-08-01 20:57 EEST — CODEX SOL — S10 V8 INSTALLED
+
+- **Ticket:** `GIO-20260801-STEALTHX-SUITE-DISTRIBUTION`; **Status:** In Progress.
+- S10 `RF8N313QMFL` wurde per `install -r` ohne Datenloeschung von SecureChat v6
+  auf v8 (`0.1.7-alpha`, target SDK 36) aktualisiert. Das bestehende Profil zeigt
+  beim Start erwartungsgemaess den Samsung-Biometrie-Dialog; Paket- und
+  Versionspruefung sind PASS, sichtbarer App-Smoke wartet auf Entsperrung.
+
+## 2026-08-01 23:24 EEST — CODEX SOL — V8 DISTRIBUTION / PLAY UPLOAD
+
+- **Ticket:** `GIO-20260731-SECURECHAT-REVIEW-ENTITLEMENT`; **Status:** In Progress.
+- Hetzner-Primary laeuft auf dem validierten Signaling-Commit `8a0c386`; exakte
+  Remote-Test-, Audit-, Health- und WSS-Gates bestanden. S4 aktivierte das
+  widerrufbare server-signierte Elite-Reviewer-Entitlement Ende-zu-Ende. S7
+  blieb wegen nicht automatisierbarer Compose-Tastenbetaetigung bei FREE; es
+  gab dort keinen fehlgeschlagenen Serverrequest und keinen Credential-Leak.
+- Client v8 ist als GitHub-Release `v0.1.7-alpha-securechat` mit APK/AAB live;
+  Download HTTP 200, Android-CI und Pages-Deployment fuer `a6990f8` PASS.
+- Google Play akzeptiert den Upload in den bestehenden Closed-Alpha-Entwurf und
+  optimiert das Bundle derzeit. Reviewer-Code bleibt ausschliesslich im
+  geschuetzten lokalen Secret-Pfad und wird weder hier noch in Logs ausgegeben.
+- Kein Produktionsrollout und keine Zahlung. Offen: Play-Verarbeitung,
+  Entwurf speichern/einreichen und App-Access-Credential hinterlegen.
+
+## 2026-08-01 23:43 EEST — CODEX SOL — V8 CLOSED ALPHA SUBMITTED
+
+- **Ticket:** `GIO-20260731-SECURECHAT-REVIEW-ENTITLEMENT`; **Status:** Google review pending.
+- Google Play akzeptierte `SecureChat-LATEST.aab` als VersionCode 8,
+  `0.1.7-alpha`, minSdk 26 und target SDK 36. Release
+  `0.1.7-alpha (8) - Closed alpha` wurde ausschliesslich an den bestehenden
+  geschlossenen Alpha-Test mit 100 Prozent der Testgruppe gesendet.
+- Der widerrufbare Elite-Reviewer-Zugang wurde als englische App-Access-
+  Anleitung hinterlegt. Credential-Wert bleibt geheim; die optionale Nutzung
+  durch vertrauenswuerdige Google-Partner wurde deaktiviert. Play bestaetigte
+  `1 Aenderung wurde zur Ueberpruefung gesendet`; Vorabpruefungen sind durch
+  und der Eintrag steht unter `Aenderungen, die ueberprueft werden`.
+- Einzige Bundle-Warnung: fehlende Deobfuscation-Datei; sie blockiert den
+  Closed-Alpha-Review nicht. S4-Restart-Persistenz wurde erneut geprueft:
+  Settings zeigt nach Force-Stop/Start weiterhin `Current Access: ELITE`,
+  Prozess aktiv, keine relevanten Fatal-/TLS-/Sodium-/SQLite-Fehler.
+- Kein Produktionsrollout und keine Zahlung. Externer Restgate: Google-Review.
+
+## 2026-08-01 23:53 EEST — CODEX SOL — PUBLIC VERSION SWEEP COMPLETE
+
+- Commit `4b128d2` aktualisiert den sichtbaren APK-Statusbanner und die Wiki-
+  Releasezeile auf `0.1.7-alpha`. Der exakte Downloadtag bleibt
+  `v0.1.7-alpha-securechat`.
+- Android-CI `30696462125` und Pages `30696461746` PASS. Live Landing,
+  Downloadbereich und Wiki zeigen v0.1.7-alpha.
+- Closed Alpha v8 bleibt bei Google in Review; kein Produktionsrollout.
+
+## 2026-08-03 09:42 EEST — CODEX SOL — CHAMELEON INTEROP VERIFICATION START
+
+- **Ticket:** `GIO-20260803-CHAMELEON-V13-IDENTITY`; **Status:** In Progress;
+  read-only SecureChat/device-verification scope. No SecureChat source, identity, entitlement,
+  release, Play track, server, or credential mutation is authorized.
+- Goal: verify that a freshly generated current-format SecureChat identity/contact bundle is
+  accepted by the Chameleon identity-binding implementation and vice versa on S7/S4, without
+  exposing private keys or message content. S10 is currently unavailable.
+
+---
+
+## 2026-08-03 10:50 EEST — CODEX SOL — CHAMELEON INTEROP STATIC CHECKPOINT
+
+- **Ticket:** `GIO-20260803-CHAMELEON-V13-IDENTITY`; **Status:** In Progress.
+- Read-only comparison confirms SecureChat and Chameleon use the same public
+  `stealthx://add/<sxId>?x=...&e=...&s=...&c=...&h=...` contract, URL-safe
+  unpadded Base64 fields, canonical signature payload order, key lengths, and
+  Ed25519 signature verification. SecureChat's focused QR codec test is running.
+- Dynamic S7/S4 cross-app verification is intentionally paused: S7 currently has
+  `com.neabouli.woizz` in the foreground and appears controlled by another developer.
+  No SecureChat release data, identity, source, entitlement, or Play state was changed.
+- Security follow-up discovered during read-only comparison: SecureChat validates bundle
+  format and signature but its current `ContactRepository.validateBundle` does not yet
+  enforce that `sx_ID` is derived from the supplied Ed25519 key. Chameleon v13 does enforce
+  this. Treat the SecureChat-side binding check and legacy migration as a separate authorized
+  security task; do not silently expand this Chameleon release block.
+
+---
+
+## 2026-08-03 10:54 EEST — CODEX SOL — SECURECHAT QR CONTRACT TEST PASS
+
+- Read-only focused gate
+  `:data:testDebugUnitTest --tests com.stealthx.data.identity.PublicKeyBundleQrTest`
+  passed (`BUILD SUCCESSFUL in 1m 20s`, 70 tasks). This confirms current SecureChat
+  round-trip preservation of all public bundle fields, including `createdAt` used by
+  signature validation, and rejection when `createdAt` is missing.
+- No SecureChat source, release data, identity, entitlement, credential, server, Git, or
+  Play state was changed. Dynamic two-device evidence remains on hold for device isolation.
+
+---
+
+## 2026-08-03 13:10 EEST — CODEX SOL — CHAMELEON INTEROP PASS / API36 FGS FINDING
+
+- **Ticket:** `GIO-20260803-CHAMELEON-V13-IDENTITY`; interop verification PASS on
+  isolated API-30/API-36 emulators. SecureChat accepted Chameleon's complete signed
+  public bundle and stored one contact; Chameleon accepted SecureChat's current bundle
+  through its real paste/verify/save UI. No private keys or user data were exposed.
+- A temporary debug-only clipboard action was built in detached worktree
+  `securechat-interop-clipboard` solely to move the public QR payload between emulator
+  apps. It is not part of release source, Git or Play and is being discarded.
+- Separate reproducible finding: when target-SDK-36 SecureChat is cold-started in the
+  background by an exported debug broadcast, `SecureChatApp.onCreate()` unconditionally
+  calls `startForegroundService(MessageListenerService)`. Android rejects this with
+  `ForegroundServiceStartNotAllowedException`, crashing Application startup. Normal
+  explicit foreground launch succeeds. Fix must move/gate service startup by an allowed
+  foreground/boot path and add API-35/36 regression coverage before the next SecureChat
+  build; no production or Play state changed here.
+
+---
+
+## 2026-08-03 13:15 EEST — CODEX SOL — API36 FGS START FIX BLOCK
+
+- **Ticket:** `GIO-20260803-SECURECHAT-API36-FGS`; **Status:** In Progress;
+  **Risk:** medium. Scope is limited to preventing `SecureChatApp` from starting
+  `MessageListenerService` when Android cold-starts the process in a disallowed
+  background state, while preserving explicit foreground launch and allowed boot paths.
+- Kimi K3 is assigned a secret-free isolated implementation worktree. Required gate:
+  focused lifecycle tests, SecureChat full release gate, API-36 background-broadcast
+  regression, normal foreground-launch smoke, and Sol diff/security review. No version
+  bump, Play upload, production deployment, credential, payment or server mutation.
+
+---
+
+## 2026-08-03 13:45 EEST — CODEX SOL — API36 FGS START FIX LOCALLY GREEN
+
+- **Ticket:** `GIO-20260803-SECURECHAT-API36-FGS`; **Status:** Done locally;
+  external promotion not authorized. Kimi K3 implemented the narrow fix in isolated
+  branch `fix/securechat-api36-fgs`: `SecureChatApp.onCreate()` no longer starts the
+  message-listener foreground service from arbitrary background process creation;
+  `MainActivity.onCreate()` starts it from the allowed visible-app path when the
+  existing preference is enabled. Sol reviewed the complete two-file diff.
+- Real API-36 regression PASS on `emulator-5558`: after force-stop, the exported debug
+  DUMP broadcast cold-started the process and returned `ok=true` without
+  `ForegroundServiceStartNotAllowedException`, fatal exception or Application crash.
+  A subsequent normal Activity launch succeeded and `dumpsys` showed
+  `MessageListenerService` running as a foreground service with caller state `TOP`.
+- Full verification PASS after serial retry: `verifyNoAppIfrWalletCode`, all Gradle
+  tests, `lintRelease`, signed `assembleRelease`/`bundleRelease`, plus CI-equivalent
+  `check assembleDebug`. The first parallel release run hit a transient K2/KAPT
+  duplicate-service compiler error; the serial one-worker rerun passed. A later packaging
+  attempt initially lacked the isolated worktree's local signing link; after linking the
+  existing ignored local signing configuration, APK/AAB packaging passed.
+- Artifact validation: package `securechat.app`, versionCode 8, versionName
+  `0.1.7-alpha`, minSdk 26, compile/target SDK 36; APK v2 signature verified and AAB
+  JAR verification exited successfully. SHA-256: APK
+  `9ec83e79358989fbf29ba2d6238be5402112051951ab4cfbfde24aa1823ada32`;
+  AAB `ea153f6c8d8344742de4852ddda29c4c394e6c9ec8ce28464737e8a301cffc38`.
+- No version bump, Git push, Play upload, deployment, credential, payment, server or
+  physical-device mutation occurred. S7/S4 remained untouched because Woizz is active.
+  Next external step requires a fresh unique SecureChat versionCode and explicit
+  authorization to push and replace the closed-Alpha candidate.
+
+---
+
+## 2026-08-03 13:50 EEST — CODEX SOL — API36 FGS FIX COMMITTED LOCALLY
+
+- The reviewed two-file fix is committed locally as `d7586a7` on
+  `fix/securechat-api36-fgs`; the isolated worktree is clean. It has not been pushed.
+- API-30/API-36 disposable emulators were shut down without saving snapshots. Physical
+  S7/S4 remained untouched. External release work still requires a unique version bump
+  and explicit push/closed-Alpha promotion authorization.
+
+---
+
+## 2026-08-04 02:10 EEST — CODEX SOL — API36 FGS CLOSED-ALPHA PROMOTION AUTHORIZED
+
+- **Ticket:** `GIO-20260803-SECURECHAT-API36-FGS`; **Status:** In Progress;
+  external scope explicitly authorized by Gio.
+- Authorized actions: choose and apply a Play-unique SecureChat versionCode, integrate
+  local commit `d7586a7`, run the complete signed release gate, push the reviewed branch,
+  and upload/submit the resulting AAB only to the existing SecureChat closed Alpha test.
+- Excluded: production/open/public rollout, payments, server or credential mutation,
+  physical-device interference, and unrelated changes. Rollback: stop before Play submit
+  or retain the previous closed-Alpha release if validation fails.
+
+---
+
+## 2026-08-04 09:42 EEST — CODEX SOL — API36 FGS V9 CLOSED ALPHA SUBMITTED
+
+- **Ticket:** `GIO-20260803-SECURECHAT-API36-FGS`; **Status:** Done for the authorized
+  closed-Alpha promotion. The preceding `02:10 EEST` authorization timestamp was recorded
+  by a stale session clock; this append-only entry records the actual execution window.
+- Google Play confirmed versionCode `9`, versionName `0.1.8-alpha`, package
+  `securechat.app`, minSdk 26 and target SDK 36 as unique and accepted. Release
+  `0.1.8-alpha (9) - Closed alpha` was submitted only to the existing closed Alpha;
+  Play now shows `1 Änderung wurde zur Überprüfung gesendet`.
+- Release branch `fix/securechat-api36-fgs` was pushed with `d7586a7` (foreground-safe
+  listener start) and `b05c4a9` (v9 bump). It was not merged into `main`; no production,
+  open or public rollout occurred.
+- Sol full verification PASS: `verifyNoAppIfrWalletCode`, all tests, `lintRelease`, signed
+  `assembleRelease`/`bundleRelease`, then `check assembleDebug`. APK v2 and AAB JAR
+  signatures verified. APK SHA-256
+  `886857bbe58b749fc24038edce52d8bbfd896f3d5131b1ca50b345ffe2d1d6a5`; AAB SHA-256
+  `34744ea6c73a178ed567806de5f342ff8ac81f2377ad5ff98e7507cae505f36c`.
+- Kimi K3 independently reviewed `origin/main..b05c4a9` read-only: no high-severity or
+  security regression. Follow-ups, not Alpha blockers: define listener restart behavior
+  after reboot/process removal and confirm Play-policy justification for the pre-existing
+  `remoteMessaging` FGS type. Sol had already passed the real API-36 background-start
+  regression and normal foreground-listener smoke on an emulator.
+- Play emitted only the nonblocking missing R8 disclosure-file warning; release
+  `isMinifyEnabled = false`. No physical device, payment, server, credential or download
+  link was changed. Desktop artifacts: `/Users/gio/Desktop/SecureChat-LATEST.apk`,
+  `/Users/gio/Desktop/SecureChat-LATEST.aab`, and versioned copies under
+  `/Users/gio/Desktop/aab apk/`.
+
+---
+
+## 2026-08-04 10:03 EEST — CODEX SOL — LISTENER RECOVERY HARDENING START
+
+- **Ticket:** `GIO-20260804-SECURECHAT-LISTENER-RECOVERY`; **Status:** In Progress;
+  **Risk:** medium; local Android source/test scope only.
+- Goal: define and implement the smallest Android-16-compliant recovery path for the
+  opt-in background message listener after process removal or device reboot, and verify
+  whether the pre-existing `remoteMessaging` foreground-service type matches Android and
+  Google Play requirements. No identity, crypto, entitlement, payment or transport
+  protocol change is authorized.
+- Work will use the isolated `fix/securechat-api36-fgs` worktree. Kimi K3 receives a
+  secret-free read-only architecture review; Sol owns the implementation decision, diff,
+  full tests and emulator evidence.
+- S7 and S4 are unavailable for this task because another workload is currently active;
+  S10 is disconnected. No physical-device process, app or data will be touched. No Git
+  merge/push, Play write, public download, server, credential or production action is in
+  scope.
+
+---
+
+## 2026-08-04 11:53 EEST — CODEX SOL — LISTENER RECOVERY LOCAL PASS
+
+- **Ticket:** `GIO-20260804-SECURECHAT-LISTENER-RECOVERY`; **Status:** Local Done,
+  release integration not authorized. Worktree/branch:
+  `/Users/gio/Desktop/repos/.worktrees/securechat-listener-recovery`,
+  `fix/securechat-listener-recovery`, based on pushed closed-Alpha v9 commit `b05c4a9`.
+- Implemented a true opt-in background listener (new installs default off), notification
+  permission request at enable time, safe foreground-service startup, a LOW-importance
+  privacy-safe notification channel, and recovery after `BOOT_COMPLETED` and
+  `MY_PACKAGE_REPLACED`. Unknown receiver actions and encrypted-preference failures fail
+  closed. The existing `remoteMessaging` service type remains unchanged.
+- Changed production files: `app/build.gradle.kts`, `app/src/main/AndroidManifest.xml`,
+  `MainActivity.kt`, `MessageListenerService.kt`, `AppPreferences.kt`,
+  `SettingsScreen.kt`; new `BootCompletedReceiver.kt`, `ListenerStartup.kt`, and eight
+  JUnit 5 recovery-decision tests. A temporary debug-only listener switch used for the
+  emulator test was removed after evidence collection and is not in the final diff.
+- Sol full gate PASS on the final production diff:
+  `verifyNoAppIfrWalletCode test lintRelease assembleRelease bundleRelease check
+  assembleDebug`; 1,431 Gradle tasks, `BUILD SUCCESSFUL` in 14m16s. Eight focused tests
+  pass. `git diff --check` passes. Signed local package evidence: `securechat.app`,
+  versionCode 9, versionName `0.1.8-alpha`, minSdk 26, target/compile SDK 36; APK v2
+  signature and AAB JAR signature verified. Local hashes: APK
+  `e373f694e9f1d92c70c01741404cf3cce42b51545c3a63b6f1c9e2f935812484`; AAB
+  `264e8b13b6bc2d822832f5d30b4525ab5c7eae37eab03a53a57ebcce16be5621`.
+- Android-36 AOSP emulator PASS: fresh install had no listener; explicit opt-in produced
+  a foreground `remoteMessaging` service (`types=0x200`) with LOW channel
+  `securechat_background_messages_v2` and text `Background message listening is active`;
+  disabling stopped it; unknown receiver action did not start it. After a real emulator
+  reboot/unlock, Android started the service from the `BOOT_COMPLETED` exemption and no
+  `ForegroundServiceStartNotAllowedException`, app fatal exception, or service security
+  error was present. Emulator cold boot was unusually slow and its system boot queue had
+  unrelated pre-boot ANRs; the SecureChat recovery completed once Android delivered
+  `BOOT_COMPLETED`. Emulator was shut down without saving a snapshot.
+- Kimi K3 final read-only review found no critical/high security or lifecycle defect.
+  Accepted residuals: users who relied on the old implicit default-on behavior will now
+  need to enable the listener; the old notification channel can remain as harmless system
+  settings clutter; receiver/service integration beyond the emulator path is not covered
+  by JVM tests. Sol rejects Kimi's incidental claim that `storeScreenshot` excludes
+  `src/debug`: this project explicitly adds that source directory, but the temporary hook
+  was removed, so no new test surface remains.
+- Android/Play policy assessment: boot and package-replacement starts are documented FGS
+  exemptions, and `remoteMessaging` is not in the Android-15 boot-banned type list.
+  Google Play still requires a truthful FGS declaration and demonstration video as a
+  separate external console task.
+- No source commit, push, merge, Play write, public artifact replacement, server,
+  credential, payment, production, or physical-device action occurred. S7/S4 remained
+  untouched; S10 was disconnected. Release integration needs a new explicit approval and
+  should include release notes explaining that background listening is opt-in.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+---
+
+## 2026-08-04 12:04 EEST — LISTENER RECOVERY PROMOTION AUTHORIZATION ACTUAL EOF
+
+- The 12:02 authorization block was appended by context near an older marker rather than
+  the physical EOF. It remains intact under the append-only policy; this entry is the
+  authoritative current-state pointer.
+- Gio authorized commit/push/integration, versionCode 13 (`0.1.9-alpha`), SecureChat
+  closed-Alpha promotion, and the truthful Google Play `remoteMessaging` FGS declaration.
+  Protected review/CI remains mandatory; production/open/public rollout, payments,
+  server/secrets, physical devices, and unrelated repositories remain excluded.
+
+`TASK IN PROGRESS`
+
+---
+
+## 2026-08-04 12:31 EEST — LISTENER RECOVERY MERGE ACTUAL EOF
+
+- The 12:29 merge block was retained where contextual patching placed it. This is the
+  authoritative physical-EOF pointer: PR #10 is merged as exact `main`
+  `f572efb21396e4c552960bc282ccc8e31acddde2`; pre-merge CI and CodeRabbit passed.
+- Exact-main CI `30862321419` attempt 1 was cancelled after an infrastructure hang;
+  attempt 2 is running for the same commit. Play closed-Alpha upload and truthful
+  `remoteMessaging` declaration await Gio's personal Google authentication.
+
+`TASK IN PROGRESS`
+
+---
+
+## 2026-08-04 12:38 EEST — EXACT-MAIN CI PASS ACTUAL EOF
+
+- Exact `main` `f572efb21396e4c552960bc282ccc8e31acddde2` passed SecureChat Android
+  CI run `30862321419` attempt 2: Gradle checks, debug assembly and test-result upload all
+  succeeded. Pages run `30862320805` also passed.
+- Git integration is complete. Pending authorized external work is limited to uploading
+  signed `securechat.app` versionCode 13 (`0.1.9-alpha`) to the existing closed Alpha and
+  completing the truthful `remoteMessaging` Play declaration after Gio signs in.
+
+`TASK IN PROGRESS — PLAY AUTHENTICATION`
+
+---
+
+## 2026-08-04 12:52 EEST — CODEX SOL — V13 CLOSED ALPHA SUBMITTED
+
+- **Ticket:** `GIO-20260804-SECURECHAT-LISTENER-RECOVERY`; **Status:** Done for the
+  authorized integration and closed-Alpha promotion.
+- Google Play accepted package `securechat.app`, versionCode 13, versionName
+  `0.1.9-alpha`, minSdk 26 and target SDK 36 in the existing
+  `Geschlossener Test - Alpha`. English release notes document explicit listener opt-in,
+  Android 15/16 FGS handling, notification permission flow and restart recovery.
+- The release was submitted to Google review; Play confirmed
+  `1 Änderung wurde zur Überprüfung gesendet`. No production, open or public rollout,
+  payment, server, secret or physical-device action occurred.
+- Play's device comparison showed zero lost devices. The sole release warning was the
+  nonblocking missing R8 disclosure file; `isMinifyEnabled = false`. Signed AAB SHA-256:
+  `28324c9b8b6fae587d7a466cef4dd91a0a1c568a5a93320149e6636105c40454`.
+- App content lists the foreground-service declaration under completed declarations.
+  `REMOTE_MESSAGING` is selected for transferring messages between devices and the
+  existing demonstration video returns HTTP 200. The exact v13 merged release manifest
+  declares only `FOREGROUND_SERVICE_REMOTE_MESSAGING`; the console also displays a stale
+  `DATA_SYNC` label from older active artifact history, so Sol did not add or modify an
+  untruthful v13 data-sync declaration.
+- Exact main `f572efb21396e4c552960bc282ccc8e31acddde2`, PR #10, pre-merge CI,
+  CodeRabbit, exact-main Android CI `30862321419` attempt 2 and Pages `30862320805`
+  are all green.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
