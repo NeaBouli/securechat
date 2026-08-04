@@ -35,8 +35,8 @@ android {
         applicationId = "securechat.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 9
-        versionName = "0.1.8-alpha"
+        versionCode = 13
+        versionName = "0.1.9-alpha"
         buildConfigField("String", "FORCED_TIER", "\"\"")
         buildConfigField("Boolean", "ALLOW_SCREENSHOTS", "false")
     }
@@ -157,4 +157,9 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.timber)
+
+    testImplementation(libs.junit5.api)
+    testRuntimeOnly(libs.junit5.engine)
 }
+
+tasks.withType<Test> { useJUnitPlatform() }

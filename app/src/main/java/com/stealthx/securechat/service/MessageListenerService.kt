@@ -5,9 +5,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
 import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.prefs.AppPreferences
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +31,14 @@ class MessageListenerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(NOTIFICATION_ID, buildForegroundNotification())
+        // FOREGROUND_SERVICE_TYPE_MANIFEST keeps the manifest-declared
+        // foregroundServiceType (remoteMessaging) unchanged.
+        ServiceCompat.startForeground(
+            this,
+            NOTIFICATION_ID,
+            buildForegroundNotification(),
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_MANIFEST
+        )
         if (!appPreferences.backgroundListenerEnabled) {
             stopListeningService()
             return
@@ -71,24 +80,23 @@ class MessageListenerService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun buildForegroundNotification(): Notification {
-        val channelId = "securechat_listener"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                channelId,
-                "Message Listener",
-                NotificationManager.IMPORTANCE_MIN
+                NOTIFICATION_CHANNEL_ID,
+                "Background messages",
+                NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Keeps encrypted message delivery active"
+                description = "Shown while background message listening is active"
                 setShowBadge(false)
                 setSound(null, null)
             }
             getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
-        return NotificationCompat.Builder(this, channelId)
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(android.R.drawable.ic_lock_lock)
             .setContentTitle("SecureChat")
-            .setContentText("End-to-end encrypted • messages protected")
-            .setPriority(NotificationCompat.PRIORITY_MIN)
+            .setContentText("Background message listening is active")
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .setOngoing(true)
             .setSilent(true)
             .build()
@@ -107,5 +115,6 @@ class MessageListenerService : Service() {
 
     companion object {
         private const val NOTIFICATION_ID = 7331
+        private const val NOTIFICATION_CHANNEL_ID = "securechat_background_messages_v2"
     }
 }

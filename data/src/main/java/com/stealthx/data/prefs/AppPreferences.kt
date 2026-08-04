@@ -74,7 +74,7 @@ class AppPreferences @Inject constructor(
         set(value) = prefs.edit().putBoolean(KEY_STEALTH_DELETE_ENABLED, value).apply()
 
     var backgroundListenerEnabled: Boolean
-        get() = prefs.getBoolean(KEY_BACKGROUND_LISTENER_ENABLED, true)
+        get() = prefs.getBoolean(KEY_BACKGROUND_LISTENER_ENABLED, false)
         set(value) = prefs.edit().putBoolean(KEY_BACKGROUND_LISTENER_ENABLED, value).apply()
 
     var pinnedContactIds: Set<String>
