@@ -35,8 +35,8 @@ android {
         applicationId = "securechat.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 8
-        versionName = "0.1.7-alpha"
+        versionCode = 9
+        versionName = "0.1.8-alpha"
         buildConfigField("String", "FORCED_TIER", "\"\"")
         buildConfigField("Boolean", "ALLOW_SCREENSHOTS", "false")
     }
