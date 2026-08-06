@@ -3110,6 +3110,14 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 `REVIEW IN PROGRESS`
 
+## 2026-08-06 03:40 EEST — CODEX SOL — REVIEW FIX
+
+- GitHub Build & Test passed. CodeRabbit's valid timeout finding was addressed in the shared
+  browser client together with safer signature fallback and deterministic button reset.
+- No payment activation, deployment, secret or Android source change.
+
+`REVIEW FIX CI RERUN REQUIRED`
+
 ## 2026-08-06 03:33 EEST — CODEX SOL — PR OPEN
 
 - PR `https://github.com/NeaBouli/securechat/pull/12`, implementation commit `ed5f3ab`.
