@@ -3103,6 +3103,33 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 `READY FOR REVIEW — DO NOT ACTIVATE PAYMENTS`
 
+---
+
+## 2026-08-09 11:47 EEST — CODEX SOL — LEGACY PR #9 SELECTIVE SALVAGE
+
+- PR #9 is stale as a branch but contains one missing security invariant: only
+  `securechat_pro_lifetime -> PRO` and `securechat_elite_lifetime -> ELITE` are accepted.
+- The product/tier binding and mismatch tests were ported onto fresh current-main branch
+  `fix/entitlement-product-tier-binding`; unknown products and forged product/tier combinations
+  fail closed.
+- `ANDROID_HOME=/Users/gio/Library/Android/sdk ./gradlew :stealthx-crypto:test --no-daemon`
+  PASS (`BUILD SUCCESSFUL`, 32 actionable tasks). No Android wallet/IFR code, deployment,
+  runtime secret or payment activation changed.
+- Product decision: IFR-holder discounts have no per-wallet reuse limit. Browser verification
+  is required per discounted checkout; wallet/IFR mechanisms remain outside the Android app.
+
+`SECURITY SALVAGE TESTED — PR #9 WILL BE SUPERSEDED`
+
+## 2026-08-09 12:02 EEST — CODEX SOL — LEGACY PR #9 SALVAGE READY
+
+- Final diff and `git diff --check` PASS. Crypto tests remain green for both debug and release
+  unit-test variants. The branch contains only the product/tier binding, focused tests and this
+  append-only Bridge record.
+- Ready for protected GitHub PR/CI integration. Old PR #9 will be closed as superseded after the
+  fresh-main replacement merges.
+
+`FRESH-MAIN SECURITY PR READY`
+
 ## 2026-08-09 11:09 EEST — WEB IFR MERGE ACTUAL EOF POINTER
 
 - The detailed same-timestamp merge block appears earlier due to contextual append placement.
