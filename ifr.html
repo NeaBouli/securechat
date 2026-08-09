@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SecureChat IFR integration status. Browser verification and discounted checkout are currently disabled.">
-<title>SecureChat IFR Integration Status</title>
+<meta name="description" content="SecureChat browser-only IFR holder verification for eligible 50% checkout discounts.">
+<title>SecureChat IFR Holder Discount</title>
 <style>
 :root{color-scheme:dark;--accent:#00ff88;--brand:#00d4ff;--bg:#070910;--panel:#10141d;--text:#eef3f8;--muted:#a8b0bc}
 *{box-sizing:border-box}
@@ -18,11 +18,11 @@ a{display:inline-block;margin-top:10px;color:var(--accent);font-weight:700}
 </head>
 <body>
 <main class="card">
-<h1>IFR integration is launch-gated</h1>
-<p>SecureChat does not connect a wallet in the Android app. Browser wallet verification and discounted Stripe checkout are planned but currently disabled pending VLABS payment, accounting and launch approval.</p>
+<h1>IFR holder discount</h1>
+<p>SecureChat does not connect a wallet in the Android app. Wallet ownership is signed only in the browser before purchase, then the server checks IFR read-only on Ethereum Mainnet.</p>
 <p>Referenced Ethereum Mainnet token contract: <code>0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code>.</p>
-<p>No wallet connection, signature request, eligibility check or checkout can be started from this page.</p>
-<a href="https://vlabs.gr/en/shop?focus=security">Check VLABS availability</a>
+<p>Eligible checkout is 50% off: 2,000 IFR for Pro or 6,000 IFR for Elite. Payment remains fail-closed whenever the secure fiscal checkout is unavailable.</p>
+<a href="./#ifr">Open browser verification</a>
 </main>
 </body>
 </html>

@@ -3092,6 +3092,69 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-06 03:30 EEST — WEB-ONLY IFR SALES ACTUAL EOF POINTER
+
+- The detailed same-timestamp `WEB-ONLY IFR SALES SURFACE` block was appended earlier in this
+  file by contextual patch placement and remains intact under append-only rules.
+- Authoritative current status: branch `fix/gh-42-web-ifr-checkout` is source-ready for review;
+  production payment activation remains blocked by VLABS fiscal readiness, entitlement runtime
+  provisioning and repeated-discount enforcement. All documented tests passed and no Android,
+  deployment, secret or live-payment action occurred.
+
+`READY FOR REVIEW — DO NOT ACTIVATE PAYMENTS`
+
+## 2026-08-06 03:33 EEST — CODEX SOL — PR ACTUAL EOF POINTER
+
+- PR `https://github.com/NeaBouli/securechat/pull/12`, implementation commit `ed5f3ab`.
+- GitHub build/test and CodeRabbit checks started. No merge, deployment or payment activation.
+
+`REVIEW IN PROGRESS`
+
+## 2026-08-06 03:40 EEST — CODEX SOL — REVIEW FIX
+
+- GitHub Build & Test passed. CodeRabbit's valid timeout finding was addressed in the shared
+  browser client together with safer signature fallback and deterministic button reset.
+- No payment activation, deployment, secret or Android source change.
+
+`REVIEW FIX CI RERUN REQUIRED`
+
+## 2026-08-06 03:47 EEST — CODEX SOL — REVIEW SOURCE GREEN
+
+- Implementation head `79e21d5`; PR #12 Build & Test PASS. Valid CodeRabbit timeout feedback
+  was fixed across the shared client; final bot status is green/rate-limited.
+- Ready for human review only. No merge, deploy, secret or payment activation.
+
+`SOURCE REVIEW GREEN — PRODUCTION BLOCKED`
+
+## 2026-08-06 03:33 EEST — CODEX SOL — PR OPEN
+
+- PR `https://github.com/NeaBouli/securechat/pull/12`, implementation commit `ed5f3ab`.
+- GitHub build/test and CodeRabbit checks started. No merge, deployment or payment activation.
+
+`REVIEW IN PROGRESS`
+
+---
+
+## 2026-08-06 03:30 EEST — CODEX SOL — WEB-ONLY IFR SALES SURFACE
+
+- Ticket `GIO-20260806-STEALTHX-WEB-IFR-CHECKOUT`; branch
+  `fix/gh-42-web-ifr-checkout`; status: source ready for review, production blocked.
+- SecureChat landing, IFR, FAQ, Wiki and README now describe IFR solely as a browser-purchase
+  discount. The active browser control supports Connect, Disconnect, signed verification and
+  Pro/Elite checkout; the wallet field is read-only and the Suite remains unavailable.
+- Added a neutral payment-return page that waits for signed server fulfillment instead of
+  claiming success from the return URL. Mobile 375 px browser verification has zero horizontal
+  overflow and readable controls.
+- PASS: shared JS syntax; identical shared-script SHA-256 across all three sites;
+  `git diff --check`; Gradle `verifyNoAppIfrWalletCode`. No Android source/artifact, payment
+  activation, secret, deployment or live checkout was touched.
+- Blocked before live sale: VLABS AADE/myDATA/e-timologio; production entitlement signing and
+  runtime configuration; repeated-discount enforcement policy.
+
+`READY FOR REVIEW — DO NOT ACTIVATE PAYMENTS`
+
+---
+
 ## 2026-08-04 12:02 EEST — CODEX SOL — LISTENER RECOVERY PROMOTION AUTHORIZED
 
 - **Ticket:** `GIO-20260804-SECURECHAT-LISTENER-RECOVERY`; **Status:** In Progress;
@@ -3848,3 +3911,16 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   are all green.
 
 `TASK COMPLETE — TARGET STOP ACTIVE`
+
+---
+
+## 2026-08-06 03:30 EEST — WEB-ONLY IFR SALES ACTUAL EOF POINTER
+
+- The detailed same-timestamp `WEB-ONLY IFR SALES SURFACE` block appears earlier in this file
+  because of contextual patch placement and remains intact under append-only rules.
+- Authoritative current status: branch `fix/gh-42-web-ifr-checkout` is source-ready for review;
+  production payment activation remains blocked by VLABS fiscal readiness, entitlement runtime
+  provisioning and repeated-discount enforcement. All documented tests passed and no Android,
+  deployment, secret or live-payment action occurred.
+
+`READY FOR REVIEW — DO NOT ACTIVATE PAYMENTS`
