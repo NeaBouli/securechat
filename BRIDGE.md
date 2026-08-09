@@ -3971,3 +3971,18 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   deployment, secret or live-payment action occurred.
 
 `READY FOR REVIEW — DO NOT ACTIVATE PAYMENTS`
+
+## 2026-08-09 12:11 EEST — CODEX SOL — LEGACY ENTITLEMENT SALVAGE MERGED
+
+- Fresh-main PR #14 merged as `ec1b38d010ba6a6867aadc12b94ea5d7851fe99b`; exact-main Android CI run
+  `31305071624` and Pages run `31305071074` PASS.
+- Obsolete PR #9 was commented and closed as superseded. Its relevant product-to-tier binding
+  was ported and tested; the stale branch itself was not merged.
+- Product decision is final for current web sales: every successfully verified IFR holder may
+  receive the provider-defined discount on every eligible checkout. There is no per-wallet
+  reuse limit. Verification remains browser/server-side before purchase; Android apps remain
+  free of IFR and wallet mechanisms.
+- No production deployment, runtime secret, Play release or live payment mutation occurred.
+  VLABS fiscal/AADE and private production fulfillment remain a separate readiness gate.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
