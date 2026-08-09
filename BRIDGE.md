@@ -3103,6 +3103,26 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 `READY FOR REVIEW — DO NOT ACTIVATE PAYMENTS`
 
+## 2026-08-09 11:09 EEST — WEB IFR MERGE ACTUAL EOF POINTER
+
+- The detailed same-timestamp merge block appears earlier due to contextual append placement.
+- Authoritative status: PR #12 merged as `691f5fd6c04de39a56cd70b7e8770c8f600d7a75`;
+  exact-main Android CI and Pages PASS; live site HTTP 200; payment remains fail-closed.
+
+`MERGED AND VERIFIED — LIVE PAYMENT STILL BLOCKED`
+
+## 2026-08-09 11:09 EEST — CODEX SOL — WEB IFR MERGED
+
+- Gio granted explicit owner/admin approval for the exact reviewed PR #12 head `dc1298b`.
+- PR #12 merged to `main` as `691f5fd6c04de39a56cd70b7e8770c8f600d7a75`.
+- Exact-main SecureChat Android CI and GitHub Pages deployment PASS. Live
+  `https://securechat.stealthx.tech/` exposes the browser-only IFR controls and returns HTTP 200.
+- No Android wallet/IFR code, payment activation, runtime secret or Android artifact changed.
+- Remaining gates: VLABS fiscal transmission, production entitlement provisioning and
+  server-side repeated-discount enforcement.
+
+`MERGED AND VERIFIED — LIVE PAYMENT STILL BLOCKED`
+
 ## 2026-08-06 03:33 EEST — CODEX SOL — PR ACTUAL EOF POINTER
 
 - PR `https://github.com/NeaBouli/securechat/pull/12`, implementation commit `ed5f3ab`.
