@@ -1,5 +1,16 @@
 # BRIDGE — securechat
 
+## 2026-08-12 — Private Finance Ownership Refreshed
+
+- Codex remains responsible for commercial integration coordination. Detailed
+  payment, fiscal, provider and release records are maintained only in private
+  `NeaBouli/vlabs` at
+  `docs/finance-integrations/projects/securechat.md`.
+- SecureChat remains `STANDBY / IN DEVELOPMENT`; no sales activation is
+  authorized and all product/runtime/device/release gates remain closed.
+- Keep this public repository limited to generic disabled-state and ownership
+  references; do not add operational finance or identity data.
+
 ## Public Payment Data Boundary
 
 - This repository is public. Operational payment/Etimologio information is stored only in private `NeaBouli/vlabs` at `docs/finance-integrations/projects/securechat.md`.
