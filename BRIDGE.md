@@ -1,5 +1,14 @@
 # BRIDGE — securechat
 
+## 2026-08-12 — Software Refund Policy Synchronized
+
+- The private VLABS operator policy now records no voluntary refund after
+  successful software activation, with mandatory corrections handled through
+  the private credit/revocation path.
+- SecureChat remains `STANDBY / IN DEVELOPMENT`; no sales, runtime, provider or
+  Production gate changed. Detailed finance records stay only in private
+  `NeaBouli/vlabs`; this public entry contains no operational values.
+
 ## 2026-08-12 — Private Finance Ownership Refreshed
 
 - Codex remains responsible for commercial integration coordination. Detailed
