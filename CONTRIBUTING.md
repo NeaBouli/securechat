@@ -49,3 +49,10 @@ SecureChat is licensed under the StealthX Source-Available License. You may read
 - GitHub Issues for feature discussions and bug reports
 - Pull Request comments for code-specific discussions
 - kaspartisan@proton.me for private matters
+## Gradle dependency verification
+
+Dependencies are checksum-locked in `gradle/verification-metadata.xml`. When a reviewed
+dependency update changes the graph, rerun the same affected Gradle CI tasks with
+`--write-verification-metadata sha256`, inspect the metadata diff for only the expected
+component/version changes, and then rerun the tasks without the write flag. Do not accept
+unrelated checksum churn.

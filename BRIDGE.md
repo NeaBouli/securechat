@@ -3092,6 +3092,62 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 18:06 EEST — CODEX SOL — SECURITY-GATE HANDOFF ACTUAL EOF POINTER
+
+- The complete `SECURITY/CI GATES HARDENED → REVIEW` handoff from 18:03 EEST appears earlier
+  in this append-only file because contextual insertion matched an older stop marker.
+- Its authoritative status is unchanged: all local source/build/signature/static checks are
+  green; API 26/36 emulator execution and normal GitHub PR review/checks remain required before
+  merge. No production, deployment, credential, payment or Play publishing action occurred.
+
+`LOCAL HARDENING GREEN — NORMAL PR AND REQUIRED REVIEW NEXT`
+
+---
+
+## 2026-08-13 18:15 EEST — CODEX SOL — POST-REVIEW CI CORRECTIONS VERIFIED
+
+- Kimi K3's independent SecureChat review and the cross-repository CI review were applied by
+  Sol: AAB verification now requires real JAR signature entries, workflow concurrency uses only
+  valid contexts, and SDK/emulator/ADB/`apksigner` invocations use deterministic SDK paths.
+- Post-correction validation: all workflow YAML and Gradle verification XML parse, every action
+  reference is a 40-character immutable SHA, no invalid top-level matrix reference remains,
+  `git diff --check` passes, and no temporary signing file remains.
+- Full local build/test/signature results remain the green results recorded in the detailed
+  handoff. Hosted API 26/36 instrumentation and normal PR review/checks remain pre-merge gates.
+
+`POST-REVIEW SOURCE GREEN — PR NEXT`
+
+---
+
+## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
+
+- **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
+  worktree; the user's primary checkout and its unrelated changes were preserved.
+- CI now uses immutable upstream-verified action SHAs, least privilege and concurrency; it runs
+  root checks/lint plus debug and CI-signed release APK/AAB builds, validates ZIP/signatures,
+  labels artifacts CI-only, retains them seven days and always removes ephemeral signing data.
+- Added dependency review, monthly Dependabot, API 26/36 emulator instrumentation and a
+  `MainActivity` launch smoke test. Added official Gradle wrapper checksum and strict dependency
+  checksum metadata; Android test dependencies live in the version catalog and reviewed
+  metadata regeneration is documented.
+- **Tests:** metadata-generation full release chain PASS in 6m52s (1,766 tasks); final original
+  metadata-enforced release chain PASS in 1m53s (1,462 tasks). After final review corrections,
+  `./gradlew check assembleDebugAndroidTest` PASS in 26m11s (1,375 tasks), including both
+  `verifyNoAppIfrWalletCode` and `verifyNoClientSideGooglePlayUnlock` plus all module checks and
+  Android-test APK builds. Release APK/AAB ZIP and signature gates PASS; package metadata remains
+  `securechat.app`, versionCode 13, target/compile SDK 36, min SDK 26.
+- Kimi K3 independently reviewed the diff read-only, verified all action tags, the official
+  Gradle checksum and selected Google Maven hashes. Sol fixed its actionable AAB-signature-gate
+  finding by requiring both JAR signature files in addition to `jarsigner`, moved test versions
+  into the catalog, added unconditional key cleanup, API 36 coverage and maintenance guidance.
+- Static workflow/XML/action-pin/diff/temporary-file/secret-pattern checks PASS. No production,
+  deployment, payment, runtime credential, Play publishing or app entitlement logic changed.
+  API 26/36 emulator execution and normal PR review/checks remain required before merge.
+
+`LOCAL HARDENING GREEN — NORMAL PR AND REQUIRED REVIEW NEXT`
+
+---
+
 ## 2026-08-06 03:30 EEST — WEB-ONLY IFR SALES ACTUAL EOF POINTER
 
 - The detailed same-timestamp `WEB-ONLY IFR SALES SURFACE` block was appended earlier in this
@@ -3986,3 +4042,27 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   VLABS fiscal/AADE and private production fulfillment remain a separate readiness gate.
 
 `TASK COMPLETE — TARGET STOP ACTIVE`
+
+---
+
+## 2026-08-13 18:07 EEST — CODEX SOL — SECURITY-GATE HANDOFF PHYSICAL EOF
+
+- The complete 18:03 EEST security/CI hardening handoff and its 18:06 pointer appear earlier in
+  this append-only file due historical duplicate stop markers. This block is the physical EOF.
+- Authoritative status: all local source/build/signature/static checks are green; API 26/36
+  emulator execution and normal GitHub PR review/checks remain required before merge. No
+  production, deployment, runtime credential, payment or Play publishing action occurred.
+
+`LOCAL HARDENING GREEN — NORMAL PR AND REQUIRED REVIEW NEXT`
+
+---
+
+## 2026-08-13 18:16 EEST — CODEX SOL — POST-REVIEW CORRECTION PHYSICAL EOF
+
+- The detailed 18:15 EEST post-review correction block appears earlier because this historical
+  append-only Bridge contains repeated marker text. Its authoritative status is unchanged:
+  Kimi's actionable findings are fixed and final YAML/XML/shell/action-pin/diff/temp-file
+  validation passes.
+- Hosted API 26/36 instrumentation and normal PR review/checks remain pre-merge gates.
+
+`POST-REVIEW SOURCE GREEN — PR NEXT`
