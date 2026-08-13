@@ -3092,6 +3092,230 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 18:06 EEST — CODEX SOL — SECURITY-GATE HANDOFF ACTUAL EOF POINTER
+
+- The complete `SECURITY/CI GATES HARDENED → REVIEW` handoff from 18:03 EEST appears earlier
+  in this append-only file because contextual insertion matched an older stop marker.
+- Its authoritative status is unchanged: all local source/build/signature/static checks are
+  green; API 26/36 emulator execution and normal GitHub PR review/checks remain required before
+  merge. No production, deployment, credential, payment or Play publishing action occurred.
+
+`LOCAL HARDENING GREEN — NORMAL PR AND REQUIRED REVIEW NEXT`
+
+---
+
+## 2026-08-13 18:15 EEST — CODEX SOL — POST-REVIEW CI CORRECTIONS VERIFIED
+
+- Kimi K3's independent SecureChat review and the cross-repository CI review were applied by
+  Sol: AAB verification now requires real JAR signature entries, workflow concurrency uses only
+  valid contexts, and SDK/emulator/ADB/`apksigner` invocations use deterministic SDK paths.
+- Post-correction validation: all workflow YAML and Gradle verification XML parse, every action
+  reference is a 40-character immutable SHA, no invalid top-level matrix reference remains,
+  `git diff --check` passes, and no temporary signing file remains.
+- Full local build/test/signature results remain the green results recorded in the detailed
+  handoff. Hosted API 26/36 instrumentation and normal PR review/checks remain pre-merge gates.
+
+`POST-REVIEW SOURCE GREEN — PR NEXT`
+
+---
+
+## 2026-08-13 19:10 EEST — CODEX SOL — FRESH-RUNNER METADATA CORRECTION
+
+- The first hosted PR build exposed dependency checksums absent from metadata generated against
+  the warm local Gradle cache. No source or application behavior was implicated.
+- Sol regenerated strict SHA-256 verification metadata against an empty Gradle user home.
+  `check lintRelease assembleDebug assembleDebugAndroidTest` passed in 28m13s
+  (1,640 tasks).
+- The exact strict release chain
+  `check lintRelease assembleDebug assembleRelease bundleRelease` passed in 12m40s
+  (1,431 tasks). Release APK/AAB ZIP and signature gates passed; expected warnings are limited
+  to the intentionally short-lived self-signed CI identity.
+- GitHub dependency graph/vulnerability alerts were enabled for this repository through the
+  authorized repository-admin API. The endpoint verified with HTTP 204 and the rerun Dependency
+  Review job passed.
+- Temporary CI-only signing material was removed. PR #18 will rerun hosted checks after this
+  metadata correction; required review and the separate private-audit release gate remain.
+
+`FRESH-RUNNER DEPENDENCY METADATA GREEN — HOSTED PR RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:14 EEST — CODEX SOL — PR REVIEW HARDENING PHYSICAL EOF
+
+- Both SecureChat checkout steps now set `persist-credentials: false`, preventing PR-controlled
+  Gradle logic from inheriting a Git credential in the workspace.
+- Sol did not add `contents: write` dependency submission to the PR build: the repository
+  dependency graph is already enabled and Dependency Review passes, while broadening token
+  permissions is contrary to the least-privilege scope. Dependabot's monthly grouping and the
+  high-severity blocking threshold remain explicit policy choices, not demonstrated defects.
+- Ruby YAML parsing, checkout-configuration inspection and `git diff --check` pass. Hosted
+  PR checks remain authoritative for emulator execution.
+
+`ACTIONABLE PR REVIEW ITEM FIXED — HOSTED CHECKS REQUIRED`
+
+---
+
+## 2026-08-13 19:22 EEST — CODEX SOL — LINUX AAPT2 VERIFICATION COVERAGE
+
+- The final hosted build progressed beyond the prior metadata gap and identified the remaining
+  platform-specific AAPT2 Linux classifier. Sol resolved the exact pinned classifier from the
+  configured Google repository using Gradle's verification writer.
+- Strict metadata now includes its Gradle-generated SHA-256 entry. XML and diff validation pass,
+  all three repositories produced the same checksum, and the temporary init script was removed.
+- No dependency version or application code changed. A final hosted rerun remains required.
+
+`CROSS-PLATFORM VERIFICATION METADATA COMPLETE — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:45 EEST — CODEX SOL — EMULATOR RUNNER CORRECTION
+
+- Both manual API 26/36 jobs remained indefinitely in `adb wait-for-device`; the existing
+  deadline started only after that unbounded call and therefore could not protect the job.
+- The manual emulator orchestration was replaced by established
+  `ReactiveCircus/android-emulator-runner` v2.38.0 pinned to immutable commit
+  `a421e43855164a8197daf9d8d40fe71c6996bb0d`, with a 600-second boot timeout. Compile platform
+  and build-tools 36 are provisioned explicitly before the same connected smoke-test task.
+- Workflow YAML, immutable action pins and diff validation pass. Hosted execution is required.
+
+`EMULATOR BOOT FLOW BOUNDED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:09 EEST — CODEX SOL — BOUNDED ADB INSTALL TIMEOUT
+
+- API 26 booted successfully but ran zero tests because Ddmlib timed out while committing the
+  26-MB debug APK. UTP reported `ShellCommandUnresponsiveException`; no test assertion or app
+  crash occurred. The uploaded diagnostic artifact confirmed the same installation failure.
+- Android's AGP 8.11.1 `adbOptions.timeOutInMs` is set to 600,000 ms, retaining a finite job
+  bound while allowing slow emulator installs. Local Gradle configuration validation passes.
+
+`ADB INSTALL WINDOW BOUNDED AT TEN MINUTES — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:28 EEST — CODEX SOL — NON-STREAMING INSTRUMENTATION
+
+- A second API 26 run proved UTP ignored the AGP ADB timeout and failed after five minutes in
+  the streaming split commit, still with zero tests. The ineffective Gradle setting was removed.
+- The bounded emulator runner now assembles app/test APKs, installs each with
+  `adb install --no-streaming` under an external 600-second limit, invokes the declared
+  AndroidJUnitRunner directly and requires an `OK` result with at least one test.
+- YAML, extracted shell syntax, immutable action pins and diff validation pass.
+
+`STREAMING INSTALL PATH REMOVED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:53 EEST — CODEX SOL — SINGLE-SHELL SMOKE HARNESS
+
+- Hosted logs proved the emulator action executes multiline script entries as separate shell
+  commands. This breaks continuations and state even when APK installation succeeds.
+- A repository-local strict Bash harness now performs bounded non-streaming installs, direct
+  instrumentation and positive test-count validation in one shell. The action invokes it with
+  one folded command. Emulator boot remains bounded and is raised to 900 seconds for API 36.
+- Bash syntax, YAML folding, immutable action pins and diff validation pass.
+
+`SINGLE-SHELL INSTRUMENTATION HARNESS READY — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:05 EEST — CODEX SOL — APK PATH RESOLUTION HARDENED
+
+- The shared harness now resolves a missing requested APK by exact basename under the workspace,
+  requires exactly one non-empty match and prints path/size before installation. Ambiguity fails
+  explicitly. This makes action working-directory differences deterministic.
+- Bash syntax and diff validation pass.
+
+`APK DISCOVERY DETERMINISTIC AND DIAGNOSTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:18 EEST — CODEX SOL — ABI-SPLIT APK SELECTION
+
+- The shared harness now also handles valid ABI-split output sets: within the expected variant
+  directory it prefers one universal artifact, otherwise one x86_64 artifact, and fails on
+  unresolved ambiguity. Existing exact-path behavior is unchanged.
+- Bash syntax and diff validation pass.
+
+`ABI-SPLIT APK SELECTION DETERMINISTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:48 EEST — CODEX SOL — KVM ACCELERATION RESTORED
+
+- Emulator-runner logs reported hardware acceleration unavailable because the earlier KVM
+  permission step was lost when manual boot orchestration was replaced.
+- The established KVM udev permission step is restored before the pinned emulator runner.
+  Boot remains bounded at 900 seconds. YAML and diff validation pass.
+
+`HARDWARE-ACCELERATED HOSTED EMULATION RESTORED`
+
+---
+
+## 2026-08-13 21:52 EEST — CODEX SOL — FINAL REVIEW FOLLOW-UP
+
+- Status: IN PROGRESS on PR #18; API 26 instrumentation is green and API 36/build
+  verification remain under exact-head observation.
+- A current review found one valid portability defect: Android SDK packages used a fixed
+  `cmdline-tools/latest` path. The workflow now uses the `sdkmanager` selected by the pinned
+  setup action and passes the SDK root explicitly.
+- Dependabot's wildcard group is limited to minor/patch updates, while major updates remain
+  individually visible. Dependency Review now fails on every reported severity.
+- Dependency-graph submission remains intentionally disabled in this read-only PR workflow:
+  repository dependency graph and vulnerability alerts are already enabled, and granting
+  repository write permission to PR-controlled Gradle execution would weaken least privilege.
+- Required verification: YAML parse, focused policy checks, then complete hosted CI and both
+  emulator APIs on the resulting exact head. No production, deployment, credentials, payment,
+  publishing, or private audit data is in scope.
+
+`FINAL REVIEW PATCH APPLIED — EXACT-HEAD VERIFICATION REQUIRED`
+
+---
+
+## 2026-08-13 22:04 EEST — CODEX SOL — INSTRUMENTATION EVIDENCE FIX
+
+- Hosted API 26 passed on exact head `c008a8b`, but GitHub reported no result file for the
+  artifact upload because the harness still used and deleted a temporary file.
+- The harness now persists raw `am instrument` output beneath the uploaded Android
+  test-results tree. Strict pipeline failure propagation and the non-zero test-count assertion
+  remain unchanged.
+- Required verification: shell syntax, hosted API 26/API 36 rerun, non-empty evidence upload,
+  and the complete exact-head CI matrix. No production or runtime action is in scope.
+
+`TEST EXECUTION GREEN — PERSISTED EVIDENCE RERUN REQUIRED`
+
+---
+
+## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
+
+- **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
+  worktree; the user's primary checkout and its unrelated changes were preserved.
+- CI now uses immutable upstream-verified action SHAs, least privilege and concurrency; it runs
+  root checks/lint plus debug and CI-signed release APK/AAB builds, validates ZIP/signatures,
+  labels artifacts CI-only, retains them seven days and always removes ephemeral signing data.
+- Added dependency review, monthly Dependabot, API 26/36 emulator instrumentation and a
+  `MainActivity` launch smoke test. Added official Gradle wrapper checksum and strict dependency
+  checksum metadata; Android test dependencies live in the version catalog and reviewed
+  metadata regeneration is documented.
+- **Tests:** metadata-generation full release chain PASS in 6m52s (1,766 tasks); final original
+  metadata-enforced release chain PASS in 1m53s (1,462 tasks). After final review corrections,
+  `./gradlew check assembleDebugAndroidTest` PASS in 26m11s (1,375 tasks), including both
+  `verifyNoAppIfrWalletCode` and `verifyNoClientSideGooglePlayUnlock` plus all module checks and
+  Android-test APK builds. Release APK/AAB ZIP and signature gates PASS; package metadata remains
+  `securechat.app`, versionCode 13, target/compile SDK 36, min SDK 26.
+- Kimi K3 independently reviewed the diff read-only, verified all action tags, the official
+  Gradle checksum and selected Google Maven hashes. Sol fixed its actionable AAB-signature-gate
+  finding by requiring both JAR signature files in addition to `jarsigner`, moved test versions
+  into the catalog, added unconditional key cleanup, API 36 coverage and maintenance guidance.
+- Static workflow/XML/action-pin/diff/temporary-file/secret-pattern checks PASS. No production,
+  deployment, payment, runtime credential, Play publishing or app entitlement logic changed.
+  API 26/36 emulator execution and normal PR review/checks remain required before merge.
+
+`LOCAL HARDENING GREEN — NORMAL PR AND REQUIRED REVIEW NEXT`
+
+---
+
 ## 2026-08-06 03:30 EEST — WEB-ONLY IFR SALES ACTUAL EOF POINTER
 
 - The detailed same-timestamp `WEB-ONLY IFR SALES SURFACE` block was appended earlier in this
@@ -3986,3 +4210,124 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   VLABS fiscal/AADE and private production fulfillment remain a separate readiness gate.
 
 `TASK COMPLETE — TARGET STOP ACTIVE`
+
+---
+
+## 2026-08-13 18:07 EEST — CODEX SOL — SECURITY-GATE HANDOFF PHYSICAL EOF
+
+- The complete 18:03 EEST security/CI hardening handoff and its 18:06 pointer appear earlier in
+  this append-only file due historical duplicate stop markers. This block is the physical EOF.
+- Authoritative status: all local source/build/signature/static checks are green; API 26/36
+  emulator execution and normal GitHub PR review/checks remain required before merge. No
+  production, deployment, runtime credential, payment or Play publishing action occurred.
+
+`LOCAL HARDENING GREEN — NORMAL PR AND REQUIRED REVIEW NEXT`
+
+---
+
+## 2026-08-13 18:16 EEST — CODEX SOL — POST-REVIEW CORRECTION PHYSICAL EOF
+
+- The detailed 18:15 EEST post-review correction block appears earlier because this historical
+  append-only Bridge contains repeated marker text. Its authoritative status is unchanged:
+  Kimi's actionable findings are fixed and final YAML/XML/shell/action-pin/diff/temp-file
+  validation passes.
+- Hosted API 26/36 instrumentation and normal PR review/checks remain pre-merge gates.
+
+`POST-REVIEW SOURCE GREEN — PR NEXT`
+
+---
+
+## 2026-08-13 19:11 EEST — CODEX SOL — FRESH-RUNNER CORRECTION PHYSICAL EOF
+
+- The detailed 19:10 EEST fresh-runner metadata correction appears earlier because of this
+  file's historical duplicate markers. It records the empty-cache 1,640-task pass, exact
+  1,431-task release pass, artifact signature gates and removal of temporary signing material.
+- GitHub dependency graph/vulnerability alerts are enabled and the rerun Dependency Review job
+  passed. PR #18 will rerun hosted checks after the metadata correction is pushed.
+
+`FRESH-RUNNER DEPENDENCY METADATA GREEN — HOSTED PR RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:15 EEST — CODEX SOL — PR REVIEW HARDENING PHYSICAL EOF
+
+- The detailed 19:14 EEST review-hardening block appears earlier because of historical duplicate
+  markers. Both checkout steps disable credential persistence; YAML, structured checkout
+  inspection and diff validation pass.
+- Broader write permission and unrelated dependency-policy changes were not introduced.
+
+`ACTIONABLE PR REVIEW ITEM FIXED — HOSTED CHECKS REQUIRED`
+
+---
+
+## 2026-08-13 19:23 EEST — CODEX SOL — LINUX AAPT2 COVERAGE PHYSICAL EOF
+
+- The detailed 19:22 EEST block appears earlier because of historical duplicate markers.
+  Gradle-generated Linux AAPT2 SHA-256 coverage is now present and validated; the temporary
+  resolver script was removed.
+
+`CROSS-PLATFORM VERIFICATION METADATA COMPLETE — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:46 EEST — CODEX SOL — EMULATOR CORRECTION PHYSICAL EOF
+
+- The detailed 19:45 EEST block appears earlier because of historical duplicate markers.
+  Manual unbounded ADB waiting was replaced by the immutable, bounded emulator runner.
+
+`EMULATOR BOOT FLOW BOUNDED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:10 EEST — CODEX SOL — ADB TIMEOUT CORRECTION PHYSICAL EOF
+
+- The detailed 20:09 EEST block appears earlier because of historical duplicate markers.
+  The verified UTP installation timeout now has a finite ten-minute AGP installation window.
+
+`ADB INSTALL WINDOW BOUNDED AT TEN MINUTES — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:29 EEST — CODEX SOL — NON-STREAMING CORRECTION PHYSICAL EOF
+
+- The detailed 20:28 EEST block appears earlier because of historical duplicate markers.
+  The ineffective UTP timeout approach was superseded by bounded non-streaming installs and
+  direct AndroidJUnitRunner result validation.
+
+`STREAMING INSTALL PATH REMOVED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:54 EEST — CODEX SOL — SMOKE HARNESS PHYSICAL EOF
+
+- The detailed 20:53 EEST block appears earlier because of historical duplicate markers.
+  The bounded install, instrumentation and result checks now run in one validated Bash process.
+
+`SINGLE-SHELL INSTRUMENTATION HARNESS READY — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:06 EEST — CODEX SOL — APK DISCOVERY PHYSICAL EOF
+
+- The detailed 21:05 EEST block appears earlier because of historical duplicate markers.
+  Missing requested APK paths now resolve by unique workspace basename with explicit diagnostics.
+
+`APK DISCOVERY DETERMINISTIC AND DIAGNOSTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:19 EEST — CODEX SOL — ABI SELECTION PHYSICAL EOF
+
+- The detailed 21:18 EEST block appears earlier because of historical duplicate markers.
+  Valid universal/x86_64 split artifacts are now selected deterministically.
+
+`ABI-SPLIT APK SELECTION DETERMINISTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:49 EEST — CODEX SOL — KVM RESTORE PHYSICAL EOF
+
+- The detailed 21:48 EEST block appears earlier because of historical duplicate markers.
+  Hosted emulator execution is hardware-accelerated again and retains bounded boot handling.
+
+`HARDWARE-ACCELERATED HOSTED EMULATION RESTORED`
