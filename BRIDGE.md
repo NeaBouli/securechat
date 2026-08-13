@@ -3140,6 +3140,21 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 19:14 EEST — CODEX SOL — PR REVIEW HARDENING PHYSICAL EOF
+
+- Both SecureChat checkout steps now set `persist-credentials: false`, preventing PR-controlled
+  Gradle logic from inheriting a Git credential in the workspace.
+- Sol did not add `contents: write` dependency submission to the PR build: the repository
+  dependency graph is already enabled and Dependency Review passes, while broadening token
+  permissions is contrary to the least-privilege scope. Dependabot's monthly grouping and the
+  high-severity blocking threshold remain explicit policy choices, not demonstrated defects.
+- Ruby YAML parsing, checkout-configuration inspection and `git diff --check` pass. Hosted
+  PR checks remain authoritative for emulator execution.
+
+`ACTIONABLE PR REVIEW ITEM FIXED — HOSTED CHECKS REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4099,3 +4114,14 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   passed. PR #18 will rerun hosted checks after the metadata correction is pushed.
 
 `FRESH-RUNNER DEPENDENCY METADATA GREEN — HOSTED PR RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:15 EEST — CODEX SOL — PR REVIEW HARDENING PHYSICAL EOF
+
+- The detailed 19:14 EEST review-hardening block appears earlier because of historical duplicate
+  markers. Both checkout steps disable credential persistence; YAML, structured checkout
+  inspection and diff validation pass.
+- Broader write permission and unrelated dependency-policy changes were not introduced.
+
+`ACTIONABLE PR REVIEW ITEM FIXED — HOSTED CHECKS REQUIRED`
