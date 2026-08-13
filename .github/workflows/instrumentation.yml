@@ -69,7 +69,16 @@ jobs:
           arch: x86_64
           profile: pixel_2
           emulator-boot-timeout: 600
-          script: ./gradlew --no-daemon --max-workers=2 :app:connectedDebugAndroidTest
+          script: |
+            set -eu
+            ./gradlew --no-daemon --max-workers=2 :app:assembleDebug :app:assembleDebugAndroidTest
+            timeout 600 adb install --no-streaming -r -t -g app/build/outputs/apk/debug/app-debug.apk
+            timeout 600 adb install --no-streaming -r -t -g app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+            result="$(mktemp)"
+            trap 'rm -f "$result"' EXIT
+            adb shell am instrument -w -r \
+              securechat.app.test/androidx.test.runner.AndroidJUnitRunner | tee "$result"
+            grep -Eq '^OK \([1-9][0-9]* tests?\)$' "$result"
 
       - name: Upload instrumentation results
         if: always()

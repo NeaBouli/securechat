@@ -3194,6 +3194,19 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 20:28 EEST — CODEX SOL — NON-STREAMING INSTRUMENTATION
+
+- A second API 26 run proved UTP ignored the AGP ADB timeout and failed after five minutes in
+  the streaming split commit, still with zero tests. The ineffective Gradle setting was removed.
+- The bounded emulator runner now assembles app/test APKs, installs each with
+  `adb install --no-streaming` under an external 600-second limit, invokes the declared
+  AndroidJUnitRunner directly and requires an `OK` result with at least one test.
+- YAML, extracted shell syntax, immutable action pins and diff validation pass.
+
+`STREAMING INSTALL PATH REMOVED — HOSTED RERUN REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4192,3 +4205,13 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   The verified UTP installation timeout now has a finite ten-minute AGP installation window.
 
 `ADB INSTALL WINDOW BOUNDED AT TEN MINUTES — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:29 EEST — CODEX SOL — NON-STREAMING CORRECTION PHYSICAL EOF
+
+- The detailed 20:28 EEST block appears earlier because of historical duplicate markers.
+  The ineffective UTP timeout approach was superseded by bounded non-streaming installs and
+  direct AndroidJUnitRunner result validation.
+
+`STREAMING INSTALL PATH REMOVED — HOSTED RERUN REQUIRED`
