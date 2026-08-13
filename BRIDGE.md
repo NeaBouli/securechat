@@ -3253,6 +3253,26 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 21:52 EEST — CODEX SOL — FINAL REVIEW FOLLOW-UP
+
+- Status: IN PROGRESS on PR #18; API 26 instrumentation is green and API 36/build
+  verification remain under exact-head observation.
+- A current review found one valid portability defect: Android SDK packages used a fixed
+  `cmdline-tools/latest` path. The workflow now uses the `sdkmanager` selected by the pinned
+  setup action and passes the SDK root explicitly.
+- Dependabot's wildcard group is limited to minor/patch updates, while major updates remain
+  individually visible. Dependency Review now fails on every reported severity.
+- Dependency-graph submission remains intentionally disabled in this read-only PR workflow:
+  repository dependency graph and vulnerability alerts are already enabled, and granting
+  repository write permission to PR-controlled Gradle execution would weaken least privilege.
+- Required verification: YAML parse, focused policy checks, then complete hosted CI and both
+  emulator APIs on the resulting exact head. No production, deployment, credentials, payment,
+  publishing, or private audit data is in scope.
+
+`FINAL REVIEW PATCH APPLIED — EXACT-HEAD VERIFICATION REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
