@@ -1,5 +1,14 @@
 # BRIDGE — securechat
 
+## 2026-08-13 — Public security audit handoff — RELEASE GATE
+
+- A private VLABS operator audit records unresolved public-data hygiene,
+  configuration and dependency-coverage work. No live secret compromise was
+  confirmed by the covered current-checkout review.
+- Release remains gated until the operator supplies bounded, no-secrets
+  acceptance criteria and confirms their evidence. Do not publish finding
+  details or raw evidence here. Payment and production state are unchanged.
+
 ## Public Payment Data Boundary
 
 - This repository is public. Operational payment/Etimologio information is stored only in private `NeaBouli/vlabs` at `docs/finance-integrations/projects/securechat.md`.
