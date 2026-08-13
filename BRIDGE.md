@@ -3182,6 +3182,18 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 20:09 EEST — CODEX SOL — BOUNDED ADB INSTALL TIMEOUT
+
+- API 26 booted successfully but ran zero tests because Ddmlib timed out while committing the
+  26-MB debug APK. UTP reported `ShellCommandUnresponsiveException`; no test assertion or app
+  crash occurred. The uploaded diagnostic artifact confirmed the same installation failure.
+- Android's AGP 8.11.1 `adbOptions.timeOutInMs` is set to 600,000 ms, retaining a finite job
+  bound while allowing slow emulator installs. Local Gradle configuration validation passes.
+
+`ADB INSTALL WINDOW BOUNDED AT TEN MINUTES — HOSTED RERUN REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4171,3 +4183,12 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   Manual unbounded ADB waiting was replaced by the immutable, bounded emulator runner.
 
 `EMULATOR BOOT FLOW BOUNDED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:10 EEST — CODEX SOL — ADB TIMEOUT CORRECTION PHYSICAL EOF
+
+- The detailed 20:09 EEST block appears earlier because of historical duplicate markers.
+  The verified UTP installation timeout now has a finite ten-minute AGP installation window.
+
+`ADB INSTALL WINDOW BOUNDED AT TEN MINUTES — HOSTED RERUN REQUIRED`

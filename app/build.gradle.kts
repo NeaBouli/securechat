@@ -14,6 +14,10 @@ val localProps = Properties().also { props ->
 }
 
 android {
+    adbOptions {
+        timeOutInMs = 600_000
+    }
+
     namespace = "com.stealthx.securechat"
     compileSdk = 36
 
