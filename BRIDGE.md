@@ -3231,6 +3231,17 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 21:18 EEST — CODEX SOL — ABI-SPLIT APK SELECTION
+
+- The shared harness now also handles valid ABI-split output sets: within the expected variant
+  directory it prefers one universal artifact, otherwise one x86_64 artifact, and fails on
+  unresolved ambiguity. Existing exact-path behavior is unchanged.
+- Bash syntax and diff validation pass.
+
+`ABI-SPLIT APK SELECTION DETERMINISTIC — HOSTED RERUN REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4257,3 +4268,12 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   Missing requested APK paths now resolve by unique workspace basename with explicit diagnostics.
 
 `APK DISCOVERY DETERMINISTIC AND DIAGNOSTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:19 EEST — CODEX SOL — ABI SELECTION PHYSICAL EOF
+
+- The detailed 21:18 EEST block appears earlier because of historical duplicate markers.
+  Valid universal/x86_64 split artifacts are now selected deterministically.
+
+`ABI-SPLIT APK SELECTION DETERMINISTIC — HOSTED RERUN REQUIRED`
