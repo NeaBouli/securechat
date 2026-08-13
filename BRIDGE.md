@@ -3242,6 +3242,17 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 21:48 EEST — CODEX SOL — KVM ACCELERATION RESTORED
+
+- Emulator-runner logs reported hardware acceleration unavailable because the earlier KVM
+  permission step was lost when manual boot orchestration was replaced.
+- The established KVM udev permission step is restored before the pinned emulator runner.
+  Boot remains bounded at 900 seconds. YAML and diff validation pass.
+
+`HARDWARE-ACCELERATED HOSTED EMULATION RESTORED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4277,3 +4288,12 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   Valid universal/x86_64 split artifacts are now selected deterministically.
 
 `ABI-SPLIT APK SELECTION DETERMINISTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:49 EEST — CODEX SOL — KVM RESTORE PHYSICAL EOF
+
+- The detailed 21:48 EEST block appears earlier because of historical duplicate markers.
+  Hosted emulator execution is hardware-accelerated again and retains bounded boot handling.
+
+`HARDWARE-ACCELERATED HOSTED EMULATION RESTORED`
