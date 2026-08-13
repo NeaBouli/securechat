@@ -3207,6 +3207,19 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 20:53 EEST — CODEX SOL — SINGLE-SHELL SMOKE HARNESS
+
+- Hosted logs proved the emulator action executes multiline script entries as separate shell
+  commands. This breaks continuations and state even when APK installation succeeds.
+- A repository-local strict Bash harness now performs bounded non-streaming installs, direct
+  instrumentation and positive test-count validation in one shell. The action invokes it with
+  one folded command. Emulator boot remains bounded and is raised to 900 seconds for API 36.
+- Bash syntax, YAML folding, immutable action pins and diff validation pass.
+
+`SINGLE-SHELL INSTRUMENTATION HARNESS READY — HOSTED RERUN REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4215,3 +4228,12 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   direct AndroidJUnitRunner result validation.
 
 `STREAMING INSTALL PATH REMOVED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:54 EEST — CODEX SOL — SMOKE HARNESS PHYSICAL EOF
+
+- The detailed 20:53 EEST block appears earlier because of historical duplicate markers.
+  The bounded install, instrumentation and result checks now run in one validated Bash process.
+
+`SINGLE-SHELL INSTRUMENTATION HARNESS READY — HOSTED RERUN REQUIRED`
