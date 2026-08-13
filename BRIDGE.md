@@ -3119,6 +3119,27 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 19:10 EEST — CODEX SOL — FRESH-RUNNER METADATA CORRECTION
+
+- The first hosted PR build exposed dependency checksums absent from metadata generated against
+  the warm local Gradle cache. No source or application behavior was implicated.
+- Sol regenerated strict SHA-256 verification metadata against an empty Gradle user home.
+  `check lintRelease assembleDebug assembleDebugAndroidTest` passed in 28m13s
+  (1,640 tasks).
+- The exact strict release chain
+  `check lintRelease assembleDebug assembleRelease bundleRelease` passed in 12m40s
+  (1,431 tasks). Release APK/AAB ZIP and signature gates passed; expected warnings are limited
+  to the intentionally short-lived self-signed CI identity.
+- GitHub dependency graph/vulnerability alerts were enabled for this repository through the
+  authorized repository-admin API. The endpoint verified with HTTP 204 and the rerun Dependency
+  Review job passed.
+- Temporary CI-only signing material was removed. PR #18 will rerun hosted checks after this
+  metadata correction; required review and the separate private-audit release gate remain.
+
+`FRESH-RUNNER DEPENDENCY METADATA GREEN — HOSTED PR RERUN REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4066,3 +4087,15 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - Hosted API 26/36 instrumentation and normal PR review/checks remain pre-merge gates.
 
 `POST-REVIEW SOURCE GREEN — PR NEXT`
+
+---
+
+## 2026-08-13 19:11 EEST — CODEX SOL — FRESH-RUNNER CORRECTION PHYSICAL EOF
+
+- The detailed 19:10 EEST fresh-runner metadata correction appears earlier because of this
+  file's historical duplicate markers. It records the empty-cache 1,640-task pass, exact
+  1,431-task release pass, artifact signature gates and removal of temporary signing material.
+- GitHub dependency graph/vulnerability alerts are enabled and the rerun Dependency Review job
+  passed. PR #18 will rerun hosted checks after the metadata correction is pushed.
+
+`FRESH-RUNNER DEPENDENCY METADATA GREEN — HOSTED PR RERUN REQUIRED`
