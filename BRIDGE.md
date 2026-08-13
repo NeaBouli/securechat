@@ -3273,6 +3273,20 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 22:04 EEST — CODEX SOL — INSTRUMENTATION EVIDENCE FIX
+
+- Hosted API 26 passed on exact head `c008a8b`, but GitHub reported no result file for the
+  artifact upload because the harness still used and deleted a temporary file.
+- The harness now persists raw `am instrument` output beneath the uploaded Android
+  test-results tree. Strict pipeline failure propagation and the non-zero test-count assertion
+  remain unchanged.
+- Required verification: shell syntax, hosted API 26/API 36 rerun, non-empty evidence upload,
+  and the complete exact-head CI matrix. No production or runtime action is in scope.
+
+`TEST EXECUTION GREEN — PERSISTED EVIDENCE RERUN REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
