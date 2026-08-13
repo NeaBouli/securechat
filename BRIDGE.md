@@ -3220,6 +3220,17 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 21:05 EEST — CODEX SOL — APK PATH RESOLUTION HARDENED
+
+- The shared harness now resolves a missing requested APK by exact basename under the workspace,
+  requires exactly one non-empty match and prints path/size before installation. Ambiguity fails
+  explicitly. This makes action working-directory differences deterministic.
+- Bash syntax and diff validation pass.
+
+`APK DISCOVERY DETERMINISTIC AND DIAGNOSTIC — HOSTED RERUN REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4237,3 +4248,12 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   The bounded install, instrumentation and result checks now run in one validated Bash process.
 
 `SINGLE-SHELL INSTRUMENTATION HARNESS READY — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:06 EEST — CODEX SOL — APK DISCOVERY PHYSICAL EOF
+
+- The detailed 21:05 EEST block appears earlier because of historical duplicate markers.
+  Missing requested APK paths now resolve by unique workspace basename with explicit diagnostics.
+
+`APK DISCOVERY DETERMINISTIC AND DIAGNOSTIC — HOSTED RERUN REQUIRED`
