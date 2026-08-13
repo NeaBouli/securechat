@@ -3168,6 +3168,20 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 19:45 EEST — CODEX SOL — EMULATOR RUNNER CORRECTION
+
+- Both manual API 26/36 jobs remained indefinitely in `adb wait-for-device`; the existing
+  deadline started only after that unbounded call and therefore could not protect the job.
+- The manual emulator orchestration was replaced by established
+  `ReactiveCircus/android-emulator-runner` v2.38.0 pinned to immutable commit
+  `a421e43855164a8197daf9d8d40fe71c6996bb0d`, with a 600-second boot timeout. Compile platform
+  and build-tools 36 are provisioned explicitly before the same connected smoke-test task.
+- Workflow YAML, immutable action pins and diff validation pass. Hosted execution is required.
+
+`EMULATOR BOOT FLOW BOUNDED — HOSTED RERUN REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4148,3 +4162,12 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   resolver script was removed.
 
 `CROSS-PLATFORM VERIFICATION METADATA COMPLETE — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:46 EEST — CODEX SOL — EMULATOR CORRECTION PHYSICAL EOF
+
+- The detailed 19:45 EEST block appears earlier because of historical duplicate markers.
+  Manual unbounded ADB waiting was replaced by the immutable, bounded emulator runner.
+
+`EMULATOR BOOT FLOW BOUNDED — HOSTED RERUN REQUIRED`
