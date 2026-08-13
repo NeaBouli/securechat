@@ -3155,6 +3155,19 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 19:22 EEST — CODEX SOL — LINUX AAPT2 VERIFICATION COVERAGE
+
+- The final hosted build progressed beyond the prior metadata gap and identified the remaining
+  platform-specific AAPT2 Linux classifier. Sol resolved the exact pinned classifier from the
+  configured Google repository using Gradle's verification writer.
+- Strict metadata now includes its Gradle-generated SHA-256 entry. XML and diff validation pass,
+  all three repositories produced the same checksum, and the temporary init script was removed.
+- No dependency version or application code changed. A final hosted rerun remains required.
+
+`CROSS-PLATFORM VERIFICATION METADATA COMPLETE — HOSTED RERUN REQUIRED`
+
+---
+
 ## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
 
 - **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
@@ -4125,3 +4138,13 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - Broader write permission and unrelated dependency-policy changes were not introduced.
 
 `ACTIONABLE PR REVIEW ITEM FIXED — HOSTED CHECKS REQUIRED`
+
+---
+
+## 2026-08-13 19:23 EEST — CODEX SOL — LINUX AAPT2 COVERAGE PHYSICAL EOF
+
+- The detailed 19:22 EEST block appears earlier because of historical duplicate markers.
+  Gradle-generated Linux AAPT2 SHA-256 coverage is now present and validated; the temporary
+  resolver script was removed.
+
+`CROSS-PLATFORM VERIFICATION METADATA COMPLETE — HOSTED RERUN REQUIRED`
