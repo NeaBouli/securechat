@@ -1,5 +1,14 @@
 # BRIDGE — securechat
 
+## 2026-08-13 — Public security audit handoff — RELEASE GATE
+
+- A private VLABS operator audit records unresolved public-data hygiene,
+  configuration and dependency-coverage work. No live secret compromise was
+  confirmed by the covered current-checkout review.
+- Release remains gated until the operator supplies bounded, no-secrets
+  acceptance criteria and confirms their evidence. Do not publish finding
+  details or raw evidence here. Payment and production state are unchanged.
+
 ## Public Payment Data Boundary
 
 - This repository is public. Operational payment/Etimologio information is stored only in private `NeaBouli/vlabs` at `docs/finance-integrations/projects/securechat.md`.
@@ -3986,3 +3995,20 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   VLABS fiscal/AADE and private production fulfillment remain a separate readiness gate.
 
 `TASK COMPLETE — TARGET STOP ACTIVE`
+
+## 2026-08-13 — CODEX SOL — SECURITY AUDIT HANDOFF INVENTORY
+
+- Handoff PR `#17` was read in full. It is documentation-only, mergeable and Android Build &
+  Test plus CodeRabbit pass.
+- **Release gate:** `OPEN / BLOCKED`. The PR remains open under `REVIEW_REQUIRED`; no merge,
+  admin bypass or branch-protection exception was used.
+- Read-only scope covered the global and project rules, the project Bridge, VLABS control PRs
+  `#133`/`#134`, and the exact public handoff diff. No private evidence or scanner output was
+  copied here.
+- Existing privacy/configuration, dependency coverage, crypto, identity, Android, Play,
+  physical-device, payment and fiscal gates remain active. Safe preparation is limited to a
+  secret-free coverage inventory and test plan. Next required input is a repository-specific,
+  bounded, secret-free remediation assignment and acceptance criteria from the private VLABS
+  operator.
+
+`INVENTORY COMPLETE — RELEASE GATE REMAINS BLOCKED`
