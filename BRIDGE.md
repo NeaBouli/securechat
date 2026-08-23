@@ -4425,3 +4425,20 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   this exact signed artifact to SecureChat production and submit it to Google review.
 
 `LOCAL RELEASE GATE GREEN — PROTECTED REVIEW NEXT`
+
+---
+
+## 2026-08-23 13:48 EEST — SECURECHAT-20260823-API36-PRODUCTION → Blocked
+
+- PR `#27` merged normally as exact main `20d5f58ce4430aed284f6285d786b18e6f8898b0`.
+  Exact-main SecureChat Android CI run `32633127636` PASS and Pages run `32633127424` PASS.
+- Google Play production inspection is authoritative: SecureChat has no production access yet.
+  The closed test is active, but Play reports `0` enrolled testers. Production access remains
+  disabled until at least 12 testers enroll and the qualifying closed test runs for at least
+  14 days; only then can the production-access questionnaire be submitted.
+- Therefore versionCode 14 was not uploaded to production and no misleading production release
+  was created. The signed, verified AAB remains at `/Users/gio/Desktop/SecureChat-LATEST.aab`.
+- **Next external prerequisite:** enroll at least 12 real closed-test participants, maintain the
+  test for 14 days, apply for production access, then upload this API-36 bundle after approval.
+
+`SOURCE AND ARTIFACT GREEN — GOOGLE PRODUCTION ACCESS BLOCKED BY TESTER REQUIREMENT`
