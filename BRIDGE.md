@@ -3253,6 +3253,21 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-23 11:25 EEST — CODEX SOL — TARGET API 36 PRODUCTION GATE
+
+- **Ticket:** `SECURECHAT-20260823-API36-PRODUCTION`; **Type:** EXTERNAL / STATUS;
+  **Status:** Production promotion decision open.
+- Read-only Play Console policy details require an Android 16 / target API 36 production release
+  by 31 August 2026. A compliant internal, closed or open test alone does not clear the warning.
+- SecureChat source and closed-Alpha v13 already target SDK 36. Google identifies old internal-test
+  artifact versionCode 4 (`0.1.3-alpha`) at target SDK 35 as the affected artifact.
+- Resolution is a newer target-SDK-36 production bundle. No Play artifact, track or production
+  setting was changed during this assessment.
+
+`API36 IMPLEMENTED — PRODUCTION RELEASE REQUIRED TO CLEAR PLAY WARNING`
+
+---
+
 ## 2026-08-13 21:52 EEST — CODEX SOL — FINAL REVIEW FOLLOW-UP
 
 - Status: IN PROGRESS on PR #18; API 26 instrumentation is green and API 36/build
@@ -4358,3 +4373,15 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   Hosted emulator execution is hardware-accelerated again and retains bounded boot handling.
 
 `HARDWARE-ACCELERATED HOSTED EMULATION RESTORED`
+
+---
+
+## 2026-08-23 11:35 EEST — CODEX SOL — TARGET API MATRIX CONFIRMED AT PHYSICAL EOF
+
+- Play policy details identify internal-test v4 (`0.1.3-alpha`) at target SDK 35.
+- Current source and closed-Alpha v13 target SDK 36, but Google explicitly requires a newer SDK-36
+  production release by 31 August 2026; test-track compliance alone does not clear this warning.
+- SecureCall has already submitted its SDK-36 production remediation; Chameleon has a clean policy
+  status and active SDK-36 Alpha. No SecureChat Play mutation occurred in this check.
+
+`SECURECHAT API36 PRODUCTION RELEASE REQUIRED`
