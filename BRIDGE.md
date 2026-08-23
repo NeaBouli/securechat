@@ -3253,6 +3253,37 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-23 12:08 EEST — SECURECHAT-20260823-API36-PRODUCTION PHYSICAL EOF
+
+- The detailed 12:05 EEST task-takeover block appears earlier because this historical
+  append-only Bridge contains repeated marker text. This physical-EOF pointer is authoritative.
+- Scope remains the signed `securechat.app` versionCode 14 API-36 production candidate,
+  protected-branch review, exact artifact verification and the owner-authorized Google Play
+  production submission. No other app, track, payment, server or credential action is included.
+
+`TASK IN PROGRESS — RELEASE BUILD NEXT`
+
+---
+
+## 2026-08-23 12:05 EEST — SECURECHAT-20260823-API36-PRODUCTION → In Progress
+
+- **Owner:** CODEX SOL
+- **Branch:** `release/securechat-v14-production-api36-20260823`
+- **Scope:** Produce the next signed SecureChat production bundle for package
+  `securechat.app`, target API 36 and unused version code 14; verify locally before the
+  authorized Google Play production submission.
+- **Changed:** No application files changed at task takeover.
+- **Authorization:** Repository owner explicitly authorized the API-36 production release.
+- **Risk:** Medium — public Google Play publishing remains gated on signed-artifact validation,
+  protected-branch review and an explicit final Play inspection.
+- **Exclusions:** No SecureCall, Chameleon, payment, server, credential or unrelated track changes.
+- **Next:** Bump version metadata, run the complete release gate, verify package/version/SDK/signature,
+  open the normal protected-branch PR, then submit the exact reviewed artifact to Google Play.
+
+---
+
+---
+
 ## 2026-08-13 21:52 EEST — CODEX SOL — FINAL REVIEW FOLLOW-UP
 
 - Status: IN PROGRESS on PR #18; API 26 instrumentation is green and API 36/build
@@ -4358,3 +4389,39 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   Hosted emulator execution is hardware-accelerated again and retains bounded boot handling.
 
 `HARDWARE-ACCELERATED HOSTED EMULATION RESTORED`
+
+---
+
+## 2026-08-23 12:10 EEST — SECURECHAT-20260823-API36-PRODUCTION ACTUAL EOF
+
+- The detailed 12:05 EEST task-takeover block and its 12:08 pointer appear earlier because
+  contextual patching matched an older repeated marker. Both remain intact under append-only rules.
+- Authoritative current scope: signed `securechat.app` versionCode 14, versionName
+  `0.1.10-alpha`, target API 36; complete release verification, protected-branch review and
+  owner-authorized Google Play production submission. All unrelated systems remain excluded.
+
+`TASK IN PROGRESS — RELEASE BUILD NEXT`
+
+---
+
+## 2026-08-23 13:02 EEST — SECURECHAT-20260823-API36-PRODUCTION → Review
+
+- **Changed:** `app/build.gradle.kts` now carries versionCode 14 and versionName
+  `0.1.10-alpha`; package `securechat.app`, compile SDK 36 and target SDK 36 remain unchanged.
+- **Full gate:** `verifyNoAppIfrWalletCode verifyNoClientSideGooglePlayUnlock test lintRelease
+  assembleDebug assembleRelease bundleRelease check` → PASS, 1,431 tasks, `BUILD SUCCESSFUL`.
+  The first run reached signing after all tests/lint but correctly failed because the isolated
+  worktree lacked its ignored relative keystore link; after adding that local-only link, the
+  complete incremental rerun passed.
+- **Artifact:** release APK signature PASS; release AAB JAR signature PASS; package/version/API
+  metadata PASS; AAB signer matches the previously Play-accepted SecureChat bundle. AAB SHA-256
+  `46490291388fdb7fed5ccac4f06da478e46a18eedeb5fe44e96573873a6e462a`, size 20,351,676 bytes.
+- **Independent review:** Kimi K3 read-only review found no release blocker, no runtime/source
+  behavior change and no secret in the tracked diff. Low-only notes concern historical Bridge
+  marker ordering and a cosmetic doubled separator; append-only history is retained.
+- **Risk:** Medium — source is locally green; normal protected-branch PR/CI and final Play
+  inspection remain mandatory before the authorized production submission.
+- **Next:** Commit/push the reviewed branch, open PR, require normal checks/review, then upload
+  this exact signed artifact to SecureChat production and submit it to Google review.
+
+`LOCAL RELEASE GATE GREEN — PROTECTED REVIEW NEXT`

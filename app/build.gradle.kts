@@ -35,8 +35,8 @@ android {
         applicationId = "securechat.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 13
-        versionName = "0.1.9-alpha"
+        versionCode = 14
+        versionName = "0.1.10-alpha"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "FORCED_TIER", "\"\"")
         buildConfigField("Boolean", "ALLOW_SCREENSHOTS", "false")
