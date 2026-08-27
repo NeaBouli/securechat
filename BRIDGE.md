@@ -4489,3 +4489,21 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - PR remains open and mergeable with `REVIEW_REQUIRED`; no approving independent review exists yet. No merge or external release action was attempted.
 
 `PR 29 CI GREEN — APPROVING REVIEW REQUIRED`
+
+## 2026-08-27 06:31 EEST — CODEX SOL + KIMI K3 — ENTITLEMENT RELEASE BOUNDARY VERIFIED
+
+- All signable base/internal/Free/Pro/Elite compatibility variants now disable tier overrides and require the server-signed, device-bound activation path. Only debug/screenshot builds may force access. A new Gradle guard fails if a signable variant enables an override.
+- Edge-to-edge keyboard/navigation insets on New Contact were corrected. FAQ, landing, wiki and README now distinguish published `v0.1.5-alpha` from candidate `v0.1.11-alpha`, document the one-APK activation model and use the seller-set checkout discount.
+- Full verification PASS: 1,467 Gradle tasks including all module checks/tests, Release Lint, entitlement guards, signed base AAB/APK and signed compatibility APKs. Generated BuildConfig values were inspected: every signable variant has `ALLOW_TIER_OVERRIDE=false`, empty `FORCED_TIER`, and `FORCE_ELITE=false`.
+- Final AAB SHA-256: `c7d1e93551a130732d40a7f194fd3d5209ad9b610d1bcaf0311af2db743b0bc8`. Package `securechat.app`, versionCode `15`, versionName `0.1.11-alpha`, API 36 and release certificate were reverified. Desktop candidates are refreshed.
+- S7 and Tab S4 remain occupied by Woizz and were not disturbed; S10 is absent. Physical messaging/background/notification and activation-code E2E remain open and are not claimed.
+- Remaining gates: normal PR approval/merge and exact-head CI rerun; physical matrix; Google closed-test review/duration; GitHub Release/site publication. Stripe and Greek VAT/AADE/myDATA/e-timologio remain on explicit standby.
+
+`SERVER-SIGNED ONE-APK MODEL LOCALLY GREEN — PROTECTED AND PHYSICAL GATES OPEN`
+
+## 2026-08-27 06:38 EEST — CODEX SOL + KIMI K3 — FINAL GUARD REVIEW PASS
+
+- Kimi's final read-only review found no release blocker and identified two guard-hardening opportunities. Sol closed both: all tier declarations are parsed across the complete app build script, the sole enabled declaration must be inside Debug, runtime conjunctions are asserted, and every `pre*ReleaseBuild` depends on the guard.
+- Direct `:app:preReleaseBuild` verification PASS and visibly executed `verifyNoReleaseTierOverrides`. Live GitHub `releases/latest/download/SecureChat-LATEST.apk` resolves to the stable `v0.1.5-alpha` asset; the newer `v0.1.7-alpha` remains a prerelease and does not back the stable URL.
+
+`FINAL TIER GUARD PASS — NO LOCAL RELEASE BLOCKER`
