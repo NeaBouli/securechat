@@ -4517,3 +4517,11 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - Stripe production activation and Greek VAT/AADE/myDATA/e-timologio remain the sole intentionally deferred implementation block pending owner data and separately bounded production authorization.
 
 `LOCAL PRE-SALE SCOPE GREEN — EXACT-HEAD CI, REVIEW AND EXTERNAL GATES REMAIN`
+
+## 2026-08-27 08:22 EEST — CODEX SOL — CLOSED CHECKOUT RUNTIME GATE VERIFIED
+
+- Public copy now consistently describes the IFR purchase benefit as planned. A central `data-ifr-enabled=false` runtime gate returns before wallet/checkout handlers bind; all controls remain disabled even if markup and script load normally.
+- Node syntax and closed-gate regression PASS: no handlers, no network path and all controls disabled. The regression is wired into Android CI. Browser PASS at `1440x900` and `390x844`: zero console errors, visible standby state and no horizontal overflow.
+- No Android source or signed candidate changed. Server-side checkout authorization remains part of the intentionally deferred Stripe + Greek VAT/AADE/myDATA/e-timologio implementation block.
+
+`FINAL LOCAL REVIEW FIXES GREEN — EXACT-HEAD CI AND NORMAL REVIEW REQUIRED`
