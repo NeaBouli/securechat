@@ -15,14 +15,14 @@
 - Key Storage: Android Keystore (StrongBox/TEE)
 - KDF: Argon2id
 
-## IFR Token Tier System (Cross-Product)
+## IFR Holder Discount (Cross-Product)
 
-| IFR Lock | SecureCall | SecureChat | Chameleon | Suite |
+| Verified IFR status | SecureCall | SecureChat | Chameleon | Suite |
 |----------|------------|------------|-----------|-------|
-| 0 | Free | Free | Free | — |
-| >= 2,000 | Pro | Pro | Pro | — |
-| >= 6,000 | Premium | Elite | Elite | — |
-| >= 8,000 | Premium | Elite | Elite | Suite (all) |
+| No IFR balance | Normal checkout | Normal checkout | Normal checkout | — |
+| Positive IFR balance | Seller-defined discount | Seller-defined discount | Seller-defined discount | Unavailable until bundle fulfillment launches |
+
+Verification is browser-only before purchase. There is no token-amount tier threshold and no IFR or wallet mechanism inside the Android apps.
 
 ## Product Structure
 

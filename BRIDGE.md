@@ -3251,6 +3251,37 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 `HARDWARE-ACCELERATED HOSTED EMULATION RESTORED`
 
+## 2026-08-17 04:12 EEST — CODEX SOL — PHYSICAL CONTACT IMPORT QA CHECKPOINT
+
+- Fresh Free/Pro/Elite tier releases were assigned to S7/S4/S10. Tier presentation, settings,
+  IFR/wallet absence and the Pro foreground message listener were physically verified.
+- Found and fixed an API 26 layout blocker: Add Contact was not scrollable and its action button
+  sat below the S7 viewport. Full release unit/lint and all tier APK builds pass after adding
+  navigation/IME padding and vertical scrolling.
+- The S7 then physically opened the full signed S4 identity, scrolled to Add Contact, imported it
+  successfully and opened the encrypted conversation. A 500-event stability run per connected
+  Free/Pro package produced no captured app crash or ANR.
+- Cross-device delivery remains externally blocked: S7 cannot establish the signaling TLS path
+  on its current Wi-Fi while S4 can. S10 disconnected before the corrected Elite reinstall and
+  remains protected by its device-credential gate. No production or Play action occurred.
+
+`CONTACT IMPORT FIX VERIFIED — DELIVERY AND S10 RETEST OPEN`
+
+---
+
+## 2026-08-17 EEST — CODEX SOL — THREE-DEVICE RELEASE QA START
+
+- Central ticket `GIO-20260817-STEALTHX-3X3-QA` is in progress against exact
+  `origin/main` `9feb47bf4686` in an isolated worktree; the divergent canonical
+  worktree remains untouched.
+- Connected matrix: S7/API 26 = Free, Tab S4/API 29 = Pro, S10/API 31 = Elite.
+  Fresh installs follow successful unit, lint, release, package and signature gates.
+- Kimi K3 completed the independent secret-free feature/settings matrix review.
+  Current-code physical message, background-listener and recovery coverage remains
+  a release gate.
+
+`THREE-DEVICE QA IN PROGRESS — RELEASE GATE OPEN`
+
 ---
 
 ## 2026-08-23 12:08 EEST — SECURECHAT-20260823-API36-PRODUCTION PHYSICAL EOF
@@ -4425,3 +4456,20 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   this exact signed artifact to SecureChat production and submit it to Google review.
 
 `LOCAL RELEASE GATE GREEN — PROTECTED REVIEW NEXT`
+
+## 2026-08-26 23:01 EEST — CODEX SOL — PRE-SALE COMPLETION BLOCK ACTIVE
+
+- **Ticket:** `GIO-20260826-STEALTHX-PRESALE-COMPLETE`; **Type:** AUDIT / FIX / TEST / RELEASE; **Status:** In Progress.
+- Scope: close every independently solvable SecureChat readiness gap across code, UI, public documentation, artifacts, CI and three-device QA.
+- Stripe, VAT, AADE/myDATA and e-timologio remain on standby. The prior physical-QA correction is being reconciled against current `origin/main` in this isolated worktree.
+- Kimi K3 is providing independent cross-repository review; Sol owns integration and final verification.
+
+`PRE-SALE COMPLETION IN PROGRESS — PAYMENT AND TAX ACTIVATION EXCLUDED`
+## 2026-08-27 04:31 EEST — CODEX TERMINAL — FIX/STATUS — PRE-SALE CANDIDATE VERIFIED
+
+- SecureChat Android remains fully IFR-/wallet-free. Version `0.1.11-alpha` / versionCode `15`, package `securechat.app`, compile/target API 36.
+- Full Gradle gate PASS: 1,305 tasks covering unit tests, all module checks, Release Lint and debug assembly. Signed base/Free/Pro/Elite release APKs plus Play AAB built and certificate/package metadata verified.
+- S10 evidence: signed base APK installed successfully, activity launch returned OK, process stayed alive and Logcat contained no crash. S10 disconnected before screenshot/deeper interaction; S7/S4 were occupied by Woizz and were not touched.
+- Public page browser check PASS with no horizontal overflow; release copy now points to `releases/latest/download/SecureChat-LATEST.apk` and displays v0.1.11.
+- Kimi K3 independently reviewed the ecosystem block; Sol integrated and retested the findings. Artifacts are under `/Users/gio/Desktop/aab apk/presale-2026-08-27/`.
+- Open gates: physical cross-device messaging/background/notification matrix, Google closed-test duration/review, release-asset publication/site deployment, Stripe + Greek tax block on explicit standby.

@@ -6,7 +6,7 @@ Part of the [StealthX Platform](https://stealthx.tech).
 
 ## Status
 
-**v0.1.7-alpha — Closed test release; paid access remains launch-gated**
+**v0.1.11-alpha — Closed test release; paid access remains launch-gated**
 
 BUILD SUCCESSFUL — Debug 42 MB / Release 21 MB (minified + shrunk)
 
@@ -75,9 +75,9 @@ The public SecureChat app does not run WalletConnect or wallet verification insi
 
 | Tier | Web IFR eligibility | Checkout benefit | Features |
 |---|---:|---:|---|
-| Free | 0 IFR | EUR 0 | Core messaging, 10 contacts |
-| Pro | 2,000 IFR | Eligible browser checkout is 50% off | Unlimited contacts; groups and Kaspa identity remain roadmap |
-| Elite | 6,000 IFR | Eligible browser checkout is 50% off | Emergency Broadcast; onion/decoy features remain roadmap |
+| Free | Not required | EUR 0 | Core messaging, 10 contacts |
+| Pro | Positive IFR balance | Seller-defined browser checkout discount | Unlimited contacts; groups and Kaspa identity remain roadmap |
+| Elite | Positive IFR balance | Seller-defined browser checkout discount | Emergency Broadcast; onion/decoy features remain roadmap |
 | Suite | Unavailable | No checkout | Bundle fulfillment is not enabled |
 See [PRICING.md](docs/PRICING.md).
 

@@ -33,7 +33,7 @@ class SecureChatApp : Application() {
             Timber.e(e, "Identity init failed — will retry on next launch")
         }
 
-        val allowDevTierOverride = BuildConfig.DEBUG
+        val allowDevTierOverride = BuildConfig.ALLOW_TIER_OVERRIDE
         com.stealthx.shared.DevTierOverride.forcedTier =
             BuildConfig.FORCED_TIER
                 .takeIf { allowDevTierOverride && it.isNotBlank() }
