@@ -118,9 +118,51 @@ val verifyNoClientSideGooglePlayUnlock = tasks.register("verifyNoClientSideGoogl
     }
 }
 
+val verifyNoReleaseTierOverrides = tasks.register("verifyNoReleaseTierOverrides") {
+    group = "verification"
+    description = "Fail if a signable release variant embeds a paid tier override"
+
+    val appBuildScript = file("app/build.gradle.kts")
+    val appRuntime = file("app/src/main/java/com/stealthx/securechat/SecureChatApp.kt")
+    inputs.files(appBuildScript, appRuntime)
+
+    doLast {
+        val source = appBuildScript.readText()
+        val declarationPattern = Regex(
+            """buildConfigField\s*\(\s*"Boolean"\s*,\s*"ALLOW_TIER_OVERRIDE"\s*,\s*"(true|false)"\s*\)"""
+        )
+        val declarations = declarationPattern.findAll(source).toList()
+        val markerCount = Regex("ALLOW_TIER_OVERRIDE").findAll(source).count()
+        check(declarations.size == markerCount) { "Tier override declarations must use boolean literals" }
+
+        val debugStart = source.indexOf("debug {")
+        val screenshotStart = source.indexOf("create(\"storeScreenshot\")")
+        check(debugStart >= 0 && screenshotStart > debugStart) { "Debug build boundary not found" }
+        val enabled = declarations.filter { it.groupValues[1] == "true" }
+        if (enabled.size != 1 || enabled.single().range.first !in debugStart until screenshotStart) {
+            error("Only the debug build may enable tier overrides")
+        }
+
+        val runtime = appRuntime.readText()
+        check(runtime.contains("takeIf { allowDevTierOverride && it.isNotBlank() }")) {
+            "Forced tiers must remain gated by ALLOW_TIER_OVERRIDE"
+        }
+        check(runtime.contains("allowDevTierOverride && BuildConfig.FORCE_ELITE")) {
+            "FORCE_ELITE must remain gated by ALLOW_TIER_OVERRIDE"
+        }
+    }
+}
+
+project(":app").tasks.matching {
+    it.name.startsWith("pre") && it.name.endsWith("ReleaseBuild")
+}.configureEach {
+    dependsOn(verifyNoReleaseTierOverrides)
+}
+
 subprojects {
     tasks.matching { it.name == "check" }.configureEach {
         dependsOn(verifyNoAppIfrWalletCode)
         dependsOn(verifyNoClientSideGooglePlayUnlock)
+        dependsOn(verifyNoReleaseTierOverrides)
     }
 }

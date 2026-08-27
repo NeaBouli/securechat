@@ -71,7 +71,7 @@ Requirements: JDK 17, Android SDK 36, Android 8.0+ (API 26+) target devices.
 
 ## IFR Holder Discount
 
-The public SecureChat app does not run WalletConnect or wallet verification inside Android. IFR holder verification is browser-only before purchase: sign ownership, verify the Mainnet IFR balance read-only, then open an eligible 50% checkout when the secure payment backend is available.
+The public SecureChat app does not run WalletConnect or wallet verification inside Android. IFR holder verification is browser-only before purchase: sign ownership, verify the Mainnet IFR balance read-only, then open the seller-set discount displayed at checkout when the secure payment backend is available.
 
 | Tier | Web IFR eligibility | Checkout benefit | Features |
 |---|---:|---:|---|
