@@ -4507,3 +4507,13 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - Direct `:app:preReleaseBuild` verification PASS and visibly executed `verifyNoReleaseTierOverrides`. Live GitHub `releases/latest/download/SecureChat-LATEST.apk` resolves to the stable `v0.1.5-alpha` asset; the newer `v0.1.7-alpha` remains a prerelease and does not back the stable URL.
 
 `FINAL TIER GUARD PASS — NO LOCAL RELEASE BLOCKER`
+
+## 2026-08-27 07:45 EEST — CODEX SOL — FINAL PRE-SALE COPY GATE VERIFIED
+
+- Final review copy was corrected and the public IFR verification/checkout surface is explicitly planned and disabled until payment and fiscal approval. No Android source or signed artifact changed in this block.
+- Focused Android compile PASS: 117 Gradle tasks. Local browser verification PASS for desktop `1440x900` and mobile `390x844`: connect and both tier checkout controls disabled, standby status visible, no horizontal overflow.
+- Existing signed candidate remains package `securechat.app`, version `0.1.11-alpha` / `15`, target API 36. Candidate AAB SHA-256 remains `c7d1e93551a130732d40a7f194fd3d5209ad9b610d1bcaf0311af2db743b0bc8` because application code did not change.
+- Physical messaging/background/notification and activation-code E2E remain open; S7/Tab S4 are reserved by Woizz and S10 is absent. Normal PR approval/merge, Google closed-test review/duration and post-merge release/site publication remain external gates.
+- Stripe production activation and Greek VAT/AADE/myDATA/e-timologio remain the sole intentionally deferred implementation block pending owner data and separately bounded production authorization.
+
+`LOCAL PRE-SALE SCOPE GREEN — EXACT-HEAD CI, REVIEW AND EXTERNAL GATES REMAIN`
