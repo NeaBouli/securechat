@@ -35,15 +35,17 @@ android {
         applicationId = "securechat.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 14
-        versionName = "0.1.10-alpha"
+        versionCode = 15
+        versionName = "0.1.11-alpha"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "FORCED_TIER", "\"\"")
+        buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "false")
         buildConfigField("Boolean", "ALLOW_SCREENSHOTS", "false")
     }
 
     buildTypes {
         debug {
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "true")
             buildConfigField("Boolean", "FORCE_ELITE", "true")
             buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
         }
@@ -62,6 +64,7 @@ android {
             applicationIdSuffix = ".internal"
             versionNameSuffix = "-internal"
             buildConfigField("Boolean", "FORCE_ELITE", "true")
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "true")
             buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
             matchingFallbacks += listOf("release")
         }
@@ -71,6 +74,7 @@ android {
             applicationIdSuffix = ".free"
             versionNameSuffix = "-free"
             buildConfigField("Boolean", "FORCE_ELITE", "false")
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "true")
             buildConfigField("String", "FORCED_TIER", "\"FREE\"")
             matchingFallbacks += listOf("release")
         }
@@ -80,6 +84,7 @@ android {
             applicationIdSuffix = ".pro"
             versionNameSuffix = "-pro"
             buildConfigField("Boolean", "FORCE_ELITE", "false")
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "true")
             buildConfigField("String", "FORCED_TIER", "\"PRO\"")
             matchingFallbacks += listOf("release")
         }
@@ -89,6 +94,7 @@ android {
             applicationIdSuffix = ".elite"
             versionNameSuffix = "-elite"
             buildConfigField("Boolean", "FORCE_ELITE", "true")
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "true")
             buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
             matchingFallbacks += listOf("release")
         }
