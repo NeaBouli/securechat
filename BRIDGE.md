@@ -4473,3 +4473,12 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - Public page browser check PASS with no horizontal overflow; release copy now points to `releases/latest/download/SecureChat-LATEST.apk` and displays v0.1.11.
 - Kimi K3 independently reviewed the ecosystem block; Sol integrated and retested the findings. Artifacts are under `/Users/gio/Desktop/aab apk/presale-2026-08-27/`.
 - Open gates: physical cross-device messaging/background/notification matrix, Google closed-test duration/review, release-asset publication/site deployment, Stripe + Greek tax block on explicit standby.
+
+## 2026-08-27 04:36 EEST — CODEX TERMINAL — RELEASE HANDOFF — PR OPEN
+
+- Reviewed implementation committed as `84b156ee935e7776ef1f249a406a4ee596817d2c` and pushed on `fix/presale-complete-20260826`.
+- Normal protected review opened: https://github.com/NeaBouli/securechat/pull/29
+- PR is open and mergeable. Dependency Review is PASS; build/test and instrumented API 26/36 checks are running. Independent approving review remains required.
+- No merge, release-asset publication, site deployment, Play mutation or payment/tax activation occurred.
+
+`PR 29 OPEN — CI AND INDEPENDENT REVIEW PENDING`
