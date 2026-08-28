@@ -349,7 +349,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          SecureChat is available as an Android alpha APK for testing. The published build is v0.1.5-alpha; candidate v0.1.11-alpha remains under review. Core encrypted messaging, QR contact exchange and server-signed activation tiers use one Android APK. Paid availability remains launch-gated, and broader store distribution plus privacy-relay expansion remain on the roadmap. You can download the published APK from <a href="https://github.com/NeaBouli/securechat/releases/latest">GitHub Releases</a>.
+          SecureChat is available as an Android alpha APK for testing. The public GitHub build is v0.1.5-alpha; v0.1.11-alpha is available only to selected closed and internal Google Play testers. Core encrypted messaging, QR contact exchange and server-signed activation tiers use one Android APK. Paid availability remains launch-gated, and broader store distribution plus privacy-relay expansion remain on the roadmap. You can download the public APK from <a href="https://github.com/NeaBouli/securechat/releases/latest">GitHub Releases</a>.
         </div>
       </div>
     </div>
@@ -399,7 +399,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          Chameleon has no internet permission. It cannot send data anywhere, even if it wanted to. Everything stays on your phone. Your rules, your encrypted files, your settings &mdash; all stored locally in an SQLCipher encrypted database. The source code is on <a href="https://github.com/NeaBouli/chameleon">GitHub</a> so you can verify this yourself.
+          Chameleon is local-first: rules, encrypted files, private keys and settings stay on the device. Its optional contact listener, encrypted message relay and activation-code verification use limited encrypted network processing as described in the <a href="https://chameleon.stealthx.tech/privacy.html">Chameleon privacy policy</a>. It has no advertising or analytics SDK. The source code is on <a href="https://github.com/NeaBouli/chameleon">GitHub</a> for review.
         </div>
       </div>
     </div>
@@ -505,7 +505,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          No. Chameleon uses Android's AccessibilityService, but only locally on your device. It never connects to the internet. It has no internet permission at all. Everything it does stays on your phone. The source is available on <a href="https://github.com/NeaBouli/chameleon">GitHub</a> for transparency and security review.
+          Chameleon's accessibility-based text processing is designed to run locally on the device. Private keys and plaintext are not sent to StealthX. Optional cross-device contact, encrypted relay and entitlement features do use limited network connectivity; see the <a href="https://chameleon.stealthx.tech/privacy.html">current privacy policy</a>. The source is available on <a href="https://github.com/NeaBouli/chameleon">GitHub</a> for transparency and security review.
         </div>
       </div>
     </div>

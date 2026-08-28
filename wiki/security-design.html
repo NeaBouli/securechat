@@ -28,7 +28,7 @@
 <p class="meta">Classification: Technical · Crypto Stack · Threat Model</p>
 <p>SecureChat's security is built on one principle: <strong style="color:var(--text)">we cannot read your messages, even if compelled by a court order.</strong> The architecture makes this technically impossible, not just a policy promise.</p>
 <h2>Three Rules — Never Broken</h2>
-<div class="rule">🔒 <strong style="color:var(--text)">No internet permission by default.</strong> SecureChat never makes network calls without explicit user action. Kaspa identity anchoring requires one-time opt-in.</div>
+<div class="rule">🔒 <strong style="color:var(--text)">Encrypted network transport.</strong> SecureChat uses its central signaling relay for current online delivery and optional background message listening. Message content remains end-to-end encrypted, while limited routing and connection metadata is processed as described in the privacy policy.</div>
 <div class="rule">🔒 <strong style="color:var(--text)">Private keys never leave hardware.</strong> All key generation and crypto operations happen inside Android Keystore (StrongBox or TEE). Keys are not exportable.</div>
 <div class="rule">🔒 <strong style="color:var(--text)">Fail Secure.</strong> On any error, the app encrypts — never decrypts. No plaintext fallback. No silent degradation.</div>
 <h2>Cryptographic Algorithms</h2>

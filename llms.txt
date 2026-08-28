@@ -30,7 +30,7 @@
 ## Links
 - Main: https://securechat.stealthx.tech
 - GitHub: https://github.com/NeaBouli/securechat
-- Source Code: https://github.com/NeaBouli/chameleon
+- Source Code: https://github.com/NeaBouli/securechat
 - Platform: https://stealthx.tech
 - IFR Token: https://ifrunit.tech
 - Privacy Policy: https://securechat.stealthx.tech/privacy.html
@@ -38,7 +38,7 @@
 ## Chameleon (Part of SecureChat Ecosystem)
 - Context-aware Privacy OS for Android
 - Integrates with SecureChat as overlay encryption layer
-- URL: https://securechat.stealthx.tech/chameleon
+- URL: https://chameleon.stealthx.tech
 - GitHub: https://github.com/NeaBouli/chameleon
 - License: StealthX Source-Available License
 - Crypto: XChaCha20-Poly1305, same stack as SecureChat
