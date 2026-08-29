@@ -4525,3 +4525,26 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - No Android source or signed candidate changed. Server-side checkout authorization remains part of the intentionally deferred Stripe + Greek VAT/AADE/myDATA/e-timologio implementation block.
 
 `FINAL LOCAL REVIEW FIXES GREEN — EXACT-HEAD CI AND NORMAL REVIEW REQUIRED`
+
+## 2026-08-29 01:57 EEST — CODEX SOL — PUBLIC CONTENT CORRECTION READY FOR REVIEW
+
+- Public copy now distinguishes GitHub APK v0.1.5 from v0.1.11-alpha available to
+  selected closed/internal Play testers; the Play control no longer says coming soon.
+- Corrected both false Chameleon no-Internet claims, SecureChat network-permission and
+  paid-access documentation, source/cross-product links, IFR canonical and sitemap dates.
+- Local verification PASS: XML sitemap parse, `git diff --check`, stale-claim guards and
+  15-page local link/fragment scan with zero broken targets.
+- Work is isolated from the existing dirty documentation worktree on branch
+  `docs/public-content-sync-20260829`. GitHub review, CI and live Pages verification
+  remain pending.
+
+`PUBLIC CONTENT CORRECTION IMPLEMENTED / LOCAL GATES PASS / REVIEW PENDING`
+
+## 2026-08-29 02:15 EEST — CODEX SOL — PR 30 EXACT-HEAD GREEN / REVIEW BLOCKED
+
+- Exact head `9c568a3` passed Android Build & Test and Dependency Review; the follow-up
+  CodeRabbit check was rate-limited but is successful and nonblocking.
+- Protected `main` still requires one independent approval. No admin bypass was used;
+  Pages deployment and live verification wait on merge.
+
+`PR 30 TECHNICALLY GREEN / INDEPENDENT REVIEW REQUIRED`

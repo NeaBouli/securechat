@@ -1,6 +1,6 @@
 # SecureChat — User Manual
 
-**Version 0.1.5-alpha · StealthX Platform**
+**Version 0.1.11-alpha · Closed Google Play test · StealthX Platform**
 
 ---
 
@@ -222,7 +222,7 @@ IFR holder discounts are launch-gated and not active in the current sales flow. 
 
 ### About
 
-- Version: 0.1.0-alpha
+- Version: 0.1.11-alpha (closed test)
 - Platform: SecureChat — StealthX Platform
 
 ---
@@ -234,8 +234,8 @@ IFR holder discounts are launch-gated and not active in the current sales flow. 
 | Camera | QR code scanning for contact key exchange |
 | Biometric | App unlock authentication |
 | NFC | Contact exchange via NFC (future) |
-| Notifications | Future: incoming message alerts |
-| Internet | IFR token verification via Ethereum RPC |
+| Notifications | Incoming-message alerts and the optional background listener |
+| Internet | Encrypted message transport, signaling, contact exchange and activation verification |
 
 SecureChat requests no contacts, phone state, location, or call log permissions. It does not access your address book, SMS, or phone.
 
@@ -261,7 +261,7 @@ This is designed for high-urgency situations where you need to destroy the app's
 
 **Storage:** SQLCipher AES-256 encrypted database. Encrypted SharedPreferences (AES-256-GCM) for app settings.
 
-**IFR cache integrity:** HMAC-SHA256 over the cached tier data. The HMAC key lives in Android Keystore (hardware-backed TEE or StrongBox). Any tampering with the cache is detected and the tier reverts to Free.
+**Paid access:** SecureChat contains no wallet connector, IFR balance lookup or in-app IFR tier cache. Paid access uses a server-signed, device-bound activation credential. Any future IFR holder discount is verified only in the browser before purchase.
 
 ---
 
