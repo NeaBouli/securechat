@@ -1,5 +1,17 @@
 # BRIDGE — securechat
 
+## 2026-09-04 — Private VLABS finance handoff refreshed
+
+- This public repository contains no finance details. SecureChat remains in
+  development with all paid controls closed.
+- The project developer must record exact `PRODUCT_READY` evidence for a
+  finished release. The private VLABS operator then performs project-specific
+  payment, delivery and reversal tests and records `FINANCE_READY`. Both are
+  required before any paid control can be enabled.
+- Do not publish recipient, account, tax, provider, customer, invoice or
+  runtime values. Obtain the current finance instructions through Gio and the
+  private VLABS operator only.
+
 ## Public Payment Data Boundary
 
 - This repository is public. Operational payment/Etimologio information is stored only in private `NeaBouli/vlabs` at `docs/finance-integrations/projects/securechat.md`.
