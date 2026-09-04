@@ -4560,3 +4560,21 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   Pages deployment and live verification wait on merge.
 
 `PR 30 TECHNICALLY GREEN / INDEPENDENT REVIEW REQUIRED`
+
+## 2026-09-04 20:16 EEST — CODEX SOL — ENTITLEMENT CLIENT HARDENING READY FOR REVIEW
+
+- Made activation refresh single-callback and timeout-bounded; malformed, stale or
+  failed responses now remain fail-closed and trigger runtime downgrade.
+- Full CI-equivalent matrix PASS: no-app-wallet/IFR guard, check, release lint,
+  debug/release APK and release AAB (1432 tasks).
+- Existing release identity produced valid API-36 artifacts for package
+  `securechat.app` code 15 and Free package `securechat.app.free` code 15.
+- S7 Free update/install PASS; activity started and remained resumed, process alive,
+  no app Fatal/ANR. Settings inspection found no IFR, wallet, WalletConnect or MetaMask
+  UI references.
+- Only S7 was attached. Cross-device encrypted messaging, activation/restore/revoke,
+  Play license-tester lifecycle and S10/S4 coverage remain external gates. No product
+  is PRODUCT_READY or FINANCE_READY; commerce remains disabled.
+- Kimi K3 was unavailable due weekly quota (HTTP 403); Sol completed review and tests.
+
+`LOCAL CODE/TEST GATES PASS / S7 SMOKE PASS / REVIEW AND MULTI-DEVICE E2E GATES OPEN`
