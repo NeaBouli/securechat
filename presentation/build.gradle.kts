@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.android.legacy.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
 android {
@@ -45,6 +45,6 @@ dependencies {
     implementation(libs.androidx.biometric)
     implementation(libs.zxing.android)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     debugImplementation(libs.compose.ui.tooling)
 }
