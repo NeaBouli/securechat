@@ -4583,3 +4583,15 @@ Projekt: **securechat**  ·  Pfad: `~/Desktop/repos/securechat`
 
 - Absolute local home paths in public docs replaced with `~/`. IFR statements (PRICING.md, index.html,
   faq.html: discounts at 2,000 / 6,000 IFR, launch-gated and disabled) were checked and are consistent.
+
+## 2026-10-03 — CLAUDE CODE — IFR ELIGIBILITY RULE DECIDED (hold model)
+
+- Decision (owner delegated): StealthX keeps the **hold model**. Any positive IFR token balance
+  (`balanceOf`, 9 decimals) qualifies for the seller-set discount, verified only in the browser
+  checkout with a signed nonce. The checkout stays launch-gated. The Android apps contain no IFR or wallet logic, and PRO/ELITE
+  access comes only from signed activation credentials.
+- Retired: the 2,000 / 6,000 IFR tier thresholds and IFRLock lookups. Remaining mentions are marked as
+  historical. This resolves the open question in the previous entry.
+- Launch gate added: because a dust balance qualifies, the seller documents a minimum-balance or
+  per-wallet limit decision before the discounted checkout is enabled.
+- Correction to the previous entry: the site and docs use no 2,000 / 6,000 thresholds; they already state the hold rule. Files: docs/PRICING.md.

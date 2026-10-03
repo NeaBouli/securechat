@@ -15,7 +15,7 @@
 ## Rules
 - VLABS is the canonical source for current price and availability.
 - A lifetime license is a perpetual right to use the purchased supported version; it is not a promise of unlimited future products, hosting or updates.
-- Any positive IFR balance qualifies for the seller-defined holder discount shown at checkout; there is no token-amount tier threshold. Discounts remain disabled until separately approved.
+- Any positive IFR balance qualifies for the seller-defined holder discount shown at checkout; there is no token-amount tier threshold. Discounts remain disabled until separately approved. Before enabling, the seller documents a minimum-balance or per-wallet limit decision, because a dust balance would otherwise qualify.
 - Product, bundle, refund and support scope follows the VLABS software terms shown before checkout.
 
 ## Status
