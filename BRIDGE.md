@@ -68,9 +68,9 @@ Verifikation:
 - S10 nicht verbunden.
 
 Desktop-Artefakte:
-- `/Users/gio/Desktop/SecureChat-LATEST.aab`
-- `/Users/gio/Desktop/SecureChat-Release-LATEST.apk`
-- `/Users/gio/Desktop/SecureChat-Internal-LATEST.apk` (Test, FORCE_ELITE)
+- `~/Desktop/SecureChat-LATEST.aab`
+- `~/Desktop/SecureChat-Release-LATEST.apk`
+- `~/Desktop/SecureChat-Internal-LATEST.apk` (Test, FORCE_ELITE)
 
 Audit-Details: `docs/SETTINGS_AUDIT_2026-06-21.md`
 
@@ -1804,37 +1804,37 @@ Real PRO/ELITE Test erst möglich wenn ein Holder seine Tokens lockt.
 ### TYPE: REVIEW
 
 **[HIGH] FINDING: SecureChat sx_ IDs are not derived from Ed25519 public keys**
-File: `/Users/gio/Desktop/repos/securechat/data/src/main/java/com/stealthx/data/identity/StealthXIdentity.kt:76`
+File: `~/Desktop/repos/securechat/data/src/main/java/com/stealthx/data/identity/StealthXIdentity.kt:76`
 Description: `getOrCreateWithSeed()` creates a random `identity_seed` and passes it into `getOrCreate()` as the public-key hex input. The resulting `sx_` ID is deterministic from a random seed, not from the Ed25519 public key as required by the platform contract.
 Fix: Generate/load the Ed25519 identity keypair before ID creation and derive `sx_` from Ed25519 public key bytes. Add tests for exact `sx_` + 9 Base58 chars and total length 12.
 Linear: NEW
 
 **[HIGH] FINDING: SecureChat accepts malformed sx_ IDs**
-File: `/Users/gio/Desktop/repos/securechat/domain/src/main/java/com/stealthx/domain/keyexchange/KeyExchangeManager.kt:71`
+File: `~/Desktop/repos/securechat/domain/src/main/java/com/stealthx/domain/keyexchange/KeyExchangeManager.kt:71`
 Description: Key-exchange validation checks only `startsWith("sx_")`; contact import accepts `sx_` length >= 10. IDs with wrong length or non-Base58 characters can pass validation.
 Fix: Add a shared validator for `^sx_[1-9A-HJ-NP-Za-km-z]{9}$` and enforce it in key exchange, QR parsing, and contact import.
 Linear: NEW
 
 **[MEDIUM] FINDING: SecureChat IFR ABI constant still references lockedAmount**
-File: `/Users/gio/Desktop/repos/securechat/stealthx-ifr/src/main/java/com/stealthx/ifr/IFRConstants.kt:61`
+File: `~/Desktop/repos/securechat/stealthx-ifr/src/main/java/com/stealthx/ifr/IFRConstants.kt:61`
 Description: The live verifier now calls `lockedBalance`, but the ABI string still declares `lockedAmount`, which contradicts the required contract field name and could reintroduce the old bug.
 Fix: Update the ABI fragment to `lockedBalance` or remove unused ABI text; add a regression test asserting the method name.
 Linear: NEW
 
 **[MEDIUM] FINDING: SecureChat Settings lists unimplemented Phase 2/3 features as ordinary gated rows**
-File: `/Users/gio/Desktop/repos/securechat/presentation/src/main/java/com/stealthx/presentation/screens/SettingsScreen.kt:90`
+File: `~/Desktop/repos/securechat/presentation/src/main/java/com/stealthx/presentation/screens/SettingsScreen.kt:90`
 Description: Group Messaging, Encrypted File Transfer, Kaspa Identity Anchor, Chameleon Integration, Onion Routing, Decoy Chat Profiles, Advanced Threat Detection, and Emergency Broadcast are shown as tier-gated feature rows. Several are TODO/placeholder/roadmap functionality and are not marked coming soon.
 Fix: Mark unavailable items as Coming Soon/Phase 2/Phase 3, or hide them until implementation and domain-level gates exist.
 Linear: NEW
 
 **[HIGH] FINDING: SecureCall can send plaintext when native crypto is unavailable or encryption returns null**
-File: `/Users/gio/Desktop/repos/stealth/client_android/app/src/main/java/com/securecall/app/net/WebSocketService.kt:348`
+File: `~/Desktop/repos/stealth/client_android/app/src/main/java/com/securecall/app/net/WebSocketService.kt:348`
 Description: Cross-repo release blocker: SecureCall falls back to raw data when crypto is unavailable, violating the platform-wide XChaCha20-Poly1305 requirement.
 Fix: Fail closed instead of sending plaintext.
 Linear: NEW
 
 **[HIGH] FINDING: Chameleon IFR verifier calls obsolete lockedAmount contract method**
-File: `/Users/gio/Desktop/repos/chameleon/stealthx-ifr/src/main/java/com/stealthx/ifr/verifier/IFRLockVerifier.kt:51`
+File: `~/Desktop/repos/chameleon/stealthx-ifr/src/main/java/com/stealthx/ifr/verifier/IFRLockVerifier.kt:51`
 Description: Cross-repo IFR blocker: Chameleon still calls `lockedAmount(address)` while the required/live method is `lockedBalance(address)`.
 Fix: Change Chameleon verifier and ABI/tests to `lockedBalance`.
 Linear: NEW
@@ -2480,9 +2480,9 @@ Build: ✅ | S7 ✅ | S4 ✅
 ### STATUS: DONE
 ### EMPFÄNGER: CC|GIO
 
-**SecureChat App Icon aus `/Users/gio/Desktop/icons` platziert**
+**SecureChat App Icon aus `~/Desktop/icons` platziert**
 
-- Quelle: `/Users/gio/Desktop/icons/SecureChat-Icon.png` (1024x1024)
+- Quelle: `~/Desktop/icons/SecureChat-Icon.png` (1024x1024)
 - Ziel:
   - `app/src/main/res/drawable/ic_launcher_bitmap.png` (432x432 adaptive foreground)
   - `app/src/main/res/mipmap-*/ic_launcher.png`
@@ -2535,7 +2535,7 @@ Build: ✅ | S7 ✅ | S4 ✅
 ## 2026-06-11 Codex — Release APK published
 - Version: `0.1.1-alpha` (`versionCode 2`).
 - Release build: `./gradlew assembleRelease` ✅ BUILD SUCCESSFUL.
-- Desktop artifact: `/Users/gio/Desktop/SecureChat-LATEST.apk` (13 MB).
+- Desktop artifact: `~/Desktop/SecureChat-LATEST.apk` (13 MB).
 - GitHub release created: `v0.1.1-alpha-securechat`.
 ## 2026-06-11 22:17 UTC — Codex SecureChat Site/Wiki Refresh
 
@@ -2559,7 +2559,7 @@ Build: ✅ | S7 ✅ | S4 ✅
   - Nicht implementierte Zusatzfunktionen werden nicht mehr als aktive Pro/Elite-Leistung verkauft; sie sind als Roadmap dargestellt.
 - Release-Pipeline-Fix: `isMinifyEnabled=false`, `isShrinkResources=false`, weil R8 bei `:app:minifyReleaseWithR8` reproduzierbar hing. Tests/Release bauen damit sauber.
 - Verification: `testDebugUnitTest assembleRelease` gruen.
-- Desktop-Artefakt: `/Users/gio/Desktop/SecureChat-LATEST.apk` aktualisiert.
+- Desktop-Artefakt: `~/Desktop/SecureChat-LATEST.apk` aktualisiert.
 - Device refresh: S4, S7, S10 frisch installiert; text-only launch smoke ohne Crash.
 
 ## 2026-06-12 16:01 PT — Codex Final SecureChat Audit Pass
@@ -2583,7 +2583,7 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Fix: Settings liest `versionName` jetzt dynamisch aus `PackageManager`, damit kuenftige Builds keinen stale About-Text behalten.
 - Verification:
   - `./gradlew --no-daemon --max-workers=1 testDebugUnitTest assembleRelease` ✅ BUILD SUCCESSFUL.
-  - `/Users/gio/Desktop/SecureChat-LATEST.apk` ersetzt; SHA256 `e583fe29c9846b46d656bc38f21b3a807931e381a25c8b2d2d84717fff836150`.
+  - `~/Desktop/SecureChat-LATEST.apk` ersetzt; SHA256 `e583fe29c9846b46d656bc38f21b3a807931e381a25c8b2d2d84717fff836150`.
   - APK auf S4, S7, S10 installiert.
   - GitHub Release `v0.1.1-alpha-securechat` Asset `SecureChat-LATEST.apk` neu hochgeladen.
 - Post-install Smoke: S4/S7/S10 melden `versionName=0.1.1-alpha`; je 80 Monkey-Events ohne SecureChat Fatal Exception/ANR.
@@ -2630,7 +2630,7 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Verification:
   - Android source scan over `app data domain presentation shared features stealthx-access` has no `IFR/Ifr/WalletConnect/MetaMask/Uniswap` or old wallet/lock identifier hits.
   - `./gradlew --no-daemon --max-workers=1 testDebugUnitTest assembleRelease` succeeded.
-  - Desktop artifact refreshed: `/Users/gio/Desktop/SecureChat-LATEST.apk` (21 MB, 2026-06-19 14:58 PDT).
+  - Desktop artifact refreshed: `~/Desktop/SecureChat-LATEST.apk` (21 MB, 2026-06-19 14:58 PDT).
 - Device note: no ADB install or logcat actions were run to avoid interfering with the separate `woizz` device work.
 - Next: install and smoke-test on S10/S7/S4 once device ownership is clear.
 
@@ -2661,7 +2661,7 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Verification:
   - Hard source scan over `app data domain presentation shared features stealthx-access gradle/libs.versions.toml` has no hits for `IFR/Ifr/ifr`, `Wallet`, `WalletConnect`, `MetaMask`, `Uniswap`, `web3/Web3`, `2,000`, `6,000`, or old upgrade phrases.
   - `./gradlew --no-daemon --max-workers=1 testDebugUnitTest assembleRelease` succeeded.
-  - Desktop artifact refreshed: `/Users/gio/Desktop/SecureChat-LATEST.apk` (21 MB, 2026-06-19 16:20 PDT).
+  - Desktop artifact refreshed: `~/Desktop/SecureChat-LATEST.apk` (21 MB, 2026-06-19 16:20 PDT).
   - Targeted APK string scan found no visible old IFR/Wallet/Connect/Uniswap phrases; raw short `IIFr`/`ifre` byte hits are non-UI false positives.
 - Device note: no ADB/device action was run to avoid interfering with separate `woizz` work.
 - Later milestone: build SecureChat AAB only after SecureChat is functionally complete and fully verified; do not produce AAB before that pass.
@@ -2684,10 +2684,10 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Build verification:
   - `./gradlew --no-daemon --no-watch-fs --max-workers=1 testDebugUnitTest :app:assembleRelease :app:bundleRelease` succeeded.
 - Desktop artifacts refreshed:
-  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.1-alpha-vC2.apk`
-  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.1-alpha-vC2.aab`
-  - `/Users/gio/Desktop/SecureChat-LATEST.apk`
-  - `/Users/gio/Desktop/SecureChat-LATEST.aab`
+  - `~/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.1-alpha-vC2.apk`
+  - `~/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.1-alpha-vC2.aab`
+  - `~/Desktop/SecureChat-LATEST.apk`
+  - `~/Desktop/SecureChat-LATEST.aab`
 - GitHub release `v0.1.1-alpha-securechat` assets were updated with `SecureChat-LATEST.apk` and `SecureChat-LATEST.aab`.
 - Verified SecureChat GitHub APK URL returned HTTP 200.
 - Device QA:
@@ -2704,14 +2704,14 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Updated the download section copy to state:
   - One APK covers Free, Pro, and Elite.
   - Paid plans unlock with an activation code after checkout.
-- Google Play upload target remains `/Users/gio/Desktop/SecureChat-LATEST.aab`.
+- Google Play upload target remains `~/Desktop/SecureChat-LATEST.aab`.
 - Verified SecureChat GitHub APK link returned HTTP 200.
 
 ## 2026-06-20 15:11 PDT — CODEX TERMINAL FIX/RELEASE
 
 - Exported SecureChat launcher icons to the Desktop:
-  - `/Users/gio/Desktop/SecureChat-App-Icon.png`
-  - `/Users/gio/Desktop/SecureChat-App-Icon-Round.png`
+  - `~/Desktop/SecureChat-App-Icon.png`
+  - `~/Desktop/SecureChat-App-Icon-Round.png`
   - Both are 192x192 PNG from `mipmap-xxxhdpi`.
 - Android 15 edge-to-edge compatibility pass:
   - `MainActivity` now calls `enableEdgeToEdge()`.
@@ -2724,10 +2724,10 @@ Build: ✅ | S7 ✅ | S4 ✅
 - Build verification succeeded:
   - `./gradlew --no-daemon --no-watch-fs --max-workers=1 testDebugUnitTest :app:assembleRelease :app:bundleRelease`
 - Desktop artifacts refreshed:
-  - `/Users/gio/Desktop/SecureChat-LATEST.apk`
-  - `/Users/gio/Desktop/SecureChat-LATEST.aab`
-  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.2-alpha-vC3.apk`
-  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.2-alpha-vC3.aab`
+  - `~/Desktop/SecureChat-LATEST.apk`
+  - `~/Desktop/SecureChat-LATEST.aab`
+  - `~/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.2-alpha-vC3.apk`
+  - `~/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.2-alpha-vC3.aab`
 - Verified APK metadata:
   - package `com.stealthx.securechat`
   - versionCode `3`
@@ -2758,10 +2758,10 @@ External release:
 - Build verification succeeded:
   - `./gradlew --no-daemon --no-watch-fs --max-workers=1 testDebugUnitTest :app:assembleRelease :app:bundleRelease`
 - Desktop artifacts refreshed:
-  - `/Users/gio/Desktop/SecureChat-LATEST.apk`
-  - `/Users/gio/Desktop/SecureChat-LATEST.aab`
-  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.3-alpha-vC4.apk`
-  - `/Users/gio/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.3-alpha-vC4.aab`
+  - `~/Desktop/SecureChat-LATEST.apk`
+  - `~/Desktop/SecureChat-LATEST.aab`
+  - `~/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.3-alpha-vC4.apk`
+  - `~/Desktop/StealthX-Release-2026-06-20/SecureChat-v0.1.3-alpha-vC4.aab`
 - Verified APK/AAB metadata:
   - package `securechat.app`
   - versionCode `4`
@@ -2791,7 +2791,7 @@ External release:
 - Latest known saved SecureChat state remains:
   - Code commit `1344c1a fix: align SecureChat package name for Play upload`
   - Bridge verification commit `6e6db9f docs: record SecureChat v0.1.3 release verification`
-  - Desktop upload artifact `/Users/gio/Desktop/SecureChat-LATEST.aab`
+  - Desktop upload artifact `~/Desktop/SecureChat-LATEST.aab`
   - package `securechat.app`
   - versionCode `4`
   - versionName `0.1.3-alpha`
@@ -2802,7 +2802,7 @@ External release:
   - IFR/wallet verification stays website-side for Stripe discount.
   - One public APK/AAB; paid plans unlock after checkout with activation code/subscription state.
 - Additional Desktop handoff written:
-  - `/Users/gio/Desktop/STEALTHX_RESTART_STATUS_2026-06-21.md`
+  - `~/Desktop/STEALTHX_RESTART_STATUS_2026-06-21.md`
 - Next startup check:
   - Run `git status --short` and `git log -3 --oneline` in this repo after reboot.
 
@@ -2822,7 +2822,7 @@ Verification:
 - `./gradlew --no-daemon --max-workers=1 app:bundleRelease` succeeded.
 
 Desktop artifact refreshed:
-- `/Users/gio/Desktop/SecureChat-LATEST.aab`
+- `~/Desktop/SecureChat-LATEST.aab`
   - SHA256 `de3992d84ffd12b7e08f8c9697d7fcba5e610140a1697e8aeb831efdee284c43`
 
 ## 2026-06-21 15:30 PDT - CODEX TERMINAL TEST-TIER BUILDS/S10 INSTALL
@@ -2920,7 +2920,7 @@ Open next steps:
   einem haengenden Dex-Schritt beendet; der fokussierte Wiederholungslauf mit zwei Workern war
   erfolgreich.
 - Auf S7 installiert, drei echte 1440x2560-/9:16-Screenshots aufgenommen und unter
-  `/Users/gio/Desktop/SecureChat-PlayStore-Screenshots/` abgelegt:
+  `~/Desktop/SecureChat-PlayStore-Screenshots/` abgelegt:
   `01-securechat-home.png`, `02-securechat-settings.png`, `03-securechat-new-contact.png`.
 - Die Identitaets-/QR-Ansicht wurde in `private-review/` verschoben und ist ausdruecklich nicht
   fuer den Store-Upload vorgesehen.
@@ -2950,7 +2950,7 @@ Open next steps:
 - Geschlossener Alpha-Test auf Griechenland eingerichtet; bestehende E-Mail-Liste
   `SecureCall beta-test` mit 23 Eintraegen und Feedbackkanal
   `https://github.com/NeaBouli/securechat/issues` hinterlegt.
-- `/Users/gio/Desktop/SecureChat-LATEST.aab` von Google Play akzeptiert: Package
+- `~/Desktop/SecureChat-LATEST.aab` von Google Play akzeptiert: Package
   `securechat.app`, VersionCode 6, VersionName `0.1.5-alpha`, minSdk 26, targetSdk 35.
 - Release `0.1.5-alpha (6) - Closed alpha` mit englischen Versionshinweisen erstellt.
 - Fehlende Foreground-Service-Erklaerung fuer `dataSync` sachlich ergaenzt. Nachweisvideo aus
@@ -2989,7 +2989,7 @@ Bei der Anweisung **"lese bridge"** in diesem Repo startest du autonom nach `~/.
 6. Definition of Done + volle relevante Tests. Diese Bridge append-only mit datiertem Block aktualisieren.
 7. Dann exakt ausgeben: `TASK COMPLETE — TARGET STOP ACTIVE`. Keinen Folgetask automatisch starten.
 
-Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
+Projekt: **securechat**  ·  Pfad: `~/Desktop/repos/securechat`
 (Autor: CC, 2026-07-28 — additive Autostart-Verdrahtung des Master-Agent-Workflows.)
 
 ## 2026-07-28 21:10 EEST — CODEX SOL — PLAY CLOSED-ALPHA STATUS VERIFIED
@@ -3437,7 +3437,7 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - The product/tier binding and mismatch tests were ported onto fresh current-main branch
   `fix/entitlement-product-tier-binding`; unknown products and forged product/tier combinations
   fail closed.
-- `ANDROID_HOME=/Users/gio/Library/Android/sdk ./gradlew :stealthx-crypto:test --no-daemon`
+- `ANDROID_HOME=~/Library/Android/sdk ./gradlew :stealthx-crypto:test --no-daemon`
   PASS (`BUILD SUCCESSFUL`, 32 actionable tasks). No Android wallet/IFR code, deployment,
   runtime secret or payment activation changed.
 - Product decision: IFR-holder discounts have no per-wallet reuse limit. Browser verification
@@ -3628,12 +3628,12 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   mit Commit `020b949 test: enable repeatable device messaging checks`
   separat committed und gepusht.
 - Desktop-Artefakt:
-  `/Users/gio/Desktop/SecureChat-LATEST.aab`, VersionCode 7,
+  `~/Desktop/SecureChat-LATEST.aab`, VersionCode 7,
   VersionName `0.1.6-alpha`, Paket `securechat.app`, targetSdk 36,
   SHA-256
   `521a84cc3b16c4727309c8bc12519b0bd096902b68ba4113934a63a57b2906d0`.
   Das vorherige v6-Bundle bleibt als
-  `/Users/gio/Desktop/SecureChat-v0.1.5-alpha-vC6.aab` erhalten.
+  `~/Desktop/SecureChat-v0.1.5-alpha-vC6.aab` erhalten.
 - Google Play akzeptierte v7 im bestehenden Closed-Alpha-Track ohne Verlust
   unterstuetzter Geraete. Release-Name und englische Hinweise wurden
   gespeichert; `FOREGROUND_SERVICE_REMOTE_MESSAGING` ist als
@@ -3722,7 +3722,7 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   mindestens 12 angemeldete Tester und mindestens 14 Tage geschlossenen Test.
 - Das neue verifizierte v7-AAB liegt unter
   `app/build/outputs/bundle/release/app-release.aab`. Die Desktop-Datei
-  `/Users/gio/Desktop/SecureChat-LATEST.aab` ist noch das alte Bundle und
+  `~/Desktop/SecureChat-LATEST.aab` ist noch das alte Bundle und
   darf nicht als v7-Uploadquelle verwendet werden.
 - Offene Releaseaktionen: Produktcommits pushen; neues v7-AAB auf Desktop
   bereitstellen; Foreground-Service-Erklaerung auf `remoteMessaging`
@@ -4140,9 +4140,9 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   regression and normal foreground-listener smoke on an emulator.
 - Play emitted only the nonblocking missing R8 disclosure-file warning; release
   `isMinifyEnabled = false`. No physical device, payment, server, credential or download
-  link was changed. Desktop artifacts: `/Users/gio/Desktop/SecureChat-LATEST.apk`,
-  `/Users/gio/Desktop/SecureChat-LATEST.aab`, and versioned copies under
-  `/Users/gio/Desktop/aab apk/`.
+  link was changed. Desktop artifacts: `~/Desktop/SecureChat-LATEST.apk`,
+  `~/Desktop/SecureChat-LATEST.aab`, and versioned copies under
+  `~/Desktop/aab apk/`.
 
 ---
 
@@ -4169,7 +4169,7 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 - **Ticket:** `GIO-20260804-SECURECHAT-LISTENER-RECOVERY`; **Status:** Local Done,
   release integration not authorized. Worktree/branch:
-  `/Users/gio/Desktop/repos/.worktrees/securechat-listener-recovery`,
+  `~/Desktop/repos/.worktrees/securechat-listener-recovery`,
   `fix/securechat-listener-recovery`, based on pushed closed-Alpha v9 commit `b05c4a9`.
 - Implemented a true opt-in background listener (new installs default off), notification
   permission request at enable time, safe foreground-service startup, a LOW-importance
@@ -4483,7 +4483,7 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - Full Gradle gate PASS: 1,305 tasks covering unit tests, all module checks, Release Lint and debug assembly. Signed base/Free/Pro/Elite release APKs plus Play AAB built and certificate/package metadata verified.
 - S10 evidence: signed base APK installed successfully, activity launch returned OK, process stayed alive and Logcat contained no crash. S10 disconnected before screenshot/deeper interaction; S7/S4 were occupied by Woizz and were not touched.
 - Public page browser check PASS with no horizontal overflow; release copy now points to `releases/latest/download/SecureChat-LATEST.apk` and displays v0.1.11.
-- Kimi K3 independently reviewed the ecosystem block; Sol integrated and retested the findings. Artifacts are under `/Users/gio/Desktop/aab apk/presale-2026-08-27/`.
+- Kimi K3 independently reviewed the ecosystem block; Sol integrated and retested the findings. Artifacts are under `~/Desktop/aab apk/presale-2026-08-27/`.
 - Open gates: physical cross-device messaging/background/notification matrix, Google closed-test duration/review, release-asset publication/site deployment, Stripe + Greek tax block on explicit standby.
 
 ## 2026-08-27 04:36 EEST — CODEX TERMINAL — RELEASE HANDOFF — PR OPEN
@@ -4578,3 +4578,8 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 - Kimi K3 was unavailable due weekly quota (HTTP 403); Sol completed review and tests.
 
 `LOCAL CODE/TEST GATES PASS / S7 SMOKE PASS / REVIEW AND MULTI-DEVICE E2E GATES OPEN`
+
+## 2026-10-03 — CLAUDE CODE — PATH ANONYMIZATION (docs only)
+
+- Absolute local home paths in public docs replaced with `~/`. IFR statements (PRICING.md, index.html,
+  faq.html: discounts at 2,000 / 6,000 IFR, launch-gated and disabled) were checked and are consistent.
