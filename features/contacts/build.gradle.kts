@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.android.legacy.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
 android {
@@ -31,7 +31,7 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     // QR code scanning for key-exchange (SC-04)
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     testImplementation(libs.junit5.api)
