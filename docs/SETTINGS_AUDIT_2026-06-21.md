@@ -37,6 +37,6 @@ Installed Internal APK:
 
 Desktop artifacts:
 
-- `/Users/gio/Desktop/SecureChat-LATEST.aab` SHA256 `e5928f415b49623559d6a2ab0bd6c0f908bb84a614140135b3dc46f10cadda9f`
-- `/Users/gio/Desktop/SecureChat-Release-LATEST.apk` SHA256 `9d0c3dc7a134474b7ba7e52110b65236286b45d3c053f90fb8b35b6a557323e0`
-- `/Users/gio/Desktop/SecureChat-Internal-LATEST.apk` SHA256 `d74c42d1bfea5259f149a73e4c714930160298c84117ce934b769f22b558a962`
+- `~/Desktop/SecureChat-LATEST.aab` SHA256 `e5928f415b49623559d6a2ab0bd6c0f908bb84a614140135b3dc46f10cadda9f`
+- `~/Desktop/SecureChat-Release-LATEST.apk` SHA256 `9d0c3dc7a134474b7ba7e52110b65236286b45d3c053f90fb8b35b6a557323e0`
+- `~/Desktop/SecureChat-Internal-LATEST.apk` SHA256 `d74c42d1bfea5259f149a73e4c714930160298c84117ce934b769f22b558a962`
