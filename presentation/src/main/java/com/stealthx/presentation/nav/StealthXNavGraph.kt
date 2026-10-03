@@ -1,6 +1,8 @@
 package com.stealthx.presentation.nav
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,7 +41,7 @@ fun StealthXNavGraph() {
         composable(Screen.Conversations.route) {
             val conversationsVm: ConversationsViewModel = hiltViewModel()
             val state by conversationsVm.uiState.collectAsState()
-            val activity = LocalContext.current as? Activity
+            val activity = LocalContext.current.findActivity()
             LaunchedEffect(state.wipeCompleted) {
                 if (state.wipeCompleted) {
                     activity?.finishAffinity()
@@ -143,4 +145,11 @@ fun StealthXNavGraph() {
             }
         }
     }
+}
+
+/** Walks the ContextWrapper chain to the hosting Activity (no unchecked cast). */
+private tailrec fun Context.findActivity(): Activity? = when (this) {
+    is Activity -> this
+    is ContextWrapper -> baseContext.findActivity()
+    else -> null
 }
