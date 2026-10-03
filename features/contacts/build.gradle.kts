@@ -1,13 +1,18 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.android.legacy.kapt)
     alias(libs.plugins.hilt)
 }
 android {
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+
     namespace = "com.stealthx.features.contacts"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig { minSdk = 26 }
 
     compileOptions {
@@ -15,9 +20,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 
     buildFeatures { compose = true }
 }
@@ -34,6 +36,7 @@ dependencies {
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     testImplementation(libs.junit5.api)
     testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.mockk)
 }
 tasks.withType<Test> { useJUnitPlatform() }
