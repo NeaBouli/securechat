@@ -65,7 +65,13 @@ fun NewContactScreen(
             modifier = Modifier.testTag("legacy_consent_dialog"),
             icon = { Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.error) },
             title = { Text(stringResource(R.string.legacy_contact_title)) },
-            text = { Text(stringResource(R.string.legacy_contact_message, sxId)) },
+            // Scrollable so the full warning stays reachable at large font scales.
+            text = {
+                Text(
+                    stringResource(R.string.legacy_contact_message, sxId),
+                    modifier = Modifier.verticalScroll(rememberScrollState())
+                )
+            },
             confirmButton = {
                 TextButton(
                     onClick = { vm.confirmLegacyImport() },
