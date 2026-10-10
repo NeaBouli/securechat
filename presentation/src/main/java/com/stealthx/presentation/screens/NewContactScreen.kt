@@ -62,29 +62,29 @@ fun NewContactScreen(
         }
     }
 
-    state.legacyConsentSxId?.let { sxId ->
+    state.legacyCandidate?.let { candidate ->
         AlertDialog(
-            // Back / outside tap is a cancel: nothing is written without explicit consent.
-            onDismissRequest = { vm.cancelLegacyImport() },
+            // Back / outside tap cancels exactly this candidate: nothing is written.
+            onDismissRequest = { vm.cancelLegacyImport(candidate.generation) },
             modifier = Modifier.testTag("legacy_consent_dialog"),
             icon = { Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.error) },
             title = { Text(stringResource(R.string.legacy_contact_title)) },
             // Scrollable so the full warning stays reachable at large font scales.
             text = {
                 Text(
-                    stringResource(R.string.legacy_contact_message, sxId),
+                    stringResource(R.string.legacy_contact_message, candidate.sxId, candidate.keyFingerprint),
                     modifier = Modifier.verticalScroll(rememberScrollState())
                 )
             },
             confirmButton = {
                 TextButton(
-                    onClick = { vm.confirmLegacyImport() },
+                    onClick = { vm.confirmLegacyImport(candidate.generation) },
                     modifier = Modifier.testTag("legacy_consent_confirm")
                 ) { Text(stringResource(R.string.legacy_contact_confirm)) }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { vm.cancelLegacyImport() },
+                    onClick = { vm.cancelLegacyImport(candidate.generation) },
                     modifier = Modifier.testTag("legacy_consent_cancel")
                 ) { Text(stringResource(R.string.legacy_contact_cancel)) }
             }

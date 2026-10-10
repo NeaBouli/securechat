@@ -13,6 +13,7 @@ import com.stealthx.data.repository.ContactImportResult
 import com.stealthx.data.repository.ContactRepository
 import com.stealthx.data.repository.IdentityKeyChangedException
 import com.stealthx.data.repository.ImportProvenance
+import com.stealthx.data.repository.LegacyConsentGate
 import com.stealthx.data.repository.LegacyConsentRequiredException
 import com.stealthx.data.repository.UnboundIdentityException
 import com.stealthx.domain.tier.TierGate
@@ -39,8 +40,8 @@ data class NewContactUiState(
     val statusMessage: String? = null,
     val errorMessage: String? = null,
     val contactAdded: Boolean = false,
-    /** Unbound legacy SecureID from an in-person scan awaiting explicit consent. */
-    val legacyConsentSxId: String? = null
+    /** Frozen unbound legacy candidate from an in-person scan awaiting explicit consent. */
+    val legacyCandidate: LegacyConsentGate.Candidate? = null
 )
 
 @HiltViewModel
@@ -65,7 +66,7 @@ class NewContactViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ContactLimitState())
 
-    private var pendingLegacyContent: String? = null
+    private val legacyGate = LegacyConsentGate()
 
     /**
      * [provenance] is decided by the screen's entry point (camera scan / NFC tap =
@@ -75,20 +76,30 @@ class NewContactViewModel @Inject constructor(
         importContent(content, provenance, legacyConsent = false)
     }
 
-    /** User explicitly accepted the "legacy, not key-bound" warning. */
-    fun confirmLegacyImport() {
-        val content = pendingLegacyContent ?: return
-        pendingLegacyContent = null
-        importContent(content, ImportProvenance.IN_PERSON, legacyConsent = true)
+    /**
+     * User explicitly accepted the warning for the displayed candidate [generation]. Stale,
+     * replayed or non-matching confirmations grant nothing (SCT-02 scan finding).
+     */
+    fun confirmLegacyImport(generation: Int) {
+        val candidate = legacyGate.claim(generation) ?: return
+        importContent(candidate.content, ImportProvenance.IN_PERSON, legacyConsent = true, expected = candidate)
     }
 
-    /** User cancelled the legacy warning: nothing is written. */
-    fun cancelLegacyImport() {
-        pendingLegacyContent = null
-        _uiState.value = NewContactUiState(statusMessage = "Contact not saved")
+    /** User cancelled the displayed candidate: nothing is written. */
+    fun cancelLegacyImport(generation: Int) {
+        if (legacyGate.cancel(generation)) {
+            _uiState.value = NewContactUiState(statusMessage = "Contact not saved")
+        }
     }
 
-    private fun importContent(content: String, provenance: ImportProvenance, legacyConsent: Boolean) {
+    private fun importContent(
+        content: String,
+        provenance: ImportProvenance,
+        legacyConsent: Boolean,
+        expected: LegacyConsentGate.Candidate? = null
+    ) {
+        // While a legacy candidate is shown, other camera/NFC/manual imports must not replace it.
+        if (expected == null && legacyGate.isPending()) return
         val trimmed = content.trim()
         if (trimmed.isBlank()) {
             _uiState.value = NewContactUiState(errorMessage = "QR content is required")
@@ -97,6 +108,12 @@ class NewContactViewModel @Inject constructor(
 
         val bundle = PublicKeyBundleQr.fromQrContent(trimmed).getOrElse {
             _uiState.value = NewContactUiState(errorMessage = it.message ?: "Invalid StealthX QR content")
+            return
+        }
+
+        if (expected != null && (bundle.sxId != expected.sxId ||
+                LegacyConsentGate.fingerprint(bundle.ed25519PublicKey) != expected.keyFingerprint)) {
+            _uiState.value = NewContactUiState(errorMessage = "Contact not saved")
             return
         }
 
@@ -116,8 +133,12 @@ class NewContactViewModel @Inject constructor(
                     contactAdded = result != ContactImportResult.ALREADY_KNOWN
                 )
             } catch (e: LegacyConsentRequiredException) {
-                pendingLegacyContent = trimmed
-                _uiState.value = NewContactUiState(legacyConsentSxId = bundle.sxId)
+                val candidate = legacyGate.offer(bundle.sxId, bundle.ed25519PublicKey, trimmed)
+                _uiState.value = if (candidate != null) {
+                    NewContactUiState(legacyCandidate = candidate)
+                } else {
+                    _uiState.value // another candidate is already shown; keep it unchanged
+                }
             } catch (e: UnboundIdentityException) {
                 _uiState.value = NewContactUiState(errorMessage = e.message)
             } catch (e: IdentityKeyChangedException) {
