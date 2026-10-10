@@ -73,4 +73,16 @@ class LegacyConsentGateTest {
         assertEquals(fa, LegacyConsentGate.fingerprint(keyA.copyOf()))
         assertTrue(Regex("^[0-9A-F]{4}( [0-9A-F]{4}){3}$").matches(fa), fa)
     }
+
+    @Test
+    @DisplayName("current() exposes the pending candidate until it is claimed or cancelled")
+    fun currentTracksPending() {
+        val gate = LegacyConsentGate()
+        assertNull(gate.current())
+        val a = gate.offer(id, keyA, "content-A")!!
+        gate.offer(id, keyB, "content-B")
+        assertEquals(a, gate.current(), "a refused second candidate must not change what is shown")
+        gate.claim(a.generation)
+        assertNull(gate.current())
+    }
 }

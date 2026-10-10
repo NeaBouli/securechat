@@ -30,6 +30,10 @@ class LegacyConsentGate {
     @Synchronized
     fun isPending(): Boolean = pending != null
 
+    /** The candidate currently awaiting a decision, if any (drives the visible dialog). */
+    @Synchronized
+    fun current(): Candidate? = pending
+
     /** Freezes a new candidate, or returns null if another candidate is still pending. */
     @Synchronized
     fun offer(sxId: String, ed25519PublicKey: ByteArray, content: String): Candidate? {

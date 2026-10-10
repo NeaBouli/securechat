@@ -63,31 +63,11 @@ fun NewContactScreen(
     }
 
     state.legacyCandidate?.let { candidate ->
-        AlertDialog(
-            // Back / outside tap cancels exactly this candidate: nothing is written.
-            onDismissRequest = { vm.cancelLegacyImport(candidate.generation) },
-            modifier = Modifier.testTag("legacy_consent_dialog"),
-            icon = { Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.error) },
-            title = { Text(stringResource(R.string.legacy_contact_title)) },
-            // Scrollable so the full warning stays reachable at large font scales.
-            text = {
-                Text(
-                    stringResource(R.string.legacy_contact_message, candidate.sxId, candidate.keyFingerprint),
-                    modifier = Modifier.verticalScroll(rememberScrollState())
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = { vm.confirmLegacyImport(candidate.generation) },
-                    modifier = Modifier.testTag("legacy_consent_confirm")
-                ) { Text(stringResource(R.string.legacy_contact_confirm)) }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = { vm.cancelLegacyImport(candidate.generation) },
-                    modifier = Modifier.testTag("legacy_consent_cancel")
-                ) { Text(stringResource(R.string.legacy_contact_cancel)) }
-            }
+        LegacyConsentDialog(
+            sxId = candidate.sxId,
+            keyFingerprint = candidate.keyFingerprint,
+            onConfirm = { vm.confirmLegacyImport(candidate.generation) },
+            onCancel = { vm.cancelLegacyImport(candidate.generation) }
         )
     }
 
@@ -346,3 +326,38 @@ private fun readContactUri(tag: android.nfc.Tag): String? = runCatching {
         runCatching { ndef.close() }
     }
 }.getOrNull()
+
+/**
+ * SCT-02 warning for an unbound legacy SecureID. Back / outside tap is a cancel; the text scrolls so
+ * the full warning stays reachable at large font scales. Callers bind confirm/cancel to one candidate.
+ */
+@Composable
+fun LegacyConsentDialog(
+    sxId: String,
+    keyFingerprint: String,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onCancel,
+        modifier = Modifier.testTag("legacy_consent_dialog"),
+        icon = { Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.error) },
+        title = { Text(stringResource(R.string.legacy_contact_title)) },
+        text = {
+            Text(
+                stringResource(R.string.legacy_contact_message, sxId, keyFingerprint),
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm, modifier = Modifier.testTag("legacy_consent_confirm")) {
+                Text(stringResource(R.string.legacy_contact_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onCancel, modifier = Modifier.testTag("legacy_consent_cancel")) {
+                Text(stringResource(R.string.legacy_contact_cancel))
+            }
+        }
+    )
+}

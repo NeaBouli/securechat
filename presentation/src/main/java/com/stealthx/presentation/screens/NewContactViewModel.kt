@@ -69,6 +69,14 @@ class NewContactViewModel @Inject constructor(
     private val legacyGate = LegacyConsentGate()
 
     /**
+     * Every state written while a legacy candidate is pending keeps that candidate visible, so an
+     * overlapping import that finishes later cannot hide the dialog and leave the gate stuck.
+     */
+    private fun publish(state: NewContactUiState) {
+        _uiState.value = state.copy(legacyCandidate = legacyGate.current())
+    }
+
+    /**
      * [provenance] is decided by the screen's entry point (camera scan / NFC tap =
      * IN_PERSON; deep link, pasted or edited text = REMOTE), never by the content.
      */
@@ -118,33 +126,30 @@ class NewContactViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            _uiState.value = NewContactUiState(isSaving = true)
+            publish(NewContactUiState(isSaving = true))
             try {
                 val result = contactRepository.addContactBundle(bundle, provenance, legacyConsent)
                 if (result != ContactImportResult.ALREADY_KNOWN) {
                     contactExchangeManager.sendExchange(bundle.sxId)
                 }
-                _uiState.value = NewContactUiState(
+                publish(NewContactUiState(
                     statusMessage = when (result) {
                         ContactImportResult.ALREADY_KNOWN -> "Contact already saved"
                         ContactImportResult.ADDED_LEGACY -> "Legacy contact added (not key-bound)"
                         ContactImportResult.ADDED -> "Contact added"
                     },
                     contactAdded = result != ContactImportResult.ALREADY_KNOWN
-                )
+                ))
             } catch (e: LegacyConsentRequiredException) {
-                val candidate = legacyGate.offer(bundle.sxId, bundle.ed25519PublicKey, trimmed)
-                _uiState.value = if (candidate != null) {
-                    NewContactUiState(legacyCandidate = candidate)
-                } else {
-                    _uiState.value // another candidate is already shown; keep it unchanged
-                }
+                // Freeze the candidate (or keep an already pending one) and show it.
+                legacyGate.offer(bundle.sxId, bundle.ed25519PublicKey, trimmed)
+                publish(NewContactUiState())
             } catch (e: UnboundIdentityException) {
-                _uiState.value = NewContactUiState(errorMessage = e.message)
+                publish(NewContactUiState(errorMessage = e.message))
             } catch (e: IdentityKeyChangedException) {
-                _uiState.value = NewContactUiState(errorMessage = e.message)
+                publish(NewContactUiState(errorMessage = e.message))
             } catch (e: Exception) {
-                _uiState.value = NewContactUiState(errorMessage = e.message ?: "Could not add contact")
+                publish(NewContactUiState(errorMessage = e.message ?: "Could not add contact"))
             }
         }
     }

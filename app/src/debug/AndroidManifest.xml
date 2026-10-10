@@ -12,5 +12,10 @@
         <receiver
             android:name=".debug.TestHookReceiver"
             android:exported="true" />
+
+        <!-- SCT-02 visual QA only: renders the legacy-consent dialog, no import path. -->
+        <activity
+            android:name=".debug.LegacyConsentPreviewActivity"
+            android:exported="true" />
     </application>
 </manifest>
