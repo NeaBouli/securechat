@@ -27,13 +27,19 @@ import com.stealthx.shared.model.AccessTier
 fun StealthXNavGraph() {
     val navController = rememberNavController()
     val context = LocalContext.current
+    // Only an explicit VIEW deep link is routed here. NFC intents also carry intent.data and are
+    // already routed through NfcUriRelay; taking both would navigate twice (SCT-02 review F2).
+    // Every externally delivered link is REMOTE; in-person NFC exists only in NewContactScreen's
+    // own reader-mode callback.
     val pendingDeepLink = remember {
-        (context as? Activity)?.intent?.data?.toString()
+        (context as? Activity)?.intent
+            ?.takeIf { it.action == android.content.Intent.ACTION_VIEW }
+            ?.data?.toString()
             ?.takeIf { it.startsWith("stealthx://add/") }
     }
     LaunchedEffect(pendingDeepLink) {
         if (pendingDeepLink != null) {
-            navController.navigate(Screen.NewContact.withLink(pendingDeepLink, Screen.NewContact.SOURCE_LINK))
+            navController.navigate(Screen.NewContact.withLink(pendingDeepLink))
             (context as? Activity)?.intent?.data = null
         }
     }
@@ -52,7 +58,7 @@ fun StealthXNavGraph() {
             LaunchedEffect(pendingNfcUri) {
                 pendingNfcUri?.let { uri ->
                     NfcUriRelay.consume()
-                    navController.navigate(Screen.NewContact.withLink(uri, Screen.NewContact.SOURCE_NFC))
+                    navController.navigate(Screen.NewContact.withLink(uri))
                 }
             }
             ConversationsScreen(
@@ -97,18 +103,14 @@ fun StealthXNavGraph() {
         }
         composable(
             route = Screen.NewContact.DEEP_LINK_ROUTE,
-            arguments = listOf(
-                navArgument(Screen.NewContact.ARG_LINK) { type = NavType.StringType; defaultValue = "" },
-                navArgument(Screen.NewContact.ARG_SOURCE) { type = NavType.StringType; defaultValue = "" }
-            )
+            arguments = listOf(navArgument(Screen.NewContact.ARG_LINK) {
+                type = NavType.StringType; defaultValue = ""
+            })
         ) { entry ->
             val rawLink = entry.arguments?.getString(Screen.NewContact.ARG_LINK) ?: ""
             val decoded = java.net.URLDecoder.decode(rawLink, "UTF-8")
-            // Only an NFC tag read by this app counts as in-person; any other prefill is remote.
-            val source = entry.arguments?.getString(Screen.NewContact.ARG_SOURCE)
             NewContactScreen(
                 initialContent = decoded,
-                initialInPerson = source == Screen.NewContact.SOURCE_NFC && decoded.isNotEmpty(),
                 onBack = { navController.popBackStack() },
                 onContactAdded = { navController.popBackStack() },
                 onUpgrade = { navController.navigate(Screen.Upgrade.route) }

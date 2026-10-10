@@ -44,8 +44,8 @@ class TestHookReceiver : BroadcastReceiver() {
                     addContact(content)
                 }
                 ACTION_SIMULATE_NFC -> {
-                    // Same in-app hop as a real NFC tag read after NDEF parsing
-                    // (MainActivity.handleNfcIntent -> NfcUriRelay), for visual QA only.
+                    // Simulates the EXTERNAL NFC intent hop (MainActivity.handleNfcIntent -> NfcUriRelay),
+                    // which must stay REMOTE. In-person NFC exists only in NewContactScreen's reader callback.
                     val content = intent.getStringExtra(EXTRA_CONTENT)
                         ?: error("missing $EXTRA_CONTENT")
                     require(content.startsWith("stealthx://add/")) { "not a stealthx://add/ link" }
