@@ -1,5 +1,17 @@
 # BRIDGE — securechat
 
+## 2026-09-04 — Private VLABS finance handoff refreshed
+
+- This public repository contains no finance details. SecureChat remains in
+  development with all paid controls closed.
+- The project developer must record exact `PRODUCT_READY` evidence for a
+  finished release. The private VLABS operator then performs project-specific
+  payment, delivery and reversal tests and records `FINANCE_READY`. Both are
+  required before any paid control can be enabled.
+- Do not publish recipient, account, tax, provider, customer, invoice or
+  runtime values. Obtain the current finance instructions through Gio and the
+  private VLABS operator only.
+
 ## Public Payment Data Boundary
 
 - This repository is public. Operational payment/Etimologio information is stored only in private `NeaBouli/vlabs` at `docs/finance-integrations/projects/securechat.md`.
@@ -3092,6 +3104,429 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
 
 ---
 
+## 2026-08-13 18:06 EEST — CODEX SOL — SECURITY-GATE HANDOFF ACTUAL EOF POINTER
+
+- The complete `SECURITY/CI GATES HARDENED → REVIEW` handoff from 18:03 EEST appears earlier
+  in this append-only file because contextual insertion matched an older stop marker.
+- Its authoritative status is unchanged: all local source/build/signature/static checks are
+  green; API 26/36 emulator execution and normal GitHub PR review/checks remain required before
+  merge. No production, deployment, credential, payment or Play publishing action occurred.
+
+`LOCAL HARDENING GREEN — NORMAL PR AND REQUIRED REVIEW NEXT`
+
+---
+
+## 2026-08-13 18:15 EEST — CODEX SOL — POST-REVIEW CI CORRECTIONS VERIFIED
+
+- Kimi K3's independent SecureChat review and the cross-repository CI review were applied by
+  Sol: AAB verification now requires real JAR signature entries, workflow concurrency uses only
+  valid contexts, and SDK/emulator/ADB/`apksigner` invocations use deterministic SDK paths.
+- Post-correction validation: all workflow YAML and Gradle verification XML parse, every action
+  reference is a 40-character immutable SHA, no invalid top-level matrix reference remains,
+  `git diff --check` passes, and no temporary signing file remains.
+- Full local build/test/signature results remain the green results recorded in the detailed
+  handoff. Hosted API 26/36 instrumentation and normal PR review/checks remain pre-merge gates.
+
+`POST-REVIEW SOURCE GREEN — PR NEXT`
+
+---
+
+## 2026-08-13 19:10 EEST — CODEX SOL — FRESH-RUNNER METADATA CORRECTION
+
+- The first hosted PR build exposed dependency checksums absent from metadata generated against
+  the warm local Gradle cache. No source or application behavior was implicated.
+- Sol regenerated strict SHA-256 verification metadata against an empty Gradle user home.
+  `check lintRelease assembleDebug assembleDebugAndroidTest` passed in 28m13s
+  (1,640 tasks).
+- The exact strict release chain
+  `check lintRelease assembleDebug assembleRelease bundleRelease` passed in 12m40s
+  (1,431 tasks). Release APK/AAB ZIP and signature gates passed; expected warnings are limited
+  to the intentionally short-lived self-signed CI identity.
+- GitHub dependency graph/vulnerability alerts were enabled for this repository through the
+  authorized repository-admin API. The endpoint verified with HTTP 204 and the rerun Dependency
+  Review job passed.
+- Temporary CI-only signing material was removed. PR #18 will rerun hosted checks after this
+  metadata correction; required review and the separate private-audit release gate remain.
+
+`FRESH-RUNNER DEPENDENCY METADATA GREEN — HOSTED PR RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:14 EEST — CODEX SOL — PR REVIEW HARDENING PHYSICAL EOF
+
+- Both SecureChat checkout steps now set `persist-credentials: false`, preventing PR-controlled
+  Gradle logic from inheriting a Git credential in the workspace.
+- Sol did not add `contents: write` dependency submission to the PR build: the repository
+  dependency graph is already enabled and Dependency Review passes, while broadening token
+  permissions is contrary to the least-privilege scope. Dependabot's monthly grouping and the
+  high-severity blocking threshold remain explicit policy choices, not demonstrated defects.
+- Ruby YAML parsing, checkout-configuration inspection and `git diff --check` pass. Hosted
+  PR checks remain authoritative for emulator execution.
+
+`ACTIONABLE PR REVIEW ITEM FIXED — HOSTED CHECKS REQUIRED`
+
+---
+
+## 2026-08-13 19:22 EEST — CODEX SOL — LINUX AAPT2 VERIFICATION COVERAGE
+
+- The final hosted build progressed beyond the prior metadata gap and identified the remaining
+  platform-specific AAPT2 Linux classifier. Sol resolved the exact pinned classifier from the
+  configured Google repository using Gradle's verification writer.
+- Strict metadata now includes its Gradle-generated SHA-256 entry. XML and diff validation pass,
+  all three repositories produced the same checksum, and the temporary init script was removed.
+- No dependency version or application code changed. A final hosted rerun remains required.
+
+`CROSS-PLATFORM VERIFICATION METADATA COMPLETE — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:45 EEST — CODEX SOL — EMULATOR RUNNER CORRECTION
+
+- Both manual API 26/36 jobs remained indefinitely in `adb wait-for-device`; the existing
+  deadline started only after that unbounded call and therefore could not protect the job.
+- The manual emulator orchestration was replaced by established
+  `ReactiveCircus/android-emulator-runner` v2.38.0 pinned to immutable commit
+  `a421e43855164a8197daf9d8d40fe71c6996bb0d`, with a 600-second boot timeout. Compile platform
+  and build-tools 36 are provisioned explicitly before the same connected smoke-test task.
+- Workflow YAML, immutable action pins and diff validation pass. Hosted execution is required.
+
+`EMULATOR BOOT FLOW BOUNDED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:09 EEST — CODEX SOL — BOUNDED ADB INSTALL TIMEOUT
+
+- API 26 booted successfully but ran zero tests because Ddmlib timed out while committing the
+  26-MB debug APK. UTP reported `ShellCommandUnresponsiveException`; no test assertion or app
+  crash occurred. The uploaded diagnostic artifact confirmed the same installation failure.
+- Android's AGP 8.11.1 `adbOptions.timeOutInMs` is set to 600,000 ms, retaining a finite job
+  bound while allowing slow emulator installs. Local Gradle configuration validation passes.
+
+`ADB INSTALL WINDOW BOUNDED AT TEN MINUTES — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:28 EEST — CODEX SOL — NON-STREAMING INSTRUMENTATION
+
+- A second API 26 run proved UTP ignored the AGP ADB timeout and failed after five minutes in
+  the streaming split commit, still with zero tests. The ineffective Gradle setting was removed.
+- The bounded emulator runner now assembles app/test APKs, installs each with
+  `adb install --no-streaming` under an external 600-second limit, invokes the declared
+  AndroidJUnitRunner directly and requires an `OK` result with at least one test.
+- YAML, extracted shell syntax, immutable action pins and diff validation pass.
+
+`STREAMING INSTALL PATH REMOVED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:53 EEST — CODEX SOL — SINGLE-SHELL SMOKE HARNESS
+
+- Hosted logs proved the emulator action executes multiline script entries as separate shell
+  commands. This breaks continuations and state even when APK installation succeeds.
+- A repository-local strict Bash harness now performs bounded non-streaming installs, direct
+  instrumentation and positive test-count validation in one shell. The action invokes it with
+  one folded command. Emulator boot remains bounded and is raised to 900 seconds for API 36.
+- Bash syntax, YAML folding, immutable action pins and diff validation pass.
+
+`SINGLE-SHELL INSTRUMENTATION HARNESS READY — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:05 EEST — CODEX SOL — APK PATH RESOLUTION HARDENED
+
+- The shared harness now resolves a missing requested APK by exact basename under the workspace,
+  requires exactly one non-empty match and prints path/size before installation. Ambiguity fails
+  explicitly. This makes action working-directory differences deterministic.
+- Bash syntax and diff validation pass.
+
+`APK DISCOVERY DETERMINISTIC AND DIAGNOSTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:18 EEST — CODEX SOL — ABI-SPLIT APK SELECTION
+
+- The shared harness now also handles valid ABI-split output sets: within the expected variant
+  directory it prefers one universal artifact, otherwise one x86_64 artifact, and fails on
+  unresolved ambiguity. Existing exact-path behavior is unchanged.
+- Bash syntax and diff validation pass.
+
+`ABI-SPLIT APK SELECTION DETERMINISTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:48 EEST — CODEX SOL — KVM ACCELERATION RESTORED
+
+- Emulator-runner logs reported hardware acceleration unavailable because the earlier KVM
+  permission step was lost when manual boot orchestration was replaced.
+- The established KVM udev permission step is restored before the pinned emulator runner.
+  Boot remains bounded at 900 seconds. YAML and diff validation pass.
+
+`HARDWARE-ACCELERATED HOSTED EMULATION RESTORED`
+
+## 2026-08-17 04:12 EEST — CODEX SOL — PHYSICAL CONTACT IMPORT QA CHECKPOINT
+
+- Fresh Free/Pro/Elite tier releases were assigned to S7/S4/S10. Tier presentation, settings,
+  IFR/wallet absence and the Pro foreground message listener were physically verified.
+- Found and fixed an API 26 layout blocker: Add Contact was not scrollable and its action button
+  sat below the S7 viewport. Full release unit/lint and all tier APK builds pass after adding
+  navigation/IME padding and vertical scrolling.
+- The S7 then physically opened the full signed S4 identity, scrolled to Add Contact, imported it
+  successfully and opened the encrypted conversation. A 500-event stability run per connected
+  Free/Pro package produced no captured app crash or ANR.
+- Cross-device delivery remains externally blocked: S7 cannot establish the signaling TLS path
+  on its current Wi-Fi while S4 can. S10 disconnected before the corrected Elite reinstall and
+  remains protected by its device-credential gate. No production or Play action occurred.
+
+`CONTACT IMPORT FIX VERIFIED — DELIVERY AND S10 RETEST OPEN`
+
+---
+
+## 2026-08-17 EEST — CODEX SOL — THREE-DEVICE RELEASE QA START
+
+- Central ticket `GIO-20260817-STEALTHX-3X3-QA` is in progress against exact
+  `origin/main` `9feb47bf4686` in an isolated worktree; the divergent canonical
+  worktree remains untouched.
+- Connected matrix: S7/API 26 = Free, Tab S4/API 29 = Pro, S10/API 31 = Elite.
+  Fresh installs follow successful unit, lint, release, package and signature gates.
+- Kimi K3 completed the independent secret-free feature/settings matrix review.
+  Current-code physical message, background-listener and recovery coverage remains
+  a release gate.
+
+`THREE-DEVICE QA IN PROGRESS — RELEASE GATE OPEN`
+
+---
+
+## 2026-08-23 12:08 EEST — SECURECHAT-20260823-API36-PRODUCTION PHYSICAL EOF
+
+- The detailed 12:05 EEST task-takeover block appears earlier because this historical
+  append-only Bridge contains repeated marker text. This physical-EOF pointer is authoritative.
+- Scope remains the signed `securechat.app` versionCode 14 API-36 production candidate,
+  protected-branch review, exact artifact verification and the owner-authorized Google Play
+  production submission. No other app, track, payment, server or credential action is included.
+
+`TASK IN PROGRESS — RELEASE BUILD NEXT`
+
+---
+
+## 2026-08-23 12:05 EEST — SECURECHAT-20260823-API36-PRODUCTION → In Progress
+
+- **Owner:** CODEX SOL
+- **Branch:** `release/securechat-v14-production-api36-20260823`
+- **Scope:** Produce the next signed SecureChat production bundle for package
+  `securechat.app`, target API 36 and unused version code 14; verify locally before the
+  authorized Google Play production submission.
+- **Changed:** No application files changed at task takeover.
+- **Authorization:** Repository owner explicitly authorized the API-36 production release.
+- **Risk:** Medium — public Google Play publishing remains gated on signed-artifact validation,
+  protected-branch review and an explicit final Play inspection.
+- **Exclusions:** No SecureCall, Chameleon, payment, server, credential or unrelated track changes.
+- **Next:** Bump version metadata, run the complete release gate, verify package/version/SDK/signature,
+  open the normal protected-branch PR, then submit the exact reviewed artifact to Google Play.
+
+---
+
+---
+
+## 2026-08-13 21:52 EEST — CODEX SOL — FINAL REVIEW FOLLOW-UP
+
+- Status: IN PROGRESS on PR #18; API 26 instrumentation is green and API 36/build
+  verification remain under exact-head observation.
+- A current review found one valid portability defect: Android SDK packages used a fixed
+  `cmdline-tools/latest` path. The workflow now uses the `sdkmanager` selected by the pinned
+  setup action and passes the SDK root explicitly.
+- Dependabot's wildcard group is limited to minor/patch updates, while major updates remain
+  individually visible. Dependency Review now fails on every reported severity.
+- Dependency-graph submission remains intentionally disabled in this read-only PR workflow:
+  repository dependency graph and vulnerability alerts are already enabled, and granting
+  repository write permission to PR-controlled Gradle execution would weaken least privilege.
+- Required verification: YAML parse, focused policy checks, then complete hosted CI and both
+  emulator APIs on the resulting exact head. No production, deployment, credentials, payment,
+  publishing, or private audit data is in scope.
+
+`FINAL REVIEW PATCH APPLIED — EXACT-HEAD VERIFICATION REQUIRED`
+
+---
+
+## 2026-08-13 22:04 EEST — CODEX SOL — INSTRUMENTATION EVIDENCE FIX
+
+- Hosted API 26 passed on exact head `c008a8b`, but GitHub reported no result file for the
+  artifact upload because the harness still used and deleted a temporary file.
+- The harness now persists raw `am instrument` output beneath the uploaded Android
+  test-results tree. Strict pipeline failure propagation and the non-zero test-count assertion
+  remain unchanged.
+- Required verification: shell syntax, hosted API 26/API 36 rerun, non-empty evidence upload,
+  and the complete exact-head CI matrix. No production or runtime action is in scope.
+
+`TEST EXECUTION GREEN — PERSISTED EVIDENCE RERUN REQUIRED`
+
+---
+
+## 2026-08-14 00:45 EEST — CODEX SOL — DEPENDENCY AUTOMATION TRIAGE
+
+- GitHub reports zero open Dependabot vulnerability alerts. The five generated Gradle PRs are
+  routine major/grouped maintenance and several already fail build or emulator gates; none is a
+  required security patch and none was merged during triage.
+- Dependabot keeps grouped minor/patch updates, ignores automatic major version-update PRs, and
+  applies the same conservative policy to pinned GitHub Actions. Security updates remain eligible.
+- Required verification: YAML parse, CI/release gates, independent review and exact-main
+  verification. No runtime, Play or production action is in scope.
+
+`DEPENDENCY POLICY PATCH IN VALIDATION`
+
+---
+
+## 2026-08-14 00:48 EEST — CODEX SOL — DEPENDENCY POLICY LOCALLY GREEN
+
+- Dependabot YAML parsing and `git diff --check` PASS. The change affects automation policy only;
+  Android source, dependencies and release artifacts are byte-unchanged.
+- Kimi K3 review was attempted but unavailable due provider quota HTTP 403. Claude Code supplied
+  the permitted focused read-only fallback review and returned APPROVED with no schema defect.
+- Next: protected PR, exact-head checks, merge only after green review, then exact-main checks and
+  stale automation-PR reconciliation.
+
+`LOCAL VALIDATION COMPLETE — PROTECTED PR NEXT`
+
+---
+
+## 2026-08-13 18:03 EEST — CODEX SOL — SECURITY/CI GATES HARDENED → REVIEW
+
+- **Branch:** `fix/security-gates-20260813` from exact `origin/main` `09a1bc2` in an isolated
+  worktree; the user's primary checkout and its unrelated changes were preserved.
+- CI now uses immutable upstream-verified action SHAs, least privilege and concurrency; it runs
+  root checks/lint plus debug and CI-signed release APK/AAB builds, validates ZIP/signatures,
+  labels artifacts CI-only, retains them seven days and always removes ephemeral signing data.
+- Added dependency review, monthly Dependabot, API 26/36 emulator instrumentation and a
+  `MainActivity` launch smoke test. Added official Gradle wrapper checksum and strict dependency
+  checksum metadata; Android test dependencies live in the version catalog and reviewed
+  metadata regeneration is documented.
+- **Tests:** metadata-generation full release chain PASS in 6m52s (1,766 tasks); final original
+  metadata-enforced release chain PASS in 1m53s (1,462 tasks). After final review corrections,
+  `./gradlew check assembleDebugAndroidTest` PASS in 26m11s (1,375 tasks), including both
+  `verifyNoAppIfrWalletCode` and `verifyNoClientSideGooglePlayUnlock` plus all module checks and
+  Android-test APK builds. Release APK/AAB ZIP and signature gates PASS; package metadata remains
+  `securechat.app`, versionCode 13, target/compile SDK 36, min SDK 26.
+- Kimi K3 independently reviewed the diff read-only, verified all action tags, the official
+  Gradle checksum and selected Google Maven hashes. Sol fixed its actionable AAB-signature-gate
+  finding by requiring both JAR signature files in addition to `jarsigner`, moved test versions
+  into the catalog, added unconditional key cleanup, API 36 coverage and maintenance guidance.
+- Static workflow/XML/action-pin/diff/temporary-file/secret-pattern checks PASS. No production,
+  deployment, payment, runtime credential, Play publishing or app entitlement logic changed.
+  API 26/36 emulator execution and normal PR review/checks remain required before merge.
+
+`LOCAL HARDENING GREEN — NORMAL PR AND REQUIRED REVIEW NEXT`
+
+---
+
+## 2026-08-06 03:30 EEST — WEB-ONLY IFR SALES ACTUAL EOF POINTER
+
+- The detailed same-timestamp `WEB-ONLY IFR SALES SURFACE` block was appended earlier in this
+  file by contextual patch placement and remains intact under append-only rules.
+- Authoritative current status: branch `fix/gh-42-web-ifr-checkout` is source-ready for review;
+  production payment activation remains blocked by VLABS fiscal readiness, entitlement runtime
+  provisioning and repeated-discount enforcement. All documented tests passed and no Android,
+  deployment, secret or live-payment action occurred.
+
+`READY FOR REVIEW — DO NOT ACTIVATE PAYMENTS`
+
+---
+
+## 2026-08-09 11:47 EEST — CODEX SOL — LEGACY PR #9 SELECTIVE SALVAGE
+
+- PR #9 is stale as a branch but contains one missing security invariant: only
+  `securechat_pro_lifetime -> PRO` and `securechat_elite_lifetime -> ELITE` are accepted.
+- The product/tier binding and mismatch tests were ported onto fresh current-main branch
+  `fix/entitlement-product-tier-binding`; unknown products and forged product/tier combinations
+  fail closed.
+- `ANDROID_HOME=/Users/gio/Library/Android/sdk ./gradlew :stealthx-crypto:test --no-daemon`
+  PASS (`BUILD SUCCESSFUL`, 32 actionable tasks). No Android wallet/IFR code, deployment,
+  runtime secret or payment activation changed.
+- Product decision: IFR-holder discounts have no per-wallet reuse limit. Browser verification
+  is required per discounted checkout; wallet/IFR mechanisms remain outside the Android app.
+
+`SECURITY SALVAGE TESTED — PR #9 WILL BE SUPERSEDED`
+
+## 2026-08-09 12:02 EEST — CODEX SOL — LEGACY PR #9 SALVAGE READY
+
+- Final diff and `git diff --check` PASS. Crypto tests remain green for both debug and release
+  unit-test variants. The branch contains only the product/tier binding, focused tests and this
+  append-only Bridge record.
+- Ready for protected GitHub PR/CI integration. Old PR #9 will be closed as superseded after the
+  fresh-main replacement merges.
+
+`FRESH-MAIN SECURITY PR READY`
+
+## 2026-08-09 11:09 EEST — WEB IFR MERGE ACTUAL EOF POINTER
+
+- The detailed same-timestamp merge block appears earlier due to contextual append placement.
+- Authoritative status: PR #12 merged as `691f5fd6c04de39a56cd70b7e8770c8f600d7a75`;
+  exact-main Android CI and Pages PASS; live site HTTP 200; payment remains fail-closed.
+
+`MERGED AND VERIFIED — LIVE PAYMENT STILL BLOCKED`
+
+## 2026-08-09 11:09 EEST — CODEX SOL — WEB IFR MERGED
+
+- Gio granted explicit owner/admin approval for the exact reviewed PR #12 head `dc1298b`.
+- PR #12 merged to `main` as `691f5fd6c04de39a56cd70b7e8770c8f600d7a75`.
+- Exact-main SecureChat Android CI and GitHub Pages deployment PASS. Live
+  `https://securechat.stealthx.tech/` exposes the browser-only IFR controls and returns HTTP 200.
+- No Android wallet/IFR code, payment activation, runtime secret or Android artifact changed.
+- Remaining gates: VLABS fiscal transmission, production entitlement provisioning and
+  server-side repeated-discount enforcement.
+
+`MERGED AND VERIFIED — LIVE PAYMENT STILL BLOCKED`
+
+## 2026-08-06 03:33 EEST — CODEX SOL — PR ACTUAL EOF POINTER
+
+- PR `https://github.com/NeaBouli/securechat/pull/12`, implementation commit `ed5f3ab`.
+- GitHub build/test and CodeRabbit checks started. No merge, deployment or payment activation.
+
+`REVIEW IN PROGRESS`
+
+## 2026-08-06 03:40 EEST — CODEX SOL — REVIEW FIX
+
+- GitHub Build & Test passed. CodeRabbit's valid timeout finding was addressed in the shared
+  browser client together with safer signature fallback and deterministic button reset.
+- No payment activation, deployment, secret or Android source change.
+
+`REVIEW FIX CI RERUN REQUIRED`
+
+## 2026-08-06 03:47 EEST — CODEX SOL — REVIEW SOURCE GREEN
+
+- Implementation head `79e21d5`; PR #12 Build & Test PASS. Valid CodeRabbit timeout feedback
+  was fixed across the shared client; final bot status is green/rate-limited.
+- Ready for human review only. No merge, deploy, secret or payment activation.
+
+`SOURCE REVIEW GREEN — PRODUCTION BLOCKED`
+
+## 2026-08-06 03:33 EEST — CODEX SOL — PR OPEN
+
+- PR `https://github.com/NeaBouli/securechat/pull/12`, implementation commit `ed5f3ab`.
+- GitHub build/test and CodeRabbit checks started. No merge, deployment or payment activation.
+
+`REVIEW IN PROGRESS`
+
+---
+
+## 2026-08-06 03:30 EEST — CODEX SOL — WEB-ONLY IFR SALES SURFACE
+
+- Ticket `GIO-20260806-STEALTHX-WEB-IFR-CHECKOUT`; branch
+  `fix/gh-42-web-ifr-checkout`; status: source ready for review, production blocked.
+- SecureChat landing, IFR, FAQ, Wiki and README now describe IFR solely as a browser-purchase
+  discount. The active browser control supports Connect, Disconnect, signed verification and
+  Pro/Elite checkout; the wallet field is read-only and the Suite remains unavailable.
+- Added a neutral payment-return page that waits for signed server fulfillment instead of
+  claiming success from the return URL. Mobile 375 px browser verification has zero horizontal
+  overflow and readable controls.
+- PASS: shared JS syntax; identical shared-script SHA-256 across all three sites;
+  `git diff --check`; Gradle `verifyNoAppIfrWalletCode`. No Android source/artifact, payment
+  activation, secret, deployment or live checkout was touched.
+- Blocked before live sale: VLABS AADE/myDATA/e-timologio; production entitlement signing and
+  runtime configuration; repeated-discount enforcement policy.
+
+`READY FOR REVIEW — DO NOT ACTIVATE PAYMENTS`
+
+---
+
 ## 2026-08-04 12:02 EEST — CODEX SOL — LISTENER RECOVERY PROMOTION AUTHORIZED
 
 - **Ticket:** `GIO-20260804-SECURECHAT-LISTENER-RECOVERY`; **Status:** In Progress;
@@ -3848,3 +4283,298 @@ Projekt: **securechat**  ·  Pfad: `/Users/gio/Desktop/repos/securechat`
   are all green.
 
 `TASK COMPLETE — TARGET STOP ACTIVE`
+
+---
+
+## 2026-08-06 03:30 EEST — WEB-ONLY IFR SALES ACTUAL EOF POINTER
+
+- The detailed same-timestamp `WEB-ONLY IFR SALES SURFACE` block appears earlier in this file
+  because of contextual patch placement and remains intact under append-only rules.
+- Authoritative current status: branch `fix/gh-42-web-ifr-checkout` is source-ready for review;
+  production payment activation remains blocked by VLABS fiscal readiness, entitlement runtime
+  provisioning and repeated-discount enforcement. All documented tests passed and no Android,
+  deployment, secret or live-payment action occurred.
+
+`READY FOR REVIEW — DO NOT ACTIVATE PAYMENTS`
+
+## 2026-08-09 12:11 EEST — CODEX SOL — LEGACY ENTITLEMENT SALVAGE MERGED
+
+- Fresh-main PR #14 merged as `ec1b38d010ba6a6867aadc12b94ea5d7851fe99b`; exact-main Android CI run
+  `31305071624` and Pages run `31305071074` PASS.
+- Obsolete PR #9 was commented and closed as superseded. Its relevant product-to-tier binding
+  was ported and tested; the stale branch itself was not merged.
+- Product decision is final for current web sales: every successfully verified IFR holder may
+  receive the provider-defined discount on every eligible checkout. There is no per-wallet
+  reuse limit. Verification remains browser/server-side before purchase; Android apps remain
+  free of IFR and wallet mechanisms.
+- No production deployment, runtime secret, Play release or live payment mutation occurred.
+  VLABS fiscal/AADE and private production fulfillment remain a separate readiness gate.
+
+`TASK COMPLETE — TARGET STOP ACTIVE`
+
+---
+
+## 2026-08-13 18:07 EEST — CODEX SOL — SECURITY-GATE HANDOFF PHYSICAL EOF
+
+- The complete 18:03 EEST security/CI hardening handoff and its 18:06 pointer appear earlier in
+  this append-only file due historical duplicate stop markers. This block is the physical EOF.
+- Authoritative status: all local source/build/signature/static checks are green; API 26/36
+  emulator execution and normal GitHub PR review/checks remain required before merge. No
+  production, deployment, runtime credential, payment or Play publishing action occurred.
+
+`LOCAL HARDENING GREEN — NORMAL PR AND REQUIRED REVIEW NEXT`
+
+---
+
+## 2026-08-13 18:16 EEST — CODEX SOL — POST-REVIEW CORRECTION PHYSICAL EOF
+
+- The detailed 18:15 EEST post-review correction block appears earlier because this historical
+  append-only Bridge contains repeated marker text. Its authoritative status is unchanged:
+  Kimi's actionable findings are fixed and final YAML/XML/shell/action-pin/diff/temp-file
+  validation passes.
+- Hosted API 26/36 instrumentation and normal PR review/checks remain pre-merge gates.
+
+`POST-REVIEW SOURCE GREEN — PR NEXT`
+
+---
+
+## 2026-08-13 19:11 EEST — CODEX SOL — FRESH-RUNNER CORRECTION PHYSICAL EOF
+
+- The detailed 19:10 EEST fresh-runner metadata correction appears earlier because of this
+  file's historical duplicate markers. It records the empty-cache 1,640-task pass, exact
+  1,431-task release pass, artifact signature gates and removal of temporary signing material.
+- GitHub dependency graph/vulnerability alerts are enabled and the rerun Dependency Review job
+  passed. PR #18 will rerun hosted checks after the metadata correction is pushed.
+
+`FRESH-RUNNER DEPENDENCY METADATA GREEN — HOSTED PR RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:15 EEST — CODEX SOL — PR REVIEW HARDENING PHYSICAL EOF
+
+- The detailed 19:14 EEST review-hardening block appears earlier because of historical duplicate
+  markers. Both checkout steps disable credential persistence; YAML, structured checkout
+  inspection and diff validation pass.
+- Broader write permission and unrelated dependency-policy changes were not introduced.
+
+`ACTIONABLE PR REVIEW ITEM FIXED — HOSTED CHECKS REQUIRED`
+
+---
+
+## 2026-08-13 19:23 EEST — CODEX SOL — LINUX AAPT2 COVERAGE PHYSICAL EOF
+
+- The detailed 19:22 EEST block appears earlier because of historical duplicate markers.
+  Gradle-generated Linux AAPT2 SHA-256 coverage is now present and validated; the temporary
+  resolver script was removed.
+
+`CROSS-PLATFORM VERIFICATION METADATA COMPLETE — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 19:46 EEST — CODEX SOL — EMULATOR CORRECTION PHYSICAL EOF
+
+- The detailed 19:45 EEST block appears earlier because of historical duplicate markers.
+  Manual unbounded ADB waiting was replaced by the immutable, bounded emulator runner.
+
+`EMULATOR BOOT FLOW BOUNDED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:10 EEST — CODEX SOL — ADB TIMEOUT CORRECTION PHYSICAL EOF
+
+- The detailed 20:09 EEST block appears earlier because of historical duplicate markers.
+  The verified UTP installation timeout now has a finite ten-minute AGP installation window.
+
+`ADB INSTALL WINDOW BOUNDED AT TEN MINUTES — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:29 EEST — CODEX SOL — NON-STREAMING CORRECTION PHYSICAL EOF
+
+- The detailed 20:28 EEST block appears earlier because of historical duplicate markers.
+  The ineffective UTP timeout approach was superseded by bounded non-streaming installs and
+  direct AndroidJUnitRunner result validation.
+
+`STREAMING INSTALL PATH REMOVED — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 20:54 EEST — CODEX SOL — SMOKE HARNESS PHYSICAL EOF
+
+- The detailed 20:53 EEST block appears earlier because of historical duplicate markers.
+  The bounded install, instrumentation and result checks now run in one validated Bash process.
+
+`SINGLE-SHELL INSTRUMENTATION HARNESS READY — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:06 EEST — CODEX SOL — APK DISCOVERY PHYSICAL EOF
+
+- The detailed 21:05 EEST block appears earlier because of historical duplicate markers.
+  Missing requested APK paths now resolve by unique workspace basename with explicit diagnostics.
+
+`APK DISCOVERY DETERMINISTIC AND DIAGNOSTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:19 EEST — CODEX SOL — ABI SELECTION PHYSICAL EOF
+
+- The detailed 21:18 EEST block appears earlier because of historical duplicate markers.
+  Valid universal/x86_64 split artifacts are now selected deterministically.
+
+`ABI-SPLIT APK SELECTION DETERMINISTIC — HOSTED RERUN REQUIRED`
+
+---
+
+## 2026-08-13 21:49 EEST — CODEX SOL — KVM RESTORE PHYSICAL EOF
+
+- The detailed 21:48 EEST block appears earlier because of historical duplicate markers.
+  Hosted emulator execution is hardware-accelerated again and retains bounded boot handling.
+
+`HARDWARE-ACCELERATED HOSTED EMULATION RESTORED`
+
+---
+
+## 2026-08-23 12:10 EEST — SECURECHAT-20260823-API36-PRODUCTION ACTUAL EOF
+
+- The detailed 12:05 EEST task-takeover block and its 12:08 pointer appear earlier because
+  contextual patching matched an older repeated marker. Both remain intact under append-only rules.
+- Authoritative current scope: signed `securechat.app` versionCode 14, versionName
+  `0.1.10-alpha`, target API 36; complete release verification, protected-branch review and
+  owner-authorized Google Play production submission. All unrelated systems remain excluded.
+
+`TASK IN PROGRESS — RELEASE BUILD NEXT`
+
+---
+
+## 2026-08-23 13:02 EEST — SECURECHAT-20260823-API36-PRODUCTION → Review
+
+- **Changed:** `app/build.gradle.kts` now carries versionCode 14 and versionName
+  `0.1.10-alpha`; package `securechat.app`, compile SDK 36 and target SDK 36 remain unchanged.
+- **Full gate:** `verifyNoAppIfrWalletCode verifyNoClientSideGooglePlayUnlock test lintRelease
+  assembleDebug assembleRelease bundleRelease check` → PASS, 1,431 tasks, `BUILD SUCCESSFUL`.
+  The first run reached signing after all tests/lint but correctly failed because the isolated
+  worktree lacked its ignored relative keystore link; after adding that local-only link, the
+  complete incremental rerun passed.
+- **Artifact:** release APK signature PASS; release AAB JAR signature PASS; package/version/API
+  metadata PASS; AAB signer matches the previously Play-accepted SecureChat bundle. AAB SHA-256
+  `46490291388fdb7fed5ccac4f06da478e46a18eedeb5fe44e96573873a6e462a`, size 20,351,676 bytes.
+- **Independent review:** Kimi K3 read-only review found no release blocker, no runtime/source
+  behavior change and no secret in the tracked diff. Low-only notes concern historical Bridge
+  marker ordering and a cosmetic doubled separator; append-only history is retained.
+- **Risk:** Medium — source is locally green; normal protected-branch PR/CI and final Play
+  inspection remain mandatory before the authorized production submission.
+- **Next:** Commit/push the reviewed branch, open PR, require normal checks/review, then upload
+  this exact signed artifact to SecureChat production and submit it to Google review.
+
+`LOCAL RELEASE GATE GREEN — PROTECTED REVIEW NEXT`
+
+## 2026-08-26 23:01 EEST — CODEX SOL — PRE-SALE COMPLETION BLOCK ACTIVE
+
+- **Ticket:** `GIO-20260826-STEALTHX-PRESALE-COMPLETE`; **Type:** AUDIT / FIX / TEST / RELEASE; **Status:** In Progress.
+- Scope: close every independently solvable SecureChat readiness gap across code, UI, public documentation, artifacts, CI and three-device QA.
+- Stripe, VAT, AADE/myDATA and e-timologio remain on standby. The prior physical-QA correction is being reconciled against current `origin/main` in this isolated worktree.
+- Kimi K3 is providing independent cross-repository review; Sol owns integration and final verification.
+
+`PRE-SALE COMPLETION IN PROGRESS — PAYMENT AND TAX ACTIVATION EXCLUDED`
+## 2026-08-27 04:31 EEST — CODEX TERMINAL — FIX/STATUS — PRE-SALE CANDIDATE VERIFIED
+
+- SecureChat Android remains fully IFR-/wallet-free. Version `0.1.11-alpha` / versionCode `15`, package `securechat.app`, compile/target API 36.
+- Full Gradle gate PASS: 1,305 tasks covering unit tests, all module checks, Release Lint and debug assembly. Signed base/Free/Pro/Elite release APKs plus Play AAB built and certificate/package metadata verified.
+- S10 evidence: signed base APK installed successfully, activity launch returned OK, process stayed alive and Logcat contained no crash. S10 disconnected before screenshot/deeper interaction; S7/S4 were occupied by Woizz and were not touched.
+- Public page browser check PASS with no horizontal overflow; release copy now points to `releases/latest/download/SecureChat-LATEST.apk` and displays v0.1.11.
+- Kimi K3 independently reviewed the ecosystem block; Sol integrated and retested the findings. Artifacts are under `/Users/gio/Desktop/aab apk/presale-2026-08-27/`.
+- Open gates: physical cross-device messaging/background/notification matrix, Google closed-test duration/review, release-asset publication/site deployment, Stripe + Greek tax block on explicit standby.
+
+## 2026-08-27 04:36 EEST — CODEX TERMINAL — RELEASE HANDOFF — PR OPEN
+
+- Reviewed implementation committed as `84b156ee935e7776ef1f249a406a4ee596817d2c` and pushed on `fix/presale-complete-20260826`.
+- Normal protected review opened: https://github.com/NeaBouli/securechat/pull/29
+- PR is open and mergeable. Dependency Review is PASS; build/test and instrumented API 26/36 checks are running. Independent approving review remains required.
+- No merge, release-asset publication, site deployment, Play mutation or payment/tax activation occurred.
+
+`PR 29 OPEN — CI AND INDEPENDENT REVIEW PENDING`
+
+## 2026-08-27 04:46 EEST — CODEX TERMINAL — CI — ALL REQUIRED CHECKS GREEN
+
+- PR `#29` exact head `6d9c64a7f3bb1ee2a637a14b77bc40f7615cf988` passed Build & Test, Dependency Review and instrumented smoke tests on API 26 and API 36.
+- PR remains open and mergeable with `REVIEW_REQUIRED`; no approving independent review exists yet. No merge or external release action was attempted.
+
+`PR 29 CI GREEN — APPROVING REVIEW REQUIRED`
+
+## 2026-08-27 06:31 EEST — CODEX SOL + KIMI K3 — ENTITLEMENT RELEASE BOUNDARY VERIFIED
+
+- All signable base/internal/Free/Pro/Elite compatibility variants now disable tier overrides and require the server-signed, device-bound activation path. Only debug/screenshot builds may force access. A new Gradle guard fails if a signable variant enables an override.
+- Edge-to-edge keyboard/navigation insets on New Contact were corrected. FAQ, landing, wiki and README now distinguish published `v0.1.5-alpha` from candidate `v0.1.11-alpha`, document the one-APK activation model and use the seller-set checkout discount.
+- Full verification PASS: 1,467 Gradle tasks including all module checks/tests, Release Lint, entitlement guards, signed base AAB/APK and signed compatibility APKs. Generated BuildConfig values were inspected: every signable variant has `ALLOW_TIER_OVERRIDE=false`, empty `FORCED_TIER`, and `FORCE_ELITE=false`.
+- Final AAB SHA-256: `c7d1e93551a130732d40a7f194fd3d5209ad9b610d1bcaf0311af2db743b0bc8`. Package `securechat.app`, versionCode `15`, versionName `0.1.11-alpha`, API 36 and release certificate were reverified. Desktop candidates are refreshed.
+- S7 and Tab S4 remain occupied by Woizz and were not disturbed; S10 is absent. Physical messaging/background/notification and activation-code E2E remain open and are not claimed.
+- Remaining gates: normal PR approval/merge and exact-head CI rerun; physical matrix; Google closed-test review/duration; GitHub Release/site publication. Stripe and Greek VAT/AADE/myDATA/e-timologio remain on explicit standby.
+
+`SERVER-SIGNED ONE-APK MODEL LOCALLY GREEN — PROTECTED AND PHYSICAL GATES OPEN`
+
+## 2026-08-27 06:38 EEST — CODEX SOL + KIMI K3 — FINAL GUARD REVIEW PASS
+
+- Kimi's final read-only review found no release blocker and identified two guard-hardening opportunities. Sol closed both: all tier declarations are parsed across the complete app build script, the sole enabled declaration must be inside Debug, runtime conjunctions are asserted, and every `pre*ReleaseBuild` depends on the guard.
+- Direct `:app:preReleaseBuild` verification PASS and visibly executed `verifyNoReleaseTierOverrides`. Live GitHub `releases/latest/download/SecureChat-LATEST.apk` resolves to the stable `v0.1.5-alpha` asset; the newer `v0.1.7-alpha` remains a prerelease and does not back the stable URL.
+
+`FINAL TIER GUARD PASS — NO LOCAL RELEASE BLOCKER`
+
+## 2026-08-27 07:45 EEST — CODEX SOL — FINAL PRE-SALE COPY GATE VERIFIED
+
+- Final review copy was corrected and the public IFR verification/checkout surface is explicitly planned and disabled until payment and fiscal approval. No Android source or signed artifact changed in this block.
+- Focused Android compile PASS: 117 Gradle tasks. Local browser verification PASS for desktop `1440x900` and mobile `390x844`: connect and both tier checkout controls disabled, standby status visible, no horizontal overflow.
+- Existing signed candidate remains package `securechat.app`, version `0.1.11-alpha` / `15`, target API 36. Candidate AAB SHA-256 remains `c7d1e93551a130732d40a7f194fd3d5209ad9b610d1bcaf0311af2db743b0bc8` because application code did not change.
+- Physical messaging/background/notification and activation-code E2E remain open; S7/Tab S4 are reserved by Woizz and S10 is absent. Normal PR approval/merge, Google closed-test review/duration and post-merge release/site publication remain external gates.
+- Stripe production activation and Greek VAT/AADE/myDATA/e-timologio remain the sole intentionally deferred implementation block pending owner data and separately bounded production authorization.
+
+`LOCAL PRE-SALE SCOPE GREEN — EXACT-HEAD CI, REVIEW AND EXTERNAL GATES REMAIN`
+
+## 2026-08-27 08:22 EEST — CODEX SOL — CLOSED CHECKOUT RUNTIME GATE VERIFIED
+
+- Public copy now consistently describes the IFR purchase benefit as planned. A central `data-ifr-enabled=false` runtime gate returns before wallet/checkout handlers bind; all controls remain disabled even if markup and script load normally.
+- Node syntax and closed-gate regression PASS: no handlers, no network path and all controls disabled. The regression is wired into Android CI. Browser PASS at `1440x900` and `390x844`: zero console errors, visible standby state and no horizontal overflow.
+- No Android source or signed candidate changed. Server-side checkout authorization remains part of the intentionally deferred Stripe + Greek VAT/AADE/myDATA/e-timologio implementation block.
+
+`FINAL LOCAL REVIEW FIXES GREEN — EXACT-HEAD CI AND NORMAL REVIEW REQUIRED`
+
+## 2026-08-29 01:57 EEST — CODEX SOL — PUBLIC CONTENT CORRECTION READY FOR REVIEW
+
+- Public copy now distinguishes GitHub APK v0.1.5 from v0.1.11-alpha available to
+  selected closed/internal Play testers; the Play control no longer says coming soon.
+- Corrected both false Chameleon no-Internet claims, SecureChat network-permission and
+  paid-access documentation, source/cross-product links, IFR canonical and sitemap dates.
+- Local verification PASS: XML sitemap parse, `git diff --check`, stale-claim guards and
+  15-page local link/fragment scan with zero broken targets.
+- Work is isolated from the existing dirty documentation worktree on branch
+  `docs/public-content-sync-20260829`. GitHub review, CI and live Pages verification
+  remain pending.
+
+`PUBLIC CONTENT CORRECTION IMPLEMENTED / LOCAL GATES PASS / REVIEW PENDING`
+
+## 2026-08-29 02:15 EEST — CODEX SOL — PR 30 EXACT-HEAD GREEN / REVIEW BLOCKED
+
+- Exact head `9c568a3` passed Android Build & Test and Dependency Review; the follow-up
+  CodeRabbit check was rate-limited but is successful and nonblocking.
+- Protected `main` still requires one independent approval. No admin bypass was used;
+  Pages deployment and live verification wait on merge.
+
+`PR 30 TECHNICALLY GREEN / INDEPENDENT REVIEW REQUIRED`
+
+## 2026-09-04 20:16 EEST — CODEX SOL — ENTITLEMENT CLIENT HARDENING READY FOR REVIEW
+
+- Made activation refresh single-callback and timeout-bounded; malformed, stale or
+  failed responses now remain fail-closed and trigger runtime downgrade.
+- Full CI-equivalent matrix PASS: no-app-wallet/IFR guard, check, release lint,
+  debug/release APK and release AAB (1432 tasks).
+- Existing release identity produced valid API-36 artifacts for package
+  `securechat.app` code 15 and Free package `securechat.app.free` code 15.
+- S7 Free update/install PASS; activity started and remained resumed, process alive,
+  no app Fatal/ANR. Settings inspection found no IFR, wallet, WalletConnect or MetaMask
+  UI references.
+- Only S7 was attached. Cross-device encrypted messaging, activation/restore/revoke,
+  Play license-tester lifecycle and S10/S4 coverage remain external gates. No product
+  is PRODUCT_READY or FINANCE_READY; commerce remains disabled.
+- Kimi K3 was unavailable due weekly quota (HTTP 403); Sol completed review and tests.
+
+`LOCAL CODE/TEST GATES PASS / S7 SMOKE PASS / REVIEW AND MULTI-DEVICE E2E GATES OPEN`

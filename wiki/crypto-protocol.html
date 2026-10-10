@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="SecureChat crypto protocol specification: XChaCha20-Poly1305, X25519, Double Ratchet, Argon2id, Ed25519, Android Keystore.">
-<meta name="keywords" content="SecureChat, crypto protocol, XChaCha20, X25519, Double Ratchet, Argon2id, Ed25519, lazysodium">
+<meta name="description" content="SecureChat crypto protocol specification: XChaCha20-Poly1305, X25519, HKDF message keys, Argon2id, Ed25519, Android Keystore.">
+<meta name="keywords" content="SecureChat, crypto protocol, XChaCha20, X25519, HKDF, Argon2id, Ed25519, lazysodium">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="author" content="NeaBouli / StealthX Platform">
 <meta name="theme-color" content="#00ff88">
@@ -14,7 +14,7 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="SecureChat">
 <meta property="og:title" content="SecureChat Crypto Protocol Specification">
-<meta property="og:description" content="SecureChat crypto protocol specification: XChaCha20-Poly1305, X25519, Double Ratchet, Argon2id, Ed25519, Android Keystore.">
+<meta property="og:description" content="SecureChat crypto protocol specification: XChaCha20-Poly1305, X25519, HKDF message keys, Argon2id, Ed25519, Android Keystore.">
 <meta property="og:url" content="https://securechat.stealthx.tech/wiki/crypto-protocol.html">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SecureChat Crypto Protocol Specification">
@@ -110,7 +110,7 @@
   <div class="layer">
     <div class="layer-num">Key Exchange</div>
     <h3>Algorithm</h3>
-    <p>X25519 Elliptic-Curve Diffie-Hellman for ephemeral key agreement. Each session generates fresh key pairs so that compromise of one session does not affect others.</p>
+    <p>X25519 Elliptic-Curve Diffie-Hellman for contact-session key agreement, using each contact's persisted public key and the app's long-term receive key. There is no per-message DH ratcheting and no post-compromise recovery: if a device key is compromised, earlier messages can be exposed.</p>
     <ul>
       <li><strong>Curve:</strong> Curve25519</li>
       <li><strong>Key size:</strong> 256-bit (32 bytes)</li>
@@ -120,17 +120,17 @@
     </ul>
   </div>
 
-  <h2>Double Ratchet — Forward Secrecy</h2>
+  <h2>Message Keys — HKDF Chain</h2>
   <div class="layer">
-    <div class="layer-num">Ratchet Protocol</div>
+    <div class="layer-num">Message Key Chain</div>
     <h3>Algorithm</h3>
-    <p>Double Ratchet protocol combining a Diffie-Hellman ratchet with a symmetric-key ratchet. Every message uses a unique key. Compromise of a single message key cannot decrypt past or future messages.</p>
+    <p>The shipped app derives a unique key for every message from a symmetric HKDF chain over a per-contact X25519 key agreement. Not yet a Double Ratchet: there is no break-in recovery, and a compromised device key can expose earlier messages of a conversation. A full Double Ratchet is on the roadmap.</p>
     <ul>
-      <li><strong>DH ratchet:</strong> X25519 key pair rotated on each reply</li>
-      <li><strong>Symmetric ratchet:</strong> HMAC-based key derivation chain</li>
+      <li><strong>Key agreement:</strong> X25519 per contact; no DH ratchet step on reply yet</li>
+      <li><strong>Symmetric chain:</strong> HKDF-SHA256 key derivation chain</li>
       <li><strong>Message keys:</strong> Unique per message, deleted after decryption</li>
       <li><strong>Library:</strong> lazysodium-android (crypto_kx + crypto_auth)</li>
-      <li><strong>Purpose:</strong> Forward secrecy and break-in recovery — past messages stay safe even if current keys leak</li>
+      <li><strong>Limit:</strong> no break-in recovery; a leaked long-term device key can expose earlier messages of a conversation</li>
     </ul>
   </div>
 

@@ -127,7 +127,7 @@
   <span class="hl">ChameleonCrypto (lazysodium)</span>
     ├── XChaCha20-Poly1305 — symmetric encryption
     ├── X25519 ECDH — key exchange (ephemeral per-session)
-    ├── Double Ratchet — forward secrecy
+    ├── HKDF chain — per-message keys (Double Ratchet planned)
     ├── Ed25519 — identity signing
     └── Argon2id — password key derivation
 
@@ -178,7 +178,7 @@
     <p>The relay never sees plaintext. The Kaspa chain never sees message content. All cryptographic operations use lazysodium (libsodium wrapper), the same library used by SecureCall and Chameleon — one audited stack across the entire StealthX platform.</p>
     <ul>
       <li>XChaCha20-Poly1305: 192-bit nonce eliminates IV reuse risk</li>
-      <li>Double Ratchet: break-in recovery + forward secrecy</li>
+      <li>HKDF chain: per-message keys. Not yet a Double Ratchet: there is no break-in recovery, and a compromised device key can expose earlier messages of a conversation. A full Double Ratchet is on the roadmap.</li>
       <li>Message padding to 256-byte blocks — prevents size analysis</li>
       <li>Keys generated on-device, stored in Android Keystore hardware</li>
       <li>STEALTH-DELETE wipes all keys and messages in under 1 second</li>

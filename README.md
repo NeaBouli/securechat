@@ -6,13 +6,13 @@ Part of the [StealthX Platform](https://stealthx.tech).
 
 ## Status
 
-**v0.1.7-alpha — Closed test release; paid access remains launch-gated**
+**v0.1.11-alpha — Closed test release; paid access remains launch-gated**
 
 BUILD SUCCESSFUL — Debug 42 MB / Release 21 MB (minified + shrunk)
 
 ## Features
 - XChaCha20-Poly1305 end-to-end encryption
-- X25519 key exchange + Double Ratchet forward secrecy
+- X25519 key agreement + per-message keys from an HKDF chain (Not yet a Double Ratchet: there is no break-in recovery, and a compromised device key can expose earlier messages of a conversation. A full Double Ratchet is on the roadmap.)
 - Argon2id password KDF + Ed25519 identity signing
 - Unified `sx_` ID across SecureCall, SecureChat, Chameleon
 - QR code + NFC contact exchange (zxing-embedded)
@@ -27,7 +27,7 @@ BUILD SUCCESSFUL — Debug 42 MB / Release 21 MB (minified + shrunk)
 |-----------|-----------|------------|
 | Symmetric Encryption | XChaCha20-Poly1305 | 256-bit AEAD, 192-bit nonce |
 | Key Exchange | X25519 ECDH | Curve25519 |
-| Forward Secrecy | Double Ratchet | HKDF-SHA256 |
+| Message Keys | HKDF chain (Double Ratchet planned) | HKDF-SHA256 |
 | Password KDF | Argon2id | 64 MB memory, 3 iterations |
 | Identity Signing | Ed25519 | Curve25519 signatures |
 | Key Storage | Android Keystore | StrongBox / TEE |
@@ -71,14 +71,14 @@ Requirements: JDK 17, Android SDK 36, Android 8.0+ (API 26+) target devices.
 
 ## IFR Holder Discount
 
-The public SecureChat app does not run WalletConnect or wallet verification inside Android. A browser-based IFR holder benefit is planned but currently disabled pending VLABS payment, accounting and launch approval.
+The public SecureChat app does not run WalletConnect or wallet verification inside Android. IFR holder verification is browser-only before purchase: sign ownership, verify the Mainnet IFR balance read-only, then open the seller-set discount displayed at checkout when the secure payment backend is available.
 
 | Tier | Web IFR eligibility | Checkout benefit | Features |
 |---|---:|---:|---|
-| Free | 0 IFR | EUR 0 | Core messaging, 10 contacts |
-| Pro | Planned | Browser discount is launch-gated | Unlimited contacts; groups and Kaspa identity remain roadmap |
-| Elite | Planned | Browser discount is launch-gated | Emergency Broadcast; onion/decoy features remain roadmap |
-| Suite | Planned | Browser discount is launch-gated | Bundle availability is controlled by VLABS |
+| Free | Not required | EUR 0 | Core messaging, 10 contacts |
+| Pro | Positive IFR balance | Seller-defined browser checkout discount | Unlimited contacts; groups and Kaspa identity remain roadmap |
+| Elite | Positive IFR balance | Seller-defined browser checkout discount | Emergency Broadcast; onion/decoy features remain roadmap |
+| Suite | Unavailable | No checkout | Bundle fulfillment is not enabled |
 See [PRICING.md](docs/PRICING.md).
 
 ## Documentation
@@ -133,4 +133,4 @@ Mirrors stealthx.tech design — dark tactical aesthetic, green logo accent, sam
 
 - [SecureCall](https://stealthx.tech) — encrypted voice calls
 - [Chameleon](https://github.com/NeaBouli/chameleon) — privacy OS
-- [IFR Token](https://ifrunit.tech) — referenced ecosystem token; SecureChat holder discounts are currently disabled
+- [IFR Token](https://ifrunit.tech) — browser-only holder verification for eligible checkout discounts; never an Android unlock

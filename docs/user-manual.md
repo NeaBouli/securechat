@@ -1,6 +1,6 @@
 # SecureChat — User Manual
 
-**Version 0.1.5-alpha · StealthX Platform**
+**Version 0.1.11-alpha · Closed Google Play test · StealthX Platform**
 
 ---
 
@@ -24,7 +24,7 @@ For current online delivery, both users must be online at the same time. A centr
 
 SecureChat does not verify wallets inside the Android app. Browser-based IFR discounts are planned and currently disabled; paid activation remains launch-gated in VLABS.
 
-| Feature | Free | Pro (≥ 2,000 IFR) | Elite (≥ 6,000 IFR) |
+| Feature | Free | Pro | Elite |
 |---|---|---|---|
 | E2E encrypted messaging | Yes | Yes | Yes |
 | QR key exchange | Yes | Yes | Yes |
@@ -214,15 +214,15 @@ Send an encrypted alert message to all your contacts simultaneously with one tap
 
 IFR holder discounts are launch-gated and not active in the current sales flow. Any future browser verification will remain outside the Android app and will be documented before activation.
 
-- >= 2,000 IFR -> Pro discount
-- >= 6,000 IFR -> Elite discount
+- Any positive IFR balance is eligible for the seller-defined discount displayed at browser checkout.
+- There is no token-amount threshold for a product tier.
 - WalletConnect is not used inside the Android app.
 
 ---
 
 ### About
 
-- Version: 0.1.0-alpha
+- Version: 0.1.11-alpha (closed test)
 - Platform: SecureChat — StealthX Platform
 
 ---
@@ -234,8 +234,8 @@ IFR holder discounts are launch-gated and not active in the current sales flow. 
 | Camera | QR code scanning for contact key exchange |
 | Biometric | App unlock authentication |
 | NFC | Contact exchange via NFC (future) |
-| Notifications | Future: incoming message alerts |
-| Internet | IFR token verification via Ethereum RPC |
+| Notifications | Incoming-message alerts and the optional background listener |
+| Internet | Encrypted message transport, signaling, contact exchange and activation verification |
 
 SecureChat requests no contacts, phone state, location, or call log permissions. It does not access your address book, SMS, or phone.
 
@@ -261,7 +261,7 @@ This is designed for high-urgency situations where you need to destroy the app's
 
 **Storage:** SQLCipher AES-256 encrypted database. Encrypted SharedPreferences (AES-256-GCM) for app settings.
 
-**IFR cache integrity:** HMAC-SHA256 over the cached tier data. The HMAC key lives in Android Keystore (hardware-backed TEE or StrongBox). Any tampering with the cache is detected and the tier reverts to Free.
+**Paid access:** SecureChat contains no wallet connector, IFR balance lookup or in-app IFR tier cache. Paid access uses a server-signed, device-bound activation credential. Any future IFR holder discount is verified only in the browser before purchase.
 
 ---
 

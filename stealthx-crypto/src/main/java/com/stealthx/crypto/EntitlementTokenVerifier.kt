@@ -42,11 +42,12 @@ object EntitlementTokenVerifier {
         val product = requireNotNull(claims["product"]).also {
             require(it.matches(Regex("^securechat_[a-z0-9_]{1,100}$"))) { "Invalid SecureChat entitlement product" }
         }
-        val tier = when (claims["tier"]) {
-            "PRO" -> AccessTier.PRO
-            "ELITE" -> AccessTier.ELITE
-            else -> throw IllegalArgumentException("Invalid SecureChat entitlement tier")
+        val tier = when (product) {
+            "securechat_pro_lifetime" -> AccessTier.PRO
+            "securechat_elite_lifetime" -> AccessTier.ELITE
+            else -> throw IllegalArgumentException("Invalid SecureChat entitlement product")
         }
+        require(claims["tier"] == tier.name) { "SecureChat entitlement product/tier mismatch" }
         val issuedAt = claims["iat"]?.toLongOrNull() ?: throw IllegalArgumentException("Invalid entitlement issue time")
         val expiresAt = claims["exp"]?.toLongOrNull() ?: throw IllegalArgumentException("Invalid entitlement expiry")
         require(issuedAt <= nowEpochSeconds + 60) { "Entitlement issued in the future" }

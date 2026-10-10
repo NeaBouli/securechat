@@ -2,9 +2,8 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
 
@@ -14,8 +13,14 @@ val localProps = Properties().also { props ->
 }
 
 android {
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+
     namespace = "com.stealthx.securechat"
-    compileSdk = 36
+    compileSdk = 37
 
     signingConfigs {
         create("release") {
@@ -35,14 +40,17 @@ android {
         applicationId = "securechat.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 13
-        versionName = "0.1.9-alpha"
+        versionCode = 15
+        versionName = "0.1.11-alpha"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "FORCED_TIER", "\"\"")
+        buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "false")
         buildConfigField("Boolean", "ALLOW_SCREENSHOTS", "false")
     }
 
     buildTypes {
         debug {
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "true")
             buildConfigField("Boolean", "FORCE_ELITE", "true")
             buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
         }
@@ -55,13 +63,15 @@ android {
             buildConfigField("Boolean", "ALLOW_SCREENSHOTS", "true")
             matchingFallbacks += listOf("debug")
         }
+        // Legacy package variants remain for QA compatibility; access always comes from a server-signed entitlement.
         create("internalRelease") {
             initWith(getByName("release"))
             signingConfig = signingConfigs.getByName("release")
             applicationIdSuffix = ".internal"
             versionNameSuffix = "-internal"
-            buildConfigField("Boolean", "FORCE_ELITE", "true")
-            buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
+            buildConfigField("Boolean", "FORCE_ELITE", "false")
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "false")
+            buildConfigField("String", "FORCED_TIER", "\"\"")
             matchingFallbacks += listOf("release")
         }
         create("freeTierRelease") {
@@ -70,7 +80,8 @@ android {
             applicationIdSuffix = ".free"
             versionNameSuffix = "-free"
             buildConfigField("Boolean", "FORCE_ELITE", "false")
-            buildConfigField("String", "FORCED_TIER", "\"FREE\"")
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "false")
+            buildConfigField("String", "FORCED_TIER", "\"\"")
             matchingFallbacks += listOf("release")
         }
         create("proTierRelease") {
@@ -79,7 +90,8 @@ android {
             applicationIdSuffix = ".pro"
             versionNameSuffix = "-pro"
             buildConfigField("Boolean", "FORCE_ELITE", "false")
-            buildConfigField("String", "FORCED_TIER", "\"PRO\"")
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "false")
+            buildConfigField("String", "FORCED_TIER", "\"\"")
             matchingFallbacks += listOf("release")
         }
         create("eliteTierRelease") {
@@ -87,8 +99,9 @@ android {
             signingConfig = signingConfigs.getByName("release")
             applicationIdSuffix = ".elite"
             versionNameSuffix = "-elite"
-            buildConfigField("Boolean", "FORCE_ELITE", "true")
-            buildConfigField("String", "FORCED_TIER", "\"ELITE\"")
+            buildConfigField("Boolean", "FORCE_ELITE", "false")
+            buildConfigField("Boolean", "ALLOW_TIER_OVERRIDE", "false")
+            buildConfigField("String", "FORCED_TIER", "\"\"")
             matchingFallbacks += listOf("release")
         }
         release {
@@ -110,7 +123,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions { jvmTarget = "17" }
     buildFeatures {
         compose = true
         buildConfig = true
@@ -154,12 +166,19 @@ dependencies {
     implementation(libs.androidx.biometric)
 
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.timber)
 
     testImplementation(libs.junit5.api)
     testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    androidTestImplementation(libs.androidx.test.core.ktx)
+    // StorageUpgradeProbeTest opens the :data Room/SQLCipher database directly.
+    androidTestImplementation(libs.room.runtime)
+    androidTestImplementation(libs.sqlite.ktx)
+    androidTestImplementation(libs.androidx.test.junit.ktx)
+    androidTestImplementation(libs.androidx.test.runner)
 }
 
 tasks.withType<Test> { useJUnitPlatform() }

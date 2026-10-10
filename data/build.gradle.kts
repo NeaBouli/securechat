@@ -1,12 +1,17 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
 android {
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+
     namespace = "com.stealthx.data"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         minSdk = 26
         val entitlementKey = System.getenv("STEALTHX_ENTITLEMENT_PUBLIC_KEY_BASE64")
@@ -17,13 +22,6 @@ android {
             "STEALTHX_ENTITLEMENT_PUBLIC_KEY_BASE64 must be an unpadded 32-byte base64url key"
         }
         buildConfigField("String", "ENTITLEMENT_PUBLIC_KEY_BASE64", "\"$entitlementKey\"")
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments["room.schemaLocation"] = "$projectDir/schemas"
-                arguments["room.incremental"]    = "true"
-                arguments["room.expandProjection"] = "true"
-            }
-        }
     }
 
     buildFeatures { buildConfig = true }
@@ -33,9 +31,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 dependencies {
     implementation(project(":domain"))
@@ -45,7 +40,7 @@ dependencies {
     implementation(project(":shared"))
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.sqlcipher)
     implementation(libs.sqlite.ktx)
     implementation(libs.androidx.security.crypto)
@@ -53,11 +48,17 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     testImplementation(libs.junit5.api)
     testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.robolectric)
     testImplementation(libs.mockk)
     testImplementation(libs.coroutines.test)
 }
 tasks.withType<Test> { useJUnitPlatform() }
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+}

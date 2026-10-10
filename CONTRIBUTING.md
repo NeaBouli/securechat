@@ -21,7 +21,7 @@ This repository is source-available for transparency and independent security au
 
 Changes to the following areas require **additional review** from a security-focused maintainer:
 
-- Cryptographic implementations (XChaCha20, X25519, Double Ratchet, Argon2id, Ed25519)
+- Cryptographic implementations (XChaCha20, X25519, HKDF message keys, Double Ratchet (not yet active), Argon2id, Ed25519)
 - Android Keystore integration
 - Key management and storage
 - Transport layer and relay protocol
@@ -49,3 +49,10 @@ SecureChat is licensed under the StealthX Source-Available License. You may read
 - GitHub Issues for feature discussions and bug reports
 - Pull Request comments for code-specific discussions
 - kaspartisan@proton.me for private matters
+## Gradle dependency verification
+
+Dependencies are checksum-locked in `gradle/verification-metadata.xml`. When a reviewed
+dependency update changes the graph, rerun the same affected Gradle CI tasks with
+`--write-verification-metadata sha256`, inspect the metadata diff for only the expected
+component/version changes, and then rerun the tasks without the write flag. Do not accept
+unrelated checksum churn.
