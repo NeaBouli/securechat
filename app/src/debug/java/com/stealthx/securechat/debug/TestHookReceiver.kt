@@ -43,6 +43,15 @@ class TestHookReceiver : BroadcastReceiver() {
                         ?: error("missing $EXTRA_CONTENT")
                     addContact(content)
                 }
+                ACTION_SIMULATE_NFC -> {
+                    // Same in-app hop as a real NFC tag read after NDEF parsing
+                    // (MainActivity.handleNfcIntent -> NfcUriRelay), for visual QA only.
+                    val content = intent.getStringExtra(EXTRA_CONTENT)
+                        ?: error("missing $EXTRA_CONTENT")
+                    require(content.startsWith("stealthx://add/")) { "not a stealthx://add/ link" }
+                    com.stealthx.data.NfcUriRelay.post(content)
+                    Bundle()
+                }
                 else -> error("unknown action ${intent.action}")
             }
         }.fold(
@@ -120,6 +129,7 @@ class TestHookReceiver : BroadcastReceiver() {
         const val ACTION_SEND_TEST = "securechat.app.debug.SEND_TEST"
         const val ACTION_LISTEN = "securechat.app.debug.LISTEN"
         const val ACTION_ADD = "securechat.app.debug.ADD"
+        const val ACTION_SIMULATE_NFC = "securechat.app.debug.SIMULATE_NFC"
         const val EXTRA_CONTENT = "content"
     }
 }
