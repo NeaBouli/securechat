@@ -73,7 +73,12 @@ class NewContactViewModel @Inject constructor(
      * overlapping import that finishes later cannot hide the dialog and leave the gate stuck.
      */
     private fun publish(state: NewContactUiState) {
-        _uiState.value = state.copy(legacyCandidate = legacyGate.current())
+        val pending = legacyGate.current()
+        // A parallel import that succeeds must not leave the screen while a decision is open.
+        _uiState.value = state.copy(
+            legacyCandidate = pending,
+            contactAdded = state.contactAdded && pending == null
+        )
     }
 
     /**
