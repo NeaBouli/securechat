@@ -110,7 +110,7 @@
   <div class="layer">
     <div class="layer-num">Key Exchange</div>
     <h3>Algorithm</h3>
-    <p>X25519 Elliptic-Curve Diffie-Hellman for ephemeral key agreement. Each session generates fresh key pairs so that compromise of one session does not affect others.</p>
+    <p>X25519 Elliptic-Curve Diffie-Hellman for contact-session key agreement, using each contact's persisted public key and the app's long-term receive key. There is no per-message DH ratcheting and no post-compromise recovery: if a device key is compromised, earlier messages can be exposed.</p>
     <ul>
       <li><strong>Curve:</strong> Curve25519</li>
       <li><strong>Key size:</strong> 256-bit (32 bytes)</li>
