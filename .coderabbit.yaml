@@ -24,7 +24,7 @@ reviews:
   path_instructions:
     - path: "**/*.kt"
       instructions: |
-        Sicherheitskritische Kotlin/Android App (E2E-Verschlüsselung, XChaCha20-Poly1305, Double Ratchet, X25519/Ed25519).
+        Sicherheitskritische Kotlin/Android App (E2E-Verschlüsselung, XChaCha20-Poly1305, HKDF-Nachrichtenschluesselkette ueber X25519 pro Kontakt, X25519/Ed25519). Die aktive Nachrichtenkette ist KEIN Double Ratchet; DoubleRatchet.kt ist eine separate Implementierung. Keine Forward-Secrecy-/Break-in-Recovery-Behauptungen akzeptieren, die der aktive Pfad nicht belegt.
         Prüfe auf:
         - Android API-Kompatibilität: minSdk 26 — keine API > 26 ohne @RequiresApi oder Fallback
         - Kryptographie: kein Klartext-Fallback, kein fail-open, kein null-Handling bei Crypto-Ergebnissen
@@ -40,7 +40,7 @@ reviews:
       instructions: |
         Crypto-Kernmodul — höchste Priorität.
         Prüfe: korrekte Nonce-Generierung (nie wiederverwendet), AAD-Validierung, paddedLength-Korrektheit,
-        DoubleRatchet Chain-Advancement, X25519 Shared Secret Ableitung, Ed25519 Signatur-Verifikation vor jedem Kontakt-Import.
+        HKDF-Chain-Advancement (aktiver Pfad; DoubleRatchet.kt nur separat pruefen), X25519 Shared Secret Ableitung, Ed25519 Signatur-Verifikation vor jedem Kontakt-Import.
 
     - path: "**/MainActivity.kt"
       instructions: |

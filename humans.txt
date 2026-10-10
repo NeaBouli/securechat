@@ -9,7 +9,7 @@ Platform: StealthX (stealthx.tech)
 /* TECHNOLOGY */
 Language: Kotlin (Android)
 Crypto: lazysodium-android (libsodium wrapper)
-Algorithms: XChaCha20-Poly1305, X25519, Ed25519, Argon2id, Double Ratchet
+Algorithms: XChaCha20-Poly1305, X25519, Ed25519, Argon2id, HKDF message-key chain (Double Ratchet planned)
 Database: Room + SQLCipher
 UI: Jetpack Compose + Material3
 DI: Hilt/Dagger
