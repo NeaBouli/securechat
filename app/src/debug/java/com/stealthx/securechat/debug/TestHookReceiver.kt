@@ -8,6 +8,7 @@ import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.identity.PublicKeyBundleQr
 import com.stealthx.data.identity.StealthXIdentity
 import com.stealthx.data.repository.ContactRepository
+import com.stealthx.data.repository.ImportProvenance
 import com.stealthx.data.repository.MessageRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -73,9 +74,8 @@ class TestHookReceiver : BroadcastReceiver() {
 
     private fun addContact(content: String): Bundle = runBlocking {
         val bundle = PublicKeyBundleQr.fromQrContent(content).getOrThrow()
-        if (contactRepository.getById(bundle.sxId) == null) {
-            contactRepository.addContactBundle(bundle)
-        }
+        // Simulated QR scan; no implicit legacy consent in the debug hook either.
+        contactRepository.addContactBundle(bundle, ImportProvenance.IN_PERSON)
         contactExchangeManager.sendExchange(bundle.sxId)
         val contacts = contactRepository.observeAll().first()
         Bundle().apply {

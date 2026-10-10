@@ -7,9 +7,15 @@ sealed class Screen(val route: String) {
     }
     data object MyId : Screen("my_id")
     object NewContact : Screen("new_contact") {
-        const val DEEP_LINK_ROUTE = "new_contact?link={link}"
+        const val DEEP_LINK_ROUTE = "new_contact?link={link}&source={source}"
         const val ARG_LINK = "link"
-        fun withLink(uri: String) = "new_contact?link=${java.net.URLEncoder.encode(uri, "UTF-8")}"
+        const val ARG_SOURCE = "source"
+
+        /** Set only by the local router: NFC tag read in the app vs. external deep link. */
+        const val SOURCE_NFC = "nfc"
+        const val SOURCE_LINK = "link"
+        fun withLink(uri: String, source: String) =
+            "new_contact?link=${java.net.URLEncoder.encode(uri, "UTF-8")}&source=$source"
     }
     data object Upgrade : Screen("upgrade")
     data object Settings : Screen("settings")

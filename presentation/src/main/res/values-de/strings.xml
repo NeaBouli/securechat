@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="legacy_contact_title">Alte SecureID, nicht an den Schlüssel gebunden</string>
+    <string name="legacy_contact_message">%1$s wurde erstellt, bevor SecureIDs an ihren Schlüssel gebunden wurden. Die gültige Signatur beweist nicht, wem diese ID gehört. Speichere sie nur, wenn du bei dieser Person bist und ID und Schlüssel direkt mit ihr verglichen hast. Spätere Schlüsseländerungen für diesen Kontakt werden abgelehnt.</string>
+    <string name="legacy_contact_confirm">Trotzdem speichern</string>
+    <string name="legacy_contact_cancel">Abbrechen</string>
+</resources>

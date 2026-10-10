@@ -9,7 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.identity.PublicKeyBundleQr
+import com.stealthx.data.repository.ContactImportResult
 import com.stealthx.data.repository.ContactRepository
+import com.stealthx.data.repository.IdentityKeyChangedException
+import com.stealthx.data.repository.ImportProvenance
+import com.stealthx.data.repository.LegacyConsentRequiredException
+import com.stealthx.data.repository.UnboundIdentityException
 import com.stealthx.domain.tier.TierGate
 import com.stealthx.shared.model.AccessTier
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +38,9 @@ data class NewContactUiState(
     val isSaving: Boolean = false,
     val statusMessage: String? = null,
     val errorMessage: String? = null,
-    val contactAdded: Boolean = false
+    val contactAdded: Boolean = false,
+    /** Unbound legacy SecureID from an in-person scan awaiting explicit consent. */
+    val legacyConsentSxId: String? = null
 )
 
 @HiltViewModel
@@ -58,7 +65,30 @@ class NewContactViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ContactLimitState())
 
-    fun addFromQrContent(content: String) {
+    private var pendingLegacyContent: String? = null
+
+    /**
+     * [provenance] is decided by the screen's entry point (camera scan / NFC tap =
+     * IN_PERSON; deep link, pasted or edited text = REMOTE), never by the content.
+     */
+    fun addFromQrContent(content: String, provenance: ImportProvenance) {
+        importContent(content, provenance, legacyConsent = false)
+    }
+
+    /** User explicitly accepted the "legacy, not key-bound" warning. */
+    fun confirmLegacyImport() {
+        val content = pendingLegacyContent ?: return
+        pendingLegacyContent = null
+        importContent(content, ImportProvenance.IN_PERSON, legacyConsent = true)
+    }
+
+    /** User cancelled the legacy warning: nothing is written. */
+    fun cancelLegacyImport() {
+        pendingLegacyContent = null
+        _uiState.value = NewContactUiState(statusMessage = "Contact not saved")
+    }
+
+    private fun importContent(content: String, provenance: ImportProvenance, legacyConsent: Boolean) {
         val trimmed = content.trim()
         if (trimmed.isBlank()) {
             _uiState.value = NewContactUiState(errorMessage = "QR content is required")
@@ -73,12 +103,25 @@ class NewContactViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = NewContactUiState(isSaving = true)
             try {
-                contactRepository.addContactBundle(bundle)
-                contactExchangeManager.sendExchange(bundle.sxId)
+                val result = contactRepository.addContactBundle(bundle, provenance, legacyConsent)
+                if (result != ContactImportResult.ALREADY_KNOWN) {
+                    contactExchangeManager.sendExchange(bundle.sxId)
+                }
                 _uiState.value = NewContactUiState(
-                    statusMessage = "Contact added",
-                    contactAdded = true
+                    statusMessage = when (result) {
+                        ContactImportResult.ALREADY_KNOWN -> "Contact already saved"
+                        ContactImportResult.ADDED_LEGACY -> "Legacy contact added (not key-bound)"
+                        ContactImportResult.ADDED -> "Contact added"
+                    },
+                    contactAdded = result != ContactImportResult.ALREADY_KNOWN
                 )
+            } catch (e: LegacyConsentRequiredException) {
+                pendingLegacyContent = trimmed
+                _uiState.value = NewContactUiState(legacyConsentSxId = bundle.sxId)
+            } catch (e: UnboundIdentityException) {
+                _uiState.value = NewContactUiState(errorMessage = e.message)
+            } catch (e: IdentityKeyChangedException) {
+                _uiState.value = NewContactUiState(errorMessage = e.message)
             } catch (e: Exception) {
                 _uiState.value = NewContactUiState(errorMessage = e.message ?: "Could not add contact")
             }

@@ -21,10 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
+import com.stealthx.data.repository.ImportProvenance
+import com.stealthx.presentation.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,20 +37,48 @@ fun NewContactScreen(
     onContactAdded: () -> Unit,
     onUpgrade: () -> Unit = {},
     initialContent: String = "",
+    initialInPerson: Boolean = false,
     vm: NewContactViewModel = hiltViewModel()
 ) {
     var qrContent by remember { mutableStateOf(initialContent) }
+    // In-person only for a camera scan or an NFC tag read by this app; pasting or
+    // editing the text makes the content remote again (SCT-02).
+    var inPerson by remember { mutableStateOf(initialInPerson) }
     val limitState by vm.limitState.collectAsState()
     val state by vm.uiState.collectAsState()
     val context = LocalContext.current
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
         result.contents?.let { content ->
             qrContent = content
+            inPerson = true
             // Auto-trigger: scan intent == add intent, skip manual button press
             if (content.startsWith("stealthx://add/") && !limitState.isAtLimit) {
-                vm.addFromQrContent(content)
+                vm.addFromQrContent(content, ImportProvenance.IN_PERSON)
             }
         }
+    }
+
+    state.legacyConsentSxId?.let { sxId ->
+        AlertDialog(
+            // Back / outside tap is a cancel: nothing is written without explicit consent.
+            onDismissRequest = { vm.cancelLegacyImport() },
+            modifier = Modifier.testTag("legacy_consent_dialog"),
+            icon = { Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.error) },
+            title = { Text(stringResource(R.string.legacy_contact_title)) },
+            text = { Text(stringResource(R.string.legacy_contact_message, sxId)) },
+            confirmButton = {
+                TextButton(
+                    onClick = { vm.confirmLegacyImport() },
+                    modifier = Modifier.testTag("legacy_consent_confirm")
+                ) { Text(stringResource(R.string.legacy_contact_confirm)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { vm.cancelLegacyImport() },
+                    modifier = Modifier.testTag("legacy_consent_cancel")
+                ) { Text(stringResource(R.string.legacy_contact_cancel)) }
+            }
+        )
     }
 
     LaunchedEffect(state.contactAdded) {
@@ -185,13 +217,19 @@ fun NewContactScreen(
                 onClick = {
                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val pasted = clipboard.primaryClip?.getItemAt(0)?.text?.toString().orEmpty()
-                    if (pasted.isNotEmpty()) qrContent = pasted
+                    if (pasted.isNotEmpty()) {
+                        qrContent = pasted
+                        inPerson = false
+                    }
                 }
             )
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
                 value = qrContent,
-                onValueChange = { qrContent = it },
+                onValueChange = {
+                    qrContent = it
+                    inPerson = false
+                },
                 label = { Text("Contact QR content") },
                 placeholder = { Text("stealthx://add/sx_...?...") },
                 modifier = Modifier.fillMaxWidth(),
@@ -204,7 +242,12 @@ fun NewContactScreen(
                 Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
             }
             Button(
-                onClick = { vm.addFromQrContent(qrContent) },
+                onClick = {
+                    vm.addFromQrContent(
+                        qrContent,
+                        if (inPerson) ImportProvenance.IN_PERSON else ImportProvenance.REMOTE
+                    )
+                },
                 enabled = !limitState.isAtLimit && !state.isSaving && qrContent.startsWith("stealthx://add/"),
                 modifier = Modifier.fillMaxWidth()
             ) {

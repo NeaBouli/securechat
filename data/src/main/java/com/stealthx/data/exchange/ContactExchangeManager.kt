@@ -17,6 +17,7 @@ import com.stealthx.data.identity.PublicKeyBundleQr
 import com.stealthx.data.identity.RatchetMessageQr
 import com.stealthx.data.identity.StealthXIdentity
 import com.stealthx.data.repository.ContactRepository
+import com.stealthx.data.repository.ImportProvenance
 import com.stealthx.data.repository.MessageRepository
 import dagger.Lazy
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -236,9 +237,9 @@ class ContactExchangeManager @Inject constructor(
         scope.launch {
             runCatching {
                 val parsed = PublicKeyBundleQr.fromQrContent(bundle).getOrThrow()
-                if (contactRepository.getById(parsed.sxId) == null) {
-                    contactRepository.addContactBundle(parsed)
-                }
+                // Relay payloads are remote: strict sxId/key binding, no legacy exemption,
+                // pinned keys. Any rejection throws and emits no event.
+                contactRepository.addContactBundle(parsed, ImportProvenance.REMOTE)
                 val displayName = parsed.customHandle ?: parsed.sxId
                 val event = ContactExchangeEvent(parsed.sxId, displayName)
                 _contactExchangeEvents.tryEmit(event)
