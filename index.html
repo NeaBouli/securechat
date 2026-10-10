@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SecureChat — Encrypted Messaging for Android</title>
 <meta name="description" content="SecureChat is an alpha end-to-end encrypted Android messenger using a central signaling relay with minimized service metadata.">
-<meta name="keywords" content="encrypted messaging, secure chat, XChaCha20, end-to-end encryption, privacy, decentralized, Kaspa, IFR Token, Android, source-available, Double Ratchet">
+<meta name="keywords" content="encrypted messaging, secure chat, XChaCha20, end-to-end encryption, privacy, decentralized, Kaspa, IFR Token, Android, source-available, XChaCha20-Poly1305">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="author" content="NeaBouli / StealthX Platform">
 <meta name="copyright" content="© 2026 Vendetta Labs">
@@ -22,17 +22,17 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SecureChat">
 <meta property="og:title" content="SecureChat — Encrypted Messaging for Android">
-<meta property="og:description" content="E2E encrypted messaging with StealthX ID, QR contact exchange, relay delivery, XChaCha20, and Double Ratchet.">
+<meta property="og:description" content="E2E encrypted messaging with StealthX ID, QR contact exchange, relay delivery, and XChaCha20-Poly1305 with per-message keys.">
 <meta property="og:url" content="https://securechat.stealthx.tech/">
 <meta property="og:image" content="https://securechat.stealthx.tech/logo.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SecureChat — Encrypted Messaging for Android">
-<meta name="twitter:description" content="E2E encrypted messaging with StealthX ID, QR contact exchange, XChaCha20, and Double Ratchet.">
+<meta name="twitter:description" content="E2E encrypted messaging with StealthX ID, QR contact exchange, and XChaCha20-Poly1305 with per-message keys.">
 <meta name="twitter:image" content="https://securechat.stealthx.tech/logo.png">
 <link rel="alternate" hreflang="en" href="https://securechat.stealthx.tech/">
 <link rel="alternate" hreflang="x-default" href="https://securechat.stealthx.tech/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"SecureChat","applicationCategory":"SecurityApplication","operatingSystem":"Android 8.0+","description":"End-to-end encrypted messaging with StealthX ID, QR contact exchange, and relay delivery.","url":"https://securechat.stealthx.tech","author":{"@type":"Organization","name":"Vendetta Labs","url":"https://stealthx.tech"},"license":"https://github.com/NeaBouli/securechat/blob/main/LICENSE"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses cryptographic key pairs and a StealthX ID for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key exchange, Double Ratchet for forward secrecy, Argon2id for key derivation."}},{"@type":"Question","name":"Is SecureChat source-available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. SecureChat keeps wallet code out of Android; eligible holders verify ownership only in the browser before discounted checkout."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"Current online delivery uses a central StealthX signaling relay that processes routing and connection metadata. Message content remains end-to-end encrypted."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does SecureChat require a phone number?","acceptedAnswer":{"@type":"Answer","text":"No. SecureChat uses cryptographic key pairs and a StealthX ID for identity. No phone number, no email, no account required."}},{"@type":"Question","name":"What encryption does SecureChat use?","acceptedAnswer":{"@type":"Answer","text":"XChaCha20-Poly1305 for symmetric encryption, X25519 ECDH for key agreement, an HKDF chain for per-message keys, Argon2id for key derivation. Not yet a Double Ratchet: there is no break-in recovery, and a compromised device key can expose earlier messages of a conversation. A full Double Ratchet is on the roadmap."}},{"@type":"Question","name":"Is SecureChat source-available?","acceptedAnswer":{"@type":"Answer","text":"Yes. The source is visible for transparency and security review. Building, running, distributing, or using SecureChat requires prior written permission from Vendetta Labs."}},{"@type":"Question","name":"What is the IFR Token?","acceptedAnswer":{"@type":"Answer","text":"IFR is an Ethereum ERC-20 token. SecureChat keeps wallet code out of Android; eligible holders verify ownership only in the browser before discounted checkout."}},{"@type":"Question","name":"Does SecureChat have a server?","acceptedAnswer":{"@type":"Answer","text":"Current online delivery uses a central StealthX signaling relay that processes routing and connection metadata. Message content remains end-to-end encrypted."}}]}</script>
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -614,13 +614,13 @@
     </div>
     <div class="feature-card">
       <div class="feature-icon">🔄</div>
-      <h3>Double Ratchet Forward Secrecy</h3>
-      <p>Signal-grade Double Ratchet protocol. Compromising one key exposes nothing about past or future messages. Every message is independent.</p>
+      <h3>Per-Message Keys</h3>
+      <p>Every message gets its own key from an HKDF chain over a per-contact X25519 key agreement. Not yet a Double Ratchet: there is no break-in recovery, and a compromised device key can expose earlier messages of a conversation. A full Double Ratchet is on the roadmap.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📡</div>
       <h3>Encrypted Relay Delivery</h3>
-      <p>Messages are encrypted on-device and delivered as ratchet payloads through the StealthX relay. Kaspa relay incentives remain roadmap.</p>
+      <p>Messages are encrypted on-device and delivered as encrypted payloads through the StealthX relay. Kaspa relay incentives remain roadmap.</p>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🌐</div>
@@ -703,12 +703,12 @@
   <span class="hl">StealthX Signaling Relay</span> ← Encrypted message delivery
   <span class="hl">QR Import/Export</span>         ← Air-gapped message transfer fallback
   <span class="hl">OnionRouting</span>             ← Roadmap transport anonymity
-  <span class="dim">Relay sees encrypted ratchet payloads.</span>
+  <span class="dim">Relay sees encrypted message payloads.</span>
 
 <span class="cyan">LAYER 3 — Crypto (Device-side, lazysodium)</span>
   <span class="hl">XChaCha20Poly1305</span>        ← Symmetric encryption (24-byte nonce)
-  <span class="hl">X25519 ECDH</span>              ← Key exchange (ephemeral per-session)
-  <span class="hl">DoubleRatchet</span>            ← Forward secrecy + break-in recovery
+  <span class="hl">X25519 ECDH</span>              ← Key agreement (per contact)
+  <span class="hl">HKDF chain</span>               ← Per-message keys (no break-in recovery yet)
   <span class="hl">Argon2id</span>                 ← Password-based key derivation
   <span class="gold">Android Keystore</span>         ← Hardware-backed key storage (StrongBox)
 
@@ -734,8 +734,8 @@
     </thead>
     <tbody>
       <tr><td>Symmetric Encryption</td><td>XChaCha20-Poly1305</td><td>256-bit key, 192-bit nonce, AEAD</td><td>lazysodium-android</td></tr>
-      <tr><td>Key Exchange</td><td>X25519 ECDH</td><td>Curve25519 Diffie-Hellman, ephemeral</td><td>lazysodium-android</td></tr>
-      <tr><td>Forward Secrecy</td><td>Double Ratchet</td><td>HKDF-SHA256 ratchet, RFC 5869</td><td>lazysodium-android</td></tr>
+      <tr><td>Key Exchange</td><td>X25519 ECDH</td><td>Curve25519 Diffie-Hellman, per contact</td><td>lazysodium-android</td></tr>
+      <tr><td>Message Keys</td><td>HKDF chain</td><td>HKDF-SHA256, RFC 5869; Double Ratchet planned</td><td>lazysodium-android</td></tr>
       <tr><td>Identity Signing</td><td>Ed25519</td><td>64-byte signatures, key bundles</td><td>lazysodium-android</td></tr>
       <tr><td>Key Derivation</td><td>Argon2id</td><td>64MB memory, 3 iterations, 4 threads</td><td>lazysodium-android</td></tr>
       <tr><td>Key Storage</td><td>Android Keystore</td><td>StrongBox/TEE, per-use auth</td><td>Android API 26+</td></tr>
@@ -778,7 +778,7 @@
     </thead>
     <tbody>
       <tr><td>No phone number or email registration</td><td class="ours">Available</td></tr>
-      <tr><td>Double Ratchet + XChaCha20-Poly1305 message protection</td><td class="ours">Available</td></tr>
+      <tr><td>XChaCha20-Poly1305 message protection with per-message keys</td><td class="ours">Available</td></tr>
       <tr><td>QR contact exchange and safety numbers</td><td class="ours">Available</td></tr>
       <tr><td>Central online signaling relay</td><td class="ours">Available</td></tr>
       <tr><td>Emergency Broadcast</td><td class="ours">Elite alpha</td></tr>
@@ -802,7 +802,7 @@
       <div class="phase-badge">PHASE 0 — DONE</div>
       <div class="roadmap-content">
         <h3>Foundation — Crypto Stack & Architecture Design</h3>
-        <p>XChaCha20-Poly1305 + Double Ratchet + Argon2id. StealthX platform architecture. IFR Token integration design. Threat model.</p>
+        <p>XChaCha20-Poly1305 + HKDF message keys + Argon2id. StealthX platform architecture. IFR Token integration design. Threat model.</p>
       </div>
     </div>
     <div class="roadmap-item active">

@@ -416,7 +416,7 @@
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          Four layers work together. <strong>XChaCha20-Poly1305</strong> provides authenticated message encryption, <strong>X25519</strong> handles key agreement, the <strong>Double Ratchet</strong> advances message keys, and <strong>Argon2id</strong> provides memory-hard password derivation. Correct implementation, device integrity and key handling still matter; algorithm names alone are not a security guarantee.
+          Four layers work together. <strong>XChaCha20-Poly1305</strong> provides authenticated message encryption, <strong>X25519</strong> handles key agreement, an <strong>HKDF chain</strong> derives a new key for every message (not yet a Double Ratchet, so there is no break-in recovery), and <strong>Argon2id</strong> provides memory-hard password derivation. Correct implementation, device integrity and key handling still matter; algorithm names alone are not a security guarantee.
         </div>
       </div>
     </div>

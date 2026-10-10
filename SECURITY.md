@@ -6,7 +6,7 @@ This security policy covers:
 
 - **SecureChat website** — static site and documentation at securechat.stealthx.tech
 - **SecureChat Android app** — future encrypted messaging application (Phase 1, Q2-Q3 2026)
-- **Crypto implementation** — XChaCha20-Poly1305, X25519, Double Ratchet, Argon2id, Ed25519 via lazysodium-android
+- **Crypto implementation** — XChaCha20-Poly1305, X25519, HKDF message-key chain, Double Ratchet (implemented, not yet active), Argon2id, Ed25519 via lazysodium-android
 - **Chameleon** — overlay encryption component
 
 ## Reporting Vulnerabilities

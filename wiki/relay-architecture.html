@@ -94,7 +94,7 @@ Layer 3 (outer):  Enc(PubKey_Node_A)[Enc(PubKey_Node_B)[Enc(PubKey_Bob)[Message]
 </ul>
 
 <h2>Crypto Stack Compatibility</h2>
-<p>The entire SecureChat crypto stack is transport-agnostic. XChaCha20-Poly1305, X25519, Double Ratchet work identically over Tor, direct P2P, or internal onion routing. <strong>No changes to the crypto core required.</strong></p>
+<p>The entire SecureChat crypto stack is transport-agnostic. XChaCha20-Poly1305, X25519 and the HKDF message-key chain work identically over Tor, direct P2P, or internal onion routing. <strong>No changes to the crypto core required.</strong></p>
 
 <div class="warn">Security Audit Required: Internal onion routing (Phase 3) must pass an external security audit before release. Recommended auditor: Trail of Bits.</div>
 
