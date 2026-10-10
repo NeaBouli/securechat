@@ -6,6 +6,7 @@
 - **Plattform:** Android 8.0+ (API 26+)
 - **Sprache:** Kotlin + Jetpack Compose
 - **Crypto:** lazysodium-android (XChaCha20, X25519, Double Ratchet)
+  - *Correction 2026-10-10:* the active message protocol is an HKDF chain over a per-contact X25519 key agreement, not a Double Ratchet (no break-in recovery). The Double Ratchet claim above is historical and superseded; a full Double Ratchet remains roadmap work.
 - **Identity:** StealthXIdentity.kt (sx_ Format)
 - **IFR:** Gleicher Stack wie Chameleon
 

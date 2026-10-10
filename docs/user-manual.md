@@ -14,7 +14,7 @@ SecureChat is an end-to-end encrypted messenger where no message ever touches a 
 
 Every SecureChat user has a **StealthX ID** — a short, unique identifier derived from their Ed25519 public key. When you add a contact, you exchange public keys directly (via QR code or NFC) rather than through a server. This means no third party can intercept or fake the key exchange.
 
-Once keys are exchanged, SecureChat uses a **Double Ratchet** protocol with XChaCha20-Poly1305 encryption for every message. Each message is encrypted with a different key. If one key is ever compromised, past and future messages remain secure. Messages are stored locally on your device in an encrypted database (SQLCipher, AES-256).
+Once keys are exchanged, SecureChat encrypts every message with XChaCha20-Poly1305 under a different per-message key derived from an HKDF chain over a per-contact X25519 key agreement. This is not yet a Double Ratchet: there is no break-in recovery, and a compromised device key can expose earlier messages of a conversation. A full Double Ratchet is on the roadmap. Messages are stored locally on your device in an encrypted database (SQLCipher, AES-256).
 
 For current online delivery, both users must be online at the same time. A central StealthX signaling relay forwards the opaque encrypted payload and processes sender/recipient identifiers plus connection metadata; Tor, decentralized relays and multi-hop onion routing are roadmap features. QR export/import remains available for offline exchange.
 
@@ -164,7 +164,7 @@ After the wipe the app closes. There is no recovery.
 ### Free Features
 
 **E2E Encrypted Messaging**
-End-to-end encrypted messaging using XChaCha20-Poly1305 and Double Ratchet. Available to all tiers.
+End-to-end encrypted messaging using XChaCha20-Poly1305 with per-message keys from an HKDF chain (Double Ratchet planned). Available to all tiers.
 
 **QR Key Exchange**
 Device-to-device public key exchange via QR code or text. Available to all tiers. No server involved.
@@ -255,7 +255,7 @@ This is designed for high-urgency situations where you need to destroy the app's
 
 **Key exchange:** X25519 Elliptic Curve Diffie-Hellman. Generates a shared secret without transmitting private keys.
 
-**Forward secrecy:** Double Ratchet. Each message uses a different key derived from the ratchet state. Old message keys are deleted after use. A compromise of today's key reveals nothing about past or future messages.
+**Message keys:** HKDF-SHA256 chain over a per-contact X25519 key agreement; each message uses a different key. This is not yet a Double Ratchet: there is no break-in recovery, and a compromised device key can expose earlier messages of a conversation. A full Double Ratchet is on the roadmap.
 
 **Identity signing:** Ed25519. Every contact's public key bundle is signed by their private signing key. SecureChat verifies this signature when you add a contact, preventing impersonation.
 
