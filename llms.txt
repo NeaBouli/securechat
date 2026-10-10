@@ -1,13 +1,13 @@
 # SecureChat — StealthX Platform
 > End-to-end encrypted messaging for Android.
 > No phone number or account. The current alpha uses a central signaling relay that processes connection and routing metadata.
-> XChaCha20-Poly1305 + Double Ratchet. Kaspa identity and decentralized relay discovery remain roadmap work.
+> XChaCha20-Poly1305 with per-message HKDF keys; not yet a Double Ratchet (no break-in recovery). Kaspa identity and decentralized relay discovery remain roadmap work.
 > Source available for transparency and security review. Paid activation is launch-gated and handled through VLABS.
 
 ## Key Facts
 - Encryption: XChaCha20-Poly1305 (192-bit nonce, AEAD)
 - Key Exchange: X25519 ECDH (ephemeral per-session)
-- Forward Secrecy: Double Ratchet (HKDF-SHA256, RFC 5869)
+- Message keys: HKDF-SHA256 chain (RFC 5869) over a per-contact X25519 key agreement. Not yet a Double Ratchet: there is no break-in recovery, and a compromised device key can expose earlier messages of a conversation. A full Double Ratchet is on the roadmap.
 - Identity Signing: Ed25519
 - Key Derivation: Argon2id (64MB memory, 3 iterations)
 - Key Storage: Android Keystore (StrongBox/TEE)

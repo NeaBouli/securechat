@@ -21,7 +21,7 @@ This repository is source-available for transparency and independent security au
 
 Changes to the following areas require **additional review** from a security-focused maintainer:
 
-- Cryptographic implementations (XChaCha20, X25519, Double Ratchet, Argon2id, Ed25519)
+- Cryptographic implementations (XChaCha20, X25519, HKDF message keys, Double Ratchet (not yet active), Argon2id, Ed25519)
 - Android Keystore integration
 - Key management and storage
 - Transport layer and relay protocol

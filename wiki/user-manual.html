@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="SecureChat alpha user manual — setup, contacts, encrypted messaging, central online relay, air-gap mode, and settings. Available in English and German.">
-<meta name="keywords" content="SecureChat, encrypted messaging, user manual, setup guide, XChaCha20, Double Ratchet, IFR Token, StealthX, Betriebsanleitung">
+<meta name="keywords" content="SecureChat, encrypted messaging, user manual, setup guide, XChaCha20, IFR Token, StealthX, Betriebsanleitung">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 <meta name="author" content="NeaBouli / StealthX Platform">
 <meta name="theme-color" content="#00ff88">
@@ -140,7 +140,7 @@
 <div class="guide-section">
   <div class="section-num">Section 1</div>
   <h2 class="section-heading section-anchor" id="en-what">🔐 What is SecureChat?</h2>
-  <p>SecureChat is an end-to-end encrypted messenger. Message content is protected with <strong>XChaCha20-Poly1305 + Double Ratchet</strong>; the current central signaling relay still processes connection timing and sender/recipient <code>sx_</code> identifiers. No phone number or email registration is required.</p>
+  <p>SecureChat is an end-to-end encrypted messenger. Message content is protected with <strong>XChaCha20-Poly1305 and per-message keys</strong> (not yet a Double Ratchet, so no break-in recovery); the current central signaling relay still processes connection timing and sender/recipient <code>sx_</code> identifiers. No phone number or email registration is required.</p>
   <div class="info-box"><strong>Shared identity:</strong> SecureChat uses the same <code>sx_</code> ID as SecureCall. One identity — both apps. Share your QR once; your contact reaches you on both.</div>
 </div>
 
@@ -175,7 +175,7 @@
   <table>
     <tr><th>Element</th><th>What it shows</th></tr>
     <tr><td><strong>sx_ ID</strong></td><td>Your permanent address, large monospace font</td></tr>
-    <tr><td><strong>QR Code</strong></td><td>Full Public Key Bundle (all keys for the Double Ratchet, not just the ID)</td></tr>
+    <tr><td><strong>QR Code</strong></td><td>Full Public Key Bundle (all keys needed for encryption, not just the ID)</td></tr>
     <tr><td><strong>"Works in SecureCall AND SecureChat"</strong></td><td>One QR — your contact can reach you on both apps</td></tr>
     <tr><td><strong>Share Deep Link</strong></td><td>Android share sheet with raw text <code>stealthx://add/sx_...?...</code></td></tr>
   </table>
@@ -226,7 +226,7 @@
   <h3 style="margin:1.2rem 0 0.5rem;font-size:0.95rem;color:var(--text)">Free <span class="tier-badge free">FREE</span></h3>
   <table>
     <tr><th>Feature</th><th>Detail</th></tr>
-    <tr><td>E2E Encrypted Messaging</td><td>XChaCha20-Poly1305 + Double Ratchet — always on</td></tr>
+    <tr><td>E2E Encrypted Messaging</td><td>XChaCha20-Poly1305 with per-message keys — always on</td></tr>
     <tr><td>QR Key Exchange</td><td>Device-to-device, no server</td></tr>
     <tr><td>Contacts</td><td>Max. 10</td></tr>
   </table>
@@ -308,7 +308,7 @@
 <div class="guide-section">
   <div class="section-num">Abschnitt 1</div>
   <h2 class="section-heading section-anchor" id="de-what">🔐 Was ist SecureChat?</h2>
-  <p>SecureChat ist ein Ende-zu-Ende verschlüsselter Messenger. Der Nachrichteninhalt ist mit <strong>XChaCha20-Poly1305 + Double Ratchet</strong> geschützt; der zentrale Signaling-Dienst verarbeitet weiterhin Verbindungszeit und Absender-/Empfänger-<code>sx_</code>-IDs. Keine Telefonnummer oder E-Mail-Registrierung.</p>
+  <p>SecureChat ist ein Ende-zu-Ende verschlüsselter Messenger. Der Nachrichteninhalt ist mit <strong>XChaCha20-Poly1305 und Schlüsseln pro Nachricht</strong> geschützt (noch kein Double Ratchet, daher keine Selbstheilung nach Kompromittierung); der zentrale Signaling-Dienst verarbeitet weiterhin Verbindungszeit und Absender-/Empfänger-<code>sx_</code>-IDs. Keine Telefonnummer oder E-Mail-Registrierung.</p>
   <div class="info-box"><strong>Gemeinsame Identität:</strong> SecureChat verwendet dieselbe <code>sx_</code> ID wie SecureCall. Eine Identität — beide Apps. QR einmal teilen, Kontakt erreicht dich auf beiden.</div>
 </div>
 
@@ -343,7 +343,7 @@
   <table>
     <tr><th>Element</th><th>Inhalt</th></tr>
     <tr><td><strong>sx_ ID</strong></td><td>Deine permanente Adresse, groß in Monospace</td></tr>
-    <tr><td><strong>QR-Code</strong></td><td>Vollständiges Public-Key-Bundle (alle Schlüssel für den Double Ratchet)</td></tr>
+    <tr><td><strong>QR-Code</strong></td><td>Vollständiges Public-Key-Bundle (alle für die Verschlüsselung nötigen Schlüssel)</td></tr>
     <tr><td><strong>"Works in SecureCall AND SecureChat"</strong></td><td>Ein QR — Kontakt erreicht dich in beiden Apps</td></tr>
     <tr><td><strong>Share Deep Link</strong></td><td>Android-Teilen mit Rohtext <code>stealthx://add/sx_...?...</code></td></tr>
   </table>
@@ -394,7 +394,7 @@
   <h3 style="margin:1.2rem 0 0.5rem;font-size:0.95rem;color:var(--text)">Free <span class="tier-badge free">FREE</span></h3>
   <table>
     <tr><th>Feature</th><th>Detail</th></tr>
-    <tr><td>E2E Encrypted Messaging</td><td>XChaCha20-Poly1305 + Double Ratchet — immer an</td></tr>
+    <tr><td>E2E Encrypted Messaging</td><td>XChaCha20-Poly1305 mit Schlüsseln pro Nachricht — immer an</td></tr>
     <tr><td>QR Key Exchange</td><td>Gerät-zu-Gerät, kein Server</td></tr>
     <tr><td>Kontakte</td><td>Max. 10</td></tr>
   </table>
