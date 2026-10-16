@@ -10,14 +10,16 @@
     :root{color-scheme:dark;--bg:#0a0a0f;--panel:#0d1b2a;--line:#1e3a52;--text:#e8edf2;--muted:#aab8c4;--accent:#00d4ff}
     *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
     main{width:min(600px,100%);padding:28px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}h1{margin:0 0 12px;color:var(--accent)}p{color:var(--muted);line-height:1.6}a{display:inline-block;margin-top:10px;padding:12px 16px;border:1px solid var(--accent);border-radius:6px;color:var(--accent);font-weight:800;text-decoration:none}
+    .js-mail a { display:inline-flex; align-items:center; min-height:44px; margin:0; padding:0; border:0; }
   </style>
 </head>
 <body>
   <main>
     <h1>Checkout return</h1>
-    <p>Stripe is processing the purchase. SecureChat access is issued only after the signed payment webhook is confirmed. Check the email address used at checkout for the activation code.</p>
-    <p>If delivery is delayed, keep the Stripe receipt and contact support. A checkout-return URL alone does not activate a tier.</p>
+    <p><strong>Sales are not open yet.</strong> Purchases remain unavailable until the VLABS shop goes live. This page does not confirm a payment or activate a tier.</p>
+    <p>Once sales open, SecureChat access will require confirmation through the signed payment webhook. For questions about an existing Stripe receipt, keep the receipt and contact support: <span class="js-mail" data-u="troppus" data-d="xhtlaets|hcet"></span>.</p>
     <a href="./#download">Return to SecureChat</a>
   </main>
+<script src="js/mail-assemble.js" defer></script>
 </body>
 </html>

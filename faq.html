@@ -107,6 +107,7 @@
   .faq-answer-inner strong { color:var(--text); }
   .faq-item.open .faq-question svg { transform:rotate(180deg); }
   .faq-item.open .faq-answer { max-height:500px; }
+  .faq-item.pricing-item.open .faq-answer { max-height:none; }
   .back-link { display:inline-block; color:var(--muted); text-decoration:none; font-size:14px; margin-bottom:2rem; }
   .back-link:hover { color:var(--green); }
 
@@ -265,6 +266,7 @@
     .faq-content { padding:4.5rem 1.1rem 4.5rem; }
     .nav-links { background:rgba(247,251,249,.96); }
   }
+  .js-mail a { display:inline-flex; align-items:center; min-height:44px; margin:0; padding:0; border:0; }
 </style>
 </head>
 <body>
@@ -470,14 +472,21 @@
         </div>
       </div>
     </div>
-    <div class="faq-item">
+    <div class="faq-item pricing-item">
       <button class="faq-question">
-        What is the StealthX Suite?
+        What do the lifetime licences cost?
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="faq-answer">
         <div class="faq-answer-inner">
-          The StealthX Suite is a planned bundle of SecureCall, SecureChat and Chameleon access. Current price, included versions, support scope and availability are controlled by VLABS. It is not sell-ready until every component and bundle gate passes.
+          <p><strong>Buy once, use forever.</strong> Every paid licence is a one-time purchase for lifetime use.</p>
+          <ul>
+            <li>SecureCall Pro: &euro;15 incl. VAT; Premium: &euro;25 incl. VAT.</li>
+            <li>SecureChat Pro: &euro;9 incl. VAT; Elite: &euro;19 incl. VAT.</li>
+            <li>Chameleon Pro: &euro;9 incl. VAT; Elite: &euro;19 incl. VAT.</li>
+            <li>Custom IDs (one-time): 10+ characters &euro;1 incl. VAT; 5&ndash;9 characters &euro;2 incl. VAT; 3&ndash;4 characters &euro;5 incl. VAT.</li>
+          </ul>
+          <p><strong>Sales are not open yet.</strong> All products and custom IDs remain unavailable for purchase until the VLABS shop goes live.</p>
         </div>
       </div>
     </div>
@@ -555,6 +564,7 @@
       </div>
       <div class="footer-col">
         <h4>Legal</h4>
+        <p>Support: <span class="js-mail" data-u="troppus" data-d="xhtlaets|hcet"></span></p>
         <a href="privacy.html">Privacy Policy</a>
         <a href="https://github.com/NeaBouli/securechat/blob/main/LICENSE">License</a>
         <a href="https://github.com/NeaBouli/securechat/blob/main/SECURITY.md">Security Policy</a>
@@ -593,5 +603,6 @@ document.querySelectorAll('.faq-question').forEach(function(btn) {
 });
 </script>
 
+<script src="js/mail-assemble.js" defer></script>
 </body>
 </html>

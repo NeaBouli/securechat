@@ -93,6 +93,7 @@
   @media(max-width:600px){.guide-header{padding:2rem 1rem 1.5rem}.guide-body{padding:1rem}nav{padding:0 1rem}.nav-right .back-link{display:none}}
   [data-lang]{display:none}
   [data-lang].visible{display:block}
+  .js-mail a { display:inline-flex; align-items:center; min-height:44px; margin:0; padding:0; border:0; }
 </style>
 <link rel="stylesheet" href="wiki-light.css">
 </head>
@@ -250,10 +251,11 @@
   <h2 class="section-heading section-anchor" id="en-ifr">🔑 IFR Token and Planned Holder Discount</h2>
   <table>
     <tr><th>Element</th><th>Current status</th></tr>
-    <tr><td>Paid activation</td><td>Launch-gated; check VLABS for availability</td></tr>
+    <tr><td>Paid activation</td><td>Sales are not open yet; purchases are unavailable until the VLABS shop goes live</td></tr>
     <tr><td>IFR holder discount</td><td>Planned, but disabled pending payment, accounting and launch approval</td></tr>
   </table>
   <p>The referenced Ethereum Mainnet token contract is <code>0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code>. The Android app does not connect a wallet, and no discounted Stripe checkout is available in this release.</p>
+  <p><strong>Buy once, use forever.</strong> SecureChat Pro: &euro;9 incl. VAT one-time; Elite: &euro;19 incl. VAT one-time. Both are lifetime licences. Sales are not open yet.</p>
 </div>
 
 <div class="guide-section">
@@ -418,10 +420,11 @@
   <h2 class="section-heading section-anchor" id="de-ifr">🔑 IFR-Token und geplanter Holder-Rabatt</h2>
   <table>
     <tr><th>Element</th><th>Aktueller Status</th></tr>
-    <tr><td>Bezahlte Aktivierung</td><td>Launch-gesperrt; Verfügbarkeit bei VLABS prüfen</td></tr>
+    <tr><td>Bezahlte Aktivierung</td><td>Der Verkauf ist noch nicht geöffnet; Käufe sind erst nach dem Start des VLABS-Shops möglich</td></tr>
     <tr><td>IFR-Holder-Rabatt</td><td>Geplant, aber bis Payment-, Accounting- und Launch-Freigabe deaktiviert</td></tr>
   </table>
   <p>Der referenzierte Ethereum-Mainnet-Tokenvertrag ist <code>0x77e99917Eca8539c62F509ED1193ac36580A6e7B</code>. Die Android-App verbindet keine Wallet, und in dieser Version ist kein rabattierter Stripe-Checkout verfügbar.</p>
+  <p><strong>Einmal kaufen, für immer nutzen.</strong> SecureChat Pro: &euro;9 inkl. MwSt. einmalig; Elite: &euro;19 inkl. MwSt. einmalig. Beide sind Lifetime-Lizenzen. Der Verkauf ist noch nicht geöffnet.</p>
 </div>
 
 <div class="guide-section">
@@ -450,6 +453,7 @@
 </div><!-- /lang-de -->
 
 <footer>
+  <p>Support: <span class="js-mail" data-u="troppus" data-d="xhtlaets|hcet"></span></p>
   <a href="../">SecureChat</a> · <a href="./">Wiki</a> · <a href="https://github.com/NeaBouli/securechat">GitHub</a> · <a href="../privacy.html">Privacy</a><br>
   © 2026 Vendetta Labs · StealthX Platform
 </footer>
@@ -471,5 +475,6 @@ function setLang(lang, init) {
   if(!init) localStorage.setItem('sx-lang', lang);
 }
 </script>
+<script src="../js/mail-assemble.js" defer></script>
 </body>
 </html>

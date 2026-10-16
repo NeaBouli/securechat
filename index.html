@@ -203,9 +203,6 @@
   .tier-features { list-style:none; }
   .tier-features li { font-size:14px; color:var(--text-dim); padding:5px 0; display:flex; gap:8px; }
   .tier-features li::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; }
-  .tier-card.suite-card { grid-column:1 / -1; border-color:var(--gold) !important; background:linear-gradient(135deg,rgba(255,184,0,.10),rgba(0,255,136,.04)) !important; color:var(--text) !important; }
-  .suite-card-layout { display:grid; grid-template-columns:minmax(220px,.9fr) 1fr minmax(160px,.45fr); gap:1.5rem; align-items:center; }
-  .value-badge { font-size:11px; font-weight:800; letter-spacing:1px; background:var(--gold); color:#000; display:inline-block; padding:4px 11px; border-radius:4px; margin-bottom:.8rem; text-transform:uppercase; }
   .ifr-box { margin:1.5rem auto 0; background:rgba(0,255,136,.05); border:1px solid rgba(0,255,136,.22); border-radius:12px; padding:1.5rem; box-shadow:0 18px 48px rgba(15,23,42,.06); }
   .ifr-grid { display:grid; grid-template-columns:minmax(0,.95fr) minmax(0,1.2fr); gap:1rem; align-items:stretch; }
   .ifr-card { box-sizing:border-box; min-width:0; max-width:100%; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.25rem; }
@@ -268,7 +265,6 @@
     .hero-phone { width:220px; height:440px; }
     section { padding:3rem 1rem; }
     .stats-bar { gap:1.5rem; }
-    .suite-card-layout,
     .ifr-grid,
     .ifr-wallet-actions,
     .ifr-actions { grid-template-columns:1fr; }
@@ -432,6 +428,7 @@
     .hero-inner { gap: 32px; }
     .nav-links { background: rgba(247,251,249,.96); }
   }
+  .js-mail a { display:inline-flex; align-items:center; min-height:44px; margin:0; padding:0; border:0; }
 </style>
 </head>
 <body>
@@ -596,7 +593,7 @@
     <div class="badge"><span class="badge-icon">🔐</span> No phone number required</div>
     <div class="badge"><span class="badge-icon">💥</span> STEALTH-DELETE</div>
     <div class="badge"><span class="badge-icon">⛓</span> Kaspa Identity Layer</div>
-    <div class="badge"><span class="badge-icon">🔑</span> Lifetime via IFR Token</div>
+    <div class="badge"><span class="badge-icon">🔑</span> Buy once, use forever.</div>
     <div class="badge"><span class="badge-icon">📦</span> Source-Available</div>
     <div class="badge"><span class="badge-icon">🦎</span> Chameleon Overlay Compatible</div>
   </div>
@@ -882,26 +879,6 @@
         <li>Early access to features</li>
       </ul>
     </div>
-    <div class="tier-card featured suite-card">
-      <div class="suite-card-layout">
-        <div>
-          <div class="value-badge">Best Value</div>
-          <div class="tier-name" style="color:var(--gold)">StealthX Suite</div>
-          <div class="tier-lock">Bundle checkout remains unavailable</div>
-        </div>
-        <ul class="tier-features">
-          <li>SecureCall Premium (lifetime)</li>
-          <li>SecureChat Elite (lifetime)</li>
-          <li>Chameleon Elite (lifetime)</li>
-          <li>Bundle scope controlled by VLABS</li>
-          <li>Suite fulfillment is not enabled yet</li>
-        </ul>
-        <div>
-          <span class="btn btn-disabled" style="display:block;width:100%;text-align:center;">Suite unavailable</span>
-          <div class="ifr-token-logo"><img src="https://ifrunit.tech/assets/ifr_icon_256.png" alt="IFR token logo" width="96" height="96" loading="lazy"></div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div class="ifr-box">
@@ -939,50 +916,52 @@
 
 <!-- LIFETIME PRICING -->
 <section id="lifetime">
-  <div class="section-label">Lifetime</div>
-  <h2 class="section-title">Prefer a one-time payment?</h2>
-  <p class="section-sub">Perpetual use of the purchased supported version. Availability, support scope and current price are controlled by VLABS.</p>
+  <div class="section-label">One-time lifetime licences</div>
+  <h2 class="section-title">Buy once, use forever.</h2>
+  <p class="section-sub">All paid licences are one-time purchases for lifetime use. The fixed end prices below include VAT. <strong>Sales are not open yet.</strong> Purchases remain unavailable until the VLABS shop goes live.</p>
 
   <div class="tier-grid">
     <div class="tier-card featured">
-      <div style="font-size:11px;font-weight:700;letter-spacing:1px;background:var(--green);color:#000;display:inline-block;padding:3px 10px;border-radius:4px;margin-bottom:0.8rem;">LIMITED — 100 Licenses at &euro;9</div>
-      <div class="tier-name" style="color:var(--green);">Pro Lifetime</div>
-      <div style="font-size:2rem;font-weight:900;color:var(--text);margin:0.5rem 0;">&euro;9 <span style="font-size:14px;color:var(--muted);font-weight:400;">one-time</span></div>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;">Price rises with every sale &rarr; max &euro;14.99 at sellout</p>
+      <div class="tier-name" style="color:var(--green);">SecureChat</div>
+      <p>Pro: <strong>&euro;9 incl. VAT</strong> one-time</p>
+      <p>Elite: <strong>&euro;19 incl. VAT</strong> one-time</p>
       <ul class="tier-features">
-        <li>Everything in Pro</li>
-        <li>No subscription &mdash; pay once</li>
-        <li>Updates during the supported product lifecycle</li>
-        <li>Early adopter pricing</li>
+        <li>Pro: unlimited contacts</li>
+        <li>Elite: everything in Pro plus Emergency Broadcast</li>
+        <li>Lifetime use of the purchased tier</li>
       </ul>
-      <br>
-      <a href="https://vlabs.gr/en/shop?focus=security" style="display:block;width:100%;text-align:center;padding:10px;border:1px solid var(--green);border-radius:8px;background:var(--green);color:#000;font-weight:700;font-size:14px;">Check VLABS availability</a>
     </div>
-    <div class="tier-card featured">
-      <div style="font-size:11px;font-weight:700;letter-spacing:1px;background:var(--gold);color:#000;display:inline-block;padding:3px 10px;border-radius:4px;margin-bottom:0.8rem;">LIMITED — 100 Licenses at &euro;19</div>
-      <div class="tier-name" style="color:var(--gold);">Elite Lifetime</div>
-      <div style="font-size:2rem;font-weight:900;color:var(--text);margin:0.5rem 0;">&euro;19 <span style="font-size:14px;color:var(--muted);font-weight:400;">one-time</span></div>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:1rem;">Price rises with every sale &rarr; max &euro;23.99 at sellout</p>
+    <div class="tier-card">
+      <div class="tier-name">SecureCall</div>
+      <p>Pro: <strong>&euro;15 incl. VAT</strong> one-time</p>
+      <p>Premium: <strong>&euro;25 incl. VAT</strong> one-time</p>
       <ul class="tier-features">
-        <li>Everything in Elite</li>
-        <li>No subscription &mdash; pay once</li>
-        <li>Updates during the supported product lifecycle</li>
-        <li>Early adopter pricing</li>
+        <li>Lifetime use of the purchased tier</li>
+        <li>Sales are not open yet</li>
       </ul>
-      <br>
-      <a href="https://vlabs.gr/en/shop?focus=security" style="display:block;width:100%;text-align:center;padding:10px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;font-size:14px;">Check VLABS availability</a>
+    </div>
+    <div class="tier-card">
+      <div class="tier-name">Chameleon</div>
+      <p>Pro: <strong>&euro;9 incl. VAT</strong> one-time</p>
+      <p>Elite: <strong>&euro;19 incl. VAT</strong> one-time</p>
+      <ul class="tier-features">
+        <li>Lifetime use of the purchased tier</li>
+        <li>Sales are not open yet</li>
+      </ul>
     </div>
   </div>
 
-  <!-- Suite Banner -->
-  <div style="margin-top:2rem;background:rgba(255,184,0,0.05);border:1px solid rgba(255,184,0,0.2);border-radius:12px;padding:2rem;text-align:center;">
-    <h3 style="font-size:1.3rem;color:var(--gold);margin-bottom:0.5rem;">StealthX Suite &mdash; planned bundle</h3>
-    <p style="color:var(--text-dim);font-size:14px;margin-bottom:1rem;">SecureCall, SecureChat and Chameleon component access. The bundle is not sell-ready until every component passes its release gates.</p>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:1.5rem;">Current scope, price and availability are controlled by VLABS.</p>
-    <a href="https://vlabs.gr/en/shop?focus=security" style="display:inline-block;padding:10px 24px;border:1px solid var(--gold);border-radius:8px;background:var(--gold);color:#000;font-weight:700;font-size:14px;">Check VLABS availability</a>
+  <div class="tier-card" style="margin-top:1.5rem;">
+    <h3 class="tier-name">Custom IDs</h3>
+    <p>One-time prices by ID length:</p>
+    <ul class="tier-features">
+      <li>10+ characters: <strong>&euro;1 incl. VAT</strong></li>
+      <li>5&ndash;9 characters: <strong>&euro;2 incl. VAT</strong></li>
+      <li>3&ndash;4 characters: <strong>&euro;5 incl. VAT</strong></li>
+    </ul>
   </div>
 
-  <p style="font-size:12px;color:var(--muted);text-align:center;margin-top:1.5rem;">No product is available for paid activation until the VLABS checkout card shows it as available.</p>
+  <p style="color:var(--text-dim);text-align:center;margin-top:1.5rem;"><strong>Sales are not open yet.</strong> All products and custom IDs remain unavailable for purchase until the VLABS shop goes live.</p>
 </section>
 
 <hr class="divider">
@@ -991,7 +970,7 @@
 <section id="download" style="text-align:center;">
   <div class="section-label">Deploy</div>
   <h2 class="section-title">Ready to secure your comms?</h2>
-  <p class="section-sub" style="margin:0 auto 2rem;">SecureChat Android APK v0.1.5-alpha is currently published on GitHub. Version 0.1.11-alpha is available only to selected closed and internal Google Play testers. One APK covers Free, Pro, and Elite; paid plans unlock with an activation code after checkout.</p>
+  <p class="section-sub" style="margin:0 auto 2rem;">SecureChat Android APK v0.1.5-alpha is currently published on GitHub. Version 0.1.11-alpha is available only to selected closed and internal Google Play testers. One APK covers Free, Pro, and Elite. Paid tiers use one-time lifetime licences. Buy once, use forever. Sales are not open yet; purchases remain unavailable until the VLABS shop goes live.</p>
 
   <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-bottom:2rem;">
     <a href="https://github.com/NeaBouli/securechat/releases/latest/download/SecureChat-LATEST.apk" class="btn btn-primary">Download published APK (v0.1.5-alpha)</a>
@@ -1034,6 +1013,7 @@
       </div>
       <div class="footer-col">
         <h4>Legal</h4>
+        <p>Support: <span class="js-mail" data-u="troppus" data-d="xhtlaets|hcet"></span></p>
         <a href="privacy.html">Privacy Policy</a>
         <a href="https://github.com/NeaBouli/securechat/blob/main/LICENSE">License</a>
         <a href="https://github.com/NeaBouli/securechat/blob/main/SECURITY.md">Security Policy</a>
@@ -1047,6 +1027,7 @@
 </footer>
 
 <script type="module" src="js/ifr-checkout.js"></script>
+<script src="js/mail-assemble.js" defer></script>
 <script>
 // Chat animation
 (function() {

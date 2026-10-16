@@ -2,7 +2,7 @@
 > End-to-end encrypted messaging for Android.
 > No phone number or account. The current alpha uses a central signaling relay that processes connection and routing metadata.
 > XChaCha20-Poly1305 + Double Ratchet. Kaspa identity and decentralized relay discovery remain roadmap work.
-> Source available for transparency and security review. Paid activation is launch-gated and handled through VLABS.
+> Source available for transparency and security review. Buy once, use forever. Sales are not open yet; purchases are unavailable until the VLABS shop goes live.
 
 ## Key Facts
 - Encryption: XChaCha20-Poly1305 (192-bit nonce, AEAD)
@@ -24,8 +24,18 @@
 - Minimized account surface: no phone number or account registration
 - End-to-end encrypted payloads; the signaling relay still processes routing and connection metadata
 - STEALTH-DELETE: instant wipe of all data
-- Paid tiers: availability and checkout are controlled by VLABS
+- Paid tiers: one-time lifetime licences; sales are not open yet
 - Part of the StealthX ecosystem (SecureCall, Chameleon)
+
+## One-time Lifetime Pricing
+Buy once, use forever. All prices are fixed end prices, incl. VAT.
+- SecureCall Pro: EUR 15 incl. VAT one-time; Premium: EUR 25 incl. VAT one-time
+- SecureChat Pro: EUR 9 incl. VAT one-time; Elite: EUR 19 incl. VAT one-time
+- Chameleon Pro: EUR 9 incl. VAT one-time; Elite: EUR 19 incl. VAT one-time
+- Custom IDs, 10+ characters: EUR 1 incl. VAT one-time
+- Custom IDs, 5-9 characters: EUR 2 incl. VAT one-time
+- Custom IDs, 3-4 characters: EUR 5 incl. VAT one-time
+- Sales are not open yet. All products and custom IDs remain unavailable for purchase until the VLABS shop goes live.
 
 ## Links
 - Main: https://securechat.stealthx.tech
