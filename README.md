@@ -69,17 +69,35 @@ cd securechat
 
 Requirements: JDK 17, Android SDK 36, Android 8.0+ (API 26+) target devices.
 
+## One-time Lifetime Licences
+
+**Buy once, use forever.** All paid licences are one-time purchases for lifetime use.
+These fixed end prices include VAT:
+
+| Product | Tier | One-time price |
+|---|---|---|
+| SecureCall | Pro | EUR 15 incl. VAT |
+| SecureCall | Premium | EUR 25 incl. VAT |
+| SecureChat | Pro | EUR 9 incl. VAT |
+| SecureChat | Elite | EUR 19 incl. VAT |
+| Chameleon | Pro | EUR 9 incl. VAT |
+| Chameleon | Elite | EUR 19 incl. VAT |
+| Custom ID | 10+ characters | EUR 1 incl. VAT |
+| Custom ID | 5-9 characters | EUR 2 incl. VAT |
+| Custom ID | 3-4 characters | EUR 5 incl. VAT |
+
+**Sales are not open yet.** All products and custom IDs remain unavailable for
+purchase until the VLABS shop goes live. See the [website pricing](https://securechat.stealthx.tech/#lifetime).
+
 ## IFR Holder Discount
 
 The public SecureChat app does not run WalletConnect or wallet verification inside Android. IFR holder verification is browser-only before purchase: sign ownership, verify the Mainnet IFR balance read-only, then open the seller-set discount displayed at checkout when the secure payment backend is available.
 
 | Tier | Web IFR eligibility | Checkout benefit | Features |
 |---|---:|---:|---|
-| Free | Not required | EUR 0 | Core messaging, 10 contacts |
+| Free | Not required | EUR 0 incl. VAT | Core messaging, 10 contacts |
 | Pro | Positive IFR balance | Seller-defined browser checkout discount | Unlimited contacts; groups and Kaspa identity remain roadmap |
 | Elite | Positive IFR balance | Seller-defined browser checkout discount | Emergency Broadcast; onion/decoy features remain roadmap |
-| Suite | Unavailable | No checkout | Bundle fulfillment is not enabled |
-See [PRICING.md](docs/PRICING.md).
 
 ## Documentation
 - [LOGBUCH.md](LOGBUCH.md) — Development log (SC-00 to SC-10)
@@ -87,7 +105,7 @@ See [PRICING.md](docs/PRICING.md).
 - [docs/UNIFIED_ID_SYSTEM.md](docs/UNIFIED_ID_SYSTEM.md)
 - [docs/RELAY_ARCHITECTURE.md](docs/RELAY_ARCHITECTURE.md)
 - [docs/TRANSPORT_LAYER.md](docs/TRANSPORT_LAYER.md)
-- [docs/PRICING.md](docs/PRICING.md)
+- [Website pricing](https://securechat.stealthx.tech/#lifetime) — current one-time licence prices
 - [docs/RELEASE_PROCESS.md](docs/RELEASE_PROCESS.md)
 - [docs/TODO.md](docs/TODO.md)
 - [SECURITY.md](SECURITY.md) — Vulnerability disclosure policy
