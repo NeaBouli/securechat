@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteConstraintException
 import com.stealthx.crypto.ChameleonCrypto
 import com.stealthx.data.dao.ContactKeyDao
 import com.stealthx.data.entity.ContactKeyEntity
+import com.stealthx.data.identity.StealthXIdentity
 import com.stealthx.domain.tier.TierGate
 import com.stealthx.domain.tier.TierLimitException
 import com.stealthx.shared.model.AccessTier
@@ -18,10 +19,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ContactRepository @Inject constructor(
+class ContactRepository internal constructor(
     private val contactKeyDao: ContactKeyDao,
-    private val tierGate: TierGate
+    private val tierGate: TierGate,
+    private val verifySignature: (message: ByteArray, signature: ByteArray, publicKey: ByteArray) -> Boolean
 ) {
+    @Inject
+    constructor(contactKeyDao: ContactKeyDao, tierGate: TierGate) :
+        this(contactKeyDao, tierGate, ChameleonCrypto::verify)
+
     companion object {
         const val FREE_CONTACT_LIMIT = 10
     }
@@ -44,9 +50,32 @@ class ContactRepository @Inject constructor(
         }
     }
 
-    suspend fun addContactBundle(bundle: PublicKeyBundle) {
+    /**
+     * Import a verified contact bundle (SCT-02, interim option B).
+     *
+     * - [ImportProvenance.REMOTE] (relay, deep link, pasted text): the sxId must be derived
+     *   from the bundle's Ed25519 key. Unbound legacy IDs fail closed.
+     * - [ImportProvenance.IN_PERSON] (camera QR scan, NFC tap): an unbound legacy ID is only
+     *   saved after explicit [legacyConsent]; without it nothing is written.
+     * - A known contact's Ed25519 identity key is pinned: the same key is an idempotent
+     *   no-op, a different key is rejected on every path, with or without consent.
+     *
+     * A valid signature only proves the bundle is self-consistent, not who owns the sxId.
+     */
+    suspend fun addContactBundle(
+        bundle: PublicKeyBundle,
+        provenance: ImportProvenance,
+        legacyConsent: Boolean = false
+    ): ContactImportResult {
         validateBundle(bundle)
-        require(getById(bundle.sxId) == null) { "Contact already exists" }
+        val bound = StealthXIdentity.isIdBoundToPublicKey(bundle.sxId, bundle.ed25519PublicKey)
+
+        getById(bundle.sxId)?.let { return pinnedResult(it, bundle) }
+
+        if (!bound) {
+            if (provenance == ImportProvenance.REMOTE) throw UnboundIdentityException()
+            if (!legacyConsent) throw LegacyConsentRequiredException()
+        }
 
         try {
             addContact(
@@ -56,14 +85,22 @@ class ContactRepository @Inject constructor(
                     identityKey = bundle.ed25519PublicKey,
                     dhPublicKey = bundle.x25519PublicKey,
                     signature = bundle.signature,
-                    isVerified = true,
+                    isVerified = bound,
                     createdAt = System.currentTimeMillis(),
                     lastUsedAt = null
                 )
             )
         } catch (e: SQLiteConstraintException) {
-            throw IllegalArgumentException("Contact already exists", e)
+            // A concurrent first import won the primary key; never overwrite its pin.
+            val winner = getById(bundle.sxId) ?: throw IllegalArgumentException("Contact already exists", e)
+            return pinnedResult(winner, bundle)
         }
+        return if (bound) ContactImportResult.ADDED else ContactImportResult.ADDED_LEGACY
+    }
+
+    private fun pinnedResult(existing: ContactKeyEntity, bundle: PublicKeyBundle): ContactImportResult {
+        if (!existing.identityKey.contentEquals(bundle.ed25519PublicKey)) throw IdentityKeyChangedException()
+        return ContactImportResult.ALREADY_KNOWN
     }
 
     fun observeAll(): Flow<List<ContactKeyEntity>> = contactKeyDao.observeAll()
@@ -94,7 +131,7 @@ class ContactRepository @Inject constructor(
             ed25519 = bundle.ed25519PublicKey,
             createdAt = bundle.createdAt
         )
-        check(ChameleonCrypto.verify(payload, bundle.signature, bundle.ed25519PublicKey)) {
+        check(verifySignature(payload, bundle.signature, bundle.ed25519PublicKey)) {
             "Ed25519 signature verification failed"
         }
     }

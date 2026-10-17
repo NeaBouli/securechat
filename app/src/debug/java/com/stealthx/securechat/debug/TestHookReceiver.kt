@@ -8,6 +8,7 @@ import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.identity.PublicKeyBundleQr
 import com.stealthx.data.identity.StealthXIdentity
 import com.stealthx.data.repository.ContactRepository
+import com.stealthx.data.repository.ImportProvenance
 import com.stealthx.data.repository.MessageRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -42,6 +43,15 @@ class TestHookReceiver : BroadcastReceiver() {
                         ?: error("missing $EXTRA_CONTENT")
                     addContact(content)
                 }
+                ACTION_SIMULATE_NFC -> {
+                    // Simulates the EXTERNAL NFC intent hop (MainActivity.handleNfcIntent -> NfcUriRelay),
+                    // which must stay REMOTE. In-person NFC exists only in NewContactScreen's reader callback.
+                    val content = intent.getStringExtra(EXTRA_CONTENT)
+                        ?: error("missing $EXTRA_CONTENT")
+                    require(content.startsWith("stealthx://add/")) { "not a stealthx://add/ link" }
+                    com.stealthx.data.NfcUriRelay.post(content)
+                    Bundle()
+                }
                 else -> error("unknown action ${intent.action}")
             }
         }.fold(
@@ -73,9 +83,8 @@ class TestHookReceiver : BroadcastReceiver() {
 
     private fun addContact(content: String): Bundle = runBlocking {
         val bundle = PublicKeyBundleQr.fromQrContent(content).getOrThrow()
-        if (contactRepository.getById(bundle.sxId) == null) {
-            contactRepository.addContactBundle(bundle)
-        }
+        // Simulated QR scan; no implicit legacy consent in the debug hook either.
+        contactRepository.addContactBundle(bundle, ImportProvenance.IN_PERSON)
         contactExchangeManager.sendExchange(bundle.sxId)
         val contacts = contactRepository.observeAll().first()
         Bundle().apply {
@@ -120,6 +129,7 @@ class TestHookReceiver : BroadcastReceiver() {
         const val ACTION_SEND_TEST = "securechat.app.debug.SEND_TEST"
         const val ACTION_LISTEN = "securechat.app.debug.LISTEN"
         const val ACTION_ADD = "securechat.app.debug.ADD"
+        const val ACTION_SIMULATE_NFC = "securechat.app.debug.SIMULATE_NFC"
         const val EXTRA_CONTENT = "content"
     }
 }

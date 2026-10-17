@@ -216,6 +216,16 @@ object StealthXIdentity {
         getEncryptedPrefs(context).edit().clear().commit()
     }
 
+    /**
+     * True when [sxId] is the ID derived from [ed25519Public] (the binding new
+     * installs get). Legacy random-seed IDs return false and are not key-bound.
+     */
+    fun isIdBoundToPublicKey(sxId: String, ed25519Public: ByteArray): Boolean {
+        if (ed25519Public.size != 32) return false
+        val hex = ed25519Public.joinToString("") { "%02x".format(it.toInt() and 0xFF) }
+        return sxId == ID_PREFIX + deriveShortId(hex)
+    }
+
     internal fun deriveShortId(publicKeyHex: String): String {
         val base58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
         val bytes = publicKeyHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()

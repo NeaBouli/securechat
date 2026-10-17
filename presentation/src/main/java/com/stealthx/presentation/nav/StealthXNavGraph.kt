@@ -27,8 +27,14 @@ import com.stealthx.shared.model.AccessTier
 fun StealthXNavGraph() {
     val navController = rememberNavController()
     val context = LocalContext.current
+    // Only an explicit VIEW deep link is routed here. NFC intents also carry intent.data and are
+    // already routed through NfcUriRelay; taking both would navigate twice (SCT-02 review F2).
+    // Every externally delivered link is REMOTE; in-person NFC exists only in NewContactScreen's
+    // own reader-mode callback.
     val pendingDeepLink = remember {
-        (context as? Activity)?.intent?.data?.toString()
+        (context as? Activity)?.intent
+            ?.takeIf { it.action == android.content.Intent.ACTION_VIEW }
+            ?.data?.toString()
             ?.takeIf { it.startsWith("stealthx://add/") }
     }
     LaunchedEffect(pendingDeepLink) {

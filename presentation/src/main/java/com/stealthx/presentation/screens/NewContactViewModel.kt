@@ -9,7 +9,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stealthx.data.exchange.ContactExchangeManager
 import com.stealthx.data.identity.PublicKeyBundleQr
+import com.stealthx.data.repository.ContactImportResult
 import com.stealthx.data.repository.ContactRepository
+import com.stealthx.data.repository.IdentityKeyChangedException
+import com.stealthx.data.repository.ImportProvenance
+import com.stealthx.data.repository.LegacyConsentGate
+import com.stealthx.data.repository.LegacyConsentRequiredException
+import com.stealthx.data.repository.UnboundIdentityException
 import com.stealthx.domain.tier.TierGate
 import com.stealthx.shared.model.AccessTier
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +39,9 @@ data class NewContactUiState(
     val isSaving: Boolean = false,
     val statusMessage: String? = null,
     val errorMessage: String? = null,
-    val contactAdded: Boolean = false
+    val contactAdded: Boolean = false,
+    /** Frozen unbound legacy candidate from an in-person scan awaiting explicit consent. */
+    val legacyCandidate: LegacyConsentGate.Candidate? = null
 )
 
 @HiltViewModel
@@ -58,7 +66,53 @@ class NewContactViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ContactLimitState())
 
-    fun addFromQrContent(content: String) {
+    private val legacyGate = LegacyConsentGate()
+
+    /**
+     * Every state written while a legacy candidate is pending keeps that candidate visible, so an
+     * overlapping import that finishes later cannot hide the dialog and leave the gate stuck.
+     */
+    private fun publish(state: NewContactUiState) {
+        val pending = legacyGate.current()
+        // A parallel import that succeeds must not leave the screen while a decision is open.
+        _uiState.value = state.copy(
+            legacyCandidate = pending,
+            contactAdded = state.contactAdded && pending == null
+        )
+    }
+
+    /**
+     * [provenance] is decided by the screen's entry point (camera scan / NFC tap =
+     * IN_PERSON; deep link, pasted or edited text = REMOTE), never by the content.
+     */
+    fun addFromQrContent(content: String, provenance: ImportProvenance) {
+        importContent(content, provenance, legacyConsent = false)
+    }
+
+    /**
+     * User explicitly accepted the warning for the displayed candidate [generation]. Stale,
+     * replayed or non-matching confirmations grant nothing (SCT-02 scan finding).
+     */
+    fun confirmLegacyImport(generation: Int) {
+        val candidate = legacyGate.claim(generation) ?: return
+        importContent(candidate.content, ImportProvenance.IN_PERSON, legacyConsent = true, expected = candidate)
+    }
+
+    /** User cancelled the displayed candidate: nothing is written. */
+    fun cancelLegacyImport(generation: Int) {
+        if (legacyGate.cancel(generation)) {
+            _uiState.value = NewContactUiState(statusMessage = "Contact not saved")
+        }
+    }
+
+    private fun importContent(
+        content: String,
+        provenance: ImportProvenance,
+        legacyConsent: Boolean,
+        expected: LegacyConsentGate.Candidate? = null
+    ) {
+        // While a legacy candidate is shown, other camera/NFC/manual imports must not replace it.
+        if (expected == null && legacyGate.isPending()) return
         val trimmed = content.trim()
         if (trimmed.isBlank()) {
             _uiState.value = NewContactUiState(errorMessage = "QR content is required")
@@ -70,17 +124,37 @@ class NewContactViewModel @Inject constructor(
             return
         }
 
+        if (expected != null && (bundle.sxId != expected.sxId ||
+                LegacyConsentGate.fingerprint(bundle.ed25519PublicKey) != expected.keyFingerprint)) {
+            _uiState.value = NewContactUiState(errorMessage = "Contact not saved")
+            return
+        }
+
         viewModelScope.launch {
-            _uiState.value = NewContactUiState(isSaving = true)
+            publish(NewContactUiState(isSaving = true))
             try {
-                contactRepository.addContactBundle(bundle)
-                contactExchangeManager.sendExchange(bundle.sxId)
-                _uiState.value = NewContactUiState(
-                    statusMessage = "Contact added",
-                    contactAdded = true
-                )
+                val result = contactRepository.addContactBundle(bundle, provenance, legacyConsent)
+                if (result != ContactImportResult.ALREADY_KNOWN) {
+                    contactExchangeManager.sendExchange(bundle.sxId)
+                }
+                publish(NewContactUiState(
+                    statusMessage = when (result) {
+                        ContactImportResult.ALREADY_KNOWN -> "Contact already saved"
+                        ContactImportResult.ADDED_LEGACY -> "Legacy contact added (not key-bound)"
+                        ContactImportResult.ADDED -> "Contact added"
+                    },
+                    contactAdded = result != ContactImportResult.ALREADY_KNOWN
+                ))
+            } catch (e: LegacyConsentRequiredException) {
+                // Freeze the candidate (or keep an already pending one) and show it.
+                legacyGate.offer(bundle.sxId, bundle.ed25519PublicKey, trimmed)
+                publish(NewContactUiState())
+            } catch (e: UnboundIdentityException) {
+                publish(NewContactUiState(errorMessage = e.message))
+            } catch (e: IdentityKeyChangedException) {
+                publish(NewContactUiState(errorMessage = e.message))
             } catch (e: Exception) {
-                _uiState.value = NewContactUiState(errorMessage = e.message ?: "Could not add contact")
+                publish(NewContactUiState(errorMessage = e.message ?: "Could not add contact"))
             }
         }
     }

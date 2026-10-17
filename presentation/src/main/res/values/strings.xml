@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SCT-02: legacy (not key-bound) SecureID import warning -->
+    <string name="legacy_contact_title">Legacy SecureID, not key-bound</string>
+    <string name="legacy_contact_message">%1$s was created before SecureIDs were bound to their keys. Key fingerprint: %2$s. The valid signature does not prove who owns this ID. Only save it if you are with this person and have compared the ID and this key fingerprint with them directly. Later key changes for this contact will be rejected.</string>
+    <string name="legacy_contact_confirm">Save anyway</string>
+    <string name="legacy_contact_cancel">Cancel</string>
+</resources>

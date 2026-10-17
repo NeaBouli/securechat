@@ -21,10 +21,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanOptions
+import com.stealthx.data.nfc.NfcContactUri
+import com.stealthx.data.nfc.NfcReaderSession
+import com.stealthx.data.repository.ImportProvenance
+import com.stealthx.presentation.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,17 +45,30 @@ fun NewContactScreen(
     vm: NewContactViewModel = hiltViewModel()
 ) {
     var qrContent by remember { mutableStateOf(initialContent) }
+    // In-person only for a camera scan or an NFC tag read by this screen's own reader callback;
+    // prefilled links (deep link / external NFC intent), pasting or editing are remote (SCT-02).
+    var inPerson by remember { mutableStateOf(false) }
     val limitState by vm.limitState.collectAsState()
     val state by vm.uiState.collectAsState()
     val context = LocalContext.current
     val scanLauncher = rememberLauncherForActivityResult(ScanContract()) { result ->
         result.contents?.let { content ->
             qrContent = content
+            inPerson = true
             // Auto-trigger: scan intent == add intent, skip manual button press
             if (content.startsWith("stealthx://add/") && !limitState.isAtLimit) {
-                vm.addFromQrContent(content)
+                vm.addFromQrContent(content, ImportProvenance.IN_PERSON)
             }
         }
+    }
+
+    state.legacyCandidate?.let { candidate ->
+        LegacyConsentDialog(
+            sxId = candidate.sxId,
+            keyFingerprint = candidate.keyFingerprint,
+            onConfirm = { vm.confirmLegacyImport(candidate.generation) },
+            onCancel = { vm.cancelLegacyImport(candidate.generation) }
+        )
     }
 
     LaunchedEffect(state.contactAdded) {
@@ -149,19 +171,49 @@ fun NewContactScreen(
                 }
             )
 
-            DisposableEffect(nfcListening) {
-                if (nfcListening) {
-                    val activity = context as? android.app.Activity ?: return@DisposableEffect onDispose {}
-                    val pendingIntent = android.app.PendingIntent.getActivity(
-                        context, 0,
-                        android.content.Intent(context, activity::class.java).addFlags(android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP),
-                        android.app.PendingIntent.FLAG_MUTABLE
-                    )
-                    val filters = arrayOf(android.content.IntentFilter(android.nfc.NfcAdapter.ACTION_NDEF_DISCOVERED))
-                    nfcAdapter!!.enableForegroundDispatch(activity, pendingIntent, filters, null)
-                    onDispose { runCatching { nfcAdapter.disableForegroundDispatch(activity) } }
-                } else {
-                    onDispose {}
+            // SCT-02: in-person NFC provenance is minted only inside this platform ReaderCallback while
+            // the screen is resumed and the session generation is current. External NFC/VIEW intents
+            // handled by MainActivity stay REMOTE. Reader mode is activity-scoped; no global NFC change.
+            val lifecycleOwner = LocalLifecycleOwner.current
+            val readerSession = remember { NfcReaderSession() }
+            val mainHandler = remember { android.os.Handler(android.os.Looper.getMainLooper()) }
+            DisposableEffect(nfcListening, lifecycleOwner) {
+                val activity = context as? android.app.Activity
+                val adapter = nfcAdapter
+                if (!nfcListening || activity == null || adapter == null) {
+                    return@DisposableEffect onDispose { readerSession.disarm() }
+                }
+                fun disable() {
+                    readerSession.disarm()
+                    runCatching { adapter.disableReaderMode(activity) }
+                }
+                fun enable() {
+                    val gen = readerSession.arm()
+                    runCatching {
+                        adapter.enableReaderMode(activity, { tag ->
+                            if (!readerSession.isCurrent(gen)) return@enableReaderMode
+                            val uri = readContactUri(tag) ?: return@enableReaderMode
+                            mainHandler.post {
+                                if (readerSession.consume(gen)) {
+                                    qrContent = uri
+                                    inPerson = true
+                                    vm.addFromQrContent(uri, ImportProvenance.IN_PERSON)
+                                }
+                            }
+                        }, NFC_READER_FLAGS, null)
+                    }.onFailure { readerSession.disarm() }
+                }
+                val observer = LifecycleEventObserver { _, event ->
+                    when (event) {
+                        Lifecycle.Event.ON_RESUME -> enable()
+                        Lifecycle.Event.ON_PAUSE -> disable()
+                        else -> Unit
+                    }
+                }
+                lifecycleOwner.lifecycle.addObserver(observer) // replays ON_RESUME if already resumed
+                onDispose {
+                    lifecycleOwner.lifecycle.removeObserver(observer)
+                    disable()
                 }
             }
 
@@ -185,13 +237,19 @@ fun NewContactScreen(
                 onClick = {
                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val pasted = clipboard.primaryClip?.getItemAt(0)?.text?.toString().orEmpty()
-                    if (pasted.isNotEmpty()) qrContent = pasted
+                    if (pasted.isNotEmpty()) {
+                        qrContent = pasted
+                        inPerson = false
+                    }
                 }
             )
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
                 value = qrContent,
-                onValueChange = { qrContent = it },
+                onValueChange = {
+                    qrContent = it
+                    inPerson = false
+                },
                 label = { Text("Contact QR content") },
                 placeholder = { Text("stealthx://add/sx_...?...") },
                 modifier = Modifier.fillMaxWidth(),
@@ -204,7 +262,12 @@ fun NewContactScreen(
                 Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
             }
             Button(
-                onClick = { vm.addFromQrContent(qrContent) },
+                onClick = {
+                    vm.addFromQrContent(
+                        qrContent,
+                        if (inPerson) ImportProvenance.IN_PERSON else ImportProvenance.REMOTE
+                    )
+                },
                 enabled = !limitState.isAtLimit && !state.isSaving && qrContent.startsWith("stealthx://add/"),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -245,4 +308,56 @@ private fun OptionCard(
             }
         }
     }
+}
+
+private const val NFC_READER_FLAGS = android.nfc.NfcAdapter.FLAG_READER_NFC_A or
+    android.nfc.NfcAdapter.FLAG_READER_NFC_B or
+    android.nfc.NfcAdapter.FLAG_READER_NFC_F or
+    android.nfc.NfcAdapter.FLAG_READER_NFC_V
+
+/** Reads the NDEF message through the tag technology (never Activity extras); failures yield null. */
+private fun readContactUri(tag: android.nfc.Tag): String? = runCatching {
+    val ndef = android.nfc.tech.Ndef.get(tag) ?: return null
+    ndef.connect()
+    try {
+        val message = ndef.ndefMessage ?: return null
+        NfcContactUri.select(message.records.map { record -> runCatching { record.toUri()?.toString() }.getOrNull() })
+    } finally {
+        runCatching { ndef.close() }
+    }
+}.getOrNull()
+
+/**
+ * SCT-02 warning for an unbound legacy SecureID. Back / outside tap is a cancel; the text scrolls so
+ * the full warning stays reachable at large font scales. Callers bind confirm/cancel to one candidate.
+ */
+@Composable
+fun LegacyConsentDialog(
+    sxId: String,
+    keyFingerprint: String,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onCancel,
+        modifier = Modifier.testTag("legacy_consent_dialog"),
+        icon = { Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.error) },
+        title = { Text(stringResource(R.string.legacy_contact_title)) },
+        text = {
+            Text(
+                stringResource(R.string.legacy_contact_message, sxId, keyFingerprint),
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm, modifier = Modifier.testTag("legacy_consent_confirm")) {
+                Text(stringResource(R.string.legacy_contact_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onCancel, modifier = Modifier.testTag("legacy_consent_cancel")) {
+                Text(stringResource(R.string.legacy_contact_cancel))
+            }
+        }
+    )
 }
